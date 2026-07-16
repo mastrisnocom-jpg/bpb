@@ -1,0 +1,11 @@
+{
+  "users": [
+    {"id": 1, "name": "Adnan", "role": "Admin"},
+    {"id": 2, "name": "Budi", "role": "Teknisi"}
+  ],
+  "settings": {
+    "maintenance_mode": false,
+    "version": "1.0.0"
+  }
+}
+
