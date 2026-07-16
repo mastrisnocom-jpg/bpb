@@ -281,7 +281,13 @@
 
     <!-- SCRIPT SUPABASE & LOGIKA -->
     <script>
-       Ly8gPT09PT09PT09PT09PT09PT0gS09ORUtTSSBTVVBBQkFTRSA9PT09PT09PT09PT09PT09PQpjb25zdCBTVVBBQkFTRV9VUkwgPSAnaHR0cHM6Ly9oZnp5cG1zaXpqaXhpeWFmbmlkei5zdXBhYmFzZS5jbyc7Ci8vIEdVTkFLQU4gSEFOWUEgWUFORyBQVUJMSVNIQUJMRSBESSBTSU5JOgpjb25zdCBTVVBBQkFTRV9BTk9OX0tFWSA9ICdzYl9wdWJsaXNoYWJsZV9vZGIzTEhESG42MDhtVElsQ09kaTlRX2pDODZSNS1PJzsgCgpjb25zdCBfc3VwYWJhc2UgPSBzdXBhYmFzZS5jcmVhdGVDbGllbnQoU1VQQUJBU0VfVVJMLCBTVVBBQkFTRV9BTk9OX0tFWSk7Ci8vID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+       / ================= KONEKSI SUPABASE =================
+const SUPABASE_URL = 'https://hfzypmsizjixiyafnidz.supabase.co';
+// GUNAKAN HANYA YANG PUBLISHABLE DI SINI:
+const SUPABASE_ANON_KEY = 'sb_publishable_odb3LHDHn608mTIlCOdi9Q_jC86R5-O'; 
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ====================================================
 
         const DOMAIN = window.location.hostname;
         document.getElementById('domain-label').innerText = `${DOMAIN}/?go=nama`;
