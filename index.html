@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Super App - Supabase</title>
-    <!-- Tailwind CSS with Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,7 +11,6 @@
             theme: { extend: { colors: { emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' } } } }
         }
     </script>
-    <!-- Supabase JS Client WAJIB DITAMBAHKAN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +25,6 @@
 </head>
 <body class="min-h-screen pb-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
 
-    <!-- AREA AUTENTIKASI (LOGIN & SIGN UP) -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col items-center justify-center hidden">
         <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700">
             <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
@@ -38,7 +35,7 @@
             
             <div id="form-container" class="space-y-3">
                 <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
-                <input type="password" id="input-password" placeholder="Kata Sandi" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
             </div>
 
             <p id="auth-error" class="text-xs text-rose-500 dark:text-rose-400 font-bold mt-3 hidden">Error message</p>
@@ -48,33 +45,11 @@
             </button>
 
             <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-emerald-500 transition">
-                Belum punya akun? Daftar dengan Email.
+                Belum punya akun? Daftar sekarang.
             </button>
         </div>
     </div>
 
-    <!-- FAKE EMAIL MODAL -->
-    <div id="fake-email-modal" class="fixed top-4 left-4 right-4 z-[200] hidden">
-        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 animate-slide-down max-w-sm mx-auto">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2 text-slate-800 dark:text-white font-bold text-sm">
-                    <i class="fa-brands fa-google text-rose-500 text-lg"></i> Kotak Masuk Email
-                </div>
-                <span class="text-[10px] text-slate-400">Baru saja</span>
-            </div>
-            <h4 class="font-bold text-slate-800 dark:text-white text-[15px] mb-1">Verifikasi Akun Baru</h4>
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Pendaftaran berhasil! Berikut detail akses Anda:<br><br>
-                User: <strong id="email-user" class="text-emerald-600 dark:text-emerald-400"></strong><br>
-                Password: <strong id="email-pass" class="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded tracking-widest"></strong>
-            </p>
-            <button onclick="closeFakeEmail()" class="mt-4 w-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white font-bold py-2 rounded-xl text-sm hover:bg-slate-200 transition">
-                Tutup & Lanjut Login
-            </button>
-        </div>
-    </div>
-
-    <!-- AREA APLIKASI UTAMA (DASHBOARD) -->
     <div id="app-dashboard" class="max-w-md mx-auto px-5 pt-8 hidden">
         <header class="mb-6">
             <div class="flex justify-between items-center mb-5">
@@ -89,7 +64,6 @@
             <p class="text-slate-500 dark:text-slate-400 text-sm" id="main-subtitle">Halo, <span id="user-display" class="font-bold text-emerald-600 dark:text-emerald-400">User</span>!</p>
         </header>
 
-        <!-- VIEW: HOME -->
         <div id="view-home">
             <section class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-[32px] p-6 text-white mb-8 shadow-xl shadow-emerald-200 dark:shadow-none relative overflow-hidden">
                 <div class="absolute -right-6 -top-6 w-32 h-32 bg-white opacity-10 rounded-full"></div>
@@ -121,7 +95,6 @@
                         <i class="fa-solid fa-plus text-emerald-500"></i> Catat
                     </button>
                 </div>
-                <!-- Menambahkan info Loading data -->
                 <div id="transaction-container" class="space-y-3 max-h-64 overflow-y-auto pr-1">
                     <p class="text-xs text-center text-slate-400"><i class="fa-solid fa-spinner animate-spin"></i> Memuat database...</p>
                 </div>
@@ -145,7 +118,6 @@
             </div>
         </div>
 
-        <!-- VIEW: LAPORAN -->
         <div id="view-laporan" class="hidden mb-10">
             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
                 <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">Ringkasan Arus Kas</h3>
@@ -174,7 +146,6 @@
             </div>
         </div>
 
-        <!-- VIEW: ANGGARAN -->
         <div id="view-anggaran" class="hidden mb-10">
             <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
                 <div class="flex justify-between items-center mb-6">
@@ -196,7 +167,6 @@
         </div>
     </div>
 
-    <!-- SEMUA MODAL FORM DISINI... (Catat Keuangan & Link) -->
     <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
@@ -225,7 +195,6 @@
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Tambah Tautan</h3>
             <div class="space-y-4">
-                <input type="hidden" id="input-link-id">
                 <input type="text" id="input-link-path" placeholder="Nama Path (Contoh: gas)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                 <input type="url" id="input-link-target" placeholder="Link Tujuan..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
             </div>
@@ -247,7 +216,6 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAV KEUANGAN -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] dark:shadow-none z-40 hidden" id="bottom-nav">
         <div class="max-w-md mx-auto flex items-center justify-around px-2">
             <button id="nav-home" onclick="switchView('home')" class="p-3 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-1 transition">
@@ -268,33 +236,29 @@
                 <span class="text-[9px] font-bold">Anggaran</span>
             </button>
             <button onclick="logout()" class="p-3 text-slate-400 hover:text-rose-500 flex flex-col items-center gap-1" title="Keluar">
-                <i class="fa-solid fa-user text-lg"></i>
+                <i class="fa-solid fa-right-from-bracket text-lg"></i>
                 <span class="text-[9px] font-bold">Keluar</span>
             </button>
         </div>
     </nav>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-800 dark:bg-slate-700 text-white text-sm px-5 py-2.5 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">
         Pesan
     </div>
 
-    <!-- SCRIPT SUPABASE & LOGIKA -->
     <script>
-       / ================= KONEKSI SUPABASE =================
-const SUPABASE_URL = 'https://hfzypmsizjixiyafnidz.supabase.co';
-// GUNAKAN HANYA YANG PUBLISHABLE DI SINI:
-const SUPABASE_ANON_KEY = 'sb_publishable_odb3LHDHn608mTIlCOdi9Q_jC86R5-O'; 
-
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// ====================================================
+        // ================= KONEKSI SUPABASE =================
+        const SUPABASE_URL = 'https://hfzypmsizjixiyafnidz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_odb3LHDHn608mTIlCOdi9Q_jC86R5-O'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ====================================================
 
         const DOMAIN = window.location.hostname;
         document.getElementById('domain-label').innerText = `${DOMAIN}/?go=nama`;
 
-        // Cache Data Global (Pengganti LocalStorage)
         let globalFinances = [];
         let globalLinks = [];
+        let currentUser = null; // Menyimpan data user yang login
 
         // ROUTING AWAL
         async function runRouter() {
@@ -302,9 +266,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             const goPath = params.get('go');
 
             if (goPath) {
-                // Tarik data langsung dari server Supabase
+                // Tarik data public tautan tanpa perlu login
                 const { data, error } = await _supabase.from('tautan').select('target').eq('path', goPath.toLowerCase()).single();
-                
                 if (data && data.target) {
                     document.title = `Redirecting - ${goPath}`;
                     document.body.innerHTML = `<iframe src="${data.target}" style="position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>`;
@@ -318,20 +281,15 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 }
                 return;
             }
-
-            initTheme();
-            renderDate();
-            checkAuth();
+            initTheme(); renderDate(); checkAuth();
         }
 
-        // ================= TANGGAL JAWA & THEME =================
+        // TANGGAL & THEME
         function initTheme() {
             if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+                document.documentElement.classList.add('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun';
             } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+                document.documentElement.classList.remove('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-moon';
             }
         }
         function toggleTheme() {
@@ -350,95 +308,111 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             document.getElementById('javanese-date').innerHTML = `<i class="fa-regular fa-calendar-days mr-1.5"></i> ${days[d.getDay()]} ${pasaranArr[pasaranIndex]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
         }
 
-        // ================= SISTEM AUTENTIKASI UI =================
+        // ================= SUPABASE AUTHENTICATION =================
         let authMode = 'login';
-        let registeredUser = JSON.parse(localStorage.getItem('superapp_user')) || null;
 
-        function checkAuth() {
-            if (sessionStorage.getItem('logged_in')) {
+        async function checkAuth() {
+            // Cek session aktif di Supabase
+            const { data: { session }, error } = await _supabase.auth.getSession();
+            
+            if (session) {
+                currentUser = session.user;
                 showDashboard();
             } else {
-                setAuthMode(registeredUser ? 'login' : 'signup');
+                setAuthMode('login');
                 document.getElementById('auth-screen').classList.remove('hidden');
             }
         }
+
         function setAuthMode(mode) {
             authMode = mode;
             document.getElementById('auth-error').classList.add('hidden');
-            document.getElementById('input-email').value = registeredUser ? registeredUser.email : '';
             document.getElementById('input-password').value = '';
+            
             if (mode === 'signup') {
                 document.getElementById('auth-title').innerText = "Daftar Akun Baru";
-                document.getElementById('input-password').classList.add('hidden');
-                document.getElementById('btn-action').innerText = "Kirim Link Verifikasi";
+                document.getElementById('btn-action').innerText = "Daftar Sekarang";
                 document.getElementById('btn-switch').innerText = "Sudah punya akun? Login di sini.";
             } else {
                 document.getElementById('auth-title').innerText = "Login Dashboard";
-                document.getElementById('input-password').classList.remove('hidden');
                 document.getElementById('btn-action').innerText = "Masuk Dashboard";
-                document.getElementById('btn-switch').innerText = "Reset Pendaftaran Akun";
+                document.getElementById('btn-switch').innerText = "Belum punya akun? Daftar sekarang.";
             }
         }
-        document.getElementById('btn-switch').onclick = () => {
-            if(authMode === 'login') {
-                if(confirm("Hapus sesi akun di HP ini?")) { localStorage.removeItem('superapp_user'); registeredUser = null; setAuthMode('signup'); }
-            } else { setAuthMode(registeredUser ? 'login' : 'signup'); }
-        };
-        document.getElementById('btn-action').onclick = () => {
+
+        document.getElementById('btn-switch').onclick = () => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); };
+
+        document.getElementById('btn-action').onclick = async () => {
             const email = document.getElementById('input-email').value;
-            const pass = document.getElementById('input-password').value;
-            if (!email) return;
+            const password = document.getElementById('input-password').value;
+            const errEl = document.getElementById('auth-error');
+            
+            if (!email || !password) { errEl.innerText = "Email dan Password wajib diisi!"; errEl.classList.remove('hidden'); return; }
+            document.getElementById('btn-action').innerText = "Memproses...";
+            errEl.classList.add('hidden');
+
             if (authMode === 'signup') {
-                const randomPass = Math.random().toString(36).slice(-6).toUpperCase();
-                registeredUser = { email: email, pass: randomPass };
-                localStorage.setItem('superapp_user', JSON.stringify(registeredUser));
-                document.getElementById('email-user').innerText = email; document.getElementById('email-pass').innerText = randomPass;
-                document.getElementById('fake-email-modal').classList.remove('hidden'); setAuthMode('login');
+                const { data, error } = await _supabase.auth.signUp({ email, password });
+                if (error) {
+                    errEl.innerText = error.message; errEl.classList.remove('hidden');
+                    document.getElementById('btn-action').innerText = "Daftar Sekarang";
+                } else {
+                    alert("Pendaftaran berhasil! Silakan login.");
+                    setAuthMode('login');
+                }
             } else {
-                if (email === registeredUser.email && pass === registeredUser.pass) { sessionStorage.setItem('logged_in', 'true'); showDashboard(); } 
-                else { document.getElementById('auth-error').classList.remove('hidden'); document.getElementById('auth-error').innerText = "Sandi salah!"; }
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    errEl.innerText = "Login gagal. Cek kembali email & sandi Anda."; errEl.classList.remove('hidden');
+                    document.getElementById('btn-action').innerText = "Masuk Dashboard";
+                } else {
+                    currentUser = data.user;
+                    showDashboard();
+                }
             }
         };
-        function closeFakeEmail() { document.getElementById('fake-email-modal').classList.add('hidden'); }
-        function logout() { if(confirm('Keluar?')) { sessionStorage.removeItem('logged_in'); location.reload(); } }
+
+        async function logout() { 
+            if(confirm('Keluar dari aplikasi?')) { 
+                await _supabase.auth.signOut();
+                location.reload(); 
+            } 
+        }
 
         function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-dashboard').classList.remove('hidden');
             document.getElementById('bottom-nav').classList.remove('hidden');
-            document.getElementById('user-display').innerText = registeredUser.email.split('@')[0];
-            
-            // Tarik Semua Data dari Supabase Saat Dashboard Terbuka
+            document.getElementById('user-display').innerText = currentUser.email.split('@')[0];
             fetchDataSupabase();
         }
 
         function switchView(viewName) {
-            document.getElementById('view-home').classList.add('hidden');
-            document.getElementById('view-laporan').classList.add('hidden');
-            document.getElementById('view-anggaran').classList.add('hidden');
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            
-            const navIds = ['nav-home', 'nav-laporan', 'nav-anggaran'];
-            navIds.forEach(id => {
-                document.getElementById(id).classList.remove('text-emerald-600', 'dark:text-emerald-400');
-                document.getElementById(id).classList.add('text-slate-400');
+            ['home', 'laporan', 'anggaran'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`nav-${v}`).classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                document.getElementById(`nav-${v}`).classList.add('text-slate-400');
             });
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
             document.getElementById(`nav-${viewName}`).classList.remove('text-slate-400');
             document.getElementById(`nav-${viewName}`).classList.add('text-emerald-600', 'dark:text-emerald-400');
         }
 
         // ================= MANAJEMEN DATABASE SUPABASE =================
         async function fetchDataSupabase() {
-            // 1. Ambil Data Keuangan
-            const { data: dataKeuangan, error: errKeuangan } = await _supabase.from('keuangan').select('*').order('waktu', { ascending: false });
+            // Ambil data spesifik milik User yang sedang login
+            const { data: dataKeuangan, error: errKeuangan } = await _supabase.from('keuangan')
+                .select('*')
+                .eq('user_id', currentUser.id) // Filter by User ID
+                .order('waktu', { ascending: false });
             if (!errKeuangan) { globalFinances = dataKeuangan; }
-            renderTransactions();
-            updateLaporanDanAnggaran();
 
-            // 2. Ambil Data Link
-            const { data: dataTautan, error: errTautan } = await _supabase.from('tautan').select('*');
+            const { data: dataTautan, error: errTautan } = await _supabase.from('tautan')
+                .select('*')
+                .eq('user_id', currentUser.id); // Filter by User ID
             if (!errTautan) { globalLinks = dataTautan; }
-            renderLinks();
+
+            renderTransactions(); updateLaporanDanAnggaran(); renderLinks();
         }
 
         function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka); }
@@ -448,7 +422,7 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             let totalMasuk = 0, totalKeluar = 0;
 
             if (globalFinances.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada transaksi bulan ini.</p></div>`;
+                container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada transaksi.</p></div>`;
             } else {
                 container.innerHTML = globalFinances.map(trx => {
                     const isMasuk = trx.jenis === 'masuk';
@@ -476,13 +450,8 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         function setType(type) {
             currentType = type;
             const btnM = document.getElementById('btn-type-masuk'); const btnK = document.getElementById('btn-type-keluar');
-            if(type === 'masuk') {
-                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
-                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400";
-            } else {
-                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400";
-                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400";
-            }
+            if(type === 'masuk') { btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"; btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400"; } 
+            else { btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400"; btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400"; }
         }
         function openTrxForm() { document.getElementById('input-trx-amount').value = ''; document.getElementById('input-trx-desc').value = ''; setType('masuk'); document.getElementById('form-trx-modal').classList.remove('hidden'); }
         function closeTrxForm() { document.getElementById('form-trx-modal').classList.add('hidden'); }
@@ -493,20 +462,20 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             if(!amount || !desc) return alert('Data tidak lengkap!');
             
             document.getElementById('btn-save-trx').innerText = "Menyimpan...";
-            const now = new Date();
-            const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
+            const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
             
-            const { data, error } = await _supabase.from('keuangan').insert([{ jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
+            // Simpan ke Supabase berserta user_id
+            const { data, error } = await _supabase.from('keuangan').insert([{ 
+                user_id: currentUser.id, 
+                jenis: currentType, 
+                nominal: amount, 
+                keterangan: desc, 
+                waktu: dateStr 
+            }]).select();
             
             if(!error && data) {
-                globalFinances.unshift(data[0]); // Tambah ke UI otomatis tanpa refetch semua
-                renderTransactions();
-                updateLaporanDanAnggaran();
-                closeTrxForm();
-                showToast('Transaksi disimpan ke Cloud!');
-            } else {
-                alert("Gagal menyimpan ke Supabase. Pastikan URL/Key benar dan RLS sudah dimatikan.");
-            }
+                globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!');
+            } else { alert("Gagal menyimpan ke Supabase."); console.error(error); }
             document.getElementById('btn-save-trx').innerText = "Simpan";
         }
 
@@ -514,31 +483,23 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             if(confirm("Hapus transaksi?")) {
                 await _supabase.from('keuangan').delete().eq('id', id);
                 globalFinances = globalFinances.filter(t => t.id !== id);
-                renderTransactions();
-                updateLaporanDanAnggaran();
+                renderTransactions(); updateLaporanDanAnggaran();
             }
         }
 
-        // FUNGSI TAUTAN (SUPABASE)
+        // ================= TAUTAN SUPABASE =================
         function renderLinks() {
             const container = document.getElementById('link-container');
-            if (globalLinks.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`;
-                return;
-            }
+            if (globalLinks.length === 0) { container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`; return; }
             container.innerHTML = globalLinks.map(link => `
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">Link</span>
                         <h4 class="font-extrabold text-slate-800 dark:text-white text-sm truncate">${DOMAIN}/?go=${link.path}</h4>
-                        <button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                            Buka <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </button>
+                        <button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">Buka <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></button>
                     </div>
                     <p class="text-[11px] text-slate-400 dark:text-slate-500 mb-3 truncate">${link.target}</p>
-                    <div class="flex gap-2">
-                        <button onclick="deleteLink('${link.id}')" class="flex-1 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-xs hover:text-rose-600"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button>
-                    </div>
+                    <div class="flex gap-2"><button onclick="deleteLink('${link.id}')" class="flex-1 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-xs hover:text-rose-600"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button></div>
                 </div>
             `).join('');
         }
@@ -552,64 +513,48 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             if(!path || !target) return alert('Lengkapi data tautan!');
             
             document.getElementById('btn-save-link').innerText = "Menyimpan...";
-            const { data, error } = await _supabase.from('tautan').insert([{ path: path, target: target }]).select();
+            const { data, error } = await _supabase.from('tautan').insert([{ user_id: currentUser.id, path: path, target: target }]).select();
             
             if(!error && data) {
-                globalLinks.unshift(data[0]);
-                renderLinks();
-                closeLinkForm();
-                showToast('Tautan aktif di Cloud!');
-            } else {
-                alert("Gagal membuat link. Mungkin nama path sudah dipakai.");
-            }
+                globalLinks.unshift(data[0]); renderLinks(); closeLinkForm(); showToast('Tautan aktif di Cloud!');
+            } else { alert("Gagal membuat link. Mungkin nama path sudah dipakai."); console.error(error); }
             document.getElementById('btn-save-link').innerText = "Simpan Link";
         }
 
         async function deleteLink(id) {
             if(confirm('Hapus tautan ini secara permanen?')) {
-                await _supabase.from('tautan').delete().eq('id', id);
-                globalLinks = globalLinks.filter(l => l.id !== id);
-                renderLinks();
+                await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks();
             }
         }
 
-        // ================= LOGIKA ANGGARAN & LAPORAN =================
+        // ================= LAPORAN & ANGGARAN =================
         function updateLaporanDanAnggaran() {
             let masuk = 0, keluar = 0;
             globalFinances.forEach(trx => { if(trx.jenis === 'masuk') masuk += parseFloat(trx.nominal); else keluar += parseFloat(trx.nominal); });
 
-            document.getElementById('lap-masuk').innerText = formatRupiah(masuk);
-            document.getElementById('lap-keluar').innerText = formatRupiah(keluar);
-            
-            let rasio = 0;
-            if (masuk > 0) rasio = Math.round((keluar / masuk) * 100);
-            else if (keluar > 0) rasio = 100;
-            document.getElementById('lap-bar-keluar').style.width = `${Math.min(rasio, 100)}%`;
-            document.getElementById('lap-rasio').innerText = `${rasio}%`;
+            document.getElementById('lap-masuk').innerText = formatRupiah(masuk); document.getElementById('lap-keluar').innerText = formatRupiah(keluar);
+            let rasio = (masuk > 0) ? Math.round((keluar / masuk) * 100) : (keluar > 0 ? 100 : 0);
+            document.getElementById('lap-bar-keluar').style.width = `${Math.min(rasio, 100)}%`; document.getElementById('lap-rasio').innerText = `${rasio}%`;
 
-            let batasAnggaran = parseInt(localStorage.getItem('superapp_budget') || '0');
-            document.getElementById('anggaran-batas').innerText = formatRupiah(batasAnggaran);
-            document.getElementById('anggaran-terpakai').innerText = formatRupiah(keluar);
+            // Note: Data batas anggaran ini masih disimpan di LocalStorage perangkat karena sifatnya hanya pengaturan UI sederhana.
+            let batasAnggaran = parseInt(localStorage.getItem('superapp_budget_uid_' + currentUser.id) || '0');
+            document.getElementById('anggaran-batas').innerText = formatRupiah(batasAnggaran); document.getElementById('anggaran-terpakai').innerText = formatRupiah(keluar);
 
-            let sisa = batasAnggaran - keluar;
-            let pTerpakai = batasAnggaran > 0 ? Math.round((keluar / batasAnggaran) * 100) : 0;
-
-            const sisaEl = document.getElementById('anggaran-sisa');
-            sisaEl.innerText = formatRupiah(sisa);
+            let sisa = batasAnggaran - keluar; let pTerpakai = batasAnggaran > 0 ? Math.round((keluar / batasAnggaran) * 100) : 0;
+            const sisaEl = document.getElementById('anggaran-sisa'); sisaEl.innerText = formatRupiah(sisa);
             if(sisa < 0) { sisaEl.classList.remove('text-emerald-600', 'dark:text-emerald-400'); sisaEl.classList.add('text-rose-600', 'dark:text-rose-400'); } 
             else { sisaEl.classList.add('text-emerald-600', 'dark:text-emerald-400'); sisaEl.classList.remove('text-rose-600', 'dark:text-rose-400'); }
 
-            const bar = document.getElementById('anggaran-bar');
-            bar.style.width = `${Math.min(pTerpakai, 100)}%`;
+            const bar = document.getElementById('anggaran-bar'); bar.style.width = `${Math.min(pTerpakai, 100)}%`;
             if (pTerpakai > 90) bar.className = "h-3 rounded-full transition-all bg-rose-500";
             else if (pTerpakai > 70) bar.className = "h-3 rounded-full transition-all bg-amber-500";
             else bar.className = "h-3 rounded-full transition-all bg-emerald-500";
         }
 
-        function editAnggaran() { document.getElementById('input-anggaran-batas').value = localStorage.getItem('superapp_budget') || ''; document.getElementById('form-anggaran-modal').classList.remove('hidden'); }
+        function editAnggaran() { document.getElementById('input-anggaran-batas').value = localStorage.getItem('superapp_budget_uid_' + currentUser.id) || ''; document.getElementById('form-anggaran-modal').classList.remove('hidden'); }
         function saveAnggaran() {
             const batas = document.getElementById('input-anggaran-batas').value;
-            if(batas) { localStorage.setItem('superapp_budget', batas); document.getElementById('form-anggaran-modal').classList.add('hidden'); updateLaporanDanAnggaran(); showToast('Batas anggaran ditetapkan!'); }
+            if(batas) { localStorage.setItem('superapp_budget_uid_' + currentUser.id, batas); document.getElementById('form-anggaran-modal').classList.add('hidden'); updateLaporanDanAnggaran(); showToast('Batas anggaran ditetapkan!'); }
         }
 
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
