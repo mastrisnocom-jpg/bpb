@@ -1,133 +1,329 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Appscript Dashboard</title>
+    <title>Personal Super App - bpb.my.id</title>
+    <!-- Tailwind CSS with Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        .animate-slide-down { animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen pb-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+
+    <!-- AREA AUTENTIKASI (LOGIN & SIGN UP) -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col items-center justify-center hidden">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700">
+            <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                <i id="auth-icon" class="fa-solid fa-fingerprint"></i>
+            </div>
+            <h2 id="auth-title" class="text-2xl font-extrabold text-slate-800 dark:text-white mb-2">Login App</h2>
+            <p id="auth-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mb-6">Masuk ke Personal Dashboard.</p>
+            
+            <div id="form-container" class="space-y-3">
+                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
+            </div>
+
+            <p id="auth-error" class="text-xs text-rose-500 dark:text-rose-400 font-bold mt-3 hidden">Error message</p>
+            
+            <button id="btn-action" class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-xl hover:bg-emerald-700 active:scale-95 transition shadow-lg shadow-emerald-200 dark:shadow-none mt-5">
+                Masuk
+            </button>
+
+            <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-emerald-500 transition">
+                Belum punya akun? Daftar dengan Email.
+            </button>
+        </div>
+    </div>
+
+    <!-- FAKE EMAIL MODAL -->
+    <div id="fake-email-modal" class="fixed top-4 left-4 right-4 z-[200] hidden">
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 animate-slide-down max-w-sm mx-auto">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2 text-slate-800 dark:text-white font-bold text-sm">
+                    <i class="fa-brands fa-google text-rose-500 text-lg"></i> Kotak Masuk Email
+                </div>
+                <span class="text-[10px] text-slate-400">Baru saja</span>
+            </div>
+            <h4 class="font-bold text-slate-800 dark:text-white text-[15px] mb-1">Verifikasi Akun Baru</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Pendaftaran berhasil! Berikut detail akses Anda:<br><br>
+                User: <strong id="email-user" class="text-emerald-600 dark:text-emerald-400"></strong><br>
+                Password: <strong id="email-pass" class="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded tracking-widest"></strong>
+            </p>
+            <button onclick="closeFakeEmail()" class="mt-4 w-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white font-bold py-2 rounded-xl text-sm hover:bg-slate-200 transition">
+                Tutup & Lanjut Login
+            </button>
+        </div>
+    </div>
 
     <!-- AREA APLIKASI UTAMA (DASHBOARD) -->
     <div id="app-dashboard" class="max-w-md mx-auto px-5 pt-8 hidden">
         
+        <!-- HEADER (Selalu Tampil) -->
         <header class="mb-6">
-            <h1 class="text-[28px] font-extrabold text-slate-800 tracking-tight leading-tight mb-2">Link Appscript</h1>
-            <p class="text-slate-500 text-[15px] leading-relaxed">
-                Gunakan custom domain <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-sm" id="domain-label">domain.com/namaweb</code> untuk Web App Google Script Anda tanpa pusing memikirkan Iframe!
-            </p>
-        </header>
-
-        <!-- KARTU BIRU WAJIB KODE GS -->
-        <section class="bg-[#0d6efd] rounded-3xl p-6 text-white mb-8 shadow-lg shadow-blue-200">
-            <div class="flex items-start justify-between mb-4">
-                <div class="flex gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-xl mt-0.5"></i>
-                    <h3 class="font-bold text-[17px] leading-tight pr-4">Wajib Tambahkan Kode Ini di Code.gs</h3>
+            <div class="flex justify-between items-center mb-5">
+                <div id="javanese-date" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <i class="fa-regular fa-calendar-days mr-1.5"></i> <span>Memuat tanggal...</span>
                 </div>
-                <button onclick="copyCode()" class="bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1.5">
-                    <i class="fa-regular fa-copy"></i> <span id="copy-btn-text">Salin Kode</span>
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center transition active:scale-95">
+                    <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
             </div>
-            <div class="bg-[#0b5ed7] rounded-xl p-4 mb-4 overflow-x-auto">
-                <pre id="gs-code" class="font-mono text-[13px] whitespace-pre-wrap">return HtmlService.createHtmlOutputFromFile('Index')
-  .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);</pre>
+            <h1 class="text-[28px] font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight" id="main-title">DashboardKu</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm" id="main-subtitle">Halo, <span id="user-display" class="font-bold text-emerald-600 dark:text-emerald-400">User</span>!</p>
+        </header>
+
+        <!-- ================= VIEW: HOME ================= -->
+        <div id="view-home">
+            <!-- KARTU DASHBOARD KEUANGAN -->
+            <section class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-[32px] p-6 text-white mb-8 shadow-xl shadow-emerald-200 dark:shadow-none relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+                <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-emerald-900 opacity-20 rounded-full"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="text-emerald-100 text-sm font-medium">Total Saldo Keuangan</p>
+                        <i class="fa-solid fa-wallet text-emerald-200 opacity-50 text-2xl"></i>
+                    </div>
+                    <h2 id="total-saldo" class="text-4xl font-extrabold tracking-tight mb-6">Rp 0</h2>
+                    <div class="flex items-center justify-between bg-emerald-800/40 rounded-2xl p-4 backdrop-blur-sm">
+                        <div>
+                            <p class="text-[11px] text-emerald-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-down text-emerald-400"></i> Pemasukan</p>
+                            <p id="total-masuk" class="font-bold text-sm">Rp 0</p>
+                        </div>
+                        <div class="w-px h-8 bg-emerald-400/30"></div>
+                        <div>
+                            <p class="text-[11px] text-emerald-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up text-rose-400"></i> Pengeluaran</p>
+                            <p id="total-keluar" class="font-bold text-sm">Rp 0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIWAYAT TRANSAKSI -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white"><i class="fa-solid fa-file-invoice-dollar text-emerald-500 mr-2"></i>Riwayat Transaksi</h2>
+                    <button onclick="openTrxForm()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition active:scale-95">
+                        <i class="fa-solid fa-plus text-emerald-500"></i> Catat
+                    </button>
+                </div>
+                <div id="transaction-container" class="space-y-3 max-h-64 overflow-y-auto pr-1"></div>
             </div>
-            <p class="text-sm text-blue-100/90 leading-relaxed">
-                Tanpa kode ini, Google akan memblokir web app Anda untuk ditampilkan di dalam Iframe.
-            </p>
-        </section>
 
-        <!-- DAFTAR TAUTAN HEADER -->
-        <div class="flex items-center justify-between mb-5">
-            <h2 class="text-xl font-bold text-slate-800">Daftar Tautan</h2>
-            <button onclick="openForm()" class="bg-emerald-400 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition">
-                <i class="fa-solid fa-plus"></i> Tambah Baru
-            </button>
+            <div class="w-full h-px bg-slate-200 dark:bg-slate-700 my-8"></div>
+
+            <!-- MANAJEMEN TAUTAN PINTAS -->
+            <div class="mb-10">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 dark:text-white"><i class="fa-solid fa-link text-blue-500 mr-2"></i>Tautan Pintas</h2>
+                        <p class="text-[10px] text-slate-400 mt-0.5"><span id="domain-label">domain.com/?go=nama</span></p>
+                    </div>
+                    <button onclick="openLinkForm()" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition active:scale-95">
+                        <i class="fa-solid fa-plus"></i> Link
+                    </button>
+                </div>
+                <div id="link-container" class="space-y-3 mb-6"></div>
+            </div>
         </div>
 
-        <!-- LIST TAUTAN -->
-        <div id="link-container" class="space-y-4">
-            <!-- Data akan dimuat di sini -->
+        <!-- ================= VIEW: LAPORAN ================= -->
+        <div id="view-laporan" class="hidden mb-10">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
+                <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">Ringkasan Arus Kas</h3>
+                
+                <div class="mb-5">
+                    <div class="flex justify-between items-end mb-2">
+                        <p class="text-xs text-slate-400">Total Pemasukan</p>
+                        <p class="font-bold text-emerald-500" id="lap-masuk">Rp 0</p>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
+                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <div class="flex justify-between items-end mb-2">
+                        <p class="text-xs text-slate-400">Total Pengeluaran</p>
+                        <p class="font-bold text-rose-500" id="lap-keluar">Rp 0</p>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
+                        <div id="lap-bar-keluar" class="bg-rose-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl text-center">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Rasio Pengeluaran</p>
+                    <h4 class="text-2xl font-extrabold text-slate-800 dark:text-white" id="lap-rasio">0%</h4>
+                </div>
+            </div>
         </div>
 
-        <!-- TOMBOL SINKRONISASI GITHUB -->
-        <div class="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-4">
-            <h4 class="font-bold text-amber-800 text-sm mb-2"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Simpan ke Internet (GitHub)</h4>
-            <p class="text-xs text-amber-700 mb-3 leading-relaxed">Karena Anda menggunakan GitHub Pages, daftar di atas baru tersimpan di HP ini. Agar bisa diakses semua orang, unduh data terbarunya dan *Upload* file tersebut ke GitHub Anda.</p>
-            <button onclick="exportData()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-sm transition">
-                Download file data.json
-            </button>
+        <!-- ================= VIEW: ANGGARAN ================= -->
+        <div id="view-anggaran" class="hidden mb-10">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Batas Bulanan</h3>
+                    <button onclick="editAnggaran()" class="text-xs font-bold text-emerald-500 hover:text-emerald-600 transition"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                </div>
+
+                <div class="text-center mb-6">
+                    <p class="text-xs text-slate-400 mb-1">Sisa Anggaran Tersedia</p>
+                    <h2 class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400" id="anggaran-sisa">Rp 0</h2>
+                </div>
+
+                <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 mb-2 overflow-hidden">
+                    <div id="anggaran-bar" class="bg-emerald-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-400 font-medium">
+                    <span>Terpakai: <b id="anggaran-terpakai" class="text-slate-600 dark:text-slate-300">Rp 0</b></span>
+                    <span>Batas: <b id="anggaran-batas" class="text-slate-600 dark:text-slate-300">Rp 0</b></span>
+                </div>
+            </div>
+            
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 text-xs text-amber-700 dark:text-amber-500">
+                <i class="fa-solid fa-lightbulb mr-1"></i> <b>Tips:</b> Tetapkan batas anggaran pengeluaran agar keuangan Anda tetap sehat dan terkontrol.
+            </div>
         </div>
+
     </div>
 
-    <!-- MODAL FORM TAMBAH/EDIT -->
-    <div id="form-modal" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
-            <h3 id="form-title" class="text-xl font-bold text-slate-800 mb-4">Tambah Tautan</h3>
+    <!-- MODAL FORM TRANSAKSI -->
+    <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Nama Path (URL Akhir)</label>
-                    <input type="text" id="input-path" placeholder="contoh: enggal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <div class="flex gap-2">
+                        <button id="btn-type-masuk" onclick="setType('masuk')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">Pemasukan</button>
+                        <button id="btn-type-keluar" onclick="setType('keluar')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">Pengeluaran</button>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Link Google Apps Script</label>
-                    <input type="url" id="input-target" placeholder="https://script.google.com/..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Nominal (Rp)</label>
+                    <input type="number" id="input-trx-amount" placeholder="0" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                 </div>
-                <input type="hidden" id="input-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Keterangan</label>
+                    <input type="text" id="input-trx-desc" placeholder="Gaji / Makan" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                </div>
             </div>
             <div class="flex gap-3 mt-6">
-                <button onclick="closeForm()" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl text-sm hover:bg-slate-200">Batal</button>
-                <button onclick="saveLink()" class="flex-1 bg-[#0d6efd] text-white font-bold py-3 rounded-xl text-sm hover:bg-blue-700 shadow-md">Simpan</button>
+                <button onclick="closeTrxForm()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
+                <button onclick="saveTransaction()" class="flex-[2] bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm">Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM NAV SEPERTI GAMBAR -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] z-40 hidden" id="bottom-nav">
+    <!-- MODAL FORM LINK -->
+    <div id="form-link-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 id="form-link-title" class="text-xl font-bold text-slate-800 dark:text-white mb-4">Tambah Tautan</h3>
+            <div class="space-y-4">
+                <input type="hidden" id="input-link-id">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Path (Akhiran)</label>
+                    <input type="text" id="input-link-path" placeholder="gas" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5">Link Tujuan</label>
+                    <input type="url" id="input-link-target" placeholder="https://..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeLinkForm()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
+                <button onclick="saveLink()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-sm hover:bg-blue-700">Simpan Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SET ANGGARAN -->
+    <div id="form-anggaran-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Set Anggaran Bulanan</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Maksimal Pengeluaran (Rp)</label>
+                    <input type="number" id="input-anggaran-batas" placeholder="Contoh: 3000000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="document.getElementById('form-anggaran-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
+                <button onclick="saveAnggaran()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV KEUANGAN (DIPERBARUI) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] dark:shadow-none z-40 hidden" id="bottom-nav">
         <div class="max-w-md mx-auto flex items-center justify-around px-2">
-            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-border-all text-xl"></i></button>
-            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-chart-pie text-xl"></i></button>
+            <button id="nav-home" onclick="switchView('home')" class="p-3 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-1 transition">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[9px] font-bold">Home</span>
+            </button>
+            <button id="nav-laporan" onclick="switchView('laporan')" class="p-3 text-slate-400 hover:text-emerald-500 flex flex-col items-center gap-1 transition">
+                <i class="fa-solid fa-chart-simple text-lg"></i>
+                <span class="text-[9px] font-bold">Laporan</span>
+            </button>
             <div class="relative -top-5">
-                <button onclick="openForm()" class="w-14 h-14 bg-emerald-400 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-emerald-200 hover:scale-105 transition transform">
+                <button onclick="openTrxForm()" class="w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-emerald-200 dark:shadow-none hover:scale-105 transition active:scale-95">
                     <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
-            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-clock-rotate-left text-xl"></i></button>
-            <button class="p-3"><img src="https://github.com/mastrisnocom-jpg.png" class="w-7 h-7 rounded-full border border-slate-200"></button>
+            <button id="nav-anggaran" onclick="switchView('anggaran')" class="p-3 text-slate-400 hover:text-emerald-500 flex flex-col items-center gap-1 transition">
+                <i class="fa-solid fa-wallet text-lg"></i>
+                <span class="text-[9px] font-bold">Anggaran</span>
+            </button>
+            <button onclick="logout()" class="p-3 text-slate-400 hover:text-rose-500 flex flex-col items-center gap-1" title="Keluar">
+                <i class="fa-solid fa-user text-lg"></i>
+                <span class="text-[9px] font-bold">Keluar</span>
+            </button>
         </div>
     </nav>
 
-    <!-- NOTIFIKASI TOAST -->
-    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm px-5 py-2.5 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-800 dark:bg-slate-700 text-white text-sm px-5 py-2.5 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">
         Pesan
     </div>
 
-    <!-- SCRIPT LOGIKA APLIKASI UTAMA -->
     <script>
         const DOMAIN = window.location.hostname;
-        document.getElementById('domain-label').innerText = `${DOMAIN}/?go=namaweb`;
+        document.getElementById('domain-label').innerText = `${DOMAIN}/?go=nama`;
 
-        // Routing Engine (Untuk Mode Redirect iframe)
+        // ================= ROUTING & PENGALIHAN (REDIRECT) =================
         async function runRouter() {
             const params = new URLSearchParams(window.location.search);
             const goPath = params.get('go');
 
-            // JIKA DIAKSES DENGAN ?go= (MODE REDIRECT LAYAR PENUH)
             if (goPath) {
                 let targetUrl = null;
-
-                // 1. Cek di penyimpanan HP lokal dulu (buat ngetes langsung)
-                const localData = JSON.parse(localStorage.getItem('ikisae_links') || '[]');
+                const localData = JSON.parse(localStorage.getItem('superapp_links') || '[]');
                 const localMatch = localData.find(l => l.path.toLowerCase() === goPath.toLowerCase());
                 if (localMatch) targetUrl = localMatch.target;
 
-                // 2. Jika tidak ada di HP, tarik dari data.json di GitHub (untuk publik)
                 if (!targetUrl) {
                     try {
                         const res = await fetch('data.json');
@@ -136,152 +332,370 @@
                             const remoteMatch = remoteData.find(l => l.path.toLowerCase() === goPath.toLowerCase());
                             if (remoteMatch) targetUrl = remoteMatch.target;
                         }
-                    } catch (e) { console.log('Belum ada data.json'); }
+                    } catch (e) {}
                 }
 
-                // Tampilkan Apps Script full screen
                 if (targetUrl) {
-                    document.title = `Apps - ${goPath}`;
+                    document.title = `Aplikasi - ${goPath}`;
                     document.body.innerHTML = `<iframe src="${targetUrl}" style="position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>`;
                 } else {
-                    document.body.innerHTML = `<div style="text-align:center; padding-top:100px; font-family:sans-serif;">
-                        <h1 style="font-size:40px; color:#cbd5e1; margin-bottom:10px;">404</h1>
-                        <h2 style="color:#334155;">Tautan Belum Tersedia</h2>
-                        <p style="color:#64748b;">Path "${goPath}" tidak ditemukan di server.</p>
-                        <a href="index.html" style="display:inline-block; margin-top:20px; padding:10px 20px; background:#0d6efd; color:#fff; text-decoration:none; border-radius:10px;">Buka Dashboard</a>
+                    document.documentElement.classList.remove('dark');
+                    document.body.innerHTML = `<div style="text-align:center; padding-top:100px; font-family:'Plus Jakarta Sans', sans-serif;">
+                        <h1 style="font-size:50px; color:#94a3b8; font-weight:bold; margin-bottom:10px;">404</h1>
+                        <h2 style="color:#334155; font-weight:bold; font-size:20px;">Tautan Belum Tersedia</h2>
+                        <a href="index.html" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#059669; color:#fff; text-decoration:none; border-radius:12px; font-weight:bold;">Buka Dashboard</a>
                     </div>`;
                 }
                 return;
             }
 
-            // JIKA DIAKSES TANPA ?go= (TAMPILKAN DASHBOARD)
+            initTheme();
+            renderDate();
+            checkAuth();
+        }
+
+        // ================= TANGGAL JAWA & THEME =================
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+            }
+        }
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            }
+        }
+        function renderDate() {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const pasaranArr = ['Wage', 'Kliwon', 'Legi', 'Pahing', 'Pon'];
+            const d = new Date();
+            const utcDays = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+            const pasaranIndex = ((utcDays % 5) + 5) % 5; 
+            document.getElementById('javanese-date').innerHTML = `<i class="fa-regular fa-calendar-days mr-1.5"></i> ${days[d.getDay()]} ${pasaranArr[pasaranIndex]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        // ================= SISTEM AUTENTIKASI EMAIL =================
+        let authMode = 'login';
+        let registeredUser = JSON.parse(localStorage.getItem('superapp_user')) || null;
+
+        function checkAuth() {
+            if (sessionStorage.getItem('logged_in')) {
+                showDashboard();
+            } else {
+                setAuthMode(registeredUser ? 'login' : 'signup');
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode;
+            document.getElementById('auth-error').classList.add('hidden');
+            const title = document.getElementById('auth-title');
+            const sub = document.getElementById('auth-subtitle');
+            const btnAction = document.getElementById('btn-action');
+            const btnSwitch = document.getElementById('btn-switch');
+            const inputPass = document.getElementById('input-password');
+            const inputEmail = document.getElementById('input-email');
+
+            inputEmail.value = registeredUser ? registeredUser.email : '';
+            inputPass.value = '';
+
+            if (mode === 'signup') {
+                title.innerText = "Daftar Akun Baru";
+                sub.innerText = "Masukkan email untuk verifikasi.";
+                inputPass.classList.add('hidden');
+                btnAction.innerText = "Kirim Link Verifikasi";
+                btnSwitch.innerText = "Sudah punya akun? Login di sini.";
+            } else {
+                title.innerText = "Login Dashboard";
+                sub.innerText = "Masukkan email dan sandi Anda.";
+                inputPass.classList.remove('hidden');
+                btnAction.innerText = "Masuk Dashboard";
+                btnSwitch.innerText = "Reset Pendaftaran Akun";
+            }
+        }
+
+        document.getElementById('btn-switch').onclick = () => {
+            if(authMode === 'login') {
+                if(confirm("Tindakan ini akan menghapus akun di perangkat. Lanjutkan?")) {
+                    localStorage.removeItem('superapp_user');
+                    localStorage.removeItem('superapp_finances');
+                    localStorage.removeItem('superapp_links');
+                    localStorage.removeItem('superapp_budget');
+                    registeredUser = null;
+                    setAuthMode('signup');
+                }
+            } else {
+                setAuthMode(registeredUser ? 'login' : 'signup');
+            }
+        };
+
+        document.getElementById('btn-action').onclick = () => {
+            const email = document.getElementById('input-email').value;
+            const pass = document.getElementById('input-password').value;
+            const err = document.getElementById('auth-error');
+
+            if (!email) { err.innerText = "Email wajib diisi!"; err.classList.remove('hidden'); return; }
+
+            if (authMode === 'signup') {
+                const randomPass = Math.random().toString(36).slice(-6).toUpperCase();
+                registeredUser = { email: email, pass: randomPass };
+                localStorage.setItem('superapp_user', JSON.stringify(registeredUser));
+                
+                document.getElementById('email-user').innerText = email;
+                document.getElementById('email-pass').innerText = randomPass;
+                document.getElementById('fake-email-modal').classList.remove('hidden');
+                setAuthMode('login');
+            } else {
+                if (email === registeredUser.email && pass === registeredUser.pass) {
+                    sessionStorage.setItem('logged_in', 'true');
+                    showDashboard();
+                } else {
+                    err.innerText = "Email atau sandi salah!";
+                    err.classList.remove('hidden');
+                }
+            }
+        };
+
+        function closeFakeEmail() { document.getElementById('fake-email-modal').classList.add('hidden'); }
+
+        function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-dashboard').classList.remove('hidden');
             document.getElementById('bottom-nav').classList.remove('hidden');
-            renderData();
-        }
-
-        // ================= FITUR DASHBOARD (LOCAL STORAGE) ================= //
-        
-        function getLinks() {
-            return JSON.parse(localStorage.getItem('ikisae_links') || '[]');
-        }
-
-        function saveToLocal(data) {
-            localStorage.setItem('ikisae_links', JSON.stringify(data));
-            renderData();
-        }
-
-        function renderData() {
-            const data = getLinks();
-            const container = document.getElementById('link-container');
+            document.getElementById('user-display').innerText = registeredUser.email.split('@')[0];
             
+            // Render Data Awal
+            renderTransactions();
+            renderLinks();
+            updateLaporanDanAnggaran();
+        }
+
+        function logout() {
+            if(confirm('Yakin ingin keluar dari Dashboard?')) {
+                sessionStorage.removeItem('logged_in');
+                location.reload();
+            }
+        }
+
+        // ================= SISTEM NAVIGASI BAWAH (TABS) =================
+        function switchView(viewName) {
+            // Sembunyikan semua view
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-laporan').classList.add('hidden');
+            document.getElementById('view-anggaran').classList.add('hidden');
+            
+            // Tampilkan yang dipilih
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            
+            // Reset warna tombol nav
+            const navIds = ['nav-home', 'nav-laporan', 'nav-anggaran'];
+            navIds.forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                el.classList.add('text-slate-400');
+            });
+            
+            // Warnai tombol aktif
+            const activeNav = document.getElementById(`nav-${viewName}`);
+            activeNav.classList.remove('text-slate-400');
+            activeNav.classList.add('text-emerald-600', 'dark:text-emerald-400');
+
+            // Ubah Judul Atas
+            const title = document.getElementById('main-title');
+            const sub = document.getElementById('main-subtitle');
+            if (viewName === 'home') { title.innerText = "DashboardKu"; sub.innerHTML = `Halo, <span class="font-bold text-emerald-600 dark:text-emerald-400">${registeredUser.email.split('@')[0]}</span>!`; }
+            if (viewName === 'laporan') { title.innerText = "Laporan"; sub.innerText = "Analisis arus kas Anda."; }
+            if (viewName === 'anggaran') { title.innerText = "Anggaran"; sub.innerText = "Kontrol batas pengeluaran Anda."; }
+
+            // Update perhitungan jika masuk ke laporan/anggaran
+            updateLaporanDanAnggaran();
+        }
+
+        // ================= FUNGSI KEUANGAN (HOME, LAPORAN, ANGGARAN) =================
+        let currentType = 'masuk';
+        function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka); }
+        function getTransactions() { return JSON.parse(localStorage.getItem('superapp_finances') || '[]'); }
+        function saveTransactions(data) { localStorage.setItem('superapp_finances', JSON.stringify(data)); renderTransactions(); updateLaporanDanAnggaran(); }
+
+        function renderTransactions() {
+            const data = getTransactions();
+            const container = document.getElementById('transaction-container');
+            let totalMasuk = 0, totalKeluar = 0;
+
             if (data.length === 0) {
-                container.innerHTML = `<div class="text-center py-10 bg-white rounded-3xl border border-slate-100 shadow-sm"><p class="text-slate-400 text-sm">Belum ada tautan. Klik + Tambah Baru.</p></div>`;
-                return;
+                container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada transaksi.</p></div>`;
+            } else {
+                container.innerHTML = data.map(trx => {
+                    const isMasuk = trx.type === 'masuk';
+                    if (isMasuk) totalMasuk += parseInt(trx.amount); else totalKeluar += parseInt(trx.amount);
+                    const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-emerald-500 bg-emerald-50 dark:bg-emerald-900/40 p-2.5 rounded-xl"></i>' : '<i class="fa-solid fa-arrow-up text-rose-500 bg-rose-50 dark:bg-rose-900/40 p-2.5 rounded-xl"></i>';
+                    const amountColor = isMasuk ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white';
+                    return `
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            ${icon}
+                            <div>
+                                <h4 class="font-bold text-slate-800 dark:text-white text-xs">${trx.desc}</h4>
+                                <p class="text-[9px] text-slate-400 dark:text-slate-500">${trx.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right flex items-center gap-3">
+                            <span class="font-extrabold text-sm ${amountColor}">${isMasuk?'+':'-'}${formatRupiah(trx.amount).replace('Rp', '')}</span>
+                            <button onclick="deleteTrx('${trx.id}')" class="text-slate-300 hover:text-rose-500 transition"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            document.getElementById('total-masuk').innerText = formatRupiah(totalMasuk);
+            document.getElementById('total-keluar').innerText = formatRupiah(totalKeluar);
+            document.getElementById('total-saldo').innerText = formatRupiah(totalMasuk - totalKeluar);
+        }
+
+        function updateLaporanDanAnggaran() {
+            const data = getTransactions();
+            let masuk = 0, keluar = 0;
+            data.forEach(trx => {
+                if(trx.type === 'masuk') masuk += parseInt(trx.amount);
+                else keluar += parseInt(trx.amount);
+            });
+
+            // Update Laporan View
+            document.getElementById('lap-masuk').innerText = formatRupiah(masuk);
+            document.getElementById('lap-keluar').innerText = formatRupiah(keluar);
+            
+            let rasio = 0;
+            if (masuk > 0) rasio = Math.round((keluar / masuk) * 100);
+            else if (keluar > 0) rasio = 100;
+
+            document.getElementById('lap-bar-keluar').style.width = `${Math.min(rasio, 100)}%`;
+            
+            const rasioEl = document.getElementById('lap-rasio');
+            rasioEl.innerText = `${rasio}%`;
+            rasioEl.className = `text-2xl font-extrabold ${rasio > 80 ? 'text-rose-500' : 'text-emerald-500'}`;
+
+            // Update Anggaran View
+            let batasAnggaran = parseInt(localStorage.getItem('superapp_budget') || '0');
+            document.getElementById('anggaran-batas').innerText = formatRupiah(batasAnggaran);
+            document.getElementById('anggaran-terpakai').innerText = formatRupiah(keluar);
+
+            let sisa = batasAnggaran - keluar;
+            let percentTerpakai = 0;
+            if(batasAnggaran > 0) percentTerpakai = Math.round((keluar / batasAnggaran) * 100);
+
+            const sisaEl = document.getElementById('anggaran-sisa');
+            sisaEl.innerText = formatRupiah(sisa);
+            if(sisa < 0) {
+                sisaEl.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                sisaEl.classList.add('text-rose-600', 'dark:text-rose-400');
+            } else {
+                sisaEl.classList.remove('text-rose-600', 'dark:text-rose-400');
+                sisaEl.classList.add('text-emerald-600', 'dark:text-emerald-400');
             }
 
+            const barAnggaran = document.getElementById('anggaran-bar');
+            barAnggaran.style.width = `${Math.min(percentTerpakai, 100)}%`;
+            if (percentTerpakai > 90) barAnggaran.className = "h-3 rounded-full transition-all bg-rose-500";
+            else if (percentTerpakai > 70) barAnggaran.className = "h-3 rounded-full transition-all bg-amber-500";
+            else barAnggaran.className = "h-3 rounded-full transition-all bg-emerald-500";
+        }
+
+        // Form Anggaran
+        function editAnggaran() { document.getElementById('input-anggaran-batas').value = localStorage.getItem('superapp_budget') || ''; document.getElementById('form-anggaran-modal').classList.remove('hidden'); }
+        function saveAnggaran() {
+            const batas = document.getElementById('input-anggaran-batas').value;
+            if(!batas) return;
+            localStorage.setItem('superapp_budget', batas);
+            document.getElementById('form-anggaran-modal').classList.add('hidden');
+            updateLaporanDanAnggaran();
+            showToast('Anggaran diperbarui!');
+        }
+
+        // Form Transaksi
+        function setType(type) {
+            currentType = type;
+            const btnM = document.getElementById('btn-type-masuk'); const btnK = document.getElementById('btn-type-keluar');
+            if(type === 'masuk') {
+                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400";
+                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400";
+            } else {
+                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400";
+                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400";
+            }
+        }
+        function openTrxForm() { document.getElementById('input-trx-amount').value = ''; document.getElementById('input-trx-desc').value = ''; setType('masuk'); document.getElementById('form-trx-modal').classList.remove('hidden'); }
+        function closeTrxForm() { document.getElementById('form-trx-modal').classList.add('hidden'); }
+        function saveTransaction() {
+            const amount = document.getElementById('input-trx-amount').value;
+            const desc = document.getElementById('input-trx-desc').value;
+            if(!amount || !desc) return alert('Data tidak lengkap!');
+            const now = new Date();
+            const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
+            const data = getTransactions();
+            data.unshift({ id: Date.now().toString(), type: currentType, amount: amount, desc: desc, date: dateStr });
+            saveTransactions(data); closeTrxForm(); showToast('Transaksi dicatat!');
+        }
+        function deleteTrx(id) { if(confirm("Hapus transaksi?")) saveTransactions(getTransactions().filter(t => t.id !== id)); }
+
+
+        // ================= FUNGSI TAUTAN PINTAS =================
+        function getLinks() { return JSON.parse(localStorage.getItem('superapp_links') || '[]'); }
+        function saveLinks(data) { localStorage.setItem('superapp_links', JSON.stringify(data)); renderLinks(); }
+
+        function renderLinks() {
+            const data = getLinks();
+            const container = document.getElementById('link-container');
+            if (data.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan yang didaftarkan.</p></div>`;
+                return;
+            }
             container.innerHTML = data.map(link => `
-                <div class="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100 relative">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-700">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-emerald-100 text-emerald-600 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">Aktif</span>
-                        <h4 class="font-extrabold text-slate-800 text-[15px] flex items-center gap-1.5">
-                            ${DOMAIN}/?go=${link.path}
-                            <button onclick="copyLink('${DOMAIN}/?go=${link.path}')" class="text-slate-400 hover:text-blue-500"><i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i></button>
-                        </h4>
+                        <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">Link</span>
+                        <h4 class="font-extrabold text-slate-800 dark:text-white text-sm truncate">${DOMAIN}/?go=${link.path}</h4>
+                        <button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+                            Buka <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </button>
                     </div>
-                    <p class="text-[13px] text-slate-400 mb-4 truncate pr-4">${link.target}</p>
+                    <p class="text-[11px] text-slate-400 dark:text-slate-500 mb-3 truncate">${link.target}</p>
                     <div class="flex gap-2">
-                        <button onclick="editForm('${link.id}')" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-blue-500 flex items-center justify-center transition"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteLink('${link.id}')" class="w-10 h-10 rounded-xl bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition"><i class="fa-regular fa-trash-can"></i></button>
+                        <button onclick="editLinkForm('${link.id}')" class="flex-1 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-bold text-xs hover:text-blue-500 transition"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                        <button onclick="deleteLink('${link.id}')" class="flex-1 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-xs hover:text-rose-600 transition"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function openForm() {
-            document.getElementById('input-id').value = '';
-            document.getElementById('input-path').value = '';
-            document.getElementById('input-target').value = '';
-            document.getElementById('form-title').innerText = 'Tambah Tautan';
-            document.getElementById('form-modal').classList.remove('hidden');
-        }
-
-        function editForm(id) {
-            const data = getLinks().find(l => l.id === id);
-            if(data) {
-                document.getElementById('input-id').value = data.id;
-                document.getElementById('input-path').value = data.path;
-                document.getElementById('input-target').value = data.target;
-                document.getElementById('form-title').innerText = 'Edit Tautan';
-                document.getElementById('form-modal').classList.remove('hidden');
-            }
-        }
-
-        function closeForm() {
-            document.getElementById('form-modal').classList.add('hidden');
-        }
-
+        function openLinkForm() { document.getElementById('input-link-id').value = ''; document.getElementById('input-link-path').value = ''; document.getElementById('input-link-target').value = ''; document.getElementById('form-link-title').innerText = 'Tambah Tautan'; document.getElementById('form-link-modal').classList.remove('hidden'); }
+        function editLinkForm(id) { const data = getLinks().find(l => l.id === id); if(data) { document.getElementById('input-link-id').value = data.id; document.getElementById('input-link-path').value = data.path; document.getElementById('input-link-target').value = data.target; document.getElementById('form-link-title').innerText = 'Edit Tautan'; document.getElementById('form-link-modal').classList.remove('hidden'); } }
+        function closeLinkForm() { document.getElementById('form-link-modal').classList.add('hidden'); }
+        
         function saveLink() {
-            const id = document.getElementById('input-id').value;
-            let path = document.getElementById('input-path').value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
-            const target = document.getElementById('input-target').value;
-
-            if(!path || !target) return alert('Path dan URL Tujuan wajib diisi!');
-
+            const id = document.getElementById('input-link-id').value;
+            let path = document.getElementById('input-link-path').value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+            const target = document.getElementById('input-link-target').value;
+            if(!path || !target) return alert('Lengkapi data tautan!');
             let links = getLinks();
-            if (id) {
-                links = links.map(l => l.id === id ? {id, path, target} : l);
-                showToast('Tautan diperbarui');
-            } else {
-                if(links.find(l => l.path === path)) return alert('Nama path sudah ada!');
-                links.unshift({ id: Date.now().toString(), path, target });
-                showToast('Tautan ditambahkan');
-            }
-            
-            saveToLocal(links);
-            closeForm();
+            if (id) { links = links.map(l => l.id === id ? {id, path, target} : l); }
+            else { if(links.find(l => l.path === path)) return alert('Nama path bentrok!'); links.unshift({ id: Date.now().toString(), path, target }); }
+            saveLinks(links); closeLinkForm(); showToast('Tautan disimpan!');
         }
+        function deleteLink(id) { if(confirm('Hapus tautan ini?')) saveLinks(getLinks().filter(l => l.id !== id)); showToast('Tautan dihapus!'); }
 
-        function deleteLink(id) {
-            if(confirm('Hapus tautan ini?')) {
-                const links = getLinks().filter(l => l.id !== id);
-                saveToLocal(links);
-                showToast('Tautan dihapus');
-            }
-        }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
-        // ================= UTILITIES ================= //
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.remove('opacity-0');
-            setTimeout(() => t.classList.add('opacity-0'), 2500);
-        }
-
-        function copyCode() {
-            navigator.clipboard.writeText(document.getElementById('gs-code').innerText);
-            document.getElementById('copy-btn-text').innerText = 'Tersalin!';
-            setTimeout(() => document.getElementById('copy-btn-text').innerText = 'Salin Kode', 2000);
-        }
-
-        function copyLink(url) {
-            navigator.clipboard.writeText("https://" + url);
-            showToast("Tautan disalin ke clipboard!");
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getLinks(), null, 2));
-            const a = document.createElement('a');
-            a.href = dataStr;
-            a.download = "data.json";
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            alert("File data.json berhasil diunduh!\n\nLangkah selanjutnya:\nBuka GitHub Anda, lalu upload file data.json ini ke repositori 'bpb' agar linknya aktif di internet.");
-        }
-
-        // Mulai aplikasi
         runRouter();
     </script>
 </body>
