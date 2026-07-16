@@ -1,11 +1,12 @@
-{
-  "users": [
-    {"id": 1, "name": "Adnan", "role": "Admin"},
-    {"id": 2, "name": "Budi", "role": "Teknisi"}
-  ],
-  "settings": {
-    "maintenance_mode": false,
-    "version": "1.0.0"
+[
+  {
+    "id": "1",
+    "path": "gas",
+    "target": "https://script.google.com/macros/s/PASTE_LINK_DEPLOMENT_APPSCRIPT_ANDA_DISINI/exec"
+  },
+  {
+    "id": "2",
+    "path": "enggal",
+    "target": "https://script.google.com/macros/s/PASTE_LINK_LAINNYA/exec"
   }
-}
-
+]
