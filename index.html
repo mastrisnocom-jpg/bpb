@@ -1,1 +1,440 @@
-tes    
+html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Link Appscript - bpb.my.id</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+
+    <!-- CONTAINER UTAMA (Mobile Responsive Centered) -->
+    <div class="max-w-md mx-auto px-4 pt-6">
+        
+        <!-- HEADER -->
+        <header class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-blue-600 text-2xl font-bold"><i class="fa-solid fa-square-rss"></i></span>
+                    <span class="text-slate-800 font-bold text-lg">bpb.my.id</span>
+                </div>
+                <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full font-medium">
+                    <i class="fa-solid fa-server mr-1"></i> Mode GitHub Pages
+                </div>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Link Appscript</h1>
+            <p class="text-slate-500 text-sm mt-1 leading-relaxed">
+                Gunakan custom domain <span class="font-semibold text-blue-600" id="current-domain-placeholder">bpb.my.id/namaweb</span> untuk Web App Google Script Anda tanpa pusing memikirkan Iframe!
+            </p>
+        </header>
+
+        <!-- KARTU CODESPACE (Wajib Tambahkan Kode GS) -->
+        <section class="bg-blue-600 rounded-3xl p-5 text-white shadow-xl shadow-blue-100 mb-6 relative overflow-hidden">
+            <!-- Background Shape hiasan -->
+            <div class="absolute -right-10 -top-10 w-32 height-32 bg-blue-500 opacity-30 rounded-full"></div>
+            
+            <div class="flex items-start gap-3 relative z-10 mb-4">
+                <div class="text-yellow-300 text-xl mt-0.5">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base leading-tight">Wajib Tambahkan Kode Ini di Code.gs</h3>
+                </div>
+            </div>
+
+            <!-- Kode Blok -->
+            <div class="bg-blue-800 bg-opacity-50 rounded-xl p-3 mb-4 font-mono text-xs overflow-x-auto text-blue-100 select-all relative group border border-blue-500">
+                <pre id="code-snippet">return HtmlService.createHtmlOutputFromFile('Index')
+.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);</pre>
+            </div>
+
+            <button onclick="copyCode()" class="w-full py-3 bg-white text-blue-600 font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md hover:bg-slate-50 transition active:scale-95">
+                <i class="fa-solid fa-copy"></i> <span id="copy-text">Salin Kode</span>
+            </button>
+
+            <p class="text-[11px] text-blue-100 opacity-90 mt-4 leading-relaxed text-center">
+                Tanpa kode ini, Google akan memblokir web app Anda untuk ditampilkan di dalam iframe bpb.my.id.
+            </p>
+        </section>
+
+        <!-- DAFTAR TAUTAN -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-800">Daftar Tautan</h2>
+                <button onclick="openModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-plus text-blue-600"></i> Tambah Baru
+                </button>
+            </div>
+
+            <!-- List Loader / Empty State -->
+            <div id="empty-state" class="hidden text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200 px-6">
+                <div class="text-slate-300 text-4xl mb-3"><i class="fa-regular fa-folder-open"></i></div>
+                <h4 class="text-slate-700 font-bold text-sm">Belum Ada Tautan</h4>
+                <p class="text-slate-400 text-xs mt-1">Buat pintasan custom domain pertama Anda dengan klik tombol Tambah Baru di atas.</p>
+            </div>
+
+            <!-- Tautan Container -->
+            <div id="link-list" class="space-y-4">
+                <!-- Data akan dirender secara dinamis melalui JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- MODAL POPUP (Tambah/Edit Tautan) -->
+    <div id="link-modal" class="fixed inset-0 bg-black/50 z-50 flex items-end justify-center hidden transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md rounded-t-[32px] p-6 pb-8 transition-transform duration-300 translate-y-full shadow-2xl">
+            <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-5"></div>
+            
+            <h3 id="modal-title" class="text-lg font-bold text-slate-800 mb-4">Tambah Tautan Baru</h3>
+            
+            <form id="link-form" onsubmit="saveLink(event)">
+                <input type="hidden" id="edit-id">
+                
+                <div class="mb-4">
+                    <label class="block text-slate-700 text-xs font-bold mb-1.5">Nama Path (Sub-URL)</label>
+                    <div class="flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-3 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition">
+                        <span class="text-slate-400 text-sm font-medium mr-1" id="input-domain-prefix">bpb.my.id/</span>
+                        <input type="text" id="link-path" required placeholder="contoh: gas" class="w-full bg-transparent py-3 text-sm text-slate-800 font-semibold focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-slate-700 text-xs font-bold mb-1.5">URL Google Apps Script Web App</label>
+                    <div class="flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-3 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition">
+                        <input type="url" id="link-target" required placeholder="https://script.google.com/macros/s/..." class="w-full bg-transparent py-3 text-sm text-slate-800 focus:outline-none">
+                    </div>
+                    <span class="text-[10px] text-slate-400 mt-1 block px-1">Pastikan link Anda diawali dengan `https://`</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded-2xl transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-2xl shadow-lg shadow-blue-100 transition">
+                        Simpan Tautan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PERSYARATAN CARA INTEGRASI GITHUB -->
+    <section class="max-w-md mx-auto px-4 mb-10">
+        <div class="bg-slate-100 rounded-2xl p-4 text-xs text-slate-600 leading-relaxed">
+            <h4 class="font-bold text-slate-700 mb-1.5"><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> Cara Kerja Integrasi di GitHub:</h4>
+            <ol class="list-decimal pl-4 space-y-1">
+                <li>Agar database ini aktif di server, klik tombol <span class="font-bold">"Ekspor data.json"</span> di bawah ini.</li>
+                <li>Simpan file <span class="font-bold text-blue-600">data.json</span> ke dalam repositori GitHub <span class="font-bold">"bpb"</span> Anda.</li>
+                <li>Gunakan file ini sebagai <span class="font-bold text-green-600">index.html</span> utama di repositori tersebut.</li>
+            </ol>
+            <div class="mt-3 flex gap-2">
+                <button onclick="exportJson()" class="bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                    <i class="fa-solid fa-download"></i> Ekspor data.json
+                </button>
+                <button onclick="downloadFolders()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+                    <i class="fa-solid fa-folder-closed"></i> Info Metode Folder
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM NAVIGATION (Melayang Presisi sesuai 584854.jpg) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-3 shadow-2xl z-40">
+        <div class="max-w-md mx-auto flex items-center justify-around px-4 relative">
+            
+            <a href="#" class="flex flex-col items-center text-blue-600">
+                <span class="text-xl"><i class="fa-solid fa-grip-vertical"></i></span>
+                <span class="text-[10px] font-semibold mt-0.5">Beranda</span>
+            </a>
+
+            <a href="https://github.com/mastrisnocom-jpg/bpb" target="_blank" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <span class="text-xl"><i class="fa-solid fa-chart-simple"></i></span>
+                <span class="text-[10px] font-medium mt-0.5">Statistik</span>
+            </a>
+
+            <!-- Floating Action Button + -->
+            <div class="relative -top-7">
+                <button onclick="openModal()" class="w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transition-all active:scale-95">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <a href="#" onclick="alert('Daftar riwayat deployment otomatis aktif lewat GitHub Actions Anda.')" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <span class="text-xl"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                <span class="text-[10px] font-medium mt-0.5">Riwayat</span>
+            </a>
+
+            <a href="https://github.com/mastrisnocom-jpg" target="_blank" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <!-- Avatar Profil user -->
+                <div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden border border-slate-300">
+                    <img src="https://github.com/mastrisnocom-jpg.png" alt="Profile" class="w-full h-full object-cover">
+                </div>
+                <span class="text-[10px] font-medium mt-0.5">Profil</span>
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 hidden transition-all">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-message">Tersalin!</span>
+    </div>
+
+    <!-- JAVASCRIPT ENGINE (LOGIC & REDIRECT) -->
+    <script>
+        // Mendeteksi otomatis nama domain Anda saat berjalan di server
+        const currentDomain = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'bpb.my.id' 
+            : window.location.hostname;
+
+        document.getElementById('current-domain-placeholder').innerText = `${currentDomain}/namaweb`;
+        document.getElementById('input-domain-prefix').innerText = `${currentDomain}/`;
+
+        // ------------------ DYNAMIC ROUTING ENGINE ------------------
+        // Sistem pengalihan otomatis agar bisa diakses langsung via bpb.my.id/?go=gas
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectPath = urlParams.get('go') || urlParams.get('path');
+
+        // Mengambil daftar link dari LocalStorage (untuk simulasi client-side cepat)
+        let savedLinks = JSON.parse(localStorage.getItem('apps_script_links')) || [
+            {
+                id: "1",
+                path: "gas",
+                target: "https://script.google.com/macros/s/AKfycbxGduQ..."
+            }
+        ];
+
+        // LOGIC JIKA PENGUNJUNG INGIN MELAKUKAN REDIRECT
+        if (redirectPath) {
+            const foundLink = savedLinks.find(item => item.path.toLowerCase() === redirectPath.toLowerCase());
+            if (foundLink) {
+                // Bersihkan body halaman & buat iframe pembungkus visual penuh
+                document.body.innerHTML = `
+                    <div style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background-color:#fff;">
+                        <iframe src="${foundLink.target}" style="width:100%; height:100%; border:none; display:block;" allow="geolocation; microphone; camera"></iframe>
+                    </div>
+                `;
+                document.title = `Aplikasi ${foundLink.path.toUpperCase()}`;
+                window.stop(); // menghentikan loading script dashboard utama
+            } else {
+                // Tampilkan pesan 404 khusus jika link tidak terdaftar
+                document.body.innerHTML = `
+                    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center px-6">
+                        <div class="text-slate-300 text-7xl mb-4"><i class="fa-solid fa-link-slash"></i></div>
+                        <h1 class="text-2xl font-bold text-slate-800">Tautan Tidak Ditemukan</h1>
+                        <p class="text-slate-500 text-sm mt-1 max-w-sm">Jalur pintasan "${redirectPath}" belum didaftarkan di dashboard GitHub Pages bpb.my.id.</p>
+                        <a href="index.html" class="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition">Masuk ke Dashboard</a>
+                    </div>
+                `;
+                document.title = "Link Tidak Aktif - 404";
+            }
+        }
+
+        // ------------------ MANAJEMEN DASHBOARD ADMIN ------------------
+
+        // Render data ke layar
+        function renderLinks() {
+            const container = document.getElementById('link-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (savedLinks.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = savedLinks.map(link => `
+                <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative group hover:shadow-md transition">
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="bg-emerald-100 text-emerald-600 font-extrabold text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 uppercase">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Aktif
+                            </span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-800 text-base flex items-center gap-1.5">
+                            ${currentDomain}/?go=${link.path}
+                            <button onclick="copyToClipboard('${currentDomain}/?go=${link.path}')" class="text-slate-400 hover:text-blue-500 text-xs transition">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </h4>
+                        <p class="text-xs text-slate-400 mt-1 truncate max-w-[320px]">
+                            <i class="fa-brands fa-google text-slate-300 mr-1"></i> ${link.target}
+                        </p>
+                    </div>
+                    
+                    <div class="flex items-center gap-2.5 pt-3 border-t border-slate-50">
+                        <button onclick="editLink('${link.id}')" class="p-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition text-xs flex items-center justify-center gap-1 flex-1 font-bold">
+                            <i class="fa-regular fa-pen-to-square text-blue-500"></i> Edit
+                        </button>
+                        <button onclick="deleteLink('${link.id}')" class="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition text-xs flex items-center justify-center gap-1 font-bold">
+                            <i class="fa-regular fa-trash-can"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Salin snippet code block
+        function copyCode() {
+            const pre = document.getElementById('code-snippet');
+            navigator.clipboard.writeText(pre.innerText);
+            
+            const btnText = document.getElementById('copy-text');
+            btnText.innerText = "Tersalin!";
+            showToast("Kode Apps Script berhasil disalin!");
+            
+            setTimeout(() => {
+                btnText.innerText = "Salin Kode";
+            }, 2000);
+        }
+
+        // Copy Link Custom target ke clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText('https://' + text);
+            showToast("Tautan custom domain disalin!");
+        }
+
+        // Toast Handler
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Modal Handler
+        function openModal() {
+            document.getElementById('modal-title').innerText = "Tambah Tautan Baru";
+            document.getElementById('link-form').reset();
+            document.getElementById('edit-id').value = '';
+            
+            const modal = document.getElementById('link-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.firstElementChild.classList.remove('translate-y-full');
+            }, 50);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('link-modal');
+            modal.firstElementChild.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Simpan / Update Link
+        function saveLink(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const path = document.getElementById('link-path').value.replace(/[^a-zA-Z0-0-_]/g, '').toLowerCase();
+            const target = document.getElementById('link-target').value;
+
+            if (id) {
+                // Mode Edit
+                savedLinks = savedLinks.map(link => link.id === id ? { id, path, target } : link);
+                showToast("Tautan sukses diperbarui!");
+            } else {
+                // Mode Tambah Baru
+                const duplicate = savedLinks.some(link => link.path === path);
+                if (duplicate) {
+                    alert("Nama path '" + path + "' sudah digunakan. Pilih nama path lain.");
+                    return;
+                }
+                const newLink = {
+                    id: Date.now().toString(),
+                    path,
+                    target
+                };
+                savedLinks.push(newLink);
+                showToast("Tautan baru berhasil disimpan!");
+            }
+
+            localStorage.setItem('apps_script_links', JSON.stringify(savedLinks));
+            renderLinks();
+            closeModal();
+        }
+
+        // Edit Link
+        function editLink(id) {
+            const link = savedLinks.find(l => l.id === id);
+            if (!link) return;
+
+            document.getElementById('modal-title').innerText = "Edit Pengaturan Tautan";
+            document.getElementById('edit-id').value = link.id;
+            document.getElementById('link-path').value = link.path;
+            document.getElementById('link-target').value = link.target;
+
+            const modal = document.getElementById('link-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.firstElementChild.classList.remove('translate-y-full');
+            }, 50);
+        }
+
+        // Hapus Link
+        function deleteLink(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus tautan redirect ini?")) {
+                savedLinks = savedLinks.filter(l => l.id !== id);
+                localStorage.setItem('apps_script_links', JSON.stringify(savedLinks));
+                renderLinks();
+                showToast("Tautan berhasil dihapus!");
+            }
+        }
+
+        // Ekspor data JSON untuk disalin ke GitHub
+        function exportJson() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(savedLinks, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "data.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("File data.json berhasil diunduh!");
+        }
+
+        // Panduan Metode Folder Statis alternatif
+        function downloadFolders() {
+            alert(
+                "Info Metode Folder Statis (Kelebihan: URL bersih tanpa parameter):\n\n" +
+                "Untuk membuat link murni bpb.my.id/gas, Anda cukup membuat folder bernama 'gas' di repositori GitHub Anda, " +
+                "kemudian letakkan sebuah file bernama 'index.html' di dalam folder tersebut.\n\n" +
+                "Isi file tersebut dengan tag HTML <iframe src='LinkAppsScriptAnda'> seperti instruksi sebelumnya."
+            );
+        }
+
+        // Render daftar pertama kali dibuka
+        renderLinks();
+    </script>
+</body>
+</html>
