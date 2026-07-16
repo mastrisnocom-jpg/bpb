@@ -3,233 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Link Appscript - bpb.my.id</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Link Appscript Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
     </style>
 </head>
 <body class="min-h-screen pb-24">
 
-    <!-- CONTAINER UTAMA -->
-    <div class="max-w-md mx-auto px-4 pt-6">
+    <!-- AREA APLIKASI UTAMA (DASHBOARD) -->
+    <div id="app-dashboard" class="max-w-md mx-auto px-5 pt-8 hidden">
         
-        <!-- HEADER -->
         <header class="mb-6">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-blue-600 text-2xl font-bold"><i class="fa-solid fa-square-rss"></i></span>
-                    <span class="text-slate-800 font-bold text-lg">bpb.my.id</span>
-                </div>
-                <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full font-medium">
-                    <i class="fa-solid fa-server mr-1"></i> Mode GitHub Pages
-                </div>
-            </div>
-            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Link Appscript</h1>
-            <p class="text-slate-500 text-sm mt-1 leading-relaxed">
-                Gunakan custom domain <span class="font-semibold text-blue-600" id="current-domain-placeholder">bpb.my.id/namaweb</span> untuk Web App Google Script Anda tanpa pusing memikirkan Iframe!
+            <h1 class="text-[28px] font-extrabold text-slate-800 tracking-tight leading-tight mb-2">Link Appscript</h1>
+            <p class="text-slate-500 text-[15px] leading-relaxed">
+                Gunakan custom domain <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-sm" id="domain-label">domain.com/namaweb</code> untuk Web App Google Script Anda tanpa pusing memikirkan Iframe!
             </p>
         </header>
 
-        <!-- KARTU CODESPACE -->
-        <section class="bg-blue-600 rounded-3xl p-5 text-white shadow-xl shadow-blue-100 mb-6 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500 opacity-30 rounded-full"></div>
-            <div class="flex items-start gap-3 relative z-10 mb-4">
-                <div class="text-yellow-300 text-xl mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <div><h3 class="font-bold text-base leading-tight">Wajib Tambahkan Kode Ini di Code.gs</h3></div>
+        <!-- KARTU BIRU WAJIB KODE GS -->
+        <section class="bg-[#0d6efd] rounded-3xl p-6 text-white mb-8 shadow-lg shadow-blue-200">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-xl mt-0.5"></i>
+                    <h3 class="font-bold text-[17px] leading-tight pr-4">Wajib Tambahkan Kode Ini di Code.gs</h3>
+                </div>
+                <button onclick="copyCode()" class="bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1.5">
+                    <i class="fa-regular fa-copy"></i> <span id="copy-btn-text">Salin Kode</span>
+                </button>
             </div>
-            <div class="bg-blue-800 bg-opacity-50 rounded-xl p-3 mb-4 font-mono text-xs overflow-x-auto text-blue-100 select-all border border-blue-500">
-                <pre id="code-snippet">return HtmlService.createHtmlOutputFromFile('Index')\n.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);</pre>
+            <div class="bg-[#0b5ed7] rounded-xl p-4 mb-4 overflow-x-auto">
+                <pre id="gs-code" class="font-mono text-[13px] whitespace-pre-wrap">return HtmlService.createHtmlOutputFromFile('Index')
+  .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);</pre>
             </div>
-            <button onclick="copyCode()" class="w-full py-3 bg-white text-blue-600 font-bold rounded-2xl flex items-center justify-center gap-2 shadow-md hover:bg-slate-50 transition active:scale-95">
-                <i class="fa-solid fa-copy"></i> <span id="copy-text">Salin Kode</span>
+            <p class="text-sm text-blue-100/90 leading-relaxed">
+                Tanpa kode ini, Google akan memblokir web app Anda untuk ditampilkan di dalam Iframe.
+            </p>
+        </section>
+
+        <!-- DAFTAR TAUTAN HEADER -->
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-bold text-slate-800">Daftar Tautan</h2>
+            <button onclick="openForm()" class="bg-emerald-400 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition">
+                <i class="fa-solid fa-plus"></i> Tambah Baru
             </button>
-        </section>
+        </div>
 
-        <!-- DAFTAR TAUTAN -->
-        <section class="mb-10">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-slate-800">Daftar Tautan Aktif</h2>
-                <div class="text-xs text-slate-400"><i class="fa-solid fa-database"></i> Berbasis data.json</div>
-            </div>
+        <!-- LIST TAUTAN -->
+        <div id="link-container" class="space-y-4">
+            <!-- Data akan dimuat di sini -->
+        </div>
 
-            <!-- List Loader / Empty State -->
-            <div id="empty-state" class="hidden text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200 px-6">
-                <div class="text-slate-300 text-4xl mb-3"><i class="fa-regular fa-folder-open"></i></div>
-                <h4 class="text-slate-700 font-bold text-sm">Belum Ada Tautan Aktif</h4>
-                <p class="text-slate-400 text-xs mt-1">Pastikan Anda sudah mengunggah file data.json yang valid ke repositori bpb.</p>
-            </div>
-
-            <!-- Tautan Container -->
-            <div id="link-list" class="space-y-4">
-                <div class="text-center py-6 text-slate-400 text-xs"><i class="fa-solid fa-spinner animate-spin mr-2"></i>Memuat database dari GitHub...</div>
-            </div>
-        </section>
+        <!-- TOMBOL SINKRONISASI GITHUB -->
+        <div class="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+            <h4 class="font-bold text-amber-800 text-sm mb-2"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Simpan ke Internet (GitHub)</h4>
+            <p class="text-xs text-amber-700 mb-3 leading-relaxed">Karena Anda menggunakan GitHub Pages, daftar di atas baru tersimpan di HP ini. Agar bisa diakses semua orang, unduh data terbarunya dan *Upload* file tersebut ke GitHub Anda.</p>
+            <button onclick="exportData()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-sm transition">
+                Download file data.json
+            </button>
+        </div>
     </div>
 
-    <!-- PANDUAN PENTING GITHUB -->
-    <section class="max-w-md mx-auto px-4 mb-10">
-        <div class="bg-slate-100 rounded-2xl p-4 text-xs text-slate-600 leading-relaxed">
-            <h4 class="font-bold text-slate-700 mb-1.5"><i class="fa-solid fa-circle-info text-blue-500 mr-1"></i> Cara Menambah / Mengubah Link:</h4>
-            <p class="mb-2">Karena GitHub Pages bersifat statis (*Read-Only*), tombol tambah langsung terkunci demi keamanan. Untuk mengelola data, Anda hanya perlu mengedit file <span class="font-bold text-blue-600">data.json</span> di repositori GitHub Anda.</p>
-            <div class="bg-white p-2.5 rounded-xl font-mono text-[10px] border border-slate-200 text-slate-700 overflow-x-auto">
-                [\n  {\n    "id": "1",\n    "path": "gas",\n    "target": "URL_APPS_SCRIPT_ANDA"\n  }\n]
+    <!-- MODAL FORM TAMBAH/EDIT -->
+    <div id="form-modal" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 id="form-title" class="text-xl font-bold text-slate-800 mb-4">Tambah Tautan</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Nama Path (URL Akhir)</label>
+                    <input type="text" id="input-path" placeholder="contoh: enggal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1.5">Link Google Apps Script</label>
+                    <input type="url" id="input-target" placeholder="https://script.google.com/..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+                <input type="hidden" id="input-id">
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeForm()" class="flex-1 bg-slate-100 text-slate-600 font-bold py-3 rounded-xl text-sm hover:bg-slate-200">Batal</button>
+                <button onclick="saveLink()" class="flex-1 bg-[#0d6efd] text-white font-bold py-3 rounded-xl text-sm hover:bg-blue-700 shadow-md">Simpan</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-3 shadow-2xl z-40">
-        <div class="max-w-md mx-auto flex items-center justify-around px-4 relative">
-            <a href="#" class="flex flex-col items-center text-blue-600">
-                <span class="text-xl"><i class="fa-solid fa-grip-vertical"></i></span>
-                <span class="text-[10px] font-semibold mt-0.5">Beranda</span>
-            </a>
-            <a href="https://github.com/mastrisnocom-jpg/bpb" target="_blank" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
-                <span class="text-xl"><i class="fa-solid fa-database"></i></span>
-                <span class="text-[10px] font-medium mt-0.5">Repository</span>
-            </a>
-            <a href="https://github.com/mastrisnocom-jpg" target="_blank" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
-                <div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden border border-slate-300">
-                    <img src="https://github.com/mastrisnocom-jpg.png" alt="Profile" class="w-full h-full object-cover">
-                </div>
-                <span class="text-[10px] font-medium mt-0.5">Profil</span>
-            </a>
+    <!-- BOTTOM NAV SEPERTI GAMBAR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] z-40 hidden" id="bottom-nav">
+        <div class="max-w-md mx-auto flex items-center justify-around px-2">
+            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-border-all text-xl"></i></button>
+            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-chart-pie text-xl"></i></button>
+            <div class="relative -top-5">
+                <button onclick="openForm()" class="w-14 h-14 bg-emerald-400 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-emerald-200 hover:scale-105 transition transform">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <button class="p-3 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-clock-rotate-left text-xl"></i></button>
+            <button class="p-3"><img src="https://github.com/mastrisnocom-jpg.png" class="w-7 h-7 rounded-full border border-slate-200"></button>
         </div>
     </nav>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 hidden">
-        <i class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toast-message">Tersalin!</span>
+    <!-- NOTIFIKASI TOAST -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm px-5 py-2.5 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        Pesan
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- SCRIPT LOGIKA APLIKASI UTAMA -->
     <script>
-        const currentDomain = window.location.hostname;
-        document.getElementById('current-domain-placeholder').innerText = `${currentDomain}/namaweb`;
+        const DOMAIN = window.location.hostname;
+        document.getElementById('domain-label').innerText = `${DOMAIN}/?go=namaweb`;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectPath = urlParams.get('go') || urlParams.get('path');
+        // Routing Engine (Untuk Mode Redirect iframe)
+        async function runRouter() {
+            const params = new URLSearchParams(window.location.search);
+            const goPath = params.get('go');
 
-        // AMBIL DATA DARI FILE REPOSITORI data.json SECARA REAL-TIME
-        fetch('./data.json')
-            .then(response => {
-                if (!response.ok) throw new Error("File data.json tidak ditemukan");
-                return response.json();
-            })
-            .then(savedLinks => {
-                // LOGIC REDIRECT JIKA PARAMETER ?go= DITEMUKAN
-                if (redirectPath) {
-                    const foundLink = savedLinks.find(item => item.path.toLowerCase() === redirectPath.toLowerCase());
-                    if (foundLink) {
-                        document.body.innerHTML = `
-                            <div style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:99999; background-color:#fff;">
-                                <iframe src="${foundLink.target}" style="width:100%; height:100%; border:none; display:block;" allow="geolocation; microphone; camera"></iframe>
-                            </div>
-                        `;
-                        document.title = `Aplikasi ${foundLink.path.toUpperCase()}`;
-                        return;
-                    } else {
-                        show404(redirectPath);
-                        return;
-                    }
+            // JIKA DIAKSES DENGAN ?go= (MODE REDIRECT LAYAR PENUH)
+            if (goPath) {
+                let targetUrl = null;
+
+                // 1. Cek di penyimpanan HP lokal dulu (buat ngetes langsung)
+                const localData = JSON.parse(localStorage.getItem('ikisae_links') || '[]');
+                const localMatch = localData.find(l => l.path.toLowerCase() === goPath.toLowerCase());
+                if (localMatch) targetUrl = localMatch.target;
+
+                // 2. Jika tidak ada di HP, tarik dari data.json di GitHub (untuk publik)
+                if (!targetUrl) {
+                    try {
+                        const res = await fetch('data.json');
+                        if (res.ok) {
+                            const remoteData = await res.json();
+                            const remoteMatch = remoteData.find(l => l.path.toLowerCase() === goPath.toLowerCase());
+                            if (remoteMatch) targetUrl = remoteMatch.target;
+                        }
+                    } catch (e) { console.log('Belum ada data.json'); }
                 }
-                // JIKA AKSES BIASA, RENDER DASHBOARD
-                renderLinks(savedLinks);
-            })
-            .catch(error => {
-                console.error(error);
-                if (redirectPath) {
-                    show404(redirectPath);
+
+                // Tampilkan Apps Script full screen
+                if (targetUrl) {
+                    document.title = `Apps - ${goPath}`;
+                    document.body.innerHTML = `<iframe src="${targetUrl}" style="position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>`;
                 } else {
-                    document.getElementById('link-list').innerHTML = `
-                        <div class="text-center py-6 text-red-500 text-xs">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Gagal memuat data.json. Pastikan file data.json sudah ada di repositori GitHub Anda.
-                        </div>
-                    `;
+                    document.body.innerHTML = `<div style="text-align:center; padding-top:100px; font-family:sans-serif;">
+                        <h1 style="font-size:40px; color:#cbd5e1; margin-bottom:10px;">404</h1>
+                        <h2 style="color:#334155;">Tautan Belum Tersedia</h2>
+                        <p style="color:#64748b;">Path "${goPath}" tidak ditemukan di server.</p>
+                        <a href="index.html" style="display:inline-block; margin-top:20px; padding:10px 20px; background:#0d6efd; color:#fff; text-decoration:none; border-radius:10px;">Buka Dashboard</a>
+                    </div>`;
                 }
-            });
-
-        function renderLinks(links) {
-            const container = document.getElementById('link-list');
-            const emptyState = document.getElementById('empty-state');
-            
-            if (!links || links.length === 0) {
-                container.innerHTML = '';
-                emptyState.classList.remove('hidden');
                 return;
             }
 
-            emptyState.classList.add('hidden');
-            container.innerHTML = links.map(link => `
-                <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative group hover:shadow-md transition">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="bg-emerald-100 text-emerald-600 font-extrabold text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 uppercase">
-                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Online
-                            </span>
-                        </div>
-                        <h4 class="font-extrabold text-slate-800 text-base flex items-center gap-1.5">
-                            ${currentDomain}/?go=${link.path}
-                            <button onclick="copyToClipboard('${currentDomain}/?go=${link.path}')" class="text-slate-400 hover:text-blue-500 text-xs transition">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
+            // JIKA DIAKSES TANPA ?go= (TAMPILKAN DASHBOARD)
+            document.getElementById('app-dashboard').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+            renderData();
+        }
+
+        // ================= FITUR DASHBOARD (LOCAL STORAGE) ================= //
+        
+        function getLinks() {
+            return JSON.parse(localStorage.getItem('ikisae_links') || '[]');
+        }
+
+        function saveToLocal(data) {
+            localStorage.setItem('ikisae_links', JSON.stringify(data));
+            renderData();
+        }
+
+        function renderData() {
+            const data = getLinks();
+            const container = document.getElementById('link-container');
+            
+            if (data.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 bg-white rounded-3xl border border-slate-100 shadow-sm"><p class="text-slate-400 text-sm">Belum ada tautan. Klik + Tambah Baru.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = data.map(link => `
+                <div class="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100 relative">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-emerald-100 text-emerald-600 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide">Aktif</span>
+                        <h4 class="font-extrabold text-slate-800 text-[15px] flex items-center gap-1.5">
+                            ${DOMAIN}/?go=${link.path}
+                            <button onclick="copyLink('${DOMAIN}/?go=${link.path}')" class="text-slate-400 hover:text-blue-500"><i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i></button>
                         </h4>
-                        <p class="text-xs text-slate-400 mt-1 truncate max-w-[300px]">
-                            <i class="fa-brands fa-google text-slate-300 mr-1"></i> ${link.target}
-                        </p>
+                    </div>
+                    <p class="text-[13px] text-slate-400 mb-4 truncate pr-4">${link.target}</p>
+                    <div class="flex gap-2">
+                        <button onclick="editForm('${link.id}')" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-blue-500 flex items-center justify-center transition"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteLink('${link.id}')" class="w-10 h-10 rounded-xl bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 flex items-center justify-center transition"><i class="fa-regular fa-trash-can"></i></button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function show404(path) {
-            document.body.innerHTML = `
-                <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center px-6">
-                    <div class="text-slate-300 text-7xl mb-4"><i class="fa-solid fa-link-slash"></i></div>
-                    <h1 class="text-2xl font-bold text-slate-800">Tautan Tidak Ditemukan</h1>
-                    <p class="text-slate-500 text-sm mt-1 max-w-sm">Jalur pintasan "${path}" belum terdaftar atau penulisan data.json Anda salah.</p>
-                    <a href="index.html" class="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition">Kembali Ke Halaman Utama</a>
-                </div>
-            `;
-            document.title = "Link Tidak Aktif - 404";
+        function openForm() {
+            document.getElementById('input-id').value = '';
+            document.getElementById('input-path').value = '';
+            document.getElementById('input-target').value = '';
+            document.getElementById('form-title').innerText = 'Tambah Tautan';
+            document.getElementById('form-modal').classList.remove('hidden');
+        }
+
+        function editForm(id) {
+            const data = getLinks().find(l => l.id === id);
+            if(data) {
+                document.getElementById('input-id').value = data.id;
+                document.getElementById('input-path').value = data.path;
+                document.getElementById('input-target').value = data.target;
+                document.getElementById('form-title').innerText = 'Edit Tautan';
+                document.getElementById('form-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeForm() {
+            document.getElementById('form-modal').classList.add('hidden');
+        }
+
+        function saveLink() {
+            const id = document.getElementById('input-id').value;
+            let path = document.getElementById('input-path').value.replace(/[^a-zA-Z0-9_-]/g, '').toLowerCase();
+            const target = document.getElementById('input-target').value;
+
+            if(!path || !target) return alert('Path dan URL Tujuan wajib diisi!');
+
+            let links = getLinks();
+            if (id) {
+                links = links.map(l => l.id === id ? {id, path, target} : l);
+                showToast('Tautan diperbarui');
+            } else {
+                if(links.find(l => l.path === path)) return alert('Nama path sudah ada!');
+                links.unshift({ id: Date.now().toString(), path, target });
+                showToast('Tautan ditambahkan');
+            }
+            
+            saveToLocal(links);
+            closeForm();
+        }
+
+        function deleteLink(id) {
+            if(confirm('Hapus tautan ini?')) {
+                const links = getLinks().filter(l => l.id !== id);
+                saveToLocal(links);
+                showToast('Tautan dihapus');
+            }
+        }
+
+        // ================= UTILITIES ================= //
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.remove('opacity-0');
+            setTimeout(() => t.classList.add('opacity-0'), 2500);
         }
 
         function copyCode() {
-            const pre = document.getElementById('code-snippet');
-            navigator.clipboard.writeText(pre.innerText);
-            const btnText = document.getElementById('copy-text');
-            btnText.innerText = "Tersalin!";
-            showToast("Kode Apps Script disalin!");
-            setTimeout(() => { btnText.innerText = "Salin Kode"; }, 2000);
+            navigator.clipboard.writeText(document.getElementById('gs-code').innerText);
+            document.getElementById('copy-btn-text').innerText = 'Tersalin!';
+            setTimeout(() => document.getElementById('copy-btn-text').innerText = 'Salin Kode', 2000);
         }
 
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText('https://' + text);
-            showToast("Tautan pintas disalin!");
+        function copyLink(url) {
+            navigator.clipboard.writeText("https://" + url);
+            showToast("Tautan disalin ke clipboard!");
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 2500);
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getLinks(), null, 2));
+            const a = document.createElement('a');
+            a.href = dataStr;
+            a.download = "data.json";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            alert("File data.json berhasil diunduh!\n\nLangkah selanjutnya:\nBuka GitHub Anda, lalu upload file data.json ini ke repositori 'bpb' agar linknya aktif di internet.");
         }
+
+        // Mulai aplikasi
+        runRouter();
     </script>
 </body>
 </html>
-
