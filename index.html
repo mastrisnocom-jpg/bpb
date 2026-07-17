@@ -148,9 +148,7 @@
                 </header>
 
                 <!-- AREA BANNER IKLAN -->
-                <div id="ads-banner-container" class="hidden mb-6">
-                    <!-- Banner akan di-render di sini oleh JavaScript -->
-                </div>
+                <div id="ads-banner-container" class="hidden mb-6"></div>
 
                 <!-- VIEW HOME -->
                 <div id="view-home">
@@ -325,7 +323,7 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & TEMA (BARU) -->
+    <!-- MODAL PROFIL & TEMA -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
             <div class="flex justify-between items-center mb-1">
@@ -341,9 +339,16 @@
             <!-- Menu Khusus Admin di dalam profil -->
             <div id="menu-admin-profil" class="hidden mb-5 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
                 <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Admin Tools</p>
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden'); openAdsModal();" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bullhorn"></i> Pasang Iklan Banner
-                </button>
+                <div class="flex flex-col gap-2">
+                    <button onclick="document.getElementById('form-profile-modal').classList.add('hidden'); openAdsModal();" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bullhorn"></i> Pasang Iklan Banner
+                    </button>
+                    <!-- Fitur Upgrade User oleh Admin -->
+                    <div class="flex gap-2">
+                        <input type="email" id="admin-input-user-pro" placeholder="Email user jadi PRO..." class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        <button onclick="adminSetPro()" class="bg-slate-800 dark:bg-slate-700 text-white font-bold px-3 py-2 rounded-lg text-xs hover:bg-slate-700 transition">Pro kan!</button>
+                    </div>
+                </div>
             </div>
 
             <h4 class="text-sm font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
@@ -524,15 +529,22 @@
 
         async function logout() { if(confirm('Yakin ingin keluar dari aplikasi?')) { await _supabase.auth.signOut(); location.reload(); } }
 
-        function showDashboard() {
+        async function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-dashboard').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); 
             const username = currentUser.email.split('@')[0];
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // CEK SUPERADMIN
+            // CEK STATUS PREMIUM / ADMIN
             if(currentUser.email === superAdminEmail) {
-                isPremiumUser = true; // Admin otomatis dapet fitur premium
+                isPremiumUser = true; // Admin otomatis Pro
+            } else {
+                // Tarik data status pro dari tabel pengguna (jika kamu buat tabelnya nanti)
+                // Sementara default ke false jika bukan admin
+                const { data: userData } = await _supabase.from('pengguna').select('status_pro').eq('email', currentUser.email).maybeSingle();
+                if(userData && userData.status_pro === true) {
+                    isPremiumUser = true;
+                }
             }
 
             fetchDataSupabase();
@@ -557,6 +569,7 @@
                 btnBeliPremium.classList.remove('hidden');
             }
 
+            // Tampilkan tool admin khusus email mastrisnocom@gmail.com
             if (currentUser.email === superAdminEmail) {
                 menuAdminProfil.classList.remove('hidden');
             } else {
@@ -567,9 +580,25 @@
         }
 
         function beliPremium() {
-            const msg = `Halo Admin, saya ingin upgrade ke akun Premium untuk membuka fitur Export Excel & PDF di SuperApp.\n\nEmail akun saya: ${currentUser.email}`;
-            const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`; // GANTI NOMOR INI KE NOMOR WA KAMU
+            const msg = `Halo Admin, saya ingin upgrade ke akun Premium (PRO) di Personal SuperApp untuk membuka fitur Export Excel & PDF.\n\nEmail akun saya: ${currentUser.email}`;
+            const waLink = `https://wa.me/6282146511484?text=${encodeURIComponent(msg)}`; 
             window.open(waLink, '_blank');
+        }
+
+        // FUNGSI ADMIN JADIKAN USER PRO
+        async function adminSetPro() {
+            const emailTarget = document.getElementById('admin-input-user-pro').value;
+            if(!emailTarget) return alert("Masukkan email user!");
+            
+            // Upsert status pro ke tabel 'pengguna' di Supabase
+            const { error } = await _supabase.from('pengguna').upsert({ email: emailTarget, status_pro: true });
+            
+            if(!error) {
+                showToast(`Akun ${emailTarget} berhasil di-upgrade ke PRO!`);
+                document.getElementById('admin-input-user-pro').value = '';
+            } else {
+                alert("Gagal mengupgrade. Pastikan kamu sudah membuat tabel 'pengguna' dengan kolom 'email' (sebagai Primary Key) dan 'status_pro' (boolean) di Supabase.");
+            }
         }
 
         function switchView(viewName) {
@@ -701,14 +730,14 @@
         }
 
         function exportToExcel() {
-            if(!isPremiumUser) return alert("Maaf, Fitur Export Excel hanya tersedia untuk pengguna Premium.");
+            if(!isPremiumUser) { openProfileModal(); return alert("Fitur Export Excel hanya untuk pengguna Premium (PRO). Silakan Upgrade."); }
             if (globalFinances.length === 0) return alert("Tidak ada data transaksi untuk diekspor!");
             const dataUntukExcel = globalFinances.map((trx, index) => ({ "No": index + 1, "Waktu": trx.waktu, "Keterangan": trx.keterangan, "Jenis": trx.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran', "Nominal (Rp)": parseFloat(trx.nominal) }));
             const worksheet = XLSX.utils.json_to_sheet(dataUntukExcel); const workbook = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(workbook, worksheet, "Transaksi"); XLSX.writeFile(workbook, `Laporan_Transaksi_${new Date().toISOString().slice(0,10)}.xlsx`); showToast("Mengekspor ke Excel...");
         }
 
         function exportToPDF() {
-            if(!isPremiumUser) return alert("Maaf, Fitur Export PDF hanya tersedia untuk pengguna Premium.");
+            if(!isPremiumUser) { openProfileModal(); return alert("Fitur Export PDF hanya untuk pengguna Premium (PRO). Silakan Upgrade."); }
             if (globalFinances.length === 0) return alert("Tidak ada data transaksi untuk diekspor!");
             const { jsPDF } = window.jspdf; const doc = new jsPDF();
             doc.setFont("Helvetica", "bold"); doc.setFontSize(16); doc.text("LAPORAN RIWAYAT TRANSAKSI", 14, 20); doc.setFont("Helvetica", "normal"); doc.setFontSize(10); doc.text(`Unduh pada: ${new Date().toLocaleDateString('id-ID')}`, 14, 27); doc.text(`User: ${currentUser ? currentUser.email : 'Guest'}`, 14, 33);
