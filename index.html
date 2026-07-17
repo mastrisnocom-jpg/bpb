@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Super App - Supabase</title>
+    
+    <!-- 1. MENGHUBUNGKAN KE MANIFEST PWA -->
+    <link rel="manifest" href="/manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' } } } } }
@@ -49,6 +53,12 @@
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
             </div>
+            
+            <!-- TOMBOL INSTAL KUSTOM (Disembunyikan secara default menggunakan kelas 'hidden') -->
+            <button id="btn-pwa-install" class="hidden w-full mb-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-3 px-4 rounded-2xl shadow-lg hover:from-emerald-600 hover:to-teal-700 transition flex items-center justify-center gap-2 text-sm active:scale-[0.98]">
+                <i class="fa-solid fa-circle-arrow-down text-lg"></i> Pasang Aplikasi di HP / Laptop
+            </button>
+
             <h1 class="text-[28px] font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight" id="main-title">DashboardKu</h1>
             <p class="text-slate-500 dark:text-slate-400 text-sm" id="main-subtitle">Halo, <span id="user-display" class="font-bold text-emerald-600 dark:text-emerald-400">User</span>!</p>
         </header>
@@ -201,8 +211,36 @@
 
         let globalFinances = [];
         let globalLinks = [];
-        let globalBatasAnggaran = 0; // Data Anggaran sekarang tersimpan di variabel global
+        let globalBatasAnggaran = 0; 
         let currentUser = null; 
+
+        // --- SISTEM PEMICU TOMBOL INSTAL PWA KUSTOM ---
+        let deferredPrompt;
+        const btnPwaInstall = document.getElementById('btn-pwa-install');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Cegah pop-up bawaan chrome langsung muncul
+            deferredPrompt = e;  // Amankan datanya
+            btnPwaInstall.classList.remove('hidden'); // Tampilkan tombol kustom kita
+        });
+
+        btnPwaInstall.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            btnPwaInstall.disabled = true;
+            deferredPrompt.prompt(); // Tampilkan prompt instalasi asli
+            
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Pilihan user instalasi: ${outcome}`);
+            
+            deferredPrompt = null;
+            btnPwaInstall.classList.add('hidden'); // Sembunyikan kembali tombol
+            btnPwaInstall.disabled = false;
+        });
+
+        window.addEventListener('appinstalled', () => {
+            showToast('Aplikasi berhasil dipasang di beranda kamu!');
+        });
+        // ---------------------------------------------
 
         async function runRouter() {
             const params = new URLSearchParams(window.location.search);
@@ -219,6 +257,15 @@
                 return;
             }
             initTheme(); renderDate(); checkAuth();
+            
+            // --- REGISTRASI SERVICE WORKER ---
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(reg => console.log('Service Worker terdaftar!', reg))
+                        .catch(err => console.error('Gagal mendaftarkan Service Worker:', err));
+                });
+            }
         }
 
         function initTheme() {
@@ -269,13 +316,10 @@
         }
 
         async function fetchDataSupabase() {
-            // 1. Ambil data keuangan
             const { data: dataKeuangan } = await _supabase.from('keuangan').select('*').eq('user_id', currentUser.id).order('waktu', { ascending: false });
             if (dataKeuangan) globalFinances = dataKeuangan;
-            // 2. Ambil data link
             const { data: dataTautan } = await _supabase.from('tautan').select('*').eq('user_id', currentUser.id);
             if (dataTautan) globalLinks = dataTautan;
-            // 3. Ambil data batas anggaran dari cloud
             const { data: dataAnggaran } = await _supabase.from('pengaturan').select('batas_anggaran').eq('user_id', currentUser.id).maybeSingle();
             if (dataAnggaran) globalBatasAnggaran = parseFloat(dataAnggaran.batas_anggaran);
 
@@ -331,7 +375,6 @@
             document.getElementById('lap-masuk').innerText = formatRupiah(masuk); document.getElementById('lap-keluar').innerText = formatRupiah(keluar);
             let rasio = (masuk > 0) ? Math.round((keluar / masuk) * 100) : (keluar > 0 ? 100 : 0); document.getElementById('lap-bar-keluar').style.width = `${Math.min(rasio, 100)}%`; document.getElementById('lap-rasio').innerText = `${rasio}%`;
 
-            // Data Batas Anggaran ditarik dari variabel global (bersumber dari Supabase)
             document.getElementById('anggaran-batas').innerText = formatRupiah(globalBatasAnggaran); document.getElementById('anggaran-terpakai').innerText = formatRupiah(keluar);
             let sisa = globalBatasAnggaran - keluar; let pTerpakai = globalBatasAnggaran > 0 ? Math.round((keluar / globalBatasAnggaran) * 100) : 0;
             const sisaEl = document.getElementById('anggaran-sisa'); sisaEl.innerText = formatRupiah(sisa);
@@ -346,7 +389,6 @@
             const batas = document.getElementById('input-anggaran-batas').value;
             if (batas) {
                 document.getElementById('btn-save-anggaran').innerText = "Menyimpan...";
-                // Update ke Supabase (Menggunakan UPSERT agar otomatis nambah baru atau menimpa yang lama)
                 const { data, error } = await _supabase.from('pengaturan').upsert({ user_id: currentUser.id, batas_anggaran: batas }).select();
                 if (!error) {
                     globalBatasAnggaran = parseFloat(batas);
