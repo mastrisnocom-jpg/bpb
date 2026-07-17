@@ -35,6 +35,9 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- PUSTAKA GRAFIK CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -119,10 +122,10 @@
                 </nav>
             </div>
 
-            <!-- Bagian Bawah Profil (Sesuai Gambar Referensi) -->
+            <!-- Bagian Bawah Profil -->
             <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-col gap-3">
                 <div onclick="openProfileModal()" class="flex items-center gap-3 cursor-pointer p-1 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
-                    <div class="w-9 h-9 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center text-sm font-bold shadow-inner" id="user-avatar-placeholder">
+                    <div class="w-9 h-9 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center text-sm font-bold shadow-inner overflow-hidden" id="user-avatar-placeholder">
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -199,22 +202,15 @@
                                     </div>
                                 </section>
 
-                                <!-- Card Analisis Pengeluaran (Sesuai Desain Baru Gambar Referensi) -->
+                                <!-- Card Analisis Pengeluaran Real-Time -->
                                 <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 flex flex-col justify-between min-h-[180px] shadow-sm">
-                                    <div class="flex justify-between items-center mb-2">
+                                    <div class="flex justify-between items-center mb-1">
                                         <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300">Analisis Pengeluaran</h3>
                                         <span class="text-[9px] bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded font-medium text-slate-400">Minggu Ini</span>
                                     </div>
-                                    <!-- Grafik Simulasi Garis Cantik CSS -->
-                                    <div class="flex-1 flex items-end justify-center h-20 w-full relative px-2">
-                                        <svg class="w-full h-full text-theme-500/20 dark:text-theme-400/10" viewBox="0 0 100 40" preserveAspectRatio="none">
-                                            <path d="M 0 40 Q 25 30 50 10 T 100 40 Z" fill="currentColor"></path>
-                                            <path d="M 0 40 Q 25 30 50 10 T 100 40" fill="none" stroke="var(--t-500)" stroke-width="2"></path>
-                                        </svg>
-                                        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-theme-500 shadow-md"></div>
-                                    </div>
-                                    <div class="flex justify-between text-[8px] text-slate-400 font-bold uppercase mt-2 border-t border-slate-50 dark:border-slate-700/50 pt-1.5">
-                                        <span>Mon</span><span>Wed</span><span>Fri</span><span>Sun</span>
+                                    <!-- Kontainer Canvas Chart.js -->
+                                    <div class="flex-1 w-full h-24 relative mt-1">
+                                        <canvas id="expenseChart"></canvas>
                                     </div>
                                 </section>
                             </div>
@@ -467,6 +463,9 @@
         let currentUser = null; 
         let editingTrxId = null; 
         
+        // GLOBAL INSTANCE UNTUK CHART.JS
+        let myExpenseChart = null;
+
         // STATUS BERBAYAR & SUPERADMIN
         let isPremiumUser = false; 
         const superAdminEmail = 'mastrisnocom@gmail.com';
@@ -501,6 +500,7 @@
             root.style.setProperty('--t-900', t[900]);
             root.style.setProperty('--t-950', t[950]);
             localStorage.setItem('user-theme', themeName);
+            if(myExpenseChart) renderExpenseChart(); // Render ulang chart agar warna garis sinkron dengan tema baru
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -557,6 +557,7 @@
         }
         function toggleTheme() {
             if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; }
+            if(myExpenseChart) renderExpenseChart();
         }
         function renderDate() {
             const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']; const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']; const pasaranArr = ['Wage', 'Kliwon', 'Legi', 'Pahing', 'Pon']; const d = new Date(); const pasaranIndex = ((Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000) % 5) + 5) % 5; 
@@ -601,9 +602,14 @@
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // GENERATE INITIAL AVATAR SECARA DINAMIS
-            const initial = username.charAt(0).toUpperCase();
-            document.getElementById('user-avatar-placeholder').innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
+            // FUNGSI DINAMIS: DETEKSI & PENGATURAN FOTO PROFIL DARI GOOGLE
+            const avatarContainer = document.getElementById('user-avatar-placeholder');
+            if (currentUser.user_metadata && currentUser.user_metadata.avatar_url) {
+                avatarContainer.innerHTML = `<img src="${currentUser.user_metadata.avatar_url}" alt="Profile" class="w-full h-full rounded-full object-cover shadow-sm" referrerpolicy="no-referrer">`;
+            } else {
+                const initial = username.charAt(0).toUpperCase();
+                avatarContainer.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
+            }
 
             // CEK STATUS PREMIUM / ADMIN SECARA DINAMIS
             if(currentUser.email === superAdminEmail) {
@@ -779,6 +785,89 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
+        // FUNGSI UNTUK GENERATE GRAFIK SECARA DINAMIS MENGGUNAKAN DATA SUPABASE
+        function renderExpenseChart() {
+            const canvas = document.getElementById('expenseChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Nama hari pemetaan indeks
+            const daysMap = { 'senin': 0, 'selasa': 1, 'rabu': 2, 'kamis': 3, 'jumat': 4, 'sabtu': 5, 'minggu': 6 };
+            const dataPengeluaran = [0, 0, 0, 0, 0, 0, 0];
+            
+            // Pengolahan data: Filter jenis pengeluaran, lalu akumulasikan nominal berdasarkan pencocokan teks hari
+            globalFinances.forEach(trx => {
+                if (trx.jenis === 'keluar' && trx.waktu) {
+                    const cleanWaktu = trx.waktu.toLowerCase();
+                    for (const day in daysMap) {
+                        if (cleanWaktu.includes(day)) {
+                            dataPengeluaran[daysMap[day]] += parseFloat(trx.nominal) || 0;
+                            break;
+                        }
+                    }
+                }
+            });
+
+            // Ambil warna primer CSS tema saat ini secara dinamis untuk grafik
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--t-500').trim() || '#10b981';
+            const isDark = document.documentElement.classList.contains('dark');
+
+            // Hancurkan instansiasi chart lama jika ada, untuk menghindari duplikasi tumpang tindih
+            if (myExpenseChart) {
+                myExpenseChart.destroy();
+            }
+
+            // Bangun grafik interaktif baru
+            myExpenseChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        data: dataPengeluaran,
+                        borderColor: themeColor,
+                        borderWidth: 2.5,
+                        pointBackgroundColor: themeColor,
+                        pointHoverRadius: 6,
+                        tension: 0.4, 
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                            gradient.addColorStop(0, themeColor + '35'); 
+                            gradient.addColorStop(1, themeColor + '00'); 
+                            return gradient;
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + formatRupiah(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: isDark ? '#94a3b8' : '#64748b',
+                                font: { size: 9, weight: 'bold', family: 'Plus Jakarta Sans' }
+                            }
+                        },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
         function updateLaporanDanAnggaran() {
             let masuk = 0, keluar = 0; globalFinances.forEach(trx => { if(trx.jenis === 'masuk') masuk += parseFloat(trx.nominal); else keluar += parseFloat(trx.nominal); });
             document.getElementById('lap-masuk').innerText = formatRupiah(masuk); document.getElementById('lap-keluar').innerText = formatRupiah(keluar);
@@ -790,6 +879,9 @@
             if(sisa < 0) { sisaEl.classList.remove('text-theme-600', 'dark:text-theme-400'); sisaEl.classList.add('text-rose-600', 'dark:text-rose-400'); } else { sisaEl.classList.add('text-theme-600', 'dark:text-theme-400'); sisaEl.classList.remove('text-rose-600', 'dark:text-rose-400'); }
             const bar = document.getElementById('anggaran-bar'); bar.style.width = `${Math.min(pTerpakai, 100)}%`;
             if (pTerpakai > 90) bar.className = "h-2 rounded-full transition-all bg-rose-500"; else if (pTerpakai > 70) bar.className = "h-2 rounded-full transition-all bg-amber-500"; else bar.className = "h-2 rounded-full transition-all bg-theme-500";
+            
+            // PREPARASI PEMANGGILAN CHART.JS BERDASARKAN PEMBARUAN DATA SUPABASE TERBARU
+            renderExpenseChart();
         }
 
         function editAnggaran() { document.getElementById('input-anggaran-batas').value = globalBatasAnggaran || ''; document.getElementById('form-anggaran-modal').classList.remove('hidden'); }
