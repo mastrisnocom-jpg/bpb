@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Super App - Supabase</title>
+    <title>Personal Super App</title>
     
     <!-- 1. MENGHUBUNGKAN KE MANIFEST PWA -->
     <link rel="manifest" href="/manifest.json">
 
+    <style>
+        /* DEFINISI CSS VARIABLE UNTUK 10 TEMA WARNA */
+        :root {
+            --t-50: #ecfdf5; --t-100: #d1fae5; --t-400: #34d399; --t-500: #10b981; --t-600: #059669; --t-700: #047857; --t-900: #064e3b; --t-950: #022c22;
+        }
+    </style>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857' } } } } }
+        // MENGUBAH TAILWIND AGAR MEMBACA CSS VARIABLE UNTUK WARNA "THEME"
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        theme: { 
+                            50: 'var(--t-50)', 
+                            100: 'var(--t-100)', 
+                            400: 'var(--t-400)', 
+                            500: 'var(--t-500)', 
+                            600: 'var(--t-600)', 
+                            700: 'var(--t-700)',
+                            900: 'var(--t-900)',
+                            950: 'var(--t-950)'
+                        } 
+                    } 
+                } 
+            } 
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -35,20 +61,20 @@
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col items-center justify-center hidden">
         <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700">
-            <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+            <div class="w-16 h-16 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 transition-colors">
                 <i id="auth-icon" class="fa-solid fa-fingerprint"></i>
             </div>
             <h2 id="auth-title" class="text-2xl font-extrabold text-slate-800 dark:text-white mb-2">Login App</h2>
             <p id="auth-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mb-6">Masuk ke Personal Dashboard.</p>
             
             <div id="form-container" class="space-y-3">
-                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
-                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-emerald-500 transition">
+                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
             </div>
             
             <p id="auth-error" class="text-xs text-rose-500 dark:text-rose-400 font-bold mt-3 hidden">Error message</p>
             
-            <button id="btn-action" class="w-full bg-emerald-600 text-white font-bold py-3.5 rounded-xl hover:bg-emerald-700 active:scale-95 transition shadow-lg shadow-emerald-200 dark:shadow-none mt-5">Masuk</button>
+            <button id="btn-action" class="w-full bg-theme-600 text-white font-bold py-3.5 rounded-xl hover:bg-theme-700 active:scale-95 transition shadow-lg shadow-theme-200 dark:shadow-none mt-5">Masuk</button>
             
             <!-- SEPARATOR -->
             <div class="flex items-center my-4 text-xs text-slate-400 dark:text-slate-500">
@@ -68,7 +94,7 @@
                 Masuk dengan Google
             </button>
 
-            <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-emerald-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-theme-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
         </div>
     </div>
 
@@ -78,29 +104,29 @@
         <!-- SIDEBAR UTAMA (DESKTOP) -->
         <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 fixed top-0 bottom-0 left-0 p-6 z-30">
             <div class="flex items-center gap-3 mb-8">
-                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-emerald-200 dark:shadow-none">
+                <div class="w-10 h-10 bg-theme-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-theme-200 dark:shadow-none transition-colors">
                     <i class="fa-solid fa-cubes"></i>
                 </div>
                 <div>
                     <h3 class="font-extrabold text-slate-800 dark:text-white tracking-tight">SuperApp</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Workspace v1.0</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Unit BSN Surabaya v1.0</p>
                 </div>
             </div>
 
             <nav class="space-y-1.5 flex-1">
-                <button id="side-nav-home" onclick="switchView('home')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 transition">
+                <button id="side-nav-home" onclick="switchView('home')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-theme-50 dark:bg-theme-950/40 text-theme-600 dark:text-theme-400 transition">
                     <i class="fa-solid fa-house text-base"></i> Home
                 </button>
-                <button id="side-nav-laporan" onclick="switchView('laporan')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-emerald-500 transition">
+                <button id="side-nav-laporan" onclick="switchView('laporan')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
                     <i class="fa-solid fa-chart-simple text-base"></i> Laporan
                 </button>
-                <button id="side-nav-anggaran" onclick="switchView('anggaran')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-emerald-500 transition">
+                <button id="side-nav-anggaran" onclick="switchView('anggaran')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
                     <i class="fa-solid fa-wallet text-base"></i> Anggaran
                 </button>
                 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
                 
-                <button onclick="openTrxForm()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-100 dark:shadow-none">
+                <button onclick="openTrxForm()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none">
                     <i class="fa-solid fa-plus"></i> Catat Keuangan
                 </button>
             </nav>
@@ -108,8 +134,8 @@
             <div class="mt-auto bg-slate-50 dark:bg-slate-900/50 p-3 rounded-2xl border border-slate-100 dark:border-slate-700/40">
                 <p class="text-[10px] text-slate-400 mb-1 font-medium">Masuk sebagai:</p>
                 <p class="text-xs font-bold text-slate-700 dark:text-slate-300 truncate mb-3" id="user-display-side">User</p>
-                <button onclick="logout()" class="w-full py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 text-rose-500 dark:text-rose-400 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> Keluar Akun
+                <button onclick="openProfileModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-circle"></i> Profil & Tema
                 </button>
             </div>
         </aside>
@@ -119,7 +145,7 @@
             <div class="max-w-xl w-full mx-auto px-5 pt-8 pb-24 md:pb-12 flex-1">
                 <header class="mb-6">
                     <div class="flex justify-between items-center mb-5">
-                        <div id="javanese-date" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                        <div id="javanese-date" class="text-sm font-bold text-theme-600 dark:text-theme-400">
                             <i class="fa-regular fa-calendar-days mr-1.5"></i> <span>Memuat tanggal...</span>
                         </div>
                         <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center transition active:scale-95">
@@ -127,33 +153,33 @@
                         </button>
                     </div>
                     
-                    <button id="btn-pwa-install" class="hidden w-full mb-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-3 px-4 rounded-2xl shadow-lg hover:from-emerald-600 hover:to-teal-700 transition flex items-center justify-center gap-2 text-sm active:scale-[0.98]">
+                    <button id="btn-pwa-install" class="hidden w-full mb-4 bg-gradient-to-r from-theme-500 to-theme-700 text-white font-bold py-3 px-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-sm active:scale-[0.98]">
                         <i class="fa-solid fa-circle-arrow-down text-lg"></i> Pasang Aplikasi di HP / Laptop
                     </button>
 
                     <h1 class="text-[28px] font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight" id="main-title">DashboardKu</h1>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm md:hidden">Halo, <span id="user-display" class="font-bold text-emerald-600 dark:text-emerald-400">User</span>!</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm md:hidden">Halo, <span id="user-display" class="font-bold text-theme-600 dark:text-theme-400">User</span>!</p>
                 </header>
 
                 <!-- VIEW HOME -->
                 <div id="view-home">
-                    <section class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-[32px] p-6 text-white mb-8 shadow-xl shadow-emerald-200 dark:shadow-none relative overflow-hidden">
+                    <section class="bg-gradient-to-br from-theme-500 to-theme-700 rounded-[32px] p-6 text-white mb-8 shadow-xl shadow-theme-200 dark:shadow-none relative overflow-hidden transition-colors">
                         <div class="absolute -right-6 -top-6 w-32 h-32 bg-white opacity-10 rounded-full"></div>
-                        <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-emerald-900 opacity-20 rounded-full"></div>
+                        <div class="absolute -left-6 -bottom-6 w-24 h-24 bg-theme-900 opacity-20 rounded-full"></div>
                         <div class="relative z-10">
                             <div class="flex justify-between items-start mb-1">
-                                <p class="text-emerald-100 text-sm font-medium">Total Saldo Keuangan</p>
-                                <i class="fa-solid fa-cloud text-emerald-200 opacity-50 text-2xl" title="Online via Supabase"></i>
+                                <p class="text-theme-100 text-sm font-medium">Total Saldo Keuangan</p>
+                                <i class="fa-solid fa-cloud text-theme-200 opacity-50 text-2xl" title="Online via Supabase"></i>
                             </div>
                             <h2 id="total-saldo" class="text-4xl font-extrabold tracking-tight mb-6">Rp 0</h2>
-                            <div class="flex items-center justify-between bg-emerald-800/40 rounded-2xl p-4 backdrop-blur-sm">
+                            <div class="flex items-center justify-between bg-theme-800/40 rounded-2xl p-4 backdrop-blur-sm">
                                 <div>
-                                    <p class="text-[11px] text-emerald-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-down text-emerald-400"></i> Pemasukan</p>
+                                    <p class="text-[11px] text-theme-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-down text-theme-400"></i> Pemasukan</p>
                                     <p id="total-masuk" class="font-bold text-sm">Rp 0</p>
                                 </div>
-                                <div class="w-px h-8 bg-emerald-400/30"></div>
+                                <div class="w-px h-8 bg-theme-400/30"></div>
                                 <div>
-                                    <p class="text-[11px] text-emerald-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up text-rose-400"></i> Pengeluaran</p>
+                                    <p class="text-[11px] text-theme-200 mb-0.5 flex items-center gap-1"><i class="fa-solid fa-arrow-up text-rose-400"></i> Pengeluaran</p>
                                     <p id="total-keluar" class="font-bold text-sm">Rp 0</p>
                                 </div>
                             </div>
@@ -163,16 +189,16 @@
                     <div class="mb-8">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                             <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center">
-                                <i class="fa-solid fa-file-invoice-dollar text-emerald-500 mr-2"></i>Riwayat Transaksi
+                                <i class="fa-solid fa-file-invoice-dollar text-theme-500 mr-2 transition-colors"></i>Riwayat Transaksi
                             </h2>
                             <div class="flex items-center gap-2 flex-wrap">
-                                <button onclick="exportToExcel()" class="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
-                                    <i class="fa-solid fa-file-excel text-base text-emerald-500"></i> Excel
+                                <button onclick="exportToExcel()" class="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-theme-600 dark:text-theme-400 border border-slate-200 dark:border-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
+                                    <i class="fa-solid fa-file-excel text-base text-theme-500"></i> Excel
                                 </button>
                                 <button onclick="exportToPDF()" class="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-rose-600 dark:text-rose-400 border border-slate-200 dark:border-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
                                     <i class="fa-solid fa-file-pdf text-base text-rose-500"></i> PDF
                                 </button>
-                                <button onclick="openTrxForm()" class="md:hidden bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-emerald-200 dark:shadow-none">
+                                <button onclick="openTrxForm()" class="md:hidden bg-theme-600 hover:bg-theme-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-theme-200 dark:shadow-none">
                                     <i class="fa-solid fa-plus"></i> Catat
                                 </button>
                             </div>
@@ -202,8 +228,8 @@
                 <div id="view-laporan" class="hidden mb-10">
                     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
                         <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">Ringkasan Arus Kas</h3>
-                        <div class="mb-5 flex justify-between items-end"><p class="text-xs text-slate-400">Total Pemasukan</p><p class="font-bold text-emerald-500" id="lap-masuk">Rp 0</p></div>
-                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-5"><div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div></div>
+                        <div class="mb-5 flex justify-between items-end"><p class="text-xs text-slate-400">Total Pemasukan</p><p class="font-bold text-theme-500 transition-colors" id="lap-masuk">Rp 0</p></div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-5"><div class="bg-theme-500 h-2 rounded-full transition-colors" style="width: 100%"></div></div>
                         <div class="mb-5 flex justify-between items-end"><p class="text-xs text-slate-400">Total Pengeluaran</p><p class="font-bold text-rose-500" id="lap-keluar">Rp 0</p></div>
                         <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-5"><div id="lap-bar-keluar" class="bg-rose-500 h-2 rounded-full transition-all" style="width: 0%"></div></div>
                         <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl text-center">
@@ -217,13 +243,13 @@
                     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Batas Bulanan</h3>
-                            <button onclick="editAnggaran()" class="text-xs font-bold text-emerald-500 hover:text-emerald-600 transition"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                            <button onclick="editAnggaran()" class="text-xs font-bold text-theme-500 hover:text-theme-600 transition"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
                         </div>
                         <div class="text-center mb-6">
-                            <p class="text-xs text-slate-400 mb-1">Sisa Anggaran Tersedia</p><h2 class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400" id="anggaran-sisa">Rp 0</h2>
+                            <p class="text-xs text-slate-400 mb-1">Sisa Anggaran Tersedia</p><h2 class="text-3xl font-extrabold text-theme-600 dark:text-theme-400 transition-colors" id="anggaran-sisa">Rp 0</h2>
                         </div>
                         <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 mb-2 overflow-hidden">
-                            <div id="anggaran-bar" class="bg-emerald-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                            <div id="anggaran-bar" class="bg-theme-500 h-3 rounded-full transition-all" style="width: 0%"></div>
                         </div>
                         <div class="flex justify-between text-[10px] text-slate-400 font-medium">
                             <span>Terpakai: <b id="anggaran-terpakai" class="text-slate-600 dark:text-slate-300">Rp 0</b></span>
@@ -240,25 +266,26 @@
         </main>
     </div>
 
-    <!-- MODAL POPUPS -->
+    <!-- MODAL TRANSAKSI (TAMBAH / EDIT) -->
     <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
+            <h3 id="form-trx-title" class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
             <div class="space-y-4">
                 <div class="flex gap-2">
-                    <button id="btn-type-masuk" onclick="setType('masuk')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">Pemasukan</button>
-                    <button id="btn-type-keluar" onclick="setType('keluar')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">Pengeluaran</button>
+                    <button id="btn-type-masuk" onclick="setType('masuk')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-theme-500 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 transition-colors">Pemasukan</button>
+                    <button id="btn-type-keluar" onclick="setType('keluar')" class="flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors">Pengeluaran</button>
                 </div>
-                <input type="number" id="input-trx-amount" placeholder="Nominal (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
-                <input type="text" id="input-trx-desc" placeholder="Keterangan..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                <input type="number" id="input-trx-amount" placeholder="Nominal (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                <input type="text" id="input-trx-desc" placeholder="Keterangan..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
             </div>
             <div class="flex gap-3 mt-6">
                 <button onclick="closeTrxForm()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
-                <button id="btn-save-trx" onclick="saveTransaction()" class="flex-[2] bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm">Simpan</button>
+                <button id="btn-save-trx" onclick="saveTransaction()" class="flex-[2] bg-theme-600 text-white font-bold py-3 rounded-xl text-sm transition-colors">Simpan</button>
             </div>
         </div>
     </div>
 
+    <!-- MODAL LINK -->
     <div id="form-link-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Tambah Tautan</h3>
@@ -273,13 +300,42 @@
         </div>
     </div>
 
+    <!-- MODAL ANGGARAN -->
     <div id="form-anggaran-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Set Anggaran Bulanan</h3>
-            <input type="number" id="input-anggaran-batas" placeholder="Maksimal Pengeluaran (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+            <input type="number" id="input-anggaran-batas" placeholder="Maksimal Pengeluaran (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
             <div class="flex gap-3 mt-6">
                 <button onclick="document.getElementById('form-anggaran-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
-                <button onclick="saveAnggaran()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm" id="btn-save-anggaran">Simpan</button>
+                <button onclick="saveAnggaran()" class="flex-1 bg-theme-600 text-white font-bold py-3 rounded-xl text-sm transition-colors" id="btn-save-anggaran">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROFIL & TEMA (BARU) -->
+    <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-1">Profil & Pengaturan</h3>
+            <p class="text-xs font-bold text-theme-500 mb-5" id="profile-email-display">Memuat email...</p>
+            
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
+            <div class="grid grid-cols-5 gap-3 mb-8">
+                <button onclick="applyTheme('emerald')" class="w-10 h-10 rounded-full bg-[#10b981] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('blue')" class="w-10 h-10 rounded-full bg-[#3b82f6] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('indigo')" class="w-10 h-10 rounded-full bg-[#6366f1] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('violet')" class="w-10 h-10 rounded-full bg-[#8b5cf6] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('rose')" class="w-10 h-10 rounded-full bg-[#f43f5e] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                
+                <button onclick="applyTheme('red')" class="w-10 h-10 rounded-full bg-[#ef4444] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('orange')" class="w-10 h-10 rounded-full bg-[#f97316] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('amber')" class="w-10 h-10 rounded-full bg-[#f59e0b] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('cyan')" class="w-10 h-10 rounded-full bg-[#06b6d4] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+                <button onclick="applyTheme('teal')" class="w-10 h-10 rounded-full bg-[#14b8a6] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm transition">Batal</button>
+                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-900/20 text-rose-500 font-bold py-3 rounded-xl text-sm hover:bg-rose-100 dark:hover:bg-rose-900/40 transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Keluar Akun</button>
             </div>
         </div>
     </div>
@@ -287,11 +343,11 @@
     <!-- MOBILE NAVIGATION BOTTOM -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] dark:shadow-none z-40 md:hidden hidden" id="bottom-nav">
         <div class="max-w-md mx-auto flex items-center justify-around px-2">
-            <button id="nav-home" onclick="switchView('home')" class="p-3 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] font-bold">Home</span></button>
-            <button id="nav-laporan" onclick="switchView('laporan')" class="p-3 text-slate-400 hover:text-emerald-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-chart-simple text-lg"></i><span class="text-[9px] font-bold">Laporan</span></button>
-            <div class="relative -top-5"><button onclick="openTrxForm()" class="w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-emerald-200 dark:shadow-none hover:scale-105 transition active:scale-95"><i class="fa-solid fa-plus"></i></button></div>
-            <button id="nav-anggaran" onclick="switchView('anggaran')" class="p-3 text-slate-400 hover:text-emerald-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[9px] font-bold">Anggaran</span></button>
-            <button onclick="logout()" class="p-3 text-slate-400 hover:text-rose-500 flex flex-col items-center gap-1"><i class="fa-solid fa-right-from-bracket text-lg"></i><span class="text-[9px] font-bold">Keluar</span></button>
+            <button id="nav-home" onclick="switchView('home')" class="p-3 text-theme-600 dark:text-theme-400 flex flex-col items-center gap-1 transition-colors"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] font-bold">Home</span></button>
+            <button id="nav-laporan" onclick="switchView('laporan')" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-chart-simple text-lg"></i><span class="text-[9px] font-bold">Laporan</span></button>
+            <div class="relative -top-5"><button onclick="openTrxForm()" class="w-14 h-14 bg-theme-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-theme-200 dark:shadow-none hover:scale-105 transition active:scale-95"><i class="fa-solid fa-plus"></i></button></div>
+            <button id="nav-anggaran" onclick="switchView('anggaran')" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[9px] font-bold">Anggaran</span></button>
+            <button onclick="openProfileModal()" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-user-circle text-lg"></i><span class="text-[9px] font-bold">Profil</span></button>
         </div>
     </nav>
 
@@ -309,9 +365,39 @@
         let globalLinks = [];
         let globalBatasAnggaran = 0; 
         let currentUser = null; 
+        let editingTrxId = null; // Variabel penanda untuk fitur EDIT
 
         let deferredPrompt;
         const btnPwaInstall = document.getElementById('btn-pwa-install');
+
+        // --- SISTEM TEMA WARNA DINAMIS ---
+        const colorPalettes = {
+            emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
+            blue: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a', 950: '#172554' },
+            indigo: { 50: '#eef2ff', 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81', 950: '#1e1b4b' },
+            violet: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 900: '#4c1d95', 950: '#2e1065' },
+            rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' },
+            red: { 50: '#fef2f2', 100: '#fee2e2', 400: '#f87171', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c', 900: '#7f1d1d', 950: '#450a0a' },
+            orange: { 50: '#fff7ed', 100: '#ffedd5', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 900: '#7c2d12', 950: '#431407' },
+            amber: { 50: '#fffbeb', 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 900: '#78350f', 950: '#451a03' },
+            cyan: { 50: '#ecfeff', 100: '#cffafe', 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490', 900: '#164e63', 950: '#083344' },
+            teal: { 50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 900: '#134e4a', 950: '#042f2e' }
+        };
+
+        function applyTheme(themeName) {
+            const t = colorPalettes[themeName];
+            if(!t) return;
+            let root = document.documentElement;
+            root.style.setProperty('--t-50', t[50]);
+            root.style.setProperty('--t-100', t[100]);
+            root.style.setProperty('--t-400', t[400]);
+            root.style.setProperty('--t-500', t[500]);
+            root.style.setProperty('--t-600', t[600]);
+            root.style.setProperty('--t-700', t[700]);
+            root.style.setProperty('--t-900', t[900]);
+            root.style.setProperty('--t-950', t[950]);
+            localStorage.setItem('user-theme', themeName);
+        }
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault(); 
@@ -334,6 +420,10 @@
         });
 
         async function runRouter() {
+            // Load Tema yang disimpan user
+            const savedTheme = localStorage.getItem('user-theme');
+            if(savedTheme) applyTheme(savedTheme);
+
             const params = new URLSearchParams(window.location.search);
             const goPath = params.get('go');
             if (goPath) {
@@ -349,7 +439,6 @@
             }
             initTheme(); renderDate(); checkAuth();
             
-            // Perlu ditambahkan: Mendengarkan perubahan sesi auth global (untuk Google OAuth redirect)
             _supabase.auth.onAuthStateChange((event, session) => {
                 if (session && !currentUser) {
                     currentUser = session.user;
@@ -417,7 +506,7 @@
             }
         }
 
-        async function logout() { if(confirm('Keluar dari aplikasi?')) { await _supabase.auth.signOut(); location.reload(); } }
+        async function logout() { if(confirm('Yakin ingin keluar dari aplikasi?')) { await _supabase.auth.signOut(); location.reload(); } }
 
         function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-dashboard').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); 
@@ -427,19 +516,25 @@
             fetchDataSupabase();
         }
 
+        // BUKA PROFIL MODAL
+        function openProfileModal() {
+            document.getElementById('profile-email-display').innerText = currentUser.email;
+            document.getElementById('form-profile-modal').classList.remove('hidden');
+        }
+
         function switchView(viewName) {
             ['home', 'laporan', 'anggaran'].forEach(v => { 
                 document.getElementById(`view-${v}`).classList.add('hidden'); 
-                document.getElementById(`nav-${v}`).classList.remove('text-emerald-600', 'dark:text-emerald-400');
+                document.getElementById(`nav-${v}`).classList.remove('text-theme-600', 'dark:text-theme-400');
                 document.getElementById(`nav-${v}`).classList.add('text-slate-400');
-                document.getElementById(`side-nav-${v}`).classList.remove('bg-emerald-50', 'dark:bg-emerald-950/40', 'text-emerald-600', 'dark:text-emerald-400');
+                document.getElementById(`side-nav-${v}`).classList.remove('bg-theme-50', 'dark:bg-theme-950/40', 'text-theme-600', 'dark:text-theme-400');
                 document.getElementById(`side-nav-${v}`).classList.add('text-slate-400', 'dark:text-slate-500');
             });
             document.getElementById(`view-${viewName}`).classList.remove('hidden'); 
             document.getElementById(`nav-${viewName}`).classList.remove('text-slate-400');
-            document.getElementById(`nav-${viewName}`).classList.add('text-emerald-600', 'dark:text-emerald-400');
+            document.getElementById(`nav-${viewName}`).classList.add('text-theme-600', 'dark:text-theme-400');
             document.getElementById(`side-nav-${viewName}`).classList.remove('text-slate-400', 'dark:text-slate-500');
-            document.getElementById(`side-nav-${viewName}`).classList.add('bg-emerald-50', 'dark:bg-emerald-950/40', 'text-emerald-600', 'dark:text-emerald-400');
+            document.getElementById(`side-nav-${viewName}`).classList.add('bg-theme-50', 'dark:bg-theme-950/40', 'text-theme-600', 'dark:text-theme-400');
         }
 
         async function fetchDataSupabase() {
@@ -461,27 +556,102 @@
             else {
                 container.innerHTML = globalFinances.map(trx => {
                     const isMasuk = trx.jenis === 'masuk'; if (isMasuk) totalMasuk += parseFloat(trx.nominal); else totalKeluar += parseFloat(trx.nominal);
-                    const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-emerald-500 bg-emerald-50 dark:bg-emerald-900/40 p-2.5 rounded-xl"></i>' : '<i class="fa-solid fa-arrow-up text-rose-500 bg-rose-50 dark:bg-rose-900/40 p-2.5 rounded-xl"></i>';
-                    return `<div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-100 dark:border-slate-700 flex justify-between"><div class="flex items-center gap-3">${icon}<div><h4 class="font-bold text-slate-800 dark:text-white text-xs">${trx.keterangan}</h4><p class="text-[9px] text-slate-400">${trx.waktu}</p></div></div><div class="text-right flex items-center gap-3"><span class="font-extrabold text-sm ${isMasuk ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white'}">${isMasuk?'+':'-'}${formatRupiah(trx.nominal).replace('Rp', '')}</span><button onclick="deleteTrx('${trx.id}')" class="text-slate-300 hover:text-rose-500 transition"><i class="fa-solid fa-xmark"></i></button></div></div>`;
+                    const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-theme-500 bg-theme-50 dark:bg-theme-900/40 p-2.5 rounded-xl transition-colors"></i>' : '<i class="fa-solid fa-arrow-up text-rose-500 bg-rose-50 dark:bg-rose-900/40 p-2.5 rounded-xl"></i>';
+                    return `<div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-100 dark:border-slate-700 flex justify-between"><div class="flex items-center gap-3">${icon}<div><h4 class="font-bold text-slate-800 dark:text-white text-xs">${trx.keterangan}</h4><p class="text-[9px] text-slate-400">${trx.waktu}</p></div></div><div class="text-right flex items-center gap-3"><span class="font-extrabold text-sm ${isMasuk ? 'text-theme-600 dark:text-theme-400' : 'text-slate-800 dark:text-white'} transition-colors">${isMasuk?'+':'-'}${formatRupiah(trx.nominal).replace('Rp', '')}</span><div><button onclick="editTrx('${trx.id}')" class="text-slate-300 hover:text-blue-500 transition mr-1.5"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTrx('${trx.id}')" class="text-slate-300 hover:text-rose-500 transition"><i class="fa-solid fa-xmark"></i></button></div></div></div>`;
                 }).join('');
             }
             document.getElementById('total-masuk').innerText = formatRupiah(totalMasuk); document.getElementById('total-keluar').innerText = formatRupiah(totalKeluar); document.getElementById('total-saldo').innerText = formatRupiah(totalMasuk - totalKeluar);
         }
 
         let currentType = 'masuk';
-        function setType(type) { currentType = type; const btnM = document.getElementById('btn-type-masuk'); const btnK = document.getElementById('btn-type-keluar'); if(type === 'masuk') { btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"; btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400"; } else { btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400"; btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400"; } }
-        function openTrxForm() { document.getElementById('input-trx-amount').value = ''; document.getElementById('input-trx-desc').value = ''; setType('masuk'); document.getElementById('form-trx-modal').classList.remove('hidden'); }
+        function setType(type) { 
+            currentType = type; 
+            const btnM = document.getElementById('btn-type-masuk'); 
+            const btnK = document.getElementById('btn-type-keluar'); 
+            if(type === 'masuk') { 
+                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-theme-500 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 transition-colors"; 
+                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; 
+            } else { 
+                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors"; 
+                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; 
+            } 
+        }
+
+        function openTrxForm() { 
+            editingTrxId = null; // Reset ID untuk Input Baru
+            document.getElementById('input-trx-amount').value = ''; 
+            document.getElementById('input-trx-desc').value = ''; 
+            setType('masuk'); 
+            
+            document.getElementById('form-trx-title').innerText = "Catat Transaksi";
+            document.getElementById('btn-save-trx').innerText = "Simpan";
+
+            document.getElementById('form-trx-modal').classList.remove('hidden'); 
+        }
+
+        // FUNGSI EDIT TRANSAKSI
+        function editTrx(id) {
+            const trx = globalFinances.find(t => t.id === id);
+            if(!trx) return;
+            editingTrxId = id; // Simpan ID transaksi yang sedang diubah
+            
+            document.getElementById('input-trx-amount').value = trx.nominal;
+            document.getElementById('input-trx-desc').value = trx.keterangan;
+            setType(trx.jenis);
+            
+            document.getElementById('form-trx-title').innerText = "Edit Transaksi";
+            document.getElementById('btn-save-trx').innerText = "Update";
+            
+            document.getElementById('form-trx-modal').classList.remove('hidden');
+        }
+
         function closeTrxForm() { document.getElementById('form-trx-modal').classList.add('hidden'); }
 
         async function saveTransaction() {
-            const amount = document.getElementById('input-trx-amount').value; const desc = document.getElementById('input-trx-desc').value; if(!amount || !desc) return alert('Data tidak lengkap!');
-            document.getElementById('btn-save-trx').innerText = "Menyimpan..."; const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
-            const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
-            if(!error && data) { globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!'); } else { alert("Gagal menyimpan ke Supabase."); }
-            document.getElementById('btn-save-trx').innerText = "Simpan";
+            const amount = document.getElementById('input-trx-amount').value; 
+            const desc = document.getElementById('input-trx-desc').value; 
+            if(!amount || !desc) return alert('Data tidak lengkap!');
+            
+            document.getElementById('btn-save-trx').innerText = "Menyimpan..."; 
+            
+            // JIKA SEDANG PROSES EDIT (KARENA ID TERISI)
+            if (editingTrxId) {
+                const { data, error } = await _supabase.from('keuangan')
+                    .update({ jenis: currentType, nominal: amount, keterangan: desc })
+                    .eq('id', editingTrxId)
+                    .select();
+                    
+                if(!error && data) { 
+                    const idx = globalFinances.findIndex(t => t.id === editingTrxId);
+                    if(idx !== -1) globalFinances[idx] = data[0]; // Update lokal data
+                    renderTransactions(); 
+                    updateLaporanDanAnggaran(); 
+                    closeTrxForm(); 
+                    showToast('Transaksi berhasil diperbarui!'); 
+                } else { 
+                    alert("Gagal memperbarui data ke Supabase."); 
+                }
+            } 
+            // JIKA PROSES TAMBAH BARU
+            else {
+                const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
+                const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
+                
+                if(!error && data) { 
+                    globalFinances.unshift(data[0]); 
+                    renderTransactions(); 
+                    updateLaporanDanAnggaran(); 
+                    closeTrxForm(); 
+                    showToast('Transaksi disimpan ke Cloud!'); 
+                } else { 
+                    alert("Gagal menyimpan ke Supabase."); 
+                }
+            }
+            
+            document.getElementById('btn-save-trx').innerText = editingTrxId ? "Update" : "Simpan";
         }
 
-        async function deleteTrx(id) { if(confirm("Hapus transaksi?")) { await _supabase.from('keuangan').delete().eq('id', id); globalFinances = globalFinances.filter(t => t.id !== id); renderTransactions(); updateLaporanDanAnggaran(); } }
+        async function deleteTrx(id) { if(confirm("Hapus transaksi secara permanen?")) { await _supabase.from('keuangan').delete().eq('id', id); globalFinances = globalFinances.filter(t => t.id !== id); renderTransactions(); updateLaporanDanAnggaran(); showToast('Transaksi dihapus.'); } }
 
         function renderLinks() {
             const container = document.getElementById('link-container'); if (globalLinks.length === 0) { container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`; return; }
@@ -505,9 +675,9 @@
             document.getElementById('anggaran-batas').innerText = formatRupiah(globalBatasAnggaran); document.getElementById('anggaran-terpakai').innerText = formatRupiah(keluar);
             let sisa = globalBatasAnggaran - keluar; let pTerpakai = globalBatasAnggaran > 0 ? Math.round((keluar / globalBatasAnggaran) * 100) : 0;
             const sisaEl = document.getElementById('anggaran-sisa'); sisaEl.innerText = formatRupiah(sisa);
-            if(sisa < 0) { sisaEl.classList.remove('text-emerald-600', 'dark:text-emerald-400'); sisaEl.classList.add('text-rose-600', 'dark:text-rose-400'); } else { sisaEl.classList.add('text-emerald-600', 'dark:text-emerald-400'); sisaEl.classList.remove('text-rose-600', 'dark:text-rose-400'); }
+            if(sisa < 0) { sisaEl.classList.remove('text-theme-600', 'dark:text-theme-400'); sisaEl.classList.add('text-rose-600', 'dark:text-rose-400'); } else { sisaEl.classList.add('text-theme-600', 'dark:text-theme-400'); sisaEl.classList.remove('text-rose-600', 'dark:text-rose-400'); }
             const bar = document.getElementById('anggaran-bar'); bar.style.width = `${Math.min(pTerpakai, 100)}%`;
-            if (pTerpakai > 90) bar.className = "h-3 rounded-full transition-all bg-rose-500"; else if (pTerpakai > 70) bar.className = "h-3 rounded-full transition-all bg-amber-500"; else bar.className = "h-3 rounded-full transition-all bg-emerald-500";
+            if (pTerpakai > 90) bar.className = "h-3 rounded-full transition-all bg-rose-500"; else if (pTerpakai > 70) bar.className = "h-3 rounded-full transition-all bg-amber-500"; else bar.className = "h-3 rounded-full transition-all bg-theme-500";
         }
 
         function editAnggaran() { document.getElementById('input-anggaran-batas').value = globalBatasAnggaran || ''; document.getElementById('form-anggaran-modal').classList.remove('hidden'); }
