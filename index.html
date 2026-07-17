@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Super App</title>
     
-    <!-- 1. MENGHUBUNGKAN KE MANIFEST PWA -->
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -17,21 +16,14 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // MENGUBAH TAILWIND AGAR MEMBACA CSS VARIABLE UNTUK WARNA "THEME"
         tailwind.config = { 
             darkMode: 'class', 
             theme: { 
                 extend: { 
                     colors: { 
                         theme: { 
-                            50: 'var(--t-50)', 
-                            100: 'var(--t-100)', 
-                            400: 'var(--t-400)', 
-                            500: 'var(--t-500)', 
-                            600: 'var(--t-600)', 
-                            700: 'var(--t-700)',
-                            900: 'var(--t-900)',
-                            950: 'var(--t-950)'
+                            50: 'var(--t-50)', 100: 'var(--t-100)', 400: 'var(--t-400)', 500: 'var(--t-500)', 
+                            600: 'var(--t-600)', 700: 'var(--t-700)', 900: 'var(--t-900)', 950: 'var(--t-950)'
                         } 
                     } 
                 } 
@@ -40,7 +32,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- LIBRARY UNTUK EKSPOR EXCEL & PDF -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -76,14 +67,10 @@
             
             <button id="btn-action" class="w-full bg-theme-600 text-white font-bold py-3.5 rounded-xl hover:bg-theme-700 active:scale-95 transition shadow-lg shadow-theme-200 dark:shadow-none mt-5">Masuk</button>
             
-            <!-- SEPARATOR -->
             <div class="flex items-center my-4 text-xs text-slate-400 dark:text-slate-500">
-                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
-                <span class="px-3">atau</span>
-                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div><span class="px-3">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
             </div>
 
-            <!-- TOMBOL GOOGLE AUTH MODERN -->
             <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-white font-bold py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 active:scale-95 transition flex items-center justify-center gap-2.5 text-sm shadow-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.357 2.673 1.386 6.577l3.88 3.188z"/>
@@ -93,7 +80,6 @@
                 </svg>
                 Masuk dengan Google
             </button>
-
             <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-theme-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
         </div>
     </div>
@@ -109,7 +95,7 @@
                 </div>
                 <div>
                     <h3 class="font-extrabold text-slate-800 dark:text-white tracking-tight">SuperApp</h3>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Unit BSN Surabaya v1.0</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Workspace v1.0</p>
                 </div>
             </div>
 
@@ -124,6 +110,15 @@
                     <i class="fa-solid fa-wallet text-base"></i> Anggaran
                 </button>
                 
+                <!-- MENU SUPERADMIN (Disembunyikan secara default) -->
+                <div id="menu-superadmin" class="hidden">
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-2 px-4">Menu Admin</p>
+                    <button onclick="openAdsModal()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-amber-500 transition">
+                        <i class="fa-solid fa-bullhorn text-base"></i> Kelola Iklan
+                    </button>
+                </div>
+
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
                 
                 <button onclick="openTrxForm()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none">
@@ -161,6 +156,11 @@
                     <p class="text-slate-500 dark:text-slate-400 text-sm md:hidden">Halo, <span id="user-display" class="font-bold text-theme-600 dark:text-theme-400">User</span>!</p>
                 </header>
 
+                <!-- AREA BANNER IKLAN -->
+                <div id="ads-banner-container" class="hidden mb-6">
+                    <!-- Banner akan di-render di sini oleh JavaScript -->
+                </div>
+
                 <!-- VIEW HOME -->
                 <div id="view-home">
                     <section class="bg-gradient-to-br from-theme-500 to-theme-700 rounded-[32px] p-6 text-white mb-8 shadow-xl shadow-theme-200 dark:shadow-none relative overflow-hidden transition-colors">
@@ -191,17 +191,9 @@
                             <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center">
                                 <i class="fa-solid fa-file-invoice-dollar text-theme-500 mr-2 transition-colors"></i>Riwayat Transaksi
                             </h2>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <button onclick="exportToExcel()" class="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-theme-600 dark:text-theme-400 border border-slate-200 dark:border-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
-                                    <i class="fa-solid fa-file-excel text-base text-theme-500"></i> Excel
-                                </button>
-                                <button onclick="exportToPDF()" class="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-rose-600 dark:text-rose-400 border border-slate-200 dark:border-slate-700 p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm">
-                                    <i class="fa-solid fa-file-pdf text-base text-rose-500"></i> PDF
-                                </button>
-                                <button onclick="openTrxForm()" class="md:hidden bg-theme-600 hover:bg-theme-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-theme-200 dark:shadow-none">
-                                    <i class="fa-solid fa-plus"></i> Catat
-                                </button>
-                            </div>
+                            <button onclick="openTrxForm()" class="md:hidden bg-theme-600 hover:bg-theme-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95 shadow-md shadow-theme-200 dark:shadow-none ml-auto">
+                                <i class="fa-solid fa-plus"></i> Catat
+                            </button>
                         </div>
                         <div id="transaction-container" class="space-y-3 max-h-64 overflow-y-auto pr-1">
                             <p class="text-xs text-center text-slate-400"><i class="fa-solid fa-spinner animate-spin"></i> Memuat database...</p>
@@ -227,13 +219,28 @@
                 <!-- VIEW LAPORAN -->
                 <div id="view-laporan" class="hidden mb-10">
                     <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 mb-6">
-                        <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-wider">Ringkasan Arus Kas</h3>
+                        
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Ringkasan Arus Kas</h3>
+                            <button onclick="shareWhatsApp()" class="text-xs font-bold text-green-500 hover:text-green-600 transition flex items-center gap-1 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
+                        </div>
+
                         <div class="mb-5 flex justify-between items-end"><p class="text-xs text-slate-400">Total Pemasukan</p><p class="font-bold text-theme-500 transition-colors" id="lap-masuk">Rp 0</p></div>
                         <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-5"><div class="bg-theme-500 h-2 rounded-full transition-colors" style="width: 100%"></div></div>
                         <div class="mb-5 flex justify-between items-end"><p class="text-xs text-slate-400">Total Pengeluaran</p><p class="font-bold text-rose-500" id="lap-keluar">Rp 0</p></div>
                         <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-5"><div id="lap-bar-keluar" class="bg-rose-500 h-2 rounded-full transition-all" style="width: 0%"></div></div>
-                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl text-center">
+                        <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl text-center mb-5">
                             <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Rasio Pengeluaran</p><h4 class="text-2xl font-extrabold text-slate-800 dark:text-white" id="lap-rasio">0%</h4>
+                        </div>
+                        
+                        <!-- TOMBOL EXPORT PREMIUM -->
+                        <div class="flex gap-2 border-t border-slate-100 dark:border-slate-700 pt-5">
+                            <button onclick="exportToExcel()" class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-file-excel text-emerald-500"></i> Excel (Pro)
+                            </button>
+                            <button onclick="exportToPDF()" class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF (Pro)
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -268,7 +275,7 @@
 
     <!-- MODAL TRANSAKSI (TAMBAH / EDIT) -->
     <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
             <h3 id="form-trx-title" class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
             <div class="space-y-4">
                 <div class="flex gap-2">
@@ -287,7 +294,7 @@
 
     <!-- MODAL LINK -->
     <div id="form-link-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Tambah Tautan</h3>
             <div class="space-y-4">
                 <input type="text" id="input-link-path" placeholder="Nama Path (Contoh: gas)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
@@ -302,7 +309,7 @@
 
     <!-- MODAL ANGGARAN -->
     <div id="form-anggaran-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Set Anggaran Bulanan</h3>
             <input type="number" id="input-anggaran-batas" placeholder="Maksimal Pengeluaran (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
             <div class="flex gap-3 mt-6">
@@ -312,10 +319,28 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & TEMA (BARU) -->
+    <!-- MODAL KELOLA IKLAN (SUPERADMIN) -->
+    <div id="form-ads-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Kelola Iklan Banner</h3>
+            <div class="space-y-4">
+                <input type="text" id="input-ads-text" placeholder="Isi teks promosi / iklan..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                <input type="url" id="input-ads-link" placeholder="Link (Opsional)..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="document.getElementById('form-ads-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
+                <button id="btn-save-ads" onclick="saveAds()" class="flex-1 bg-amber-500 text-white font-bold py-3 rounded-xl text-sm hover:bg-amber-600">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROFIL & TEMA -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-1">Profil & Pengaturan</h3>
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+            <div class="flex justify-between items-center mb-1">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white">Profil</h3>
+                <span id="badge-premium" class="hidden bg-yellow-100 text-yellow-700 text-[10px] font-extrabold px-2 py-1 rounded border border-yellow-300 uppercase">Premium</span>
+            </div>
             <p class="text-xs font-bold text-theme-500 mb-5" id="profile-email-display">Memuat email...</p>
             
             <h4 class="text-sm font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
@@ -334,8 +359,8 @@
             </div>
 
             <div class="flex gap-3">
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm transition">Batal</button>
-                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-900/20 text-rose-500 font-bold py-3 rounded-xl text-sm hover:bg-rose-100 dark:hover:bg-rose-900/40 transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Keluar Akun</button>
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm transition">Tutup</button>
+                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-900/20 text-rose-500 font-bold py-3 rounded-xl text-sm hover:bg-rose-100 dark:hover:bg-rose-900/40 transition flex items-center justify-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
             </div>
         </div>
     </div>
@@ -363,9 +388,15 @@
 
         let globalFinances = [];
         let globalLinks = [];
+        let globalAds = [];
         let globalBatasAnggaran = 0; 
         let currentUser = null; 
-        let editingTrxId = null; // Variabel penanda untuk fitur EDIT
+        let editingTrxId = null; 
+        
+        // STATUS BERBAYAR (Bisa kamu update via Supabase nantinya)
+        let isPremiumUser = false; 
+        // EMAIL SUPERADMIN
+        const superAdminEmail = 'admin@bpb.my.id';
 
         let deferredPrompt;
         const btnPwaInstall = document.getElementById('btn-pwa-install');
@@ -415,19 +446,16 @@
             btnPwaInstall.disabled = false;
         });
 
-        window.addEventListener('appinstalled', () => {
-            showToast('Aplikasi berhasil dipasang di beranda kamu!');
-        });
+        window.addEventListener('appinstalled', () => { showToast('Aplikasi berhasil dipasang!'); });
 
         async function runRouter() {
-            // Load Tema yang disimpan user
             const savedTheme = localStorage.getItem('user-theme');
             if(savedTheme) applyTheme(savedTheme);
 
             const params = new URLSearchParams(window.location.search);
             const goPath = params.get('go');
             if (goPath) {
-                const { data, error } = await _supabase.from('tautan').select('target').eq('path', goPath.toLowerCase()).single();
+                const { data } = await _supabase.from('tautan').select('target').eq('path', goPath.toLowerCase()).single();
                 if (data && data.target) {
                     document.title = `Redirecting - ${goPath}`;
                     document.body.innerHTML = `<iframe src="${data.target}" style="position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>`;
@@ -447,11 +475,7 @@
             });
 
             if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js')
-                        .then(reg => console.log('Service Worker terdaftar!', reg))
-                        .catch(err => console.error('Gagal mendaftarkan Service Worker:', err));
-                });
+                window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(err => console.error(err)); });
             }
         }
 
@@ -491,19 +515,9 @@
             }
         };
 
-        // --- FUNGSIONAL LOGIN GOOGLE AUTH ---
         async function loginWithGoogle() {
-            const { data, error } = await _supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.origin + window.location.pathname
-                }
-            });
-            if (error) {
-                const errEl = document.getElementById('auth-error');
-                errEl.innerText = "Gagal masuk menggunakan Google.";
-                errEl.classList.remove('hidden');
-            }
+            const { data, error } = await _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + window.location.pathname } });
+            if (error) { const errEl = document.getElementById('auth-error'); errEl.innerText = "Gagal masuk menggunakan Google."; errEl.classList.remove('hidden'); }
         }
 
         async function logout() { if(confirm('Yakin ingin keluar dari aplikasi?')) { await _supabase.auth.signOut(); location.reload(); } }
@@ -513,10 +527,19 @@
             const username = currentUser.email.split('@')[0];
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
+            
+            // CEK JIKA USER ADALAH SUPERADMIN
+            if(currentUser.email === superAdminEmail) {
+                document.getElementById('menu-superadmin').classList.remove('hidden');
+                isPremiumUser = true; // Admin otomatis dapet fitur premium
+            }
+
+            if(isPremiumUser) document.getElementById('badge-premium').classList.remove('hidden');
+
             fetchDataSupabase();
+            fetchAds(); // Tarik data iklan
         }
 
-        // BUKA PROFIL MODAL
         function openProfileModal() {
             document.getElementById('profile-email-display').innerText = currentUser.email;
             document.getElementById('form-profile-modal').classList.remove('hidden');
@@ -566,88 +589,35 @@
         let currentType = 'masuk';
         function setType(type) { 
             currentType = type; 
-            const btnM = document.getElementById('btn-type-masuk'); 
-            const btnK = document.getElementById('btn-type-keluar'); 
-            if(type === 'masuk') { 
-                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-theme-500 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 transition-colors"; 
-                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; 
-            } else { 
-                btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors"; 
-                btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; 
-            } 
+            const btnM = document.getElementById('btn-type-masuk'); const btnK = document.getElementById('btn-type-keluar'); 
+            if(type === 'masuk') { btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-theme-500 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 transition-colors"; btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; } else { btnK.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 transition-colors"; btnM.className = "flex-1 py-3 rounded-xl text-sm font-bold border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors"; } 
         }
 
         function openTrxForm() { 
-            editingTrxId = null; // Reset ID untuk Input Baru
-            document.getElementById('input-trx-amount').value = ''; 
-            document.getElementById('input-trx-desc').value = ''; 
-            setType('masuk'); 
-            
-            document.getElementById('form-trx-title').innerText = "Catat Transaksi";
-            document.getElementById('btn-save-trx').innerText = "Simpan";
-
-            document.getElementById('form-trx-modal').classList.remove('hidden'); 
+            editingTrxId = null; 
+            document.getElementById('input-trx-amount').value = ''; document.getElementById('input-trx-desc').value = ''; 
+            setType('masuk'); document.getElementById('form-trx-title').innerText = "Catat Transaksi"; document.getElementById('btn-save-trx').innerText = "Simpan"; document.getElementById('form-trx-modal').classList.remove('hidden'); 
         }
 
-        // FUNGSI EDIT TRANSAKSI
         function editTrx(id) {
-            const trx = globalFinances.find(t => t.id === id);
-            if(!trx) return;
-            editingTrxId = id; // Simpan ID transaksi yang sedang diubah
-            
-            document.getElementById('input-trx-amount').value = trx.nominal;
-            document.getElementById('input-trx-desc').value = trx.keterangan;
-            setType(trx.jenis);
-            
-            document.getElementById('form-trx-title').innerText = "Edit Transaksi";
-            document.getElementById('btn-save-trx').innerText = "Update";
-            
-            document.getElementById('form-trx-modal').classList.remove('hidden');
+            const trx = globalFinances.find(t => t.id === id); if(!trx) return;
+            editingTrxId = id; document.getElementById('input-trx-amount').value = trx.nominal; document.getElementById('input-trx-desc').value = trx.keterangan; setType(trx.jenis); document.getElementById('form-trx-title').innerText = "Edit Transaksi"; document.getElementById('btn-save-trx').innerText = "Update"; document.getElementById('form-trx-modal').classList.remove('hidden');
         }
 
         function closeTrxForm() { document.getElementById('form-trx-modal').classList.add('hidden'); }
 
         async function saveTransaction() {
-            const amount = document.getElementById('input-trx-amount').value; 
-            const desc = document.getElementById('input-trx-desc').value; 
-            if(!amount || !desc) return alert('Data tidak lengkap!');
-            
+            const amount = document.getElementById('input-trx-amount').value; const desc = document.getElementById('input-trx-desc').value; if(!amount || !desc) return alert('Data tidak lengkap!');
             document.getElementById('btn-save-trx').innerText = "Menyimpan..."; 
             
-            // JIKA SEDANG PROSES EDIT (KARENA ID TERISI)
             if (editingTrxId) {
-                const { data, error } = await _supabase.from('keuangan')
-                    .update({ jenis: currentType, nominal: amount, keterangan: desc })
-                    .eq('id', editingTrxId)
-                    .select();
-                    
-                if(!error && data) { 
-                    const idx = globalFinances.findIndex(t => t.id === editingTrxId);
-                    if(idx !== -1) globalFinances[idx] = data[0]; // Update lokal data
-                    renderTransactions(); 
-                    updateLaporanDanAnggaran(); 
-                    closeTrxForm(); 
-                    showToast('Transaksi berhasil diperbarui!'); 
-                } else { 
-                    alert("Gagal memperbarui data ke Supabase."); 
-                }
-            } 
-            // JIKA PROSES TAMBAH BARU
-            else {
+                const { data, error } = await _supabase.from('keuangan').update({ jenis: currentType, nominal: amount, keterangan: desc }).eq('id', editingTrxId).select();
+                if(!error && data) { const idx = globalFinances.findIndex(t => t.id === editingTrxId); if(idx !== -1) globalFinances[idx] = data[0]; renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi berhasil diperbarui!'); } else { alert("Gagal memperbarui data ke Supabase."); }
+            } else {
                 const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
                 const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
-                
-                if(!error && data) { 
-                    globalFinances.unshift(data[0]); 
-                    renderTransactions(); 
-                    updateLaporanDanAnggaran(); 
-                    closeTrxForm(); 
-                    showToast('Transaksi disimpan ke Cloud!'); 
-                } else { 
-                    alert("Gagal menyimpan ke Supabase."); 
-                }
+                if(!error && data) { globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!'); } else { alert("Gagal menyimpan ke Supabase."); }
             }
-            
             document.getElementById('btn-save-trx').innerText = editingTrxId ? "Update" : "Simpan";
         }
 
@@ -687,44 +657,88 @@
             if (batas) {
                 document.getElementById('btn-save-anggaran').innerText = "Menyimpan...";
                 const { data, error } = await _supabase.from('pengaturan').upsert({ user_id: currentUser.id, batas_anggaran: batas }).select();
-                if (!error) {
-                    globalBatasAnggaran = parseFloat(batas);
-                    document.getElementById('form-anggaran-modal').classList.add('hidden');
-                    updateLaporanDanAnggaran();
-                    showToast('Batas anggaran tersimpan di Cloud!');
-                } else { alert("Gagal menyimpan anggaran ke database."); }
+                if (!error) { globalBatasAnggaran = parseFloat(batas); document.getElementById('form-anggaran-modal').classList.add('hidden'); updateLaporanDanAnggaran(); showToast('Batas anggaran tersimpan!'); } else { alert("Gagal menyimpan anggaran."); }
                 document.getElementById('btn-save-anggaran').innerText = "Simpan";
             }
         }
 
         function exportToExcel() {
+            if(!isPremiumUser) return alert("Maaf, Fitur Export Excel hanya tersedia untuk pengguna Premium.");
             if (globalFinances.length === 0) return alert("Tidak ada data transaksi untuk diekspor!");
-            const dataUntukExcel = globalFinances.map((trx, index) => ({
-                "No": index + 1,
-                "Waktu": trx.waktu,
-                "Keterangan": trx.keterangan,
-                "Jenis": trx.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran',
-                "Nominal (Rp)": parseFloat(trx.nominal)
-            }));
-            const worksheet = XLSX.utils.json_to_sheet(dataUntukExcel);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Transaksi");
-            XLSX.writeFile(workbook, `Laporan_Transaksi_${new Date().toISOString().slice(0,10)}.xlsx`);
-            showToast("Berhasil mengekspor ke Excel!");
+            const dataUntukExcel = globalFinances.map((trx, index) => ({ "No": index + 1, "Waktu": trx.waktu, "Keterangan": trx.keterangan, "Jenis": trx.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran', "Nominal (Rp)": parseFloat(trx.nominal) }));
+            const worksheet = XLSX.utils.json_to_sheet(dataUntukExcel); const workbook = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(workbook, worksheet, "Transaksi"); XLSX.writeFile(workbook, `Laporan_Transaksi_${new Date().toISOString().slice(0,10)}.xlsx`); showToast("Mengekspor ke Excel...");
         }
 
         function exportToPDF() {
+            if(!isPremiumUser) return alert("Maaf, Fitur Export PDF hanya tersedia untuk pengguna Premium.");
             if (globalFinances.length === 0) return alert("Tidak ada data transaksi untuk diekspor!");
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFont("Helvetica", "bold"); doc.setFontSize(16); doc.text("LAPORAN RIWAYAT TRANSAKSI", 14, 20);
-            doc.setFont("Helvetica", "normal"); doc.setFontSize(10);
-            doc.text(`Unduh pada: ${new Date().toLocaleDateString('id-ID')}`, 14, 27);
-            doc.text(`User: ${currentUser ? currentUser.email : 'Guest'}`, 14, 33);
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            doc.setFont("Helvetica", "bold"); doc.setFontSize(16); doc.text("LAPORAN RIWAYAT TRANSAKSI", 14, 20); doc.setFont("Helvetica", "normal"); doc.setFontSize(10); doc.text(`Unduh pada: ${new Date().toLocaleDateString('id-ID')}`, 14, 27); doc.text(`User: ${currentUser ? currentUser.email : 'Guest'}`, 14, 33);
             const rows = globalFinances.map((trx, index) => [index + 1, trx.waktu, trx.keterangan, trx.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran', formatRupiah(trx.nominal)]);
-            doc.autoTable({ startY: 38, head: [['No', 'Waktu', 'Keterangan', 'Jenis', 'Nominal']], body: rows, headStyles: { fillColor: [16, 185, 129], fontStyle: 'bold' }, styles: { font: 'Helvetica', fontSize: 9 }, columnStyles: { 4: { halign: 'right' } } });
-            doc.save(`Laporan_Transaksi_${new Date().toISOString().slice(0,10)}.pdf`);
-            showToast("Berhasil mengekspor ke PDF!");
+            doc.autoTable({ startY: 38, head: [['No', 'Waktu', 'Keterangan', 'Jenis', 'Nominal']], body: rows, headStyles: { fillColor: [16, 185, 129], fontStyle: 'bold' }, styles: { font: 'Helvetica', fontSize: 9 }, columnStyles: { 4: { halign: 'right' } } }); doc.save(`Laporan_Transaksi_${new Date().toISOString().slice(0,10)}.pdf`); showToast("Mengekspor ke PDF...");
+        }
+
+        // BAGIKAN KE WHATSAPP
+        function shareWhatsApp() {
+            const saldoEl = document.getElementById('total-saldo').innerText;
+            const masukEl = document.getElementById('lap-masuk').innerText;
+            const keluarEl = document.getElementById('lap-keluar').innerText;
+            
+            const msg = `*Laporan Keuangan Pribadi*\n\n💰 *Total Saldo:* ${saldoEl}\n📈 *Pemasukan:* ${masukEl}\n📉 *Pengeluaran:* ${keluarEl}\n\n_Catatan ini dibuat via Personal SuperApp Dashboard._`;
+            
+            const waLink = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+            window.open(waLink, '_blank');
+        }
+
+        // KELOLA IKLAN (KHUSUS SUPERADMIN)
+        function openAdsModal() {
+            document.getElementById('input-ads-text').value = '';
+            document.getElementById('input-ads-link').value = '';
+            document.getElementById('form-ads-modal').classList.remove('hidden');
+        }
+
+        async function saveAds() {
+            const teks = document.getElementById('input-ads-text').value;
+            const link = document.getElementById('input-ads-link').value;
+            if(!teks) return alert('Teks iklan tidak boleh kosong!');
+
+            document.getElementById('btn-save-ads').innerText = "Menyimpan...";
+            const { data, error } = await _supabase.from('iklan').insert([{ teks: teks, link: link }]).select();
+            if(!error) {
+                document.getElementById('form-ads-modal').classList.add('hidden');
+                showToast("Iklan berhasil diunggah!");
+                fetchAds();
+            } else {
+                alert('Gagal mengunggah iklan. Pastikan tabel "iklan" ada di Supabase.');
+            }
+            document.getElementById('btn-save-ads').innerText = "Simpan";
+        }
+
+        async function fetchAds() {
+            const container = document.getElementById('ads-banner-container');
+            const { data, error } = await _supabase.from('iklan').select('*').order('created_at', { ascending: false }).limit(1); // Ambil iklan terbaru
+            
+            if(!error && data && data.length > 0) {
+                const ads = data[0];
+                let clickAction = ads.link ? `onclick="window.open('${ads.link}', '_blank')"` : '';
+                let hoverClass = ads.link ? 'cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/40' : '';
+
+                container.innerHTML = `
+                    <div ${clickAction} class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 p-4 rounded-2xl flex items-center justify-between transition-colors ${hoverClass}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-800 text-amber-500 flex items-center justify-center font-bold text-sm shadow-sm"><i class="fa-solid fa-bullhorn"></i></div>
+                            <div>
+                                <p class="text-[10px] text-amber-600 dark:text-amber-500 font-extrabold uppercase tracking-widest mb-0.5">Pengumuman / Iklan</p>
+                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300">${ads.teks}</p>
+                            </div>
+                        </div>
+                        ${ads.link ? '<i class="fa-solid fa-arrow-up-right-from-square text-amber-500 text-xs"></i>' : ''}
+                    </div>
+                `;
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
         }
 
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
