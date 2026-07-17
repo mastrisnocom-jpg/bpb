@@ -6,7 +6,7 @@
     <title>Personal Super App - Supabase</title>
     
     <link rel="manifest" href="/manifest.json">
-
+<link rel="icon" type="image/png" href="https://bpb.my.id/logo.png">
     <style>
         /* DEFINISI CSS VARIABLE UNTUK 10 TEMA WARNA */
         :root {
@@ -125,7 +125,7 @@
             <!-- Bagian Bawah Profil -->
             <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-col gap-3">
                 <div onclick="openProfileModal()" class="flex items-center gap-3 cursor-pointer p-1 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
-                    <div class="w-9 h-9 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center text-sm font-bold shadow-inner overflow-hidden" id="user-avatar-placeholder">
+                    <div class="w-9 h-9 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center text-sm font-bold shadow-inner" id="user-avatar-placeholder">
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -602,14 +602,9 @@
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // FUNGSI DINAMIS: DETEKSI & PENGATURAN FOTO PROFIL DARI GOOGLE
-            const avatarContainer = document.getElementById('user-avatar-placeholder');
-            if (currentUser.user_metadata && currentUser.user_metadata.avatar_url) {
-                avatarContainer.innerHTML = `<img src="${currentUser.user_metadata.avatar_url}" alt="Profile" class="w-full h-full rounded-full object-cover shadow-sm" referrerpolicy="no-referrer">`;
-            } else {
-                const initial = username.charAt(0).toUpperCase();
-                avatarContainer.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
-            }
+            // GENERATE INITIAL AVATAR SECARA DINAMIS
+            const initial = username.charAt(0).toUpperCase();
+            document.getElementById('user-avatar-placeholder').innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
 
             // CEK STATUS PREMIUM / ADMIN SECARA DINAMIS
             if(currentUser.email === superAdminEmail) {
@@ -762,7 +757,10 @@
                     renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi berhasil diperbarui!'); 
                 } else { alert("Gagal memperbarui data ke Supabase."); }
             } else {
-                const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
+                const now = new Date(); 
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const dateStr = `${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
+                
                 const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
                 if(!error && data) { globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!'); } else { alert("Gagal menyimpan ke Supabase."); }
             }
@@ -795,14 +793,43 @@
             const daysMap = { 'senin': 0, 'selasa': 1, 'rabu': 2, 'kamis': 3, 'jumat': 4, 'sabtu': 5, 'minggu': 6 };
             const dataPengeluaran = [0, 0, 0, 0, 0, 0, 0];
             
-            // Pengolahan data: Filter jenis pengeluaran, lalu akumulasikan nominal berdasarkan pencocokan teks hari
+            // Pengolahan data: Filter jenis pengeluaran, lalu akumulasikan nominal berdasarkan pencocokan teks hari atau pencocokan tanggal fallback
             globalFinances.forEach(trx => {
                 if (trx.jenis === 'keluar' && trx.waktu) {
                     const cleanWaktu = trx.waktu.toLowerCase();
+                    let matched = false;
+
+                    // Langkah 1: Coba cocokkan dengan nama hari eksplisit (untuk data baru)
                     for (const day in daysMap) {
                         if (cleanWaktu.includes(day)) {
                             dataPengeluaran[daysMap[day]] += parseFloat(trx.nominal) || 0;
+                            matched = true;
                             break;
+                        }
+                    }
+
+                    // Langkah 2: Fallback jika format lama (hanya angka "tgl/bln" seperti "17/7"), hitung nama harinya secara programatik
+                    if (!matched) {
+                        try {
+                            const datePart = cleanWaktu.split(' ')[0]; // Ambil "17/7"
+                            const parts = datePart.split('/');
+                            if (parts.length >= 2) {
+                                const dayNum = parseInt(parts[0]);
+                                const monthNum = parseInt(parts[1]) - 1; // Bulan JS dimulai dari 0
+                                const currentYear = new Date().getFullYear();
+                                
+                                const parsedDate = new Date(currentYear, monthNum, dayNum);
+                                if (!isNaN(parsedDate.getTime())) {
+                                    // getDay() -> 0: Minggu, 1: Senin, ..., 6: Sabtu
+                                    // Sesuaikan dengan array index target dataPengeluaran (Senin=0, ..., Minggu=6)
+                                    let chartIndex = parsedDate.getDay() - 1;
+                                    if (chartIndex === -1) chartIndex = 6; // Mengubah Minggu dari -1 menjadi index 6
+                                    
+                                    dataPengeluaran[chartIndex] += parseFloat(trx.nominal) || 0;
+                                }
+                            }
+                        } catch (e) {
+                            console.error("Gagal memproses fallback tanggal lama:", e);
                         }
                     }
                 }
