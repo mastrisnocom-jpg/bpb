@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Super App</title>
+    <title>Personal Super App - Supabase</title>
     
     <link rel="manifest" href="/manifest.json">
 
@@ -110,15 +110,6 @@
                     <i class="fa-solid fa-wallet text-base"></i> Anggaran
                 </button>
                 
-                <!-- MENU SUPERADMIN (Disembunyikan secara default) -->
-                <div id="menu-superadmin" class="hidden">
-                    <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-2 px-4">Menu Admin</p>
-                    <button onclick="openAdsModal()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-amber-500 transition">
-                        <i class="fa-solid fa-bullhorn text-base"></i> Kelola Iklan
-                    </button>
-                </div>
-
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
                 
                 <button onclick="openTrxForm()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none">
@@ -334,15 +325,27 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & TEMA -->
+    <!-- MODAL PROFIL & TEMA (BARU) -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
             <div class="flex justify-between items-center mb-1">
                 <h3 class="text-xl font-bold text-slate-800 dark:text-white">Profil</h3>
-                <span id="badge-premium" class="hidden bg-yellow-100 text-yellow-700 text-[10px] font-extrabold px-2 py-1 rounded border border-yellow-300 uppercase">Premium</span>
+                <span id="badge-premium" class="hidden text-[10px] font-extrabold px-2 py-1 rounded border uppercase">Status</span>
             </div>
-            <p class="text-xs font-bold text-theme-500 mb-5" id="profile-email-display">Memuat email...</p>
+            <p class="text-xs font-bold text-theme-500 mb-4" id="profile-email-display">Memuat email...</p>
             
+            <button id="btn-beli-premium" onclick="beliPremium()" class="w-full mb-5 bg-gradient-to-r from-amber-400 to-amber-500 text-white font-bold py-2.5 rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition hover:scale-[0.98] hidden">
+                <i class="fa-solid fa-crown"></i> Beli Premium / Upgrade Pro
+            </button>
+
+            <!-- Menu Khusus Admin di dalam profil -->
+            <div id="menu-admin-profil" class="hidden mb-5 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Admin Tools</p>
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden'); openAdsModal();" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bullhorn"></i> Pasang Iklan Banner
+                </button>
+            </div>
+
             <h4 class="text-sm font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
             <div class="grid grid-cols-5 gap-3 mb-8">
                 <button onclick="applyTheme('emerald')" class="w-10 h-10 rounded-full bg-[#10b981] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
@@ -393,10 +396,9 @@
         let currentUser = null; 
         let editingTrxId = null; 
         
-        // STATUS BERBAYAR (Bisa kamu update via Supabase nantinya)
+        // STATUS BERBAYAR & SUPERADMIN
         let isPremiumUser = false; 
-        // EMAIL SUPERADMIN
-        const superAdminEmail = 'admin@bpb.my.id';
+        const superAdminEmail = 'mastrisnocom@gmail.com';
 
         let deferredPrompt;
         const btnPwaInstall = document.getElementById('btn-pwa-install');
@@ -528,13 +530,10 @@
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // CEK JIKA USER ADALAH SUPERADMIN
+            // CEK SUPERADMIN
             if(currentUser.email === superAdminEmail) {
-                document.getElementById('menu-superadmin').classList.remove('hidden');
                 isPremiumUser = true; // Admin otomatis dapet fitur premium
             }
-
-            if(isPremiumUser) document.getElementById('badge-premium').classList.remove('hidden');
 
             fetchDataSupabase();
             fetchAds(); // Tarik data iklan
@@ -542,7 +541,35 @@
 
         function openProfileModal() {
             document.getElementById('profile-email-display').innerText = currentUser.email;
+            
+            const badgePremium = document.getElementById('badge-premium');
+            const btnBeliPremium = document.getElementById('btn-beli-premium');
+            const menuAdminProfil = document.getElementById('menu-admin-profil');
+            
+            badgePremium.classList.remove('hidden');
+            if (isPremiumUser) {
+                badgePremium.className = "bg-yellow-100 text-yellow-700 border-yellow-300 text-[10px] font-extrabold px-2 py-1 rounded border uppercase";
+                badgePremium.innerText = "PRO USER";
+                btnBeliPremium.classList.add('hidden');
+            } else {
+                badgePremium.className = "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600 text-[10px] font-extrabold px-2 py-1 rounded border uppercase";
+                badgePremium.innerText = "FREE USER";
+                btnBeliPremium.classList.remove('hidden');
+            }
+
+            if (currentUser.email === superAdminEmail) {
+                menuAdminProfil.classList.remove('hidden');
+            } else {
+                menuAdminProfil.classList.add('hidden');
+            }
+
             document.getElementById('form-profile-modal').classList.remove('hidden');
+        }
+
+        function beliPremium() {
+            const msg = `Halo Admin, saya ingin upgrade ke akun Premium untuk membuka fitur Export Excel & PDF di SuperApp.\n\nEmail akun saya: ${currentUser.email}`;
+            const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`; // GANTI NOMOR INI KE NOMOR WA KAMU
+            window.open(waLink, '_blank');
         }
 
         function switchView(viewName) {
@@ -600,8 +627,15 @@
         }
 
         function editTrx(id) {
-            const trx = globalFinances.find(t => t.id === id); if(!trx) return;
-            editingTrxId = id; document.getElementById('input-trx-amount').value = trx.nominal; document.getElementById('input-trx-desc').value = trx.keterangan; setType(trx.jenis); document.getElementById('form-trx-title').innerText = "Edit Transaksi"; document.getElementById('btn-save-trx').innerText = "Update"; document.getElementById('form-trx-modal').classList.remove('hidden');
+            const trx = globalFinances.find(t => t.id == id); // PERBAIKAN: == agar id cocok
+            if(!trx) return;
+            editingTrxId = trx.id; 
+            document.getElementById('input-trx-amount').value = trx.nominal; 
+            document.getElementById('input-trx-desc').value = trx.keterangan; 
+            setType(trx.jenis); 
+            document.getElementById('form-trx-title').innerText = "Edit Transaksi"; 
+            document.getElementById('btn-save-trx').innerText = "Update"; 
+            document.getElementById('form-trx-modal').classList.remove('hidden');
         }
 
         function closeTrxForm() { document.getElementById('form-trx-modal').classList.add('hidden'); }
@@ -612,7 +646,11 @@
             
             if (editingTrxId) {
                 const { data, error } = await _supabase.from('keuangan').update({ jenis: currentType, nominal: amount, keterangan: desc }).eq('id', editingTrxId).select();
-                if(!error && data) { const idx = globalFinances.findIndex(t => t.id === editingTrxId); if(idx !== -1) globalFinances[idx] = data[0]; renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi berhasil diperbarui!'); } else { alert("Gagal memperbarui data ke Supabase."); }
+                if(!error && data) { 
+                    const idx = globalFinances.findIndex(t => t.id == editingTrxId); 
+                    if(idx !== -1) globalFinances[idx] = data[0]; 
+                    renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi berhasil diperbarui!'); 
+                } else { alert("Gagal memperbarui data ke Supabase."); }
             } else {
                 const now = new Date(); const dateStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}`;
                 const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
