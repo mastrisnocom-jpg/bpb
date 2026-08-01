@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Modern & Elegan</title>
+  <title>Aplikasi Dashboard Modern</title>
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,7 @@
       --primary-hover: #4f46e5;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --sidebar-width: 260px;
     }
 
     * {
@@ -31,37 +32,35 @@
       background: var(--bg-gradient);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
     }
 
-    /* Container Halaman & Animasi Transisi */
+    /* Container Halaman */
     .page {
       display: none;
       width: 100%;
-      max-width: 440px;
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .page.landing-wide {
-      max-width: 600px;
+      min-height: 100vh;
     }
 
     .page.active {
-      display: block;
+      display: flex;
+    }
+
+    /* Auth Pages (Landing & Login) Layout Center */
+    .auth-container {
+      max-width: 440px;
+      margin: auto;
+      padding: 20px;
+      width: 100%;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .auth-container.wide {
+      max-width: 600px;
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Card Glassmorphism */
@@ -75,8 +74,8 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
-    /* Tipografi */
-    h1, h2 {
+    /* Tipografi & Tombol */
+    h1, h2, h3 {
       font-weight: 700;
       letter-spacing: -0.02em;
       margin-bottom: 12px;
@@ -90,7 +89,6 @@
       margin-bottom: 28px;
     }
 
-    /* Form & Input */
     .form-group {
       margin-bottom: 20px;
       text-align: left;
@@ -122,7 +120,6 @@
       box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     }
 
-    /* Tombol Style */
     .btn {
       width: 100%;
       padding: 12px 20px;
@@ -138,6 +135,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      text-decoration: none;
     }
 
     .btn:hover {
@@ -157,7 +155,6 @@
       color: var(--text-main);
     }
 
-    /* Elemen Tambahan */
     .badge {
       display: inline-block;
       padding: 4px 12px;
@@ -171,63 +168,217 @@
       letter-spacing: 0.05em;
     }
 
-    .user-tag {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 8px;
-      border-radius: 6px;
+    /* ================= DASHBOARD LAYOUT ================= */
+    #dashboardPage {
+      display: none;
+    }
+    #dashboardPage.active {
+      display: flex;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      position: fixed;
+      height: 100vh;
+    }
+
+    .sidebar-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    .sidebar-menu a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: block;
+      transition: all 0.2s;
+    }
+
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(99, 102, 241, 0.15);
       color: #818cf8;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      padding: 40px;
+      background: transparent;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .user-profile-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Grid Statistik Dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .stat-card h4 {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Tabel / Content Area */
+    .content-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
     }
   </style>
 </head>
 <body>
 
   <!-- 1. LANDING PAGE -->
-  <div id="landingPage" class="page landing-wide">
-    <div class="card">
-      <span class="badge">Platform Terpadu</span>
-      <h1>Kelola Data Anda dengan Presisi & Kemudahan</h1>
-      <p>Sistem manajemen modern yang dirancang untuk mempercepat alur kerja Anda. Akses instan, visualisasi data real-time, dan keamanan tingkat lanjut.</p>
-      <button class="btn" onclick="navigateTo('loginPage')">
-        Mulai Sekarang &rarr;
-      </button>
+  <div id="landingPage" class="page">
+    <div class="auth-container wide">
+      <div class="card">
+        <span class="badge">Platform Terpadu</span>
+        <h1>Kelola Data Anda dengan Presisi & Kemudahan</h1>
+        <p>Sistem manajemen modern yang dirancang untuk mempercepat alur kerja Anda. Akses instan, visualisasi data real-time, dan keamanan tingkat lanjut.</p>
+        <button class="btn" onclick="navigateTo('loginPage')">
+          Mulai Sekarang &rarr;
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- 2. LOGIN PAGE -->
   <div id="loginPage" class="page">
-    <div class="card">
-      <h2>Selamat Datang</h2>
-      <p>Silakan masuk untuk mengakses dashboard Anda.</p>
-      
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" required placeholder="Masukkan username">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" required placeholder="••••••••">
-        </div>
-        <button type="submit" class="btn">Masuk ke Akun</button>
-      </form>
+    <div class="auth-container">
+      <div class="card">
+        <h2>Selamat Datang</h2>
+        <p>Silakan masuk untuk mengakses dashboard utama Anda.</p>
+        
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" required placeholder="Masukkan username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn">Masuk ke Akun</button>
+        </form>
 
-      <button class="btn btn-secondary" onclick="navigateTo('landingPage')">
-        &larr; Kembali ke Informasi
-      </button>
+        <button class="btn btn-secondary" onclick="navigateTo('landingPage')">
+          &larr; Kembali ke Informasi
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- 3. DASHBOARD PAGE (PROTECTED) -->
-  <div id="dashboardPage" class="page landing-wide">
-    <div class="card">
-      <span class="badge">Akses Diberikan</span>
-      <h1>Dashboard Utama</h1>
-      <p>Selamat datang kembali, <span id="userDisplay" class="user-tag"></span>. Sesi lokal Anda aktif dan siap digunakan.</p>
-      
-      <button class="btn" onclick="handleLogout()" style="background: #ef4444;">
-        Keluar dari Sesi
+  <!-- 3. DASHBOARD PAGE (TAMPILAN UTAMA APLIKASI) -->
+  <div id="dashboardPage" class="page">
+    <!-- Sidebar Navigasi -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        ⚡ MyApp Workspace
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active">📊 Dashboard Utama</a></li>
+        <li><a href="#">📁 Data Proyek</a></li>
+        <li><a href="#">⚙️ Pengaturan</a></li>
+      </ul>
+      <button class="btn btn-secondary" onclick="handleLogout()" style="border-color: rgba(239, 68, 68, 0.3); color: #ef4444;">
+        Keluar Sesi
       </button>
-    </div>
+    </aside>
+
+    <!-- Konten Utama Dashboard -->
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h2>Ringkasan Sistem</h2>
+          <p style="margin: 0;">Selamat bekerja kembali di workspace Anda.</p>
+        </div>
+        <div class="user-profile-badge">
+          <span>🟢 <b id="userDisplay"></b></span>
+        </div>
+      </header>
+
+      <!-- Kartu Statistik -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Pengguna</h4>
+          <div class="value">1,245</div>
+        </div>
+        <div class="stat-card">
+          <h4>Sistem Status</h4>
+          <div class="value" style="color: #10b981; font-size: 1.4rem; margin-top: 5px;">Operational</div>
+        </div>
+        <div class="stat-card">
+          <h4>Storage Local</h4>
+          <div class="value">Active</div>
+        </div>
+      </div>
+
+      <!-- Area Card Konten / Tabel Utama -->
+      <div class="content-card">
+        <h3>Aktivitas Terbaru</h3>
+        <p>Sesi Anda tersimpan dengan aman menggunakan `localStorage`. Siap diintegrasikan dengan database Supabase di kemudian hari.</p>
+      </div>
+    </main>
   </div>
 
   <script>
