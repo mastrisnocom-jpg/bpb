@@ -162,32 +162,48 @@
                     <!-- ELEMEN KANAN (IKON NOTIFIKASI LONCENG + DARK MODE) -->
                     <div class="flex items-center gap-2.5">
                         
-                        <!-- IKON LONCENG NOTIFIKASI & POPUP RIWAYAT TRANSAKSI -->
+                        <!-- IKON LONCENG NOTIFIKASI -->
                         <div class="relative">
                             <button onclick="toggleNotifDropdown()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-300 border border-slate-100 dark:border-slate-700/80 flex items-center justify-center transition active:scale-95 shadow-sm hover:border-theme-500">
                                 <i class="fa-solid fa-bell text-sm"></i>
                                 <span id="notif-badge-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></span>
                             </button>
 
-                            <!-- DROPDOWN NOTIFIKASI & RIWAYAT TRANSAKSI -->
-                            <div id="notif-dropdown-menu" class="hidden absolute right-0 top-12 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-4 border border-slate-100 dark:border-slate-700 z-50 animate-slide-down">
-                                <!-- Warning Alert jika pengeluaran melebihi pendapatan -->
-                                <div id="notif-warning-alert" class="hidden mb-3 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-2xl text-xs text-rose-600 dark:text-rose-400 flex items-center gap-2 font-bold">
-                                    <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                                    <span>Peringatan: Pengeluaran bulan ini melebihi pendapatan!</span>
+                            <!-- OVERLAY BACKDROP MOBILE (UNTUK FULLSCREEN / SHEET) -->
+                            <div id="notif-backdrop" onclick="toggleNotifDropdown()" class="hidden fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-40 md:hidden"></div>
+
+                            <!-- POPUP RIWAYAT TRANSAKSI RESPONSIP HP / DESKTOP -->
+                            <div id="notif-dropdown-menu" class="hidden fixed inset-x-4 top-16 bottom-20 md:bottom-auto md:absolute md:inset-auto md:right-0 md:top-12 md:w-96 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-4 sm:p-5 border border-slate-100 dark:border-slate-700/80 z-50 flex flex-col justify-between animate-slide-down">
+                                <div>
+                                    <!-- Header Popup Modal -->
+                                    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/80">
+                                        <h4 class="font-extrabold text-xs sm:text-sm text-slate-800 dark:text-white flex items-center gap-2">
+                                            <i class="fa-solid fa-file-invoice-dollar text-theme-500"></i> Riwayat Transaksi
+                                        </h4>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="openTrxForm(); toggleNotifDropdown();" class="bg-theme-600 hover:bg-theme-700 text-white px-3 py-1 rounded-xl text-[10px] font-bold transition shadow-sm">
+                                                + Catat
+                                            </button>
+                                            <button onclick="toggleNotifDropdown()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Warning Alert jika pengeluaran melebihi pendapatan -->
+                                    <div id="notif-warning-alert" class="hidden mt-3 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-2xl text-xs text-rose-600 dark:text-rose-400 flex items-center gap-2 font-bold">
+                                        <i class="fa-solid fa-triangle-exclamation text-base flex-shrink-0"></i>
+                                        <span>Peringatan: Pengeluaran bulan ini melebihi pendapatan!</span>
+                                    </div>
+
+                                    <!-- Container Items Transaksi -->
+                                    <div id="notif-transaction-container" class="space-y-2 mt-3 max-h-[calc(100vh-250px)] md:max-h-[320px] overflow-y-auto pr-1">
+                                        <p class="text-xs text-center text-slate-400 py-6"><i class="fa-solid fa-spinner animate-spin"></i> Memuat riwayat...</p>
+                                    </div>
                                 </div>
 
-                                <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700">
-                                    <h4 class="font-extrabold text-xs text-slate-800 dark:text-white flex items-center gap-2">
-                                        <i class="fa-solid fa-file-invoice-dollar text-theme-500"></i> Riwayat Transaksi
-                                    </h4>
-                                    <button onclick="openTrxForm(); toggleNotifDropdown();" class="bg-theme-600 hover:bg-theme-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold transition">
-                                        + Catat
-                                    </button>
-                                </div>
-
-                                <div id="notif-transaction-container" class="space-y-2 mt-3 max-h-[320px] overflow-y-auto pr-1">
-                                    <p class="text-xs text-center text-slate-400 py-4"><i class="fa-solid fa-spinner animate-spin"></i> Memuat riwayat...</p>
+                                <div class="pt-2 border-t border-slate-100 dark:border-slate-700/80 text-center">
+                                    <p class="text-[10px] font-bold text-slate-400">Tekan ikon pensil untuk mengedit atau sampah untuk menghapus</p>
                                 </div>
                             </div>
                         </div>
@@ -240,7 +256,7 @@
                                     </div>
                                 </section>
 
-                                <!-- CARD GRAFIK ANALISIS DENGAN MULTI FILTER -->
+                                <!-- CARD GRAFIK ANALISIS MULTI FILTER -->
                                 <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700/80 shadow-sm space-y-4">
                                     <!-- TAB FILTER UTAMA -->
                                     <div class="flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-2xl border border-slate-200/50 dark:border-slate-600/50 text-xs font-bold">
@@ -838,7 +854,7 @@
 
         function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka); }
 
-        // --- RENDER TRANSAKSI BERGAYA M-BANKING (GROUP BY DATE DI DALAM NOTIFIKASI) ---
+        // --- RENDER TRANSAKSI DENGAN GROUP BY DATE DENGAN MODEL KARTU M-BANKING ---
         function renderTransactions() {
             const notifContainer = document.getElementById('notif-transaction-container'); 
             let totalMasuk = 0, totalKeluar = 0;
@@ -935,18 +951,13 @@
             document.getElementById('total-saldo').innerText = formatRupiah(totalMasuk - totalKeluar);
         }
 
+        // TOGGLE DROPDOWN & OVERLAY BACKDROP MOBILE
         function toggleNotifDropdown() {
             const menu = document.getElementById('notif-dropdown-menu');
+            const backdrop = document.getElementById('notif-backdrop');
             if (menu) menu.classList.toggle('hidden');
+            if (backdrop) backdrop.classList.toggle('hidden');
         }
-
-        window.addEventListener('click', function(e) {
-            const menu = document.getElementById('notif-dropdown-menu');
-            const btn = e.target.closest('button[onclick="toggleNotifDropdown()"]');
-            if (menu && !menu.contains(e.target) && !btn) {
-                menu.classList.add('hidden');
-            }
-        });
 
         let currentType = 'masuk';
         function setType(type) { 
