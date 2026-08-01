@@ -44,23 +44,25 @@
             background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
         }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
 
     <!-- NAVBAR -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-slate-200/60 dark:border-slate-800/60">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <nav class="fixed top-0 left-0 right-0 z-40 glass-card border-b border-slate-200/60 dark:border-slate-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-gradient-to-tr from-brand-600 to-brand-400 rounded-xl flex items-center justify-center text-white text-xl shadow-lg shadow-brand-500/30">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
-                <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">SuperApp <span class="text-brand-600 dark:text-brand-400">Finance</span></span>
+                <span class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">SuperApp <span class="text-brand-600 dark:text-brand-400">Finance</span></span>
             </div>
 
             <!-- Menu Links -->
-            <div class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600 dark:text-slate-300">
+            <div class="hidden lg:flex items-center gap-8 font-semibold text-sm text-slate-600 dark:text-slate-300">
                 <a href="#fitur" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Fitur Utama</a>
                 <a href="#export" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Laporan Export</a>
                 <a href="#keuntungan" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Keuntungan PRO</a>
@@ -68,33 +70,35 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex items-center gap-4">
-                <a href="/login" class="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-brand-600 transition hidden sm:block">Masuk</a>
-                <a href="#harga" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-extrabold px-5 py-2.5 rounded-xl text-sm shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
-                    <i class="fa-solid fa-crown text-slate-900"></i> Upgrade PRO
+            <div class="flex items-center gap-3 sm:gap-4">
+                <button onclick="openLoginModal()" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Masuk
+                </button>
+                <a href="#harga" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-extrabold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fa-solid fa-crown text-slate-900"></i> <span class="hidden sm:inline">Upgrade</span> PRO
                 </a>
             </div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <section class="pt-36 pb-20 overflow-hidden relative">
-        <div class="max-w-7xl mx-auto px-6">
+    <section class="pt-32 sm:pt-36 pb-16 sm:pb-20 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-bold mb-6">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-bold mb-6">
                     <i class="fa-solid fa-sparkles"></i> Solusi Manajemen Keuangan Modern
                 </span>
-                <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-6">
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-6">
                     Kelola Arus Kas & Cetak Laporan <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-teal-500">Instant PDF & Excel</span>
                 </h1>
-                <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed font-medium">
+                <p class="text-sm sm:text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed font-medium px-2">
                     Pantau pemasukan, pengeluaran, dan batas anggaran harian Anda dalam satu dashboard intuitif. Siap di-export kapan saja untuk kebutuhan rekap usaha maupun pribadi.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="#harga" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-brand-500/25 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
-                        Mulai Coba PRO Sekarang <i class="fa-solid fa-arrow-right"></i>
-                    </a>
+                    <button onclick="openLoginModal()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-brand-500/25 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                        Masuk Dashboard <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                     <a href="#export" class="w-full sm:w-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 text-slate-700 dark:text-slate-200 font-bold px-8 py-4 rounded-2xl transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-file-export text-brand-500"></i> Lihat Format Export
                     </a>
@@ -102,53 +106,52 @@
             </div>
 
             <!-- Preview Card / Mockup Dashboard -->
-            <div class="mt-16 relative max-w-5xl mx-auto">
+            <div class="mt-12 sm:mt-16 relative max-w-5xl mx-auto">
                 <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-amber-500 rounded-3xl blur opacity-30"></div>
-                <div class="relative bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl p-6 sm:p-8">
+                <div class="relative bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl p-4 sm:p-8">
                     <!-- Top Bar UI Mockup -->
-                    <div class="flex items-center justify-between pb-6 mb-6 border-b border-slate-100 dark:border-slate-700">
+                    <div class="flex items-center justify-between pb-4 sm:pb-6 mb-6 border-b border-slate-100 dark:border-slate-700">
                         <div class="flex items-center gap-2">
                             <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
                             <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
                             <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                         </div>
-                        <span class="text-xs font-bold text-slate-400">Preview Live Dashboard & Export Ready</span>
+                        <span class="text-[10px] sm:text-xs font-bold text-slate-400">Preview Live Dashboard & Export Ready</span>
                     </div>
 
                     <!-- Visual Grid Preview -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Stat Card 1 -->
-                        <div class="bg-gradient-to-br from-brand-600 to-brand-700 p-6 rounded-2xl text-white shadow-md">
+                        <div class="bg-gradient-to-br from-brand-600 to-brand-700 p-5 sm:p-6 rounded-2xl text-white shadow-md">
                             <p class="text-xs text-brand-100 font-medium">Total Saldo Keuangan</p>
-                            <h3 class="text-2xl font-extrabold mt-1">Rp 45.850.000</h3>
+                            <h3 class="text-xl sm:text-2xl font-extrabold mt-1">Rp 45.850.000</h3>
                             <div class="mt-4 pt-4 border-t border-brand-500/40 flex justify-between text-xs">
                                 <span><i class="fa-solid fa-arrow-down text-brand-300"></i> Rp 52.000.000</span>
                                 <span><i class="fa-solid fa-arrow-up text-rose-300"></i> Rp 6.150.000</span>
                             </div>
                         </div>
 
-                        <!-- Feature Export Quick Banner -->
-                        <div class="md:col-span-2 bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">Eksklusif PRO</span>
-                                    <h4 class="font-bold text-slate-800 dark:text-white mt-2">Export Rekapitulasi Otomatis</h4>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Unduh riwayat bulanan menjadi berkas Excel akurat atau PDF yang siap dicetak.</p>
-                                </div>
+                        <!-- PERBAIKAN: Feature Export Quick Banner agar tidak over ke kanan -->
+                        <div class="md:col-span-2 bg-slate-50 dark:bg-slate-900/50 p-4 sm:p-6 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col justify-between overflow-hidden">
+                            <div class="mb-3">
+                                <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block">Eksklusif PRO</span>
+                                <h4 class="font-bold text-slate-800 dark:text-white mt-2 text-sm sm:text-base">Export Rekapitulasi Otomatis</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Unduh riwayat bulanan menjadi berkas Excel akurat atau PDF yang siap dicetak.</p>
                             </div>
-                            <div class="flex gap-3 mt-4">
-                                <div class="flex-1 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-3">
-                                    <i class="fa-solid fa-file-excel text-emerald-500 text-2xl"></i>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-800 dark:text-white">Laporan_Bulanan.xlsx</p>
-                                        <p class="text-[10px] text-slate-400">Siap olah di Ms. Excel / Sheets</p>
+                            <!-- Container Kartu Export Responsif -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 w-full">
+                                <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-3 min-w-0">
+                                    <i class="fa-solid fa-file-excel text-emerald-500 text-2xl flex-shrink-0"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-xs font-bold text-slate-800 dark:text-white truncate">Laporan_Bulanan.xlsx</p>
+                                        <p class="text-[10px] text-slate-400 truncate">Format Ms. Excel / Sheets</p>
                                     </div>
                                 </div>
-                                <div class="flex-1 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-3">
-                                    <i class="fa-solid fa-file-pdf text-rose-500 text-2xl"></i>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-800 dark:text-white">Cetak_Laporan.pdf</p>
-                                        <p class="text-[10px] text-slate-400">Format rapi & profesional</p>
+                                <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-3 min-w-0">
+                                    <i class="fa-solid fa-file-pdf text-rose-500 text-2xl flex-shrink-0"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-xs font-bold text-slate-800 dark:text-white truncate">Cetak_Laporan.pdf</p>
+                                        <p class="text-[10px] text-slate-400 truncate">Format Cetak Rapi</p>
                                     </div>
                                 </div>
                             </div>
@@ -161,41 +164,46 @@
     </section>
 
     <!-- FITUR EXPORT HIGHLIGHT (PEMIKAT UTAMA) -->
-    <section id="export" class="py-20 bg-white dark:bg-slate-800/50 border-y border-slate-100 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
+    <section id="export" class="py-16 sm:py-20 bg-white dark:bg-slate-800/50 border-y border-slate-100 dark:border-slate-800 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
                 <h2 class="text-xs font-extrabold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">Fitur Unggulan PRO</h2>
-                <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">Export Data Tanpa Batas, Kapan Saja</h3>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mt-3">Ubah catatan transaksi mentah menjadi berkas siap pakai untuk audit pribadi, pembukuan bisnis, atau presentasi.</p>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Export Data Tanpa Batas, Kapan Saja</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-3">Ubah catatan transaksi mentah menjadi berkas siap pakai untuk audit pribadi, pembukuan bisnis, atau presentasi.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- PERBAIKAN: Layout Grid Export tidak memotong / melebar berlebihan -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
                 <!-- Box Export Excel -->
-                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition duration-300 relative overflow-hidden group">
-                    <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-file-excel"></i>
+                <div class="bg-slate-50 dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl mb-5">
+                            <i class="fa-solid fa-file-excel"></i>
+                        </div>
+                        <h4 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">Format Microsoft Excel (.xlsx)</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
+                            Dapatkan data terstruktur lengkap dengan tanggal, keterangan, jenis transaksi, dan nominal angka murni yang siap diolah kembali menggunakan rumus spreadsheet.
+                        </p>
                     </div>
-                    <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Format Microsoft Excel (.xlsx)</h4>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
-                        Dapatkan data terstruktur lengkap dengan tanggal, keterangan, kategori, jenis transaksi, dan nominal angka murni yang siap diolah kembali menggunakan rumus spreadsheet.
-                    </p>
-                    <ul class="space-y-2 text-xs font-semibold text-slate-700 dark:text-slate-300 mb-6">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Kompatibel dengan Google Sheets & Ms. Excel</li>
+                    <ul class="space-y-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Kompatibel Google Sheets & Ms. Excel</li>
                         <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Format kolom rapi otomatis</li>
                         <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Bebas olah pivottable & grafik internal</li>
                     </ul>
                 </div>
 
                 <!-- Box Export PDF -->
-                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 transition duration-300 relative overflow-hidden group">
-                    <div class="w-14 h-14 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-file-pdf"></i>
+                <div class="bg-slate-50 dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 hover:border-rose-500 transition duration-300 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl mb-5">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <h4 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">Dokumen PDF Siap Cetak (.pdf)</h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
+                            Cetak laporan resmi dalam tata letak yang bersih, mencakup header identitas akun, ringkasan total saldo, serta tabel riwayat transaksi berkategorikan warna yang jelas.
+                        </p>
                     </div>
-                    <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Dokumen PDF Siap Cetak (.pdf)</h4>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
-                        Cetak laporan resmi dalam tata letak yang bersih, mencakup header identitas akun, ringkasan total saldo, serta tabel riwayat transaksi berkategorikan warna yang jelas.
-                    </p>
-                    <ul class="space-y-2 text-xs font-semibold text-slate-700 dark:text-slate-300 mb-6">
+                    <ul class="space-y-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
                         <li class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-500"></i> Layout A4 siap cetak & arsip</li>
                         <li class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-500"></i> Termasuk timestamp & identitas pengguna</li>
                         <li class="flex items-center gap-2"><i class="fa-solid fa-check text-rose-500"></i> Tampilan ringkas & elegan untuk pihak ketiga</li>
@@ -206,14 +214,14 @@
     </section>
 
     <!-- KEUNTUNGAN AKUN PRO -->
-    <section id="keuntungan" class="py-20">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
+    <section id="keuntungan" class="py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
                 <h2 class="text-xs font-extrabold text-amber-500 uppercase tracking-widest mb-2">Mengapa Harus PRO?</h2>
-                <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">Nikmati Kebebasan Finansial Tanpa Batasan</h3>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Nikmati Kebebasan Finansial Tanpa Batasan</h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Benefit 1 -->
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
                     <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 text-amber-500 rounded-xl flex items-center justify-center text-xl mb-4">
@@ -245,50 +253,54 @@
     </section>
 
     <!-- HARGA / PRICING TABLE -->
-    <section id="harga" class="py-20 bg-slate-100 dark:bg-slate-800/40">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
+    <section id="harga" class="py-16 sm:py-20 bg-slate-100 dark:bg-slate-800/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
                 <h2 class="text-xs font-extrabold text-brand-600 dark:text-brand-400 uppercase tracking-widest mb-2">Pilihan Paket</h2>
-                <h3 class="text-3xl font-extrabold text-slate-900 dark:text-white">Pilih Paket Sesuai Kebutuhan Anda</h3>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Pilih Paket Sesuai Kebutuhan Anda</h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
                 <!-- Paket Gratis -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <h4 class="text-lg font-bold text-slate-800 dark:text-white">Pengguna Gratis</h4>
-                    <p class="text-xs text-slate-500 mb-6">Cocok untuk pencatatan dasar harian.</p>
-                    <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Rp 0 <span class="text-xs text-slate-400 font-normal">/ selamanya</span></div>
-                    
-                    <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300 mb-8">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Pencatatan Pemasukan & Pengeluaran</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Analisis Grafik Mingguan Interaktif</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Penetapan Batas Anggaran Bulanan</li>
-                        <li class="flex items-center gap-2 text-slate-400 line-through"><i class="fa-solid fa-xmark text-rose-400"></i> Export Laporan Excel (.xlsx)</li>
-                        <li class="flex items-center gap-2 text-slate-400 line-through"><i class="fa-solid fa-xmark text-rose-400"></i> Export Laporan PDF (.pdf)</li>
-                    </ul>
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-800 dark:text-white">Pengguna Gratis</h4>
+                        <p class="text-xs text-slate-500 mb-6">Cocok untuk pencatatan dasar harian.</p>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Rp 0 <span class="text-xs text-slate-400 font-normal">/ selamanya</span></div>
+                        
+                        <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Pencatatan Pemasukan & Pengeluaran</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Analisis Grafik Mingguan Interaktif</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-500"></i> Penetapan Batas Anggaran Bulanan</li>
+                            <li class="flex items-center gap-2 text-slate-400 line-through"><i class="fa-solid fa-xmark text-rose-400"></i> Export Laporan Excel (.xlsx)</li>
+                            <li class="flex items-center gap-2 text-slate-400 line-through"><i class="fa-solid fa-xmark text-rose-400"></i> Export Laporan PDF (.pdf)</li>
+                        </ul>
+                    </div>
 
-                    <a href="/app" class="block text-center w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-3.5 rounded-xl text-sm transition">Gunakan Versi Gratis</a>
+                    <button onclick="openLoginModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-3.5 rounded-xl text-sm transition">Gunakan Versi Gratis</button>
                 </div>
 
                 <!-- Paket PRO (Featured) -->
-                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border-2 border-amber-400 shadow-xl relative">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border-2 border-amber-400 shadow-xl relative flex flex-col justify-between">
                     <div class="absolute -top-4 right-8 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-extrabold text-[10px] uppercase px-3 py-1 rounded-full shadow-md">
                         Paling Populer
                     </div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <i class="fa-solid fa-crown text-amber-500"></i>
-                        <h4 class="text-lg font-bold text-slate-800 dark:text-white">Pengguna PRO</h4>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-6">Untuk produktivitas finansial tanpa batas.</p>
-                    <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Rp 49.000 <span class="text-xs text-slate-400 font-normal">/ sekali bayar (Akses Selamanya)</span></div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-crown text-amber-500"></i>
+                            <h4 class="text-lg font-bold text-slate-800 dark:text-white">Pengguna PRO</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-6">Untuk produktivitas finansial tanpa batas.</p>
+                        <div class="text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Rp 49.000 <span class="text-xs text-slate-400 font-normal">/ sekali bayar</span></div>
 
-                    <ul class="space-y-3 text-xs text-slate-700 dark:text-slate-200 mb-8 font-medium">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Semua Fitur Paket Gratis</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> <b>Export Excel (.xlsx) Unlimited</b></li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> <b>Export PDF Cetak Siap Pakai</b></li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Bebas Tampilan Iklan Banner</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Prioritas Dukungan Layanan</li>
-                    </ul>
+                        <ul class="space-y-3 text-xs text-slate-700 dark:text-slate-200 mb-8 font-medium">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Semua Fitur Paket Gratis</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> <b>Export Excel (.xlsx) Unlimited</b></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> <b>Export PDF Cetak Siap Pakai</b></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Bebas Tampilan Iklan Banner</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-500"></i> Akses Selamanya Tanpa Biaya Bulanan</li>
+                        </ul>
+                    </div>
 
                     <a href="https://wa.me/6282146511484?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20akun%20PRO" target="_blank" class="block text-center w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-extrabold py-3.5 rounded-xl text-sm shadow-md transition transform hover:-translate-y-0.5">
                         Upgrade ke PRO Sekarang
@@ -300,7 +312,7 @@
 
     <!-- FOOTER -->
     <footer class="py-12 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white text-sm">
                     <i class="fa-solid fa-chart-line"></i>
@@ -311,5 +323,102 @@
         </div>
     </footer>
 
+    <!-- MODAL LOGIN / REGISTER -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 sm:p-8 shadow-2xl animate-fade-in relative border border-slate-100 dark:border-slate-700">
+            <!-- Close Button -->
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Icon Header -->
+            <div class="w-14 h-14 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+                <i id="auth-icon" class="fa-solid fa-fingerprint"></i>
+            </div>
+            
+            <h3 id="modal-auth-title" class="text-xl font-extrabold text-center text-slate-900 dark:text-white mb-1">Masuk Dashboard</h3>
+            <p id="modal-auth-subtitle" class="text-xs text-center text-slate-500 dark:text-slate-400 mb-6">Akses seluruh data keuangan Anda.</p>
+
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div>
+                    <input type="email" id="modal-email" required placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium focus:outline-none focus:border-brand-500 transition">
+                </div>
+                <div>
+                    <input type="password" id="modal-password" required placeholder="Kata Sandi" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium focus:outline-none focus:border-brand-500 transition">
+                </div>
+
+                <button type="submit" id="btn-modal-submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-lg shadow-brand-500/20 mt-2">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="flex items-center my-4 text-xs text-slate-400">
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                <span class="px-3">atau</span>
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+            </div>
+
+            <!-- Login Google -->
+            <button onclick="loginGoogleLanding()" class="w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-100 font-bold py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 transition flex items-center justify-center gap-2.5 text-xs shadow-sm">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.357 2.673 1.386 6.577l3.88 3.188z"/>
+                    <path fill="#4285F4" d="M23.605 12.3c0-.823-.074-1.614-.211-2.373H12v4.582h6.51c-.28 1.514-1.137 2.795-2.42 3.655v3.036h3.914c2.29-2.11 3.601-5.214 3.601-8.9z"/>
+                    <path fill="#FBBC05" d="M5.266 14.235A7.087 7.087 0 0 1 4.909 12c0-.795.132-1.559.357-2.265L1.386 6.577A11.948 11.948 0 0 0 0 12c0 1.959.473 3.81 1.309 5.455l3.957-3.22z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.955-1.077 7.94-2.918l-3.913-3.036c-1.087.727-2.477 1.163-4.027 1.163-3.11 0-5.74-2.105-6.682-4.945L1.31 17.486C3.286 21.359 7.314 24 12 24z"/>
+                </svg>
+                Masuk dengan Google
+            </button>
+
+            <!-- Switch Mode -->
+            <button id="btn-toggle-auth-mode" onclick="toggleAuthMode()" class="w-full text-center text-xs font-bold text-slate-400 hover:text-brand-500 mt-5 transition">
+                Belum punya akun? Daftar gratis sekarang.
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIK MODAL LOGIN -->
+    <script>
+        let currentAuthMode = 'login'; // 'login' atau 'signup'
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            const title = document.getElementById('modal-auth-title');
+            const subtitle = document.getElementById('modal-auth-subtitle');
+            const submitBtn = document.getElementById('btn-modal-submit');
+            const toggleBtn = document.getElementById('btn-toggle-auth-mode');
+
+            if (currentAuthMode === 'login') {
+                currentAuthMode = 'signup';
+                title.innerText = "Daftar Akun Baru";
+                subtitle.innerText = "Mulai kelola keuangan secara gratis.";
+                submitBtn.innerText = "Daftar Sekarang";
+                toggleBtn.innerText = "Sudah punya akun? Masuk di sini.";
+            } else {
+                currentAuthMode = 'login';
+                title.innerText = "Masuk Dashboard";
+                subtitle.innerText = "Akses seluruh data keuangan Anda.";
+                submitBtn.innerText = "Masuk Sekarang";
+                toggleBtn.innerText = "Belum punya akun? Daftar gratis sekarang.";
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            // Arahkan langsung ke halaman aplikasi dashboard utama Anda (misal dashboard.html atau /app)
+            window.location.href = 'dashboard.html'; 
+        }
+
+        function loginGoogleLanding() {
+            // Arahkan ke dashboard dengan otentikasi Google
+            window.location.href = 'dashboard.html';
+        }
+    </script>
 </body>
 </html>
