@@ -122,10 +122,10 @@
                 </nav>
             </div>
 
-            <!-- Bagian Bawah Profil -->
+            <!-- Bagian Bawah Profil Sidebar -->
             <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-col gap-3">
                 <div onclick="openProfileModal()" class="flex items-center gap-3 cursor-pointer p-1 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
-                    <div class="w-9 h-9 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full flex items-center justify-center text-sm font-bold shadow-inner" id="user-avatar-placeholder">
+                    <div class="w-9 h-9 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-bold shadow-inner" id="user-avatar-placeholder">
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -135,12 +135,12 @@
                     <i class="fa-solid fa-gear text-slate-400 text-xs"></i>
                 </div>
                 <button onclick="openProfileModal()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
-                     Profil & Tema
+                     Profil & Pengaturan
                 </button>
             </div>
         </aside>
 
-        <!-- KONTEN UTAMA & GRID SYSTEM (3 KOLOM PADA DESKTOP) -->
+        <!-- KONTEN UTAMA & GRID SYSTEM -->
         <main class="flex-1 md:pl-64 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-5 pt-6 pb-24 md:pb-12 flex-grow">
                 
@@ -152,9 +152,6 @@
                         <p class="text-slate-500 dark:text-slate-400 text-sm md:hidden">Halo, <span id="user-display" class="font-bold text-theme-600 dark:text-theme-400">User</span>!</p>
                     </div>
                     <div class="flex items-center gap-3 self-end md:self-auto">
-                        <div id="javanese-date" class="text-xs font-bold text-theme-600 dark:text-theme-400 bg-theme-50 dark:bg-theme-900/20 px-3 py-2 rounded-xl border border-theme-100/50 dark:border-none">
-                            <i class="fa-regular fa-calendar-days mr-1.5"></i> <span>Memuat tanggal...</span>
-                        </div>
                         <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center transition active:scale-95">
                             <i id="theme-icon" class="fa-solid fa-moon"></i>
                         </button>
@@ -171,7 +168,7 @@
                 <!-- DESKTOP GRID SYSTEM -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
-                    <!-- KELOMPOK KOLOM 1 & 2 (KIRI DAN TENGAH) -->
+                    <!-- KELOMPOK KOLOM UTAMA (KIRI DAN TENGAH) -->
                     <div class="lg:col-span-2 space-y-6">
                         
                         <!-- VIEW HOME -->
@@ -202,7 +199,7 @@
                                     </div>
                                 </section>
 
-                                <!-- CARD ANALISIS KEUANGAN & ARUS KAS LENGKAP -->
+                                <!-- CARD ANALISIS KEUANGAN & ARUS KAS REALTIME -->
                                 <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm space-y-4">
                                     <!-- TAB FILTER -->
                                     <div class="flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-2xl border border-slate-200/50 dark:border-slate-600/50 text-xs font-bold">
@@ -213,7 +210,7 @@
 
                                     <!-- TERAKHIR DIPERBARUI -->
                                     <div class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
-                                        Terakhir diperbarui <span id="last-updated-time">01 Agustus 2026 | 22:23 WIB</span>
+                                        Terakhir diperbarui <span id="last-updated-time">-</span>
                                     </div>
 
                                     <!-- KONTAINER GRAFIK DUAL-LINE -->
@@ -221,8 +218,8 @@
                                         <canvas id="financialChart"></canvas>
                                     </div>
 
-                                    <div class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                        2025 – 2026
+                                    <div id="chart-period-range" class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                        -
                                     </div>
 
                                     <!-- SUMMARY PILL (PENDAPATAN & PENGELUARAN) -->
@@ -241,13 +238,13 @@
                                         </div>
                                     </div>
 
-                                    <!-- DETAIL ARUS KAS BULANAN -->
+                                    <!-- DETAIL ARUS KAS BULAN INI -->
                                     <div class="pt-3 border-t border-slate-100 dark:border-slate-700/60">
-                                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Arus Kas</h3>
+                                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Arus Kas (Bulan Ini)</h3>
                                         <div class="bg-slate-50 dark:bg-slate-700/30 border border-slate-200/80 dark:border-slate-700 p-3 rounded-2xl flex flex-col gap-2">
                                             <div class="flex items-center gap-2 font-bold text-xs text-slate-700 dark:text-slate-300">
                                                 <i class="fa-regular fa-calendar text-theme-500"></i>
-                                                <span id="detail-periode-label">September – 2025</span>
+                                                <span id="detail-periode-label">-</span>
                                             </div>
                                             <div class="flex justify-between items-center text-xs font-extrabold">
                                                 <div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
@@ -346,20 +343,6 @@
                             </div>
                         </div>
 
-                        <!-- TAUTAN PINTAS (SHORTCUT LINKS) -->
-                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
-                            <div class="flex items-center justify-between mb-3">
-                                <div>
-                                    <h2 class="text-sm font-bold text-slate-800 dark:text-white"><i class="fa-solid fa-link text-blue-500 mr-2"></i>Tautan Pintas</h2>
-                                    <p class="text-[9px] text-slate-400 mt-0.5" id="domain-label">domain.com/?go=nama</p>
-                                </div>
-                                <button onclick="openLinkForm()" class="bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition"><i class="fa-solid fa-plus"></i> Link</button>
-                            </div>
-                            <div id="link-container" class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                                <p class="text-xs text-center text-slate-400"><i class="fa-solid fa-spinner animate-spin"></i> Sinkronisasi...</p>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
@@ -435,11 +418,11 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & TEMA -->
+    <!-- MODAL PROFIL, TEMA, DAN TAUTAN PINTAS -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl animate-slide-down max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-1">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white">Profil</h3>
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white">Profil & Pengaturan</h3>
                 <span id="badge-premium" class="hidden text-[10px] font-extrabold px-2 py-1 rounded border uppercase">Status</span>
             </div>
             <p class="text-xs font-bold text-theme-500 mb-4" id="profile-email-display">Memuat email...</p>
@@ -463,8 +446,26 @@
                 </div>
             </div>
 
-            <h4 class="text-sm font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
-            <div class="grid grid-cols-5 gap-3 mb-8">
+            <!-- BAGIAN TAUTAN PINTAS DI PROFIL -->
+            <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-link text-blue-500"></i> Tautan Pintas (Shortlink)
+                        </h4>
+                        <p class="text-[9px] text-slate-400 mt-0.5" id="domain-label">domain.com/?go=nama</p>
+                    </div>
+                    <button onclick="openLinkForm()" class="bg-blue-500 hover:bg-blue-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">
+                        <i class="fa-solid fa-plus"></i> Tambah
+                    </button>
+                </div>
+                <div id="link-container" class="space-y-2.5 max-h-[180px] overflow-y-auto pr-1">
+                    <p class="text-xs text-center text-slate-400"><i class="fa-solid fa-spinner animate-spin"></i> Memuat tautan...</p>
+                </div>
+            </div>
+
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mb-3">Pilih Tema Warna:</h4>
+            <div class="grid grid-cols-5 gap-3 mb-6">
                 <button onclick="applyTheme('emerald')" class="w-10 h-10 rounded-full bg-[#10b981] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
                 <button onclick="applyTheme('blue')" class="w-10 h-10 rounded-full bg-[#3b82f6] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
                 <button onclick="applyTheme('indigo')" class="w-10 h-10 rounded-full bg-[#6366f1] shadow-md active:scale-90 transition transform hover:-translate-y-1"></button>
@@ -513,11 +514,9 @@
         let currentUser = null; 
         let editingTrxId = null; 
         
-        // GLOBAL INSTANCE UNTUK CHART.JS
         let myExpenseChart = null;
         let currentFilter = 'tahunan';
 
-        // STATUS BERBAYAR & SUPERADMIN
         let isPremiumUser = false; 
         const superAdminEmail = 'mastrisnocom@gmail.com';
 
@@ -592,7 +591,7 @@
                 }
                 return;
             }
-            initTheme(); renderDate(); checkAuth();
+            initTheme(); checkAuth();
             
             _supabase.auth.onAuthStateChange((event, session) => {
                 if (session && !currentUser) {
@@ -612,10 +611,6 @@
         function toggleTheme() {
             if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; } else { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; }
             if(myExpenseChart) renderExpenseChart();
-        }
-        function renderDate() {
-            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']; const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']; const pasaranArr = ['Wage', 'Kliwon', 'Legi', 'Pahing', 'Pon']; const d = new Date(); const pasaranIndex = ((Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000) % 5) + 5) % 5; 
-            document.getElementById('javanese-date').innerHTML = `<i class="fa-regular fa-calendar-days mr-1.5"></i> ${days[d.getDay()]} ${pasaranArr[pasaranIndex]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
         }
 
         let authMode = 'login';
@@ -652,12 +647,21 @@
 
         async function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-dashboard').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); 
+            
             const username = currentUser.email.split('@')[0];
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            const initial = username.charAt(0).toUpperCase();
-            document.getElementById('user-avatar-placeholder').innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
+            // FOTO PROFIL GOOGLE OAUTH
+            const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+            const avatarPlaceholder = document.getElementById('user-avatar-placeholder');
+            
+            if (avatarUrl) {
+                avatarPlaceholder.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                const initial = username.charAt(0).toUpperCase();
+                avatarPlaceholder.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
+            }
 
             if(currentUser.email === superAdminEmail) {
                 isPremiumUser = true;
@@ -742,7 +746,7 @@
         }
 
         async function fetchDataSupabase() {
-            const { data: dataKeuangan } = await _supabase.from('keuangan').select('*').eq('user_id', currentUser.id).order('waktu', { ascending: false });
+            const { data: dataKeuangan } = await _supabase.from('keuangan').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
             if (dataKeuangan) globalFinances = dataKeuangan;
             const { data: dataTautan } = await _supabase.from('tautan').select('*').eq('user_id', currentUser.id);
             if (dataTautan) globalLinks = dataTautan;
@@ -798,6 +802,13 @@
             const amount = document.getElementById('input-trx-amount').value; const desc = document.getElementById('input-trx-desc').value; if(!amount || !desc) return alert('Data tidak lengkap!');
             document.getElementById('btn-save-trx').innerText = "Menyimpan..."; 
             
+            const now = new Date(); 
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${monthsShort[now.getMonth()]} ${now.getFullYear()} ${hours}:${minutes}`;
+
             if (editingTrxId) {
                 const { data, error } = await _supabase.from('keuangan').update({ jenis: currentType, nominal: amount, keterangan: desc }).eq('id', editingTrxId).select();
                 if(!error && data) { 
@@ -806,13 +817,7 @@
                     renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi berhasil diperbarui!'); 
                 } else { alert("Gagal memperbarui data ke Supabase."); }
             } else {
-                const now = new Date(); 
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const dateStr = `${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1} ${hours}:${minutes}`;
-                
-                const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
+                const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr, created_at: now.toISOString() }]).select();
                 if(!error && data) { globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!'); } else { alert("Gagal menyimpan ke Supabase."); }
             }
             document.getElementById('btn-save-trx').innerText = editingTrxId ? "Update" : "Simpan";
@@ -829,8 +834,8 @@
         }
 
         function renderLinks() {
-            const container = document.getElementById('link-container'); if (globalLinks.length === 0) { container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`; return; }
-            container.innerHTML = globalLinks.map(link => `<div class="bg-white dark:bg-slate-800 rounded-2xl p-3.5 border border-slate-100 dark:border-slate-700"><div class="flex items-center gap-2 mb-1.5"><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wide">Link</span><h4 class="font-extrabold text-slate-800 dark:text-white text-xs truncate max-w-[120px]">${DOMAIN}/?go=${link.path}</h4><button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center gap-1">Buka <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></button></div><p class="text-[10px] text-slate-400 dark:text-slate-500 mb-2 truncate">${link.target}</p><div class="flex gap-2"><button onclick="deleteLink('${link.id}')" class="flex-1 py-1 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-[11px] hover:text-rose-600 transition"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button></div></div>`).join('');
+            const container = document.getElementById('link-container'); if (globalLinks.length === 0) { container.innerHTML = `<div class="text-center py-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`; return; }
+            container.innerHTML = globalLinks.map(link => `<div class="bg-white dark:bg-slate-800 rounded-xl p-3 border border-slate-100 dark:border-slate-700"><div class="flex items-center gap-2 mb-1"><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase">Link</span><h4 class="font-extrabold text-slate-800 dark:text-white text-xs truncate max-w-[110px]">${DOMAIN}/?go=${link.path}</h4><button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1">Buka <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i></button></div><p class="text-[9px] text-slate-400 truncate mb-1.5">${link.target}</p><button onclick="deleteLink('${link.id}')" class="w-full py-0.5 rounded bg-rose-50 dark:bg-rose-900/20 text-rose-500 font-bold text-[10px] hover:text-rose-600 transition"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button></div>`).join('');
         }
         function openLinkForm() { document.getElementById('input-link-path').value = ''; document.getElementById('input-link-target').value = ''; document.getElementById('form-link-modal').classList.remove('hidden'); }
         function closeLinkForm() { document.getElementById('form-link-modal').classList.add('hidden'); }
@@ -842,7 +847,7 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
-        // --- FUNGSI GRAFIK DUAL-LINE TERBARU (PENERIMAAN & PENGELUARAN) ---
+        // --- FUNGSI GRAFIK DINAMIS 12 BULAN BERJALAN & REALTIME ---
         function switchChartFilter(filter) {
             currentFilter = filter;
             ['tahunan', 'bulanan', 'tanggal'].forEach(f => {
@@ -863,45 +868,83 @@
 
             const now = new Date();
             const monthsName = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('last-updated-time').innerText = `${now.getDate()} ${monthsName[now.getMonth()]} ${now.getFullYear()} | ${hours}:${minutes} WIB`;
 
-            const labels = ['Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'];
+            // MEMBUAT 12 BULAN BERJALAN SECARA DINAMIS (Hingga bulan saat ini)
+            const labels = [];
+            const monthYearKeys = []; // Kunci pencocokan format: 'YYYY-MM'
+            
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                labels.push(monthsShort[d.getMonth()]);
+                
+                const yearStr = d.getFullYear();
+                const monthStr = String(d.getMonth() + 1).padStart(2, '0');
+                monthYearKeys.push({ key: `${yearStr}-${monthStr}`, monthIdx: d.getMonth(), yearIdx: yearStr });
+            }
+
+            // Tampilkan Rentang Tahun di UI (Misal: 2025 - 2026)
+            const startYear = monthYearKeys[0].yearIdx;
+            const endYear = monthYearKeys[11].yearIdx;
+            document.getElementById('chart-period-range').innerText = (startYear === endYear) ? `${startYear}` : `${startYear} – ${endYear}`;
+
+            // Reset Data Array untuk 12 Bulan
             const dataPendapatan = new Array(12).fill(0);
             const dataPengeluaran = new Array(12).fill(0);
 
-            let totalMasukGlobal = 0;
-            let totalKeluarGlobal = 0;
+            let totalMasukChart = 0;
+            let totalKeluarChart = 0;
 
+            let currentMonthMasuk = 0;
+            let currentMonthKeluar = 0;
+
+            const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            // PENGOLAHAN DATA REALTIME TRANSAKSI
             globalFinances.forEach(trx => {
                 const nominal = parseFloat(trx.nominal) || 0;
-                if (trx.jenis === 'masuk') totalMasukGlobal += nominal;
-                if (trx.jenis === 'keluar') totalKeluarGlobal += nominal;
+                let trxDate = null;
 
-                if (trx.waktu) {
-                    const cleanWaktu = trx.waktu.toLowerCase();
-                    let monthIdx = -1;
+                if (trx.created_at) {
+                    trxDate = new Date(trx.created_at);
+                } else if (trx.waktu) {
+                    trxDate = new Date(trx.waktu);
+                }
 
-                    const monthKeys = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'agu', 'sep', 'okt', 'nov', 'des'];
-                    monthKeys.forEach((key, idx) => {
-                        if (cleanWaktu.includes(key)) {
-                            monthIdx = (idx >= 8) ? (idx - 8) : (idx + 4);
+                if (trxDate && !isNaN(trxDate.getTime())) {
+                    const trxKey = `${trxDate.getFullYear()}-${String(trxDate.getMonth() + 1).padStart(2, '0')}`;
+
+                    // Cocokkan ke dalam 12 bulan berjalan
+                    const chartIdx = monthYearKeys.findIndex(m => m.key === trxKey);
+                    if (chartIdx !== -1) {
+                        if (trx.jenis === 'masuk') {
+                            dataPendapatan[chartIdx] += nominal;
+                            totalMasukChart += nominal;
+                        } else {
+                            dataPengeluaran[chartIdx] += nominal;
+                            totalKeluarChart += nominal;
                         }
-                    });
+                    }
 
-                    if (monthIdx !== -1) {
-                        if (trx.jenis === 'masuk') dataPendapatan[monthIdx] += nominal;
-                        else dataPengeluaran[monthIdx] += nominal;
+                    // Hitung Khusus Bulan Saat Ini
+                    if (trxKey === currentMonthKey) {
+                        if (trx.jenis === 'masuk') currentMonthMasuk += nominal;
+                        else currentMonthKeluar += nominal;
                     }
                 }
             });
 
-            document.getElementById('chart-total-pendapatan').innerText = formatRupiah(totalMasukGlobal);
-            document.getElementById('chart-total-pengeluaran').innerText = formatRupiah(totalKeluarGlobal);
+            // Update Summary Pill & Detail Arus Kas Bulan Ini
+            document.getElementById('chart-total-pendapatan').innerText = formatRupiah(totalMasukChart);
+            document.getElementById('chart-total-pengeluaran').innerText = formatRupiah(totalKeluarChart);
 
-            document.getElementById('detail-masuk').innerText = formatRupiah(dataPendapatan[0]);
-            document.getElementById('detail-keluar').innerText = formatRupiah(dataPengeluaran[0]);
+            document.getElementById('detail-periode-label').innerText = `${monthsName[now.getMonth()]} – ${now.getFullYear()}`;
+            document.getElementById('detail-masuk').innerText = formatRupiah(currentMonthMasuk);
+            document.getElementById('detail-keluar').innerText = formatRupiah(currentMonthKeluar);
 
             if (myExpenseChart) myExpenseChart.destroy();
 
