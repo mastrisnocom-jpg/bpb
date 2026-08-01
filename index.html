@@ -383,7 +383,7 @@
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 // Jika user sudah login, langsung alihkan ke dashboard aplikasi
-                window.location.href = 'dashboard.html';
+                window.location.href = 'dashboard';
             }
         }
         checkLandingAuth();
