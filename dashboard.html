@@ -199,7 +199,7 @@
                                     </div>
                                 </section>
 
-                                <!-- CARD GRAFIK TAMPILAN BARU (DUAL-LINE CHART & SUMMARY) -->
+                                <!-- CARD GRAFIK TAMPILAN BARU (DUAL-LINE CHART) -->
                                 <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm space-y-4">
                                     <!-- TAB FILTER -->
                                     <div class="flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-2xl border border-slate-200/50 dark:border-slate-600/50 text-xs font-bold">
@@ -509,9 +509,11 @@
         let currentUser = null; 
         let editingTrxId = null; 
         
+        // GLOBAL INSTANCE UNTUK CHART.JS
         let myExpenseChart = null;
         let currentFilter = 'tahunan';
 
+        // STATUS BERBAYAR & SUPERADMIN
         let isPremiumUser = false; 
         const superAdminEmail = 'mastrisnocom@gmail.com';
 
@@ -545,7 +547,7 @@
             root.style.setProperty('--t-900', t[900]);
             root.style.setProperty('--t-950', t[950]);
             localStorage.setItem('user-theme', themeName);
-            if(myExpenseChart) renderExpenseChart();
+            if(myExpenseChart) renderExpenseChart(); 
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -582,7 +584,7 @@
                     window.location.href = targetUrl;
                 } else {
                     document.documentElement.classList.remove('dark');
-                    document.body.innerHTML = `<div style="text-align:center; padding-top:100px; font-family:'Plus Jakarta Sans', sans-serif;"><h1 style="font-size:50px; color:#94a3b8; font-weight:bold; margin-bottom:10px;">404</h1><h2 style="color:#334155; font-weight:bold; font-size:20px;">Tautan Belum Tersedia</h2><a href="/dashboard" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#059669; color:#fff; text-decoration:none; border-radius:12px; font-weight:bold;">Buka Dashboard Utama</a></div>`;
+                    document.body.innerHTML = `<div style="text-align:center; padding-top:100px; font-family:'Plus Jakarta Sans', sans-serif;"><h1 style="font-size:50px; color:#94a3b8; font-weight:bold; margin-bottom:10px;">404</h1><h2 style="color:#334155; font-weight:bold; font-size:20px;">Tautan Belum Tersedia</h2><a href="index.html" style="display:inline-block; margin-top:20px; padding:12px 24px; background:#059669; color:#fff; text-decoration:none; border-radius:12px; font-weight:bold;">Buka Dashboard Utama</a></div>`;
                 }
                 return;
             }
@@ -646,10 +648,9 @@
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // FOTO PROFIL GOOGLE OAUTH
+            // FOTO PROFIL GOOGLE OAUTH AKURAT
             const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
             const avatarPlaceholder = document.getElementById('user-avatar-placeholder');
-            
             if (avatarUrl) {
                 avatarPlaceholder.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
             } else {
@@ -657,6 +658,7 @@
                 avatarPlaceholder.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
             }
 
+            // CEK STATUS PREMIUM / ADMIN SECARA DINAMIS
             if(currentUser.email === superAdminEmail) {
                 isPremiumUser = true; 
             } else {
@@ -810,7 +812,6 @@
                 const minutes = String(now.getMinutes()).padStart(2, '0');
                 const dateStr = `${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1} ${hours}:${minutes}`;
                 
-                // INSERT DENGAN STRUKTUR DEDIKASI YANG SUDAH TERBUKTI BERHASIL
                 const { data, error } = await _supabase.from('keuangan').insert([{ user_id: currentUser.id, jenis: currentType, nominal: amount, keterangan: desc, waktu: dateStr }]).select();
                 if(!error && data) { globalFinances.unshift(data[0]); renderTransactions(); updateLaporanDanAnggaran(); closeTrxForm(); showToast('Transaksi disimpan ke Cloud!'); } else { alert("Gagal menyimpan ke Supabase."); }
             }
@@ -833,7 +834,7 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
-        // --- FUNGSI CHART DUAL-LINE BARU DENGAN TARGET CANVAS DARI STRUKTUR BARU ---
+        // --- FUNGSI CHART TAMPILAN BARU DENGAN SINKRONISASI PEMBACAAN AKURAT ---
         function switchChartFilter(filter) {
             currentFilter = filter;
             ['tahunan', 'bulanan', 'tanggal'].forEach(f => {
@@ -866,13 +867,12 @@
 
             // MEMBUAT 12 BULAN BERJALAN DINAMIS (Misal Sep - Agu)
             const labels = [];
-            const monthYearKeys = [];
+            const monthYearKeys = []; 
             for (let i = 11; i >= 0; i--) {
                 const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
                 labels.push(monthsShort[d.getMonth()]);
                 const yearStr = d.getFullYear();
-                const monthStr = String(d.getMonth() + 1).padStart(2, '0');
-                monthYearKeys.push({ key: `${yearStr}-${monthStr}`, monthIdx: d.getMonth(), yearIdx: yearStr });
+                monthYearKeys.push({ monthIdx: d.getMonth(), yearIdx: yearStr });
             }
 
             const startYear = monthYearKeys[0].yearIdx;
@@ -889,27 +889,38 @@
             let currentMonthKeluar = 0;
             const currentMonthIdx = now.getMonth();
 
+            // PEMBACAAN FORMAT STR_DATE UNIK SUPABASE PADA TRANSAKSI LAMA & BARU
             globalFinances.forEach(trx => {
                 const nominal = parseFloat(trx.nominal) || 0;
                 let monthFound = -1;
 
                 if (trx.waktu) {
                     const cleanWaktu = trx.waktu.toLowerCase();
-                    monthsShort.forEach((m, idx) => {
-                        if (cleanWaktu.includes(m.toLowerCase())) monthFound = idx;
+
+                    // Cek nama bulan teks singkat
+                    const monthAliases = [
+                        ['jan'], ['feb'], ['mar'], ['apr'], ['mei', 'may'], ['jun'], 
+                        ['jul'], ['agu', 'aug'], ['sep'], ['okt', 'oct'], ['nov'], ['des', 'dec']
+                    ];
+
+                    monthAliases.forEach((aliases, mIdx) => {
+                        aliases.forEach(alias => {
+                            if (cleanWaktu.includes(alias)) monthFound = mIdx;
+                        });
                     });
 
-                    // Fallback jika tgl/bln
+                    // Fallback untuk format angka tanggal biasa "1/8" atau "01/08"
                     if (monthFound === -1) {
                         try {
-                            const parts = cleanWaktu.split(' ')[0].split('/');
-                            if (parts.length >= 2) monthFound = parseInt(parts[1]) - 1;
+                            const match = cleanWaktu.match(/(\d{1,2})\/(\d{1,2})/);
+                            if (match && match[2]) {
+                                monthFound = parseInt(match[2]) - 1; // 0-11
+                            }
                         } catch(e){}
                     }
                 }
 
-                if (monthFound !== -1) {
-                    // Cari indeks posisi di 12 bulan
+                if (monthFound >= 0 && monthFound <= 11) {
                     const targetIdx = monthYearKeys.findIndex(m => m.monthIdx === monthFound);
                     if (targetIdx !== -1) {
                         if (trx.jenis === 'masuk') {
@@ -952,9 +963,10 @@
                             data: dataPendapatan,
                             borderColor: '#10b981',
                             borderWidth: 2.5,
-                            pointRadius: 0,
-                            pointHoverRadius: 5,
-                            tension: 0.4,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#10b981',
+                            pointHoverRadius: 6,
+                            tension: 0.3,
                             fill: false
                         },
                         {
@@ -962,9 +974,10 @@
                             data: dataPengeluaran,
                             borderColor: '#ef4444',
                             borderWidth: 2.5,
-                            pointRadius: 0,
-                            pointHoverRadius: 5,
-                            tension: 0.4,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#ef4444',
+                            pointHoverRadius: 6,
+                            tension: 0.3,
                             fill: true,
                             backgroundColor: 'rgba(239, 68, 68, 0.08)'
                         }
