@@ -8,7 +8,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <style>
-        /* DEFINISI CSS VARIABLE UNTUK 10 TEMA WARNA */
+        /* DEFINISI CSS VARIABLE UNTUK TEMA WARNA */
         :root {
             --t-50: #ecfdf5; --t-100: #d1fae5; --t-400: #34d399; --t-500: #10b981; --t-600: #059669; --t-700: #047857; --t-900: #064e3b; --t-950: #022c22;
         }
@@ -48,13 +48,14 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
     </style>
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col items-center justify-center hidden">
-        <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700/80">
             <div class="w-16 h-16 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 transition-colors">
                 <i id="auth-icon" class="fa-solid fa-fingerprint"></i>
             </div>
@@ -62,8 +63,8 @@
             <p id="auth-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mb-6">Masuk ke Personal Dashboard.</p>
             
             <div id="form-container" class="space-y-3">
-                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
-                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
+                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
             </div>
             
             <p id="auth-error" class="text-xs text-rose-500 dark:text-rose-400 font-bold mt-3 hidden">Error message</p>
@@ -74,7 +75,7 @@
                 <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div><span class="px-3">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
             </div>
 
-            <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-white font-bold py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 active:scale-95 transition flex items-center justify-center gap-2.5 text-sm shadow-sm">
+            <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-white font-bold py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 active:scale-95 transition flex items-center justify-center gap-2.5 text-sm shadow-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.357 2.673 1.386 6.577l3.88 3.188z"/>
                     <path fill="#4285F4" d="M23.605 12.3c0-.823-.074-1.614-.211-2.373H12v4.582h6.51c-.28 1.514-1.137 2.795-2.42 3.655v3.036h3.914c2.29-2.11 3.601-5.214 3.601-8.9z"/>
@@ -91,8 +92,9 @@
     <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
         
         <!-- SIDEBAR UTAMA (DESKTOP) -->
-        <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 fixed top-0 bottom-0 left-0 p-6 z-30 justify-between">
+        <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700/80 fixed top-0 bottom-0 left-0 p-6 z-30 justify-between">
             <div>
+                <!-- LOGO SEBELAH KIRI -->
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-theme-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-theme-200 dark:shadow-none transition-colors">
                         <i class="fa-solid fa-cubes"></i>
@@ -107,10 +109,10 @@
                     <button id="side-nav-home" onclick="switchView('home')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-theme-50 dark:bg-theme-950/40 text-theme-600 dark:text-theme-400 transition">
                         <i class="fa-solid fa-house text-base"></i> Home
                     </button>
-                    <button id="side-nav-laporan" onclick="switchView('laporan')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
+                    <button id="side-nav-laporan" onclick="switchView('laporan')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
                         <i class="fa-solid fa-chart-simple text-base"></i> Laporan
                     </button>
-                    <button id="side-nav-anggaran" onclick="switchView('anggaran')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
+                    <button id="side-nav-anggaran" onclick="switchView('anggaran')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
                         <i class="fa-solid fa-wallet text-base"></i> Anggaran
                     </button>
                     
@@ -144,15 +146,40 @@
         <main class="flex-1 md:pl-64 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-5 pt-6 pb-24 md:pb-12 flex-grow">
                 
-                <!-- HEADER ATAS -->
-                <header class="mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h1 class="text-2xl font-extrabold text-slate-800 dark:text-white tracking-tight" id="main-title">DashboardKu</h1>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs hidden md:block">Halo, selamat datang kembali di ruang produktivitas Anda.</p>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm md:hidden">Halo, <span id="user-display" class="font-bold text-theme-600 dark:text-theme-400">User</span>!</p>
+                <!-- HEADER ATAS (LOGO KIRI, HILANGKAN NAMA USER & DASHBOARD, NOTIFIKASI SAMPING DARK MODE) -->
+                <header class="mb-6 flex items-center justify-between gap-4">
+                    <!-- LOGO & BRANDING SEBELAH KIRI -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-theme-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-theme-200 dark:shadow-none">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight">SuperApp <span class="text-theme-600 dark:text-theme-400">Finance</span></h2>
+                            <p class="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-widest">Personal Workspace</p>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-3 self-end md:self-auto">
-                        <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center transition active:scale-95">
+
+                    <!-- ELEMEN KANAN (NOTIFIKASI PERINGATAN + DARK MODE) -->
+                    <div class="flex items-center gap-2.5">
+                        
+                        <!-- NOTIFIKASI PERINGATAN PENGELUARAN > PENDAPATAN -->
+                        <div id="notif-badge-container" class="relative hidden">
+                            <div class="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800/60 flex items-center justify-center transition cursor-pointer group" title="Peringatan Arus Kas">
+                                <i class="fa-solid fa-bell text-sm animate-bounce"></i>
+                                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                                
+                                <!-- Tooltip Popover Warning -->
+                                <div class="absolute right-0 top-11 w-64 p-3 bg-slate-800 dark:bg-slate-900 text-white text-[11px] rounded-2xl shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all z-50 border border-slate-700">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm flex-shrink-0 mt-0.5"></i>
+                                        <p class="font-semibold text-slate-200 leading-snug">Pengeluaran bulan ini melebihi total pendapatan Anda!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TOMBOL DARK MODE -->
+                        <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 shadow-sm border border-slate-100 dark:border-slate-700/80 flex items-center justify-center transition active:scale-95">
                             <i id="theme-icon" class="fa-solid fa-moon"></i>
                         </button>
                     </div>
@@ -162,8 +189,8 @@
                     <i class="fa-solid fa-circle-arrow-down text-lg"></i> Pasang Aplikasi di HP / Laptop
                 </button>
 
-                <!-- AREA BANNER IKLAN -->
-                <div id="ads-banner-container" class="hidden mb-5"></div>
+                <!-- AREA BANNER IKLAN MODERN WEBAPP PROFESIONAL -->
+                <div id="ads-banner-container" class="hidden mb-6"></div>
 
                 <!-- DESKTOP GRID SYSTEM -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -199,13 +226,13 @@
                                     </div>
                                 </section>
 
-                                <!-- CARD GRAFIK ANALISIS DENGAN MULTI FILTER (TAHUNAN, BULANAN, TANGGAL) -->
-                                <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm space-y-4">
+                                <!-- CARD GRAFIK ANALISIS DENGAN MULTI FILTER -->
+                                <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700/80 shadow-sm space-y-4">
                                     <!-- TAB FILTER UTAMA -->
                                     <div class="flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-2xl border border-slate-200/50 dark:border-slate-600/50 text-xs font-bold">
                                         <button id="tab-tahunan" onclick="switchChartFilter('tahunan')" class="flex-1 py-1.5 rounded-xl bg-theme-600 text-white shadow-sm transition">Tahunan</button>
-                                        <button id="tab-bulanan" onclick="switchChartFilter('bulanan')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Bulanan</button>
-                                        <button id="tab-tanggal" onclick="switchChartFilter('tanggal')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Tanggal</button>
+                                        <button id="tab-bulanan" onclick="switchChartFilter('bulanan')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Bulanan</button>
+                                        <button id="tab-tanggal" onclick="switchChartFilter('tanggal')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Tanggal</button>
                                     </div>
 
                                     <!-- INPUT PICKER TAMBAHAN -->
@@ -224,14 +251,13 @@
                                         </div>
                                     </div>
 
-                                    <!-- SUB-TAB FILTER (SEMUA, PENDAPATAN, PENGELUARAN) -->
+                                    <!-- SUB-TAB FILTER -->
                                     <div id="subtab-container" class="hidden flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl text-[11px] font-bold">
                                         <button id="subtab-semua" onclick="switchSubFilter('semua')" class="flex-1 py-1 rounded-lg bg-theme-600 text-white shadow-sm transition">Semua</button>
-                                        <button id="subtab-masuk" onclick="switchSubFilter('masuk')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pendapatan</button>
-                                        <button id="subtab-keluar" onclick="switchSubFilter('keluar')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pengeluaran</button>
+                                        <button id="subtab-masuk" onclick="switchSubFilter('masuk')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Pendapatan</button>
+                                        <button id="subtab-keluar" onclick="switchSubFilter('keluar')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Pengeluaran</button>
                                     </div>
 
-                                    <!-- KET DIPERBARUI -->
                                     <div id="last-updated-container" class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
                                         Terakhir diperbarui <span id="last-updated-time">-</span>
                                     </div>
@@ -241,7 +267,7 @@
                                         <canvas id="financialChart"></canvas>
                                     </div>
 
-                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK TAHUNAN -->
+                                    <!-- TAMPILAN SUMMARY TAHUNAN -->
                                     <div id="tahunan-summary-container">
                                         <div id="chart-period-range" class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
                                             -
@@ -282,16 +308,15 @@
                                         </div>
                                     </div>
 
-                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK DONUT CHART (DINAMIS SESUAI ACUAN GAMBAR) -->
+                                    <!-- TAMPILAN SUMMARY DONUT CHART -->
                                     <div id="donut-summary-container" class="hidden space-y-3 pt-1">
                                         <div id="donut-header-box" class="text-left">
                                             <p id="donut-title-label" class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Selisih Arus Kas :</p>
                                             <h3 id="donut-total-val" class="text-lg font-extrabold text-theme-600 dark:text-theme-400">Rp 0</h3>
                                         </div>
 
-                                        <!-- GRID BREAKDOWN KATEGORI / LEGEND -->
                                         <div id="donut-legend-box" class="grid grid-cols-2 gap-3 text-[11px] font-bold pt-1">
-                                            <!-- Diisi Dinamis oleh JavaScript -->
+                                            <!-- Diisi Dinamis -->
                                         </div>
 
                                         <div class="text-center pt-2 border-t border-slate-100 dark:border-slate-700/60">
@@ -303,7 +328,7 @@
                             </div>
 
                             <!-- DAFTAR TRANSAKSI -->
-                            <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700/80 shadow-sm">
                                 <div class="flex items-center justify-between mb-4">
                                     <h2 class="text-sm font-bold text-slate-800 dark:text-white flex items-center">
                                         <i class="fa-solid fa-file-invoice-dollar text-theme-500 mr-2"></i>Riwayat Transaksi
@@ -319,7 +344,7 @@
                         </div>
 
                         <!-- VIEW LAPORAN -->
-                        <div id="view-laporan" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
+                        <div id="view-laporan" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-sm border border-slate-100 dark:border-slate-700/80">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ringkasan Arus Kas</h3>
                                 <button onclick="shareWhatsApp()" class="text-xs font-bold text-green-500 hover:text-green-600 transition flex items-center gap-1 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-lg"><i class="fa-brands fa-whatsapp"></i> Bagikan</button>
@@ -336,18 +361,18 @@
                                 <h4 class="text-xl font-extrabold text-slate-800 dark:text-white" id="lap-rasio">0%</h4>
                             </div>
                             
-                            <div class="flex gap-2 border-t border-slate-100 dark:border-slate-700 pt-4">
-                                <button onclick="exportToExcel()" class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                            <div class="flex gap-2 border-t border-slate-100 dark:border-slate-700/80 pt-4">
+                                <button onclick="exportToExcel()" class="flex-1 bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-file-excel text-emerald-500"></i> Excel (Pro)
                                 </button>
-                                <button onclick="exportToPDF()" class="flex-1 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                                <button onclick="exportToPDF()" class="flex-1 bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
                                     <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF (Pro)
                                 </button>
                             </div>
                         </div>
 
                         <!-- VIEW ANGGARAN -->
-                        <div id="view-anggaran" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
+                        <div id="view-anggaran" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-sm border border-slate-100 dark:border-slate-700/80">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Batas Bulanan</h3>
                                 <button onclick="editAnggaran()" class="text-xs font-bold text-theme-500 hover:text-theme-600 transition"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
@@ -371,7 +396,7 @@
                     <div class="space-y-5">
                         
                         <!-- PANEL TINDAKAN CEPAT (QUICK ACTIONS) -->
-                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm hidden lg:block">
+                        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700/80 shadow-sm hidden lg:block">
                             <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wider">Tindakan Cepat</h3>
                             <div class="flex flex-col gap-2">
                                 <button onclick="openTrxForm()" class="w-full bg-theme-600/10 dark:bg-theme-500/10 text-theme-600 dark:text-theme-400 hover:bg-theme-600 hover:text-white dark:hover:bg-theme-600 font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center gap-2">
@@ -398,8 +423,8 @@
     </div>
 
     <!-- MODAL TRANSAKSI (TAMBAH / EDIT) -->
-    <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+    <div id="form-trx-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
             <h3 id="form-trx-title" class="text-xl font-bold text-slate-800 dark:text-white mb-5">Catat Transaksi</h3>
             <div class="space-y-4">
                 <div class="flex gap-2">
@@ -417,12 +442,12 @@
     </div>
 
     <!-- MODAL LINK -->
-    <div id="form-link-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+    <div id="form-link-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Tambah Tautan</h3>
             <div class="space-y-4">
-                <input type="text" id="input-link-path" placeholder="Nama Path (Contoh: gas)" class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
-                <input type="url" id="input-link-target" placeholder="Link Tujuan..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                <input type="text" id="input-link-path" placeholder="Nama Path (Contoh: gas)" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                <input type="url" id="input-link-target" placeholder="Link Tujuan..." class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
             </div>
             <div class="flex gap-3 mt-6">
                 <button onclick="closeLinkForm()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
@@ -432,8 +457,8 @@
     </div>
 
     <!-- MODAL ANGGARAN -->
-    <div id="form-anggaran-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+    <div id="form-anggaran-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Set Anggaran Bulanan</h3>
             <input type="number" id="input-anggaran-batas" placeholder="Maksimal Pengeluaran (Rp)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
             <div class="flex gap-3 mt-6">
@@ -444,12 +469,12 @@
     </div>
 
     <!-- MODAL KELOLA IKLAN (SUPERADMIN) -->
-    <div id="form-ads-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down">
+    <div id="form-ads-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">Kelola Iklan Banner</h3>
             <div class="space-y-4">
-                <input type="text" id="input-ads-text" placeholder="Isi teks promosi / iklan..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                <input type="url" id="input-ads-link" placeholder="Link (Opsional)..." class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                <input type="text" id="input-ads-text" placeholder="Isi teks promosi / iklan..." class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                <input type="url" id="input-ads-link" placeholder="Link (Opsional)..." class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
             </div>
             <div class="flex gap-3 mt-6">
                 <button onclick="document.getElementById('form-ads-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-sm">Batal</button>
@@ -459,8 +484,8 @@
     </div>
 
     <!-- MODAL PROFIL & TEMA & TAUTAN PINTAS -->
-    <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down max-h-[90vh] overflow-y-auto">
+    <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-slide-down max-h-[90vh] overflow-y-auto border border-slate-100 dark:border-slate-700/80">
             <div class="flex justify-between items-center mb-1">
                 <h3 class="text-xl font-bold text-slate-800 dark:text-white">Profil</h3>
                 <span id="badge-premium" class="hidden text-[10px] font-extrabold px-2 py-1 rounded border uppercase">Status</span>
@@ -487,7 +512,7 @@
             </div>
 
             <!-- TAUTAN PINTAS DI DALAM MODAL PROFIL -->
-            <div class="mb-5 p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <div class="mb-5 p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700/80">
                 <div class="flex items-center justify-between mb-3">
                     <div>
                         <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-link text-blue-500"></i> Tautan Pintas</h4>
@@ -522,14 +547,21 @@
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION BOTTOM -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] dark:shadow-none z-40 md:hidden hidden" id="bottom-nav">
+    <!-- MOBILE NAVIGATION BOTTOM (MENAMPILKAN FOTO PROFIL GOOGLE) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-700/80 py-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] dark:shadow-none z-40 md:hidden hidden" id="bottom-nav">
         <div class="max-w-md mx-auto flex items-center justify-around px-2">
             <button id="nav-home" onclick="switchView('home')" class="p-3 text-theme-600 dark:text-theme-400 flex flex-col items-center gap-1 transition-colors"><i class="fa-solid fa-house text-lg"></i><span class="text-[9px] font-bold">Home</span></button>
             <button id="nav-laporan" onclick="switchView('laporan')" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-chart-simple text-lg"></i><span class="text-[9px] font-bold">Laporan</span></button>
             <div class="relative -top-5"><button onclick="openTrxForm()" class="w-14 h-14 bg-theme-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-theme-200 dark:shadow-none hover:scale-105 transition active:scale-95"><i class="fa-solid fa-plus"></i></button></div>
             <button id="nav-anggaran" onclick="switchView('anggaran')" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-wallet text-lg"></i><span class="text-[9px] font-bold">Anggaran</span></button>
-            <button onclick="openProfileModal()" class="p-3 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition"><i class="fa-solid fa-user-circle text-lg"></i><span class="text-[9px] font-bold">Profil</span></button>
+            
+            <!-- BUTTON PROFIL BOTTOM NAV DENGAN FOTO PROFIL GOOGLE -->
+            <button onclick="openProfileModal()" class="p-2 text-slate-400 hover:text-theme-500 flex flex-col items-center gap-1 transition">
+                <div class="w-6 h-6 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-[10px] font-bold shadow-inner" id="user-avatar-bottom">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <span class="text-[9px] font-bold">Profil</span>
+            </button>
         </div>
     </nav>
 
@@ -551,8 +583,8 @@
         let editingTrxId = null; 
         
         let myExpenseChart = null;
-        let currentFilter = 'tahunan'; // 'tahunan', 'bulanan', 'tanggal'
-        let currentSubFilter = 'semua'; // 'semua', 'masuk', 'keluar'
+        let currentFilter = 'tahunan'; 
+        let currentSubFilter = 'semua'; 
 
         let isPremiumUser = false; 
         const superAdminEmail = 'mastrisnocom@gmail.com';
@@ -695,16 +727,22 @@
         async function showDashboard() {
             document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-dashboard').classList.remove('hidden'); document.getElementById('bottom-nav').classList.remove('hidden'); 
             const username = currentUser.email.split('@')[0];
-            document.getElementById('user-display').innerText = username;
+            
             document.getElementById('user-display-side').innerText = currentUser.email;
             
+            // MAP FOTO PROFIL GOOGLE KE SIDEBAR & BOTTOM NAV
             const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
             const avatarPlaceholder = document.getElementById('user-avatar-placeholder');
+            const avatarBottomPlaceholder = document.getElementById('user-avatar-bottom');
+            
             if (avatarUrl) {
-                avatarPlaceholder.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+                const imgHtml = `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+                avatarPlaceholder.innerHTML = imgHtml;
+                if(avatarBottomPlaceholder) avatarBottomPlaceholder.innerHTML = imgHtml;
             } else {
                 const initial = username.charAt(0).toUpperCase();
                 avatarPlaceholder.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
+                if(avatarBottomPlaceholder) avatarBottomPlaceholder.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold text-[9px]">${initial}</span>`;
             }
 
             if(currentUser.email === superAdminEmail) {
@@ -804,12 +842,12 @@
 
         function renderTransactions() {
             const container = document.getElementById('transaction-container'); let totalMasuk = 0, totalKeluar = 0;
-            if (globalFinances.length === 0) { container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada transaksi.</p></div>`; } 
+            if (globalFinances.length === 0) { container.innerHTML = `<div class="text-center py-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/80"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada transaksi.</p></div>`; } 
             else {
                 container.innerHTML = globalFinances.map(trx => {
                     const isMasuk = trx.jenis === 'masuk'; if (isMasuk) totalMasuk += parseFloat(trx.nominal); else totalKeluar += parseFloat(trx.nominal);
                     const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-theme-500 bg-theme-50 dark:bg-theme-900/40 p-2.5 rounded-xl transition-colors"></i>' : '<i class="fa-solid fa-arrow-up text-rose-500 bg-rose-50 dark:bg-rose-900/40 p-2.5 rounded-xl"></i>';
-                    return `<div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-100 dark:border-slate-700 flex justify-between items-center"><div class="flex items-center gap-3">${icon}<div><h4 class="font-bold text-slate-800 dark:text-white text-xs">${trx.keterangan}</h4><p class="text-[9px] text-slate-400">${trx.waktu}</p></div></div><div class="text-right flex items-center gap-2.5"><span class="font-extrabold text-sm ${isMasuk ? 'text-theme-600 dark:text-theme-400' : 'text-slate-800 dark:text-white'} transition-colors">${isMasuk?'+':'-'}${formatRupiah(trx.nominal).replace('Rp', '')}</span><div class="flex items-center gap-1"><button onclick="editTrx('${trx.id}')" class="text-slate-300 hover:text-blue-500 transition px-1"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="deleteTrx('${trx.id}')" class="text-slate-300 hover:text-rose-500 transition px-1"><i class="fa-solid fa-xmark text-sm"></i></button></div></div></div>`;
+                    return `<div class="bg-white dark:bg-slate-800 rounded-2xl p-3 border border-slate-100 dark:border-slate-700/80 flex justify-between items-center"><div class="flex items-center gap-3">${icon}<div><h4 class="font-bold text-slate-800 dark:text-white text-xs">${trx.keterangan}</h4><p class="text-[9px] text-slate-400">${trx.waktu}</p></div></div><div class="text-right flex items-center gap-2.5"><span class="font-extrabold text-sm ${isMasuk ? 'text-theme-600 dark:text-theme-400' : 'text-slate-800 dark:text-white'} transition-colors">${isMasuk?'+':'-'}${formatRupiah(trx.nominal).replace('Rp', '')}</span><div class="flex items-center gap-1"><button onclick="editTrx('${trx.id}')" class="text-slate-300 hover:text-blue-500 transition px-1"><i class="fa-solid fa-pen text-xs"></i></button><button onclick="deleteTrx('${trx.id}')" class="text-slate-300 hover:text-rose-500 transition px-1"><i class="fa-solid fa-xmark text-sm"></i></button></div></div></div>`;
                 }).join('');
             }
             document.getElementById('total-masuk').innerText = formatRupiah(totalMasuk); document.getElementById('total-keluar').innerText = formatRupiah(totalKeluar); document.getElementById('total-saldo').innerText = formatRupiah(totalMasuk - totalKeluar);
@@ -870,7 +908,7 @@
 
         function renderLinks() {
             const container = document.getElementById('link-container'); if (globalLinks.length === 0) { container.innerHTML = `<div class="text-center py-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700"><p class="text-slate-400 dark:text-slate-500 text-xs">Belum ada tautan.</p></div>`; return; }
-            container.innerHTML = globalLinks.map(link => `<div class="bg-white dark:bg-slate-800 rounded-2xl p-2.5 border border-slate-100 dark:border-slate-700"><div class="flex items-center gap-2 mb-1"><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wide">Link</span><h4 class="font-extrabold text-slate-800 dark:text-white text-xs truncate max-w-[120px]">${DOMAIN}/?go=${link.path}</h4><button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1">Buka <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i></button></div><p class="text-[10px] text-slate-400 dark:text-slate-500 mb-1.5 truncate">${link.target}</p><div class="flex gap-2"><button onclick="deleteLink('${link.id}')" class="w-full py-0.5 rounded bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-[10px] hover:text-rose-600 transition"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button></div></div>`).join('');
+            container.innerHTML = globalLinks.map(link => `<div class="bg-white dark:bg-slate-800 rounded-2xl p-2.5 border border-slate-100 dark:border-slate-700/80"><div class="flex items-center gap-2 mb-1"><span class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wide">Link</span><h4 class="font-extrabold text-slate-800 dark:text-white text-xs truncate max-w-[120px]">${DOMAIN}/?go=${link.path}</h4><button onclick="window.open('https://${DOMAIN}/?go=${link.path}', '_blank')" class="ml-auto bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1">Buka <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i></button></div><p class="text-[10px] text-slate-400 dark:text-slate-500 mb-1.5 truncate">${link.target}</p><div class="flex gap-2"><button onclick="deleteLink('${link.id}')" class="w-full py-0.5 rounded bg-rose-50 dark:bg-rose-900/20 text-rose-500 dark:text-rose-400 font-bold text-[10px] hover:text-rose-600 transition"><i class="fa-regular fa-trash-can mr-1"></i> Hapus</button></div></div>`).join('');
         }
         function openLinkForm() { document.getElementById('input-link-path').value = ''; document.getElementById('input-link-target').value = ''; document.getElementById('form-link-modal').classList.remove('hidden'); }
         function closeLinkForm() { document.getElementById('form-link-modal').classList.add('hidden'); }
@@ -882,7 +920,6 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
-        // --- SWITCH TAB MAIN & SUB TAB ---
         function switchChartFilter(filter) {
             currentFilter = filter;
             ['tahunan', 'bulanan', 'tanggal'].forEach(f => {
@@ -891,7 +928,7 @@
                     if(f === filter) {
                         btn.className = "flex-1 py-1.5 rounded-xl bg-theme-600 text-white shadow-sm transition";
                     } else {
-                        btn.className = "flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition";
+                        btn.className = "flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition";
                     }
                 }
             });
@@ -937,7 +974,7 @@
                     if(s === subType) {
                         btn.className = "flex-1 py-1 rounded-lg bg-theme-600 text-white shadow-sm transition";
                     } else {
-                        btn.className = "flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition";
+                        btn.className = "flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition";
                     }
                 }
             });
@@ -993,6 +1030,29 @@
 
             if (myExpenseChart) myExpenseChart.destroy();
 
+            // KONSISTENSI CEK NOTIFIKASI WARN PENGELUARAN > PENDAPATAN BULAN INI
+            let currentMonthIncome = 0;
+            let currentMonthExpense = 0;
+            const curMonthIdx = now.getMonth();
+
+            globalFinances.forEach(trx => {
+                const nominal = parseFloat(trx.nominal) || 0;
+                const pDate = parseTrxDate(trx.waktu);
+                if (pDate && pDate.getMonth() === curMonthIdx) {
+                    if (trx.jenis === 'masuk') currentMonthIncome += nominal;
+                    else currentMonthExpense += nominal;
+                }
+            });
+
+            const notifContainer = document.getElementById('notif-badge-container');
+            if (notifContainer) {
+                if (currentMonthExpense > currentMonthIncome && currentMonthExpense > 0) {
+                    notifContainer.classList.remove('hidden');
+                } else {
+                    notifContainer.classList.add('hidden');
+                }
+            }
+
             // 1. TAMPILAN FILTER TAHUNAN (LINE CHART DUAL)
             if (currentFilter === 'tahunan') {
                 const labels = [];
@@ -1013,9 +1073,6 @@
 
                 let totalMasukChart = 0;
                 let totalKeluarChart = 0;
-                let currentMonthMasuk = 0;
-                let currentMonthKeluar = 0;
-                const currentMonthIdx = now.getMonth();
 
                 globalFinances.forEach(trx => {
                     const nominal = parseFloat(trx.nominal) || 0;
@@ -1034,19 +1091,14 @@
                                 totalKeluarChart += nominal;
                             }
                         }
-
-                        if (mIdx === currentMonthIdx) {
-                            if (trx.jenis === 'masuk') currentMonthMasuk += nominal;
-                            else currentMonthKeluar += nominal;
-                        }
                     }
                 });
 
                 document.getElementById('chart-total-pendapatan').innerText = formatRupiah(totalMasukChart);
                 document.getElementById('chart-total-pengeluaran').innerText = formatRupiah(totalKeluarChart);
                 document.getElementById('detail-periode-label').innerText = `${monthsName[now.getMonth()]} – ${now.getFullYear()}`;
-                document.getElementById('detail-masuk').innerText = formatRupiah(currentMonthMasuk);
-                document.getElementById('detail-keluar').innerText = formatRupiah(currentMonthKeluar);
+                document.getElementById('detail-masuk').innerText = formatRupiah(currentMonthIncome);
+                document.getElementById('detail-keluar').innerText = formatRupiah(currentMonthExpense);
 
                 myExpenseChart = new Chart(ctx, {
                     type: 'line',
@@ -1088,12 +1140,11 @@
                 });
 
             } else {
-                // 2. TAMPILAN FILTER BULANAN / TANGGAL (DONUT CHART PRESISI SESUAI DUA GAMBAR ACUAN BARU)
+                // 2. TAMPILAN FILTER BULANAN / TANGGAL (DONUT CHART PRESISI)
                 let totalMasukFiltered = 0;
                 let totalKeluarFiltered = 0;
                 let labelFooter = "";
 
-                // PENGELOMPOKAN SUB KATEGORI TRANSAKSI
                 let catMasuk = { "Transfer Masuk": 0, "Setor Tunai": 0, "Pendapatan Bunga": 0, "Lainnya": 0 };
                 let catKeluar = { "Transfer Keluar": 0, "Pembayaran": 0, "Pembayaran Kredit": 0, "Tarik Tunai": 0 };
 
@@ -1165,7 +1216,6 @@
                     });
                 }
 
-                // SETUP DATA DONUT & HEADER TEKS BERDASARKAN SUB-TAB ('semua', 'masuk', 'keluar')
                 let donutData = [];
                 let donutBg = [];
                 let donutLabels = [];
@@ -1209,10 +1259,9 @@
                     totalValEl.innerText = formatRupiah(totalMasukFiltered);
                     totalValEl.className = "text-lg font-extrabold text-emerald-600 dark:text-emerald-400";
 
-                    const keys = Object.keys(catMasuk);
                     donutData = Object.values(catMasuk);
                     donutBg = ['#10b981', '#34d399', '#86efac', '#d1fae5'];
-                    donutLabels = keys;
+                    donutLabels = Object.keys(catMasuk);
 
                     if (totalMasukFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
 
@@ -1253,10 +1302,9 @@
                     totalValEl.innerText = formatRupiah(totalKeluarFiltered);
                     totalValEl.className = "text-lg font-extrabold text-rose-600 dark:text-rose-400";
 
-                    const keys = Object.keys(catKeluar);
                     donutData = Object.values(catKeluar);
                     donutBg = ['#7f1d1d', '#b91c1c', '#f87171', '#fca5a5'];
-                    donutLabels = keys;
+                    donutLabels = Object.keys(catKeluar);
 
                     if (totalKeluarFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
 
@@ -1399,6 +1447,7 @@
             document.getElementById('btn-save-ads').innerText = "Simpan";
         }
 
+        // DESIGN BANNER IKLAN MODERN DAN MEWAH (MODERN WEBAPP STYLE)
         async function fetchAds() {
             const container = document.getElementById('ads-banner-container');
             const { data, error } = await _supabase.from('iklan').select('*').order('created_at', { ascending: false }).limit(1); 
@@ -1406,18 +1455,23 @@
             if(!error && data && data.length > 0) {
                 const ads = data[0];
                 let clickAction = ads.link ? `onclick="window.open('${ads.link}', '_blank')"` : '';
-                let hoverClass = ads.link ? 'cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/40' : '';
+                let hoverClass = ads.link ? 'cursor-pointer hover:scale-[1.01] hover:shadow-lg' : '';
 
                 container.innerHTML = `
-                    <div ${clickAction} class="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-700/40 p-3.5 rounded-2xl flex items-center justify-between transition-colors ${hoverClass}">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-800 text-amber-500 flex items-center justify-center font-bold text-sm shadow-sm"><i class="fa-solid fa-bullhorn text-xs"></i></div>
-                            <div>
-                                <p class="text-[9px] text-amber-600 dark:text-amber-500 font-extrabold uppercase tracking-widest mb-0.5">Pengumuman / Iklan</p>
-                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300">${ads.teks}</p>
+                    <div ${clickAction} class="relative overflow-hidden bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 dark:from-amber-600/90 dark:via-amber-500/80 dark:to-yellow-600/90 border border-amber-300 dark:border-amber-500/50 p-4 rounded-3xl text-slate-900 shadow-md transition-all duration-300 ${hoverClass}">
+                        <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-white/20 rounded-full blur-xl pointer-events-none"></div>
+                        <div class="flex items-center justify-between gap-3 relative z-10">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-2xl bg-white/90 text-amber-600 flex items-center justify-center font-extrabold text-lg shadow-sm flex-shrink-0">
+                                    <i class="fa-solid fa-bullhorn animate-pulse"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="bg-slate-900/80 text-amber-300 text-[8px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider inline-block mb-1">Promosi / Pengumuman</span>
+                                    <p class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-tight truncate">${ads.teks}</p>
+                                </div>
                             </div>
+                            ${ads.link ? '<div class="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-900 dark:text-white"></i></div>' : ''}
                         </div>
-                        ${ads.link ? '<i class="fa-solid fa-arrow-up-right-from-square text-amber-500 text-xs"></i>' : ''}
                     </div>
                 `;
                 container.classList.remove('hidden');
