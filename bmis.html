@@ -3,143 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Operasional & RAB - Unit Building</title>
+    <title>Executive Dashboard - Unit Building</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
 
-    <!-- HEADER / NAVBAR -->
+    <!-- NAVBAR HEADER -->
     <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="bg-blue-600 p-2 rounded-lg">
-                    <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-white"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-base leading-tight">Unit Building Management</h1>
-                    <p class="text-xs text-slate-400">Pemantauan 9 Kantor</p>
+                    <h1 class="font-bold text-base leading-tight">Executive Dashboard</h1>
+                    <p class="text-xs text-slate-400">Ringkasan Operasional 9 Kantor</p>
                 </div>
             </div>
-            
-            <!-- GOOGLE LOGIN / PROFILE BUTTON -->
-            <button class="bg-white hover:bg-slate-100 text-slate-800 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-2 border border-slate-200 transition">
-                <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                Sign in with Google
-            </button>
-        </div>
-
-        <!-- NAVIGATION TABS -->
-        <nav class="bg-slate-800 border-t border-slate-700">
-            <div class="max-w-7xl mx-auto px-4 flex gap-2 overflow-x-auto text-xs font-medium">
-                <button class="py-3 px-4 text-blue-400 border-b-2 border-blue-500 font-semibold flex items-center gap-2">
-                    <i data-lucide="clipboard-list" class="w-4 h-4"></i> Pekerjaan Harian
-                </button>
-                <button class="py-3 px-4 text-slate-300 hover:text-white flex items-center gap-2">
-                    <i data-lucide="zap" class="w-4 h-4"></i> Tagihan Utilitas
-                </button>
-                <button class="py-3 px-4 text-slate-300 hover:text-white flex items-center gap-2">
-                    <i data-lucide="calculator" class="w-4 h-4"></i> Pembuat RAB
-                </button>
-                <button class="py-3 px-4 text-slate-300 hover:text-white flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-4 h-4"></i> Laporan & Export
-                </button>
+            <div class="text-right">
+                <span class="text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Semua Sistem Online
+                </span>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- CONTOH SECTION: FORM RAB & TERTULIS -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-4">
+        <!-- 1. BARIS KPI METRICS (4 CARDS) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- CARD 1 -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
-                    <h2 class="font-bold text-slate-800 text-base">Rencana Anggaran Biaya (RAB)</h2>
-                    <p class="text-xs text-slate-500">Buat rancangan biaya perbaikan fasilitas gedung</p>
+                    <p class="text-xs font-medium text-slate-500">Pekerjaan Pending</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">5 <span class="text-xs font-normal text-slate-400">/ 9 Kantor</span></h3>
                 </div>
-                <div class="flex gap-2">
-                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5">
-                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Export Excel
-                    </button>
-                    <button class="bg-red-600 hover:bg-red-700 text-white text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5">
-                        <i data-lucide="file-down" class="w-4 h-4"></i> Cetak PDF
-                    </button>
+                <div class="bg-amber-100 p-3 rounded-lg text-amber-600">
+                    <i data-lucide="wrench" class="w-6 h-6"></i>
                 </div>
             </div>
 
-            <!-- DETAIL PEKERJAAN -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <!-- CARD 2 -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Gedung</label>
-                    <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
-                        <option>Kantor 1 - Pusat</option>
-                        <option>Kantor 2 - Cabang Utara</option>
-                    </select>
+                    <p class="text-xs font-medium text-slate-500">Utilitas (Bulan Ini)</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">Rp 142M</h3>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pekerjaan</label>
-                    <input type="text" placeholder="Misal: Perbaikan Panel ACP & Kanopi" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Pengajuan</label>
-                    <input type="date" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs">
+                <div class="bg-blue-100 p-3 rounded-lg text-blue-600">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
                 </div>
             </div>
 
-            <!-- TABEL ITEM BARANG / JASA -->
-            <div class="overflow-x-auto mb-4">
+            <!-- CARD 3 -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-500">RAB Dalam Pengajuan</p>
+                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">2 <span class="text-xs font-normal text-slate-400">Berkas</span></h3>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
+                    <i data-lucide="file-text" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <!-- CARD 4 -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-slate-500">Status Gedung Aman</p>
+                    <h3 class="text-2xl font-bold text-emerald-600 mt-0.5">8 <span class="text-xs font-normal text-slate-400">/ 9 Lokasi</span></h3>
+                </div>
+                <div class="bg-emerald-100 p-3 rounded-lg text-emerald-600">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 2. TABEL RINGKASAN MONITORING 9 KANTOR -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i data-lucide="building-2" class="w-4 h-4 text-blue-600"></i> Matriks Pemantauan 9 Kantor
+                </h2>
+                <span class="text-xs text-slate-500">Diperbarui: Hari Ini, 08:00 WIB</span>
+            </div>
+
+            <div class="overflow-x-auto">
                 <table class="w-full text-xs text-left border-collapse">
-                    <thead class="bg-slate-100 text-slate-700 font-semibold border-y border-slate-200">
+                    <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
                         <tr>
-                            <th class="p-2.5">No</th>
-                            <th class="p-2.5">Rincian Barang / Pekerjaan</th>
-                            <th class="p-2.5 w-20">Vol</th>
-                            <th class="p-2.5 w-24">Satuan</th>
-                            <th class="p-2.5 w-32">Harga Satuan (Rp)</th>
-                            <th class="p-2.5 w-32">Total (Rp)</th>
-                            <th class="p-2.5 text-center w-12">Aksi</th>
+                            <th class="p-3">Nama Kantor</th>
+                            <th class="p-3">Kondisi Gedung</th>
+                            <th class="p-3">Pekerjaan Aktif</th>
+                            <th class="p-3">Tagihan Utilitas</th>
+                            <th class="p-3">Catatan / Peringatan Terbaru</th>
+                            <th class="p-3 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200">
-                        <tr>
-                            <td class="p-2.5">1</td>
-                            <td class="p-2.5"><input type="text" value="Lampu LED Panel 18W" class="w-full bg-transparent border-none focus:outline-none"></td>
-                            <td class="p-2.5"><input type="number" value="10" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5"><input type="text" value="Pcs" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5"><input type="number" value="85000" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5 font-semibold">850.000</td>
-                            <td class="p-2.5 text-center"><button class="text-red-500 hover:text-red-700"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
+                        <!-- KANTOR 1 -->
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-bold text-slate-800">Kantor 1 - Pusat</td>
+                            <td class="p-3">
+                                <span class="bg-emerald-100 text-emerald-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aman
+                                </span>
+                            </td>
+                            <td class="p-3 text-slate-600">0 Pending</td>
+                            <td class="p-3 font-semibold text-slate-700">Rp 45.200.000</td>
+                            <td class="p-3 text-slate-500">Operasional normal, tidak ada isu teknis.</td>
+                            <td class="p-3 text-center">
+                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="p-2.5">2</td>
-                            <td class="p-2.5"><input type="text" value="Jasa Instalasi & Perbaikan Kabel" class="w-full bg-transparent border-none focus:outline-none"></td>
-                            <td class="p-2.5"><input type="number" value="1" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5"><input type="text" value="Ls" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5"><input type="number" value="350000" class="w-full bg-slate-50 border border-slate-200 rounded p-1"></td>
-                            <td class="p-2.5 font-semibold">350.000</td>
-                            <td class="p-2.5 text-center"><button class="text-red-500 hover:text-red-700"><i data-lucide="trash-2" class="w-4 h-4 mx-auto"></i></button></td>
+
+                        <!-- KANTOR 2 -->
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 font-bold text-slate-800">Kantor 2 - Cabang Utara</td>
+                            <td class="p-3">
+                                <span class="bg-amber-100 text-amber-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Perhatian
+                                </span>
+                            </td>
+                            <td class="p-3 font-semibold text-amber-600">2 Pending</td>
+                            <td class="p-3 font-semibold text-slate-700">Rp 18.500.000</td>
+                            <td class="p-3 text-slate-600">AC Ruang Server suhu naik (Freon bocor).</td>
+                            <td class="p-3 text-center">
+                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
+                            </td>
+                        </tr>
+
+                        <!-- KANTOR 4 -->
+                        <tr class="hover:bg-slate-50 bg-red-50/30">
+                            <td class="p-3 font-bold text-slate-800">Kantor 4 - Cabang Barat</td>
+                            <td class="p-3">
+                                <span class="bg-red-100 text-red-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
+                                </span>
+                            </td>
+                            <td class="p-3 font-semibold text-red-600">3 Pending</td>
+                            <td class="p-3 font-semibold text-slate-700">Rp 22.800.000</td>
+                            <td class="p-3 text-slate-600 font-medium text-red-600">MCB Panel Utama Sering Trip (Menunggu RAB)</td>
+                            <td class="p-3 text-center">
+                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <!-- FOOTER RAB (TOTAL & TOMBOL TAMBAH) -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-3 border-t border-slate-200">
-                <button class="bg-blue-50 text-blue-600 hover:bg-blue-100 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1 border border-blue-200">
-                    <i data-lucide="plus" class="w-4 h-4"></i> Tambah Baris Pekerjaan
-                </button>
-                <div class="text-right w-full sm:w-auto bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
-                    <div class="text-xs text-slate-500 flex justify-between gap-8">
-                        <span>Subtotal:</span> <span>Rp 1.200.000</span>
-                    </div>
-                    <div class="text-xs text-slate-500 flex justify-between gap-8">
-                        <span>Estimasi PPN (11%):</span> <span>Rp 132.000</span>
-                    </div>
-                    <div class="text-sm font-bold text-slate-800 flex justify-between gap-8 border-t border-slate-300 pt-1">
-                        <span>Total Anggaran:</span> <span class="text-blue-600">Rp 1.332.000</span>
-                    </div>
-                </div>
             </div>
         </div>
 
