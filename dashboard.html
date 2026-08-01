@@ -174,7 +174,7 @@
                         <!-- VIEW HOME -->
                         <div id="view-home" class="space-y-6">
                             
-                            <!-- GRID CARD ATAS (SALDO & ANALISIS KEUANGAN BARU) -->
+                            <!-- GRID CARD ATAS (SALDO & ANALISIS KEUANGAN DENGAN MULTI FILTER) -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <!-- Card Saldo Utama -->
                                 <section class="bg-gradient-to-br from-theme-500 to-theme-700 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden flex flex-col justify-between min-h-[180px]">
@@ -199,62 +199,115 @@
                                     </div>
                                 </section>
 
-                                <!-- CARD GRAFIK TAMPILAN BARU (DUAL-LINE CHART) -->
+                                <!-- CARD GRAFIK ANALISIS DENGAN MULTI FILTER (TAHUNAN, BULANAN, TANGGAL) -->
                                 <section class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm space-y-4">
-                                    <!-- TAB FILTER -->
+                                    <!-- TAB FILTER UTAMA -->
                                     <div class="flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-2xl border border-slate-200/50 dark:border-slate-600/50 text-xs font-bold">
                                         <button id="tab-tahunan" onclick="switchChartFilter('tahunan')" class="flex-1 py-1.5 rounded-xl bg-theme-600 text-white shadow-sm transition">Tahunan</button>
                                         <button id="tab-bulanan" onclick="switchChartFilter('bulanan')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Bulanan</button>
                                         <button id="tab-tanggal" onclick="switchChartFilter('tanggal')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Tanggal</button>
                                     </div>
 
-                                    <!-- TERAKHIR DIPERBARUI -->
-                                    <div class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                                    <!-- INPUT PICKER TAMBAHAN (DITAMPILKAN SAAT TAB BULANAN / TANGGAL) -->
+                                    <div id="picker-container-bulanan" class="hidden space-y-1">
+                                        <label class="text-[10px] font-bold text-slate-400">Pilih Bulan</label>
+                                        <div class="relative">
+                                            <input type="month" id="input-picker-bulan" onchange="renderExpenseChart()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-white focus:outline-none focus:border-theme-500">
+                                        </div>
+                                    </div>
+
+                                    <div id="picker-container-tanggal" class="hidden space-y-1">
+                                        <label class="text-[10px] font-bold text-slate-400">Pilih Rentang Tanggal</label>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <input type="date" id="input-picker-start" onchange="renderExpenseChart()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1.5 text-[11px] font-bold text-slate-700 dark:text-white focus:outline-none">
+                                            <input type="date" id="input-picker-end" onchange="renderExpenseChart()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-1.5 text-[11px] font-bold text-slate-700 dark:text-white focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- SUB-TAB FILTER (SEMUA, PENDAPATAN, PENGELUARAN) KHUSUS BULANAN / TANGGAL -->
+                                    <div id="subtab-container" class="hidden flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl text-[11px] font-bold">
+                                        <button id="subtab-semua" onclick="switchSubFilter('semua')" class="flex-1 py-1 rounded-lg bg-theme-600 text-white shadow-sm transition">Semua</button>
+                                        <button id="subtab-masuk" onclick="switchSubFilter('masuk')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pendapatan</button>
+                                        <button id="subtab-keluar" onclick="switchSubFilter('keluar')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pengeluaran</button>
+                                    </div>
+
+                                    <!-- KET DIPERBARUI (UNTUK TAHUNAN) -->
+                                    <div id="last-updated-container" class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
                                         Terakhir diperbarui <span id="last-updated-time">-</span>
                                     </div>
 
-                                    <!-- KONTAINER CANVAS DUAL-LINE CHART -->
-                                    <div class="relative w-full h-40">
+                                    <!-- CONTAINER CANVAS CHART -->
+                                    <div class="relative w-full h-44 flex items-center justify-center">
                                         <canvas id="financialChart"></canvas>
                                     </div>
 
-                                    <div id="chart-period-range" class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                        -
+                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK TAHUNAN -->
+                                    <div id="tahunan-summary-container">
+                                        <div id="chart-period-range" class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                            -
+                                        </div>
+
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <div class="text-center">
+                                                <h4 id="chart-total-pendapatan" class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white mb-1">Rp 0</h4>
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-[9px] font-bold">
+                                                    <i class="fa-solid fa-arrow-down"></i> Pendapatan
+                                                </span>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 id="chart-total-pengeluaran" class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white mb-1">Rp 0</h4>
+                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-[9px] font-bold">
+                                                    <i class="fa-solid fa-arrow-up"></i> Pengeluaran
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60 mt-3">
+                                            <div class="bg-slate-50 dark:bg-slate-700/30 border border-slate-200/80 dark:border-slate-700 p-2.5 rounded-2xl flex flex-col gap-1.5">
+                                                <div class="flex items-center gap-1.5 font-bold text-[11px] text-slate-700 dark:text-slate-300">
+                                                    <i class="fa-regular fa-calendar text-theme-500"></i>
+                                                    <span id="detail-periode-label">-</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-[11px] font-extrabold">
+                                                    <div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                                                        <i class="fa-solid fa-arrow-down bg-emerald-100 dark:bg-emerald-900/50 p-1 rounded-full text-[8px]"></i>
+                                                        <span id="detail-masuk">Rp 0</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-1 text-rose-500 dark:text-rose-400">
+                                                        <i class="fa-solid fa-arrow-up bg-rose-100 dark:bg-rose-900/50 p-1 rounded-full text-[8px]"></i>
+                                                        <span id="detail-keluar">Rp 0</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <!-- SUMMARY PILL (PENDAPATAN & PENGELUARAN) -->
-                                    <div class="grid grid-cols-2 gap-2 pt-1">
+                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK DONUT CHART (BULANAN/TANGGAL) -->
+                                    <div id="donut-summary-container" class="hidden space-y-3 pt-1">
                                         <div class="text-center">
-                                            <h4 id="chart-total-pendapatan" class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white mb-1">Rp 0</h4>
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-[9px] font-bold">
-                                                <i class="fa-solid fa-arrow-down"></i> Pendapatan
-                                            </span>
+                                            <p id="donut-title-label" class="text-[10px] font-bold text-slate-400">Selisih Arus Kas :</p>
+                                            <h3 id="donut-total-val" class="text-base font-extrabold text-theme-600 dark:text-theme-400">Rp 0</h3>
                                         </div>
-                                        <div class="text-center">
-                                            <h4 id="chart-total-pengeluaran" class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white mb-1">Rp 0</h4>
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-[9px] font-bold">
-                                                <i class="fa-solid fa-arrow-up"></i> Pengeluaran
-                                            </span>
-                                        </div>
-                                    </div>
 
-                                    <!-- DETAIL ARUS KAS BULAN INI -->
-                                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700/60">
-                                        <div class="bg-slate-50 dark:bg-slate-700/30 border border-slate-200/80 dark:border-slate-700 p-2.5 rounded-2xl flex flex-col gap-1.5">
-                                            <div class="flex items-center gap-1.5 font-bold text-[11px] text-slate-700 dark:text-slate-300">
-                                                <i class="fa-regular fa-calendar text-theme-500"></i>
-                                                <span id="detail-periode-label">-</span>
-                                            </div>
-                                            <div class="flex justify-between items-center text-[11px] font-extrabold">
-                                                <div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                                                    <i class="fa-solid fa-arrow-down bg-emerald-100 dark:bg-emerald-900/50 p-1 rounded-full text-[8px]"></i>
-                                                    <span id="detail-masuk">Rp 0</span>
-                                                </div>
-                                                <div class="flex items-center gap-1 text-rose-500 dark:text-rose-400">
-                                                    <i class="fa-solid fa-arrow-up bg-rose-100 dark:bg-rose-900/50 p-1 rounded-full text-[8px]"></i>
-                                                    <span id="detail-keluar">Rp 0</span>
+                                        <div id="donut-legend-box" class="flex justify-around items-center text-[11px] font-bold pt-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
+                                                <div>
+                                                    <p class="text-slate-400 text-[9px]">Pengeluaran</p>
+                                                    <p id="donut-keluar-val" class="text-slate-700 dark:text-slate-200">Rp 0</p>
                                                 </div>
                                             </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
+                                                <div>
+                                                    <p class="text-slate-400 text-[9px]">Pendapatan</p>
+                                                    <p id="donut-masuk-val" class="text-slate-700 dark:text-slate-200">Rp 0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                                            <p id="donut-footer-period" class="text-[10px] font-bold text-slate-400">Dari -</p>
                                         </div>
                                     </div>
 
@@ -509,11 +562,10 @@
         let currentUser = null; 
         let editingTrxId = null; 
         
-        // GLOBAL INSTANCE UNTUK CHART.JS
         let myExpenseChart = null;
-        let currentFilter = 'tahunan';
+        let currentFilter = 'tahunan'; // 'tahunan', 'bulanan', 'tanggal'
+        let currentSubFilter = 'semua'; // 'semua', 'masuk', 'keluar'
 
-        // STATUS BERBAYAR & SUPERADMIN
         let isPremiumUser = false; 
         const superAdminEmail = 'mastrisnocom@gmail.com';
 
@@ -571,6 +623,17 @@
         async function runRouter() {
             const savedTheme = localStorage.getItem('user-theme');
             if(savedTheme) applyTheme(savedTheme);
+
+            // SET DEFAULT TANGGAL INPUT PICKER
+            const nowStr = new Date();
+            const year = nowStr.getFullYear();
+            const month = String(nowStr.getMonth() + 1).padStart(2, '0');
+            document.getElementById('input-picker-bulan').value = `${year}-${month}`;
+            
+            const firstDay = `${year}-${month}-01`;
+            const todayStr = `${year}-${month}-${String(nowStr.getDate()).padStart(2, '0')}`;
+            document.getElementById('input-picker-start').value = firstDay;
+            document.getElementById('input-picker-end').value = todayStr;
 
             const params = new URLSearchParams(window.location.search);
             const goPath = params.get('go');
@@ -648,7 +711,6 @@
             document.getElementById('user-display').innerText = username;
             document.getElementById('user-display-side').innerText = currentUser.email;
             
-            // FOTO PROFIL GOOGLE OAUTH AKURAT
             const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
             const avatarPlaceholder = document.getElementById('user-avatar-placeholder');
             if (avatarUrl) {
@@ -658,7 +720,6 @@
                 avatarPlaceholder.innerHTML = `<span class="text-theme-600 dark:text-theme-400 font-bold">${initial}</span>`;
             }
 
-            // CEK STATUS PREMIUM / ADMIN SECARA DINAMIS
             if(currentUser.email === superAdminEmail) {
                 isPremiumUser = true; 
             } else {
@@ -834,7 +895,7 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
-        // --- FUNGSI CHART TAMPILAN BARU DENGAN SINKRONISASI PEMBACAAN AKURAT ---
+        // --- SISTEM CHART INTERAKSI BARU: SWITCH FILTER TAHUNAN / BULANAN / TANGGAL ---
         function switchChartFilter(filter) {
             currentFilter = filter;
             ['tahunan', 'bulanan', 'tanggal'].forEach(f => {
@@ -847,7 +908,86 @@
                     }
                 }
             });
+
+            const pickerBulanan = document.getElementById('picker-container-bulanan');
+            const pickerTanggal = document.getElementById('picker-container-tanggal');
+            const subtabContainer = document.getElementById('subtab-container');
+            const lastUpdatedContainer = document.getElementById('last-updated-container');
+            const tahunanSummary = document.getElementById('tahunan-summary-container');
+            const donutSummary = document.getElementById('donut-summary-container');
+
+            if (filter === 'tahunan') {
+                pickerBulanan.classList.add('hidden');
+                pickerTanggal.classList.add('hidden');
+                subtabContainer.classList.add('hidden');
+                lastUpdatedContainer.classList.remove('hidden');
+                tahunanSummary.classList.remove('hidden');
+                donutSummary.classList.add('hidden');
+            } else if (filter === 'bulanan') {
+                pickerBulanan.classList.remove('hidden');
+                pickerTanggal.classList.add('hidden');
+                subtabContainer.classList.remove('hidden');
+                lastUpdatedContainer.classList.add('hidden');
+                tahunanSummary.classList.add('hidden');
+                donutSummary.classList.remove('hidden');
+            } else if (filter === 'tanggal') {
+                pickerBulanan.classList.add('hidden');
+                pickerTanggal.classList.remove('hidden');
+                subtabContainer.classList.remove('hidden');
+                lastUpdatedContainer.classList.add('hidden');
+                tahunanSummary.classList.add('hidden');
+                donutSummary.classList.remove('hidden');
+            }
+
             renderExpenseChart();
+        }
+
+        function switchSubFilter(subType) {
+            currentSubFilter = subType;
+            ['semua', 'masuk', 'keluar'].forEach(s => {
+                const btn = document.getElementById(`subtab-${s}`);
+                if(btn) {
+                    if(s === subType) {
+                        btn.className = "flex-1 py-1 rounded-lg bg-theme-600 text-white shadow-sm transition";
+                    } else {
+                        btn.className = "flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition";
+                    }
+                }
+            });
+            renderExpenseChart();
+        }
+
+        // FUNGSI MEMBACA BULAN DAN TANGGAL DARI DATA UNIK SUPABASE PROSESOR
+        function parseTrxDate(trxStr) {
+            if (!trxStr) return null;
+            const clean = trxStr.toLowerCase();
+            const now = new Date();
+            let mIdx = -1;
+            let dNum = -1;
+            let yNum = now.getFullYear();
+
+            const monthAliases = [
+                ['jan'], ['feb'], ['mar'], ['apr'], ['mei', 'may'], ['jun'], 
+                ['jul'], ['agu', 'aug'], ['sep'], ['okt', 'oct'], ['nov'], ['des', 'dec']
+            ];
+
+            monthAliases.forEach((aliases, idx) => {
+                aliases.forEach(a => { if (clean.includes(a)) mIdx = idx; });
+            });
+
+            const match = clean.match(/(\d{1,2})\/(\d{1,2})/);
+            if (match) {
+                dNum = parseInt(match[1]);
+                if (mIdx === -1) mIdx = parseInt(match[2]) - 1;
+            } else {
+                const dayMatch = clean.match(/\b(\d{1,2})\b/);
+                if (dayMatch) dNum = parseInt(dayMatch[1]);
+            }
+
+            if (mIdx !== -1 && dNum !== -1) {
+                return new Date(yNum, mIdx, dNum);
+            }
+            return null;
         }
 
         function renderExpenseChart() {
@@ -865,160 +1005,207 @@
             const lastUpdatedEl = document.getElementById('last-updated-time');
             if(lastUpdatedEl) lastUpdatedEl.innerText = `${now.getDate()} ${monthsName[now.getMonth()]} ${now.getFullYear()} | ${hours}:${minutes} WIB`;
 
-            // MEMBUAT 12 BULAN BERJALAN DINAMIS (Misal Sep - Agu)
-            const labels = [];
-            const monthYearKeys = []; 
-            for (let i = 11; i >= 0; i--) {
-                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                labels.push(monthsShort[d.getMonth()]);
-                const yearStr = d.getFullYear();
-                monthYearKeys.push({ monthIdx: d.getMonth(), yearIdx: yearStr });
-            }
-
-            const startYear = monthYearKeys[0].yearIdx;
-            const endYear = monthYearKeys[11].yearIdx;
-            const periodRangeEl = document.getElementById('chart-period-range');
-            if(periodRangeEl) periodRangeEl.innerText = (startYear === endYear) ? `${startYear}` : `${startYear} – ${endYear}`;
-
-            const dataPendapatan = new Array(12).fill(0);
-            const dataPengeluaran = new Array(12).fill(0);
-
-            let totalMasukChart = 0;
-            let totalKeluarChart = 0;
-            let currentMonthMasuk = 0;
-            let currentMonthKeluar = 0;
-            const currentMonthIdx = now.getMonth();
-
-            // PEMBACAAN FORMAT STR_DATE UNIK SUPABASE PADA TRANSAKSI LAMA & BARU
-            globalFinances.forEach(trx => {
-                const nominal = parseFloat(trx.nominal) || 0;
-                let monthFound = -1;
-
-                if (trx.waktu) {
-                    const cleanWaktu = trx.waktu.toLowerCase();
-
-                    // Cek nama bulan teks singkat
-                    const monthAliases = [
-                        ['jan'], ['feb'], ['mar'], ['apr'], ['mei', 'may'], ['jun'], 
-                        ['jul'], ['agu', 'aug'], ['sep'], ['okt', 'oct'], ['nov'], ['des', 'dec']
-                    ];
-
-                    monthAliases.forEach((aliases, mIdx) => {
-                        aliases.forEach(alias => {
-                            if (cleanWaktu.includes(alias)) monthFound = mIdx;
-                        });
-                    });
-
-                    // Fallback untuk format angka tanggal biasa "1/8" atau "01/08"
-                    if (monthFound === -1) {
-                        try {
-                            const match = cleanWaktu.match(/(\d{1,2})\/(\d{1,2})/);
-                            if (match && match[2]) {
-                                monthFound = parseInt(match[2]) - 1; // 0-11
-                            }
-                        } catch(e){}
-                    }
-                }
-
-                if (monthFound >= 0 && monthFound <= 11) {
-                    const targetIdx = monthYearKeys.findIndex(m => m.monthIdx === monthFound);
-                    if (targetIdx !== -1) {
-                        if (trx.jenis === 'masuk') {
-                            dataPendapatan[targetIdx] += nominal;
-                            totalMasukChart += nominal;
-                        } else {
-                            dataPengeluaran[targetIdx] += nominal;
-                            totalKeluarChart += nominal;
-                        }
-                    }
-
-                    if (monthFound === currentMonthIdx) {
-                        if (trx.jenis === 'masuk') currentMonthMasuk += nominal;
-                        else currentMonthKeluar += nominal;
-                    }
-                }
-            });
-
-            const totalPendapatanEl = document.getElementById('chart-total-pendapatan');
-            const totalPengeluaranEl = document.getElementById('chart-total-pengeluaran');
-            if(totalPendapatanEl) totalPendapatanEl.innerText = formatRupiah(totalMasukChart);
-            if(totalPengeluaranEl) totalPengeluaranEl.innerText = formatRupiah(totalKeluarChart);
-
-            const detailPeriodeEl = document.getElementById('detail-periode-label');
-            const detailMasukEl = document.getElementById('detail-masuk');
-            const detailKeluarEl = document.getElementById('detail-keluar');
-            if(detailPeriodeEl) detailPeriodeEl.innerText = `${monthsName[now.getMonth()]} – ${now.getFullYear()}`;
-            if(detailMasukEl) detailMasukEl.innerText = formatRupiah(currentMonthMasuk);
-            if(detailKeluarEl) detailKeluarEl.innerText = formatRupiah(currentMonthKeluar);
-
             if (myExpenseChart) myExpenseChart.destroy();
 
-            myExpenseChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Pendapatan',
-                            data: dataPendapatan,
-                            borderColor: '#10b981',
-                            borderWidth: 2.5,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#10b981',
-                            pointHoverRadius: 6,
-                            tension: 0.3,
-                            fill: false
-                        },
-                        {
-                            label: 'Pengeluaran',
-                            data: dataPengeluaran,
-                            borderColor: '#ef4444',
-                            borderWidth: 2.5,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#ef4444',
-                            pointHoverRadius: 6,
-                            tension: 0.3,
-                            fill: true,
-                            backgroundColor: 'rgba(239, 68, 68, 0.08)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(ctx) {
-                                    return ` ${ctx.dataset.label}: ${formatRupiah(ctx.raw)}`;
-                                }
+            // 1. TAMPILAN FILTER TAHUNAN (LINE CHART DUAL)
+            if (currentFilter === 'tahunan') {
+                const labels = [];
+                const monthYearKeys = []; 
+                for (let i = 11; i >= 0; i--) {
+                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    labels.push(monthsShort[d.getMonth()]);
+                    monthYearKeys.push({ monthIdx: d.getMonth(), yearIdx: d.getFullYear() });
+                }
+
+                const startYear = monthYearKeys[0].yearIdx;
+                const endYear = monthYearKeys[11].yearIdx;
+                const periodRangeEl = document.getElementById('chart-period-range');
+                if(periodRangeEl) periodRangeEl.innerText = (startYear === endYear) ? `${startYear}` : `${startYear} – ${endYear}`;
+
+                const dataPendapatan = new Array(12).fill(0);
+                const dataPengeluaran = new Array(12).fill(0);
+
+                let totalMasukChart = 0;
+                let totalKeluarChart = 0;
+                let currentMonthMasuk = 0;
+                let currentMonthKeluar = 0;
+                const currentMonthIdx = now.getMonth();
+
+                globalFinances.forEach(trx => {
+                    const nominal = parseFloat(trx.nominal) || 0;
+                    const parsedDate = parseTrxDate(trx.waktu);
+
+                    if (parsedDate) {
+                        const mIdx = parsedDate.getMonth();
+                        const targetIdx = monthYearKeys.findIndex(m => m.monthIdx === mIdx);
+                        
+                        if (targetIdx !== -1) {
+                            if (trx.jenis === 'masuk') {
+                                dataPendapatan[targetIdx] += nominal;
+                                totalMasukChart += nominal;
+                            } else {
+                                dataPengeluaran[targetIdx] += nominal;
+                                totalKeluarChart += nominal;
                             }
                         }
+
+                        if (mIdx === currentMonthIdx) {
+                            if (trx.jenis === 'masuk') currentMonthMasuk += nominal;
+                            else currentMonthKeluar += nominal;
+                        }
+                    }
+                });
+
+                document.getElementById('chart-total-pendapatan').innerText = formatRupiah(totalMasukChart);
+                document.getElementById('chart-total-pengeluaran').innerText = formatRupiah(totalKeluarChart);
+                document.getElementById('detail-periode-label').innerText = `${monthsName[now.getMonth()]} – ${now.getFullYear()}`;
+                document.getElementById('detail-masuk').innerText = formatRupiah(currentMonthMasuk);
+                document.getElementById('detail-keluar').innerText = formatRupiah(currentMonthKeluar);
+
+                myExpenseChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Pendapatan',
+                                data: dataPendapatan,
+                                borderColor: '#10b981',
+                                borderWidth: 2.5,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#10b981',
+                                tension: 0.3,
+                                fill: false
+                            },
+                            {
+                                label: 'Pengeluaran',
+                                data: dataPengeluaran,
+                                borderColor: '#ef4444',
+                                borderWidth: 2.5,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#ef4444',
+                                tension: 0.3,
+                                fill: true,
+                                backgroundColor: 'rgba(239, 68, 68, 0.08)'
+                            }
+                        ]
                     },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#94a3b8',
-                                font: { size: 9, weight: 'bold', family: 'Plus Jakarta Sans' }
-                            }
-                        },
-                        y: {
-                            border: { dash: [4, 4] },
-                            grid: { color: '#f1f5f9' },
-                            ticks: {
-                                color: '#94a3b8',
-                                font: { size: 8, family: 'Plus Jakarta Sans' },
-                                callback: function(val) {
-                                    return val >= 1000000 ? (val / 1000000) + ' Jt' : val;
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 9, weight: 'bold' } } },
+                            y: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8', font: { size: 8 } } }
+                        }
+                    }
+                });
+
+            } else {
+                // 2. TAMPILAN FILTER BULANAN / TANGGAL (DONUT CHART ACCORDING TO USER UI IMAGE)
+                let totalMasukFiltered = 0;
+                let totalKeluarFiltered = 0;
+                let labelFooter = "";
+
+                if (currentFilter === 'bulanan') {
+                    const pickerVal = document.getElementById('input-picker-bulan').value; // YYYY-MM
+                    let selYear = now.getFullYear();
+                    let selMonth = now.getMonth();
+
+                    if (pickerVal) {
+                        const parts = pickerVal.split('-');
+                        selYear = parseInt(parts[0]);
+                        selMonth = parseInt(parts[1]) - 1;
+                    }
+
+                    labelFooter = `Dari ${monthsName[selMonth]} ${selYear}`;
+
+                    globalFinances.forEach(trx => {
+                        const nominal = parseFloat(trx.nominal) || 0;
+                        const pDate = parseTrxDate(trx.waktu);
+                        if (pDate && pDate.getMonth() === selMonth && pDate.getFullYear() === selYear) {
+                            if (trx.jenis === 'masuk') totalMasukFiltered += nominal;
+                            else totalKeluarFiltered += nominal;
+                        }
+                    });
+
+                } else if (currentFilter === 'tanggal') {
+                    const startVal = document.getElementById('input-picker-start').value;
+                    const endVal = document.getElementById('input-picker-end').value;
+
+                    const startDate = startVal ? new Date(startVal) : new Date(now.getFullYear(), now.getMonth(), 1);
+                    const endDate = endVal ? new Date(endVal) : now;
+
+                    startDate.setHours(0,0,0,0);
+                    endDate.setHours(23,59,59,999);
+
+                    labelFooter = `Dari ${startDate.getDate()} ${monthsName[startDate.getMonth()]} ${startDate.getFullYear()} – ${endDate.getDate()} ${monthsName[endDate.getMonth()]} ${endDate.getFullYear()}`;
+
+                    globalFinances.forEach(trx => {
+                        const nominal = parseFloat(trx.nominal) || 0;
+                        const pDate = parseTrxDate(trx.waktu);
+                        if (pDate && pDate >= startDate && pDate <= endDate) {
+                            if (trx.jenis === 'masuk') totalMasukFiltered += nominal;
+                            else totalKeluarFiltered += nominal;
+                        }
+                    });
+                }
+
+                // Kalkulasi Nilai Donut Berdasarkan Sub-Filter ('semua', 'masuk', 'keluar')
+                let donutData = [];
+                let donutBg = [];
+                let selisihArusKas = totalMasukFiltered - totalKeluarFiltered;
+
+                document.getElementById('donut-total-val').innerText = formatRupiah(selisihArusKas);
+                document.getElementById('donut-keluar-val').innerText = formatRupiah(totalKeluarFiltered);
+                document.getElementById('donut-masuk-val').innerText = formatRupiah(totalMasukFiltered);
+                document.getElementById('donut-footer-period').innerText = labelFooter;
+
+                if (currentSubFilter === 'semua') {
+                    donutData = [totalKeluarFiltered, totalMasukFiltered];
+                    donutBg = ['#ef4444', '#10b981'];
+                    if (totalKeluarFiltered === 0 && totalMasukFiltered === 0) {
+                        donutData = [1];
+                        donutBg = ['#e2e8f0'];
+                    }
+                } else if (currentSubFilter === 'masuk') {
+                    donutData = [totalMasukFiltered];
+                    donutBg = ['#10b981'];
+                    if (totalMasukFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
+                } else if (currentSubFilter === 'keluar') {
+                    donutData = [totalKeluarFiltered];
+                    donutBg = ['#ef4444'];
+                    if (totalKeluarFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
+                }
+
+                myExpenseChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: currentSubFilter === 'semua' ? ['Pengeluaran', 'Pendapatan'] : [currentSubFilter === 'masuk' ? 'Pendapatan' : 'Pengeluaran'],
+                        datasets: [{
+                            data: donutData,
+                            backgroundColor: donutBg,
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '78%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(c) {
+                                        return ` ${c.label}: ${formatRupiah(c.raw)}`;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         function updateLaporanDanAnggaran() {
