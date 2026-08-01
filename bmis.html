@@ -1,163 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Dashboard - Unit Building</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi SPA LocalStorage</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+    .page { display: none; } /* Semua halaman tersembunyi secara default */
+    .active { display: block; } /* Halaman aktif ditampilkan */
+    .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 400px; }
+    button { padding: 8px 16px; margin-top: 10px; cursor: pointer; }
+    input { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
+  </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
+<body>
 
-    <!-- NAVBAR HEADER -->
-    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 p-2 rounded-lg">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-white"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-base leading-tight">Executive Dashboard</h1>
-                    <p class="text-xs text-slate-400">Ringkasan Operasional 9 Kantor</p>
-                </div>
-            </div>
-            <div class="text-right">
-                <span class="text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Semua Sistem Online
-                </span>
-            </div>
-        </div>
-    </header>
+  <!-- 1. LANDING PAGE -->
+  <div id="landingPage" class="page">
+    <h1>Selamat Datang di Website Kami</h1>
+    <p>Ini adalah halaman informasi tentang website kami sebelum Anda masuk ke sistem.</p>
+    <button onclick="navigateTo('loginPage')">Masuk / Login</button>
+  </div>
 
-    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+  <!-- 2. LOGIN PAGE -->
+  <div id="loginPage" class="page">
+    <div class="card">
+      <h2>Halaman Login</h2>
+      <form id="loginForm">
+        <label>Username:</label>
+        <input type="text" id="username" required placeholder="Masukkan username">
+        <label>Password:</label>
+        <input type="password" id="password" required placeholder="Masukkan password">
+        <button type="submit">Login</button>
+      </form>
+      <br>
+      <small><a href="#" onclick="navigateTo('landingPage')">← Kembali ke Landing Page</a></small>
+    </div>
+  </div>
 
-        <!-- 1. BARIS KPI METRICS (4 CARDS) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <!-- CARD 1 -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-500">Pekerjaan Pending</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">5 <span class="text-xs font-normal text-slate-400">/ 9 Kantor</span></h3>
-                </div>
-                <div class="bg-amber-100 p-3 rounded-lg text-amber-600">
-                    <i data-lucide="wrench" class="w-6 h-6"></i>
-                </div>
-            </div>
+  <!-- 3. DASHBOARD PAGE (PROTECTED) -->
+  <div id="dashboardPage" class="page">
+    <h1>Dashboard Utama</h1>
+    <p>Selamat datang, <b id="userDisplay"></b>!</p>
+    <p>Anda berhasil mengakses halaman area terbatas.</p>
+    <button onclick="handleLogout()">Logout</button>
+  </div>
 
-            <!-- CARD 2 -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-500">Utilitas (Bulan Ini)</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">Rp 142M</h3>
-                </div>
-                <div class="bg-blue-100 p-3 rounded-lg text-blue-600">
-                    <i data-lucide="zap" class="w-6 h-6"></i>
-                </div>
-            </div>
+  <script>
+    // Fungsi untuk navigasi antar halaman
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
 
-            <!-- CARD 3 -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-500">RAB Dalam Pengajuan</p>
-                    <h3 class="text-2xl font-bold text-slate-800 mt-0.5">2 <span class="text-xs font-normal text-slate-400">Berkas</span></h3>
-                </div>
-                <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
-                    <i data-lucide="file-text" class="w-6 h-6"></i>
-                </div>
-            </div>
+    // Cek Status Login saat halaman pertama kali di-load
+    function checkAuth() {
+      const session = JSON.parse(localStorage.getItem('user_session'));
+      
+      if (session && session.isLoggedIn) {
+        // Jika sudah login, langsung ke Dashboard
+        document.getElementById('userDisplay').innerText = session.username;
+        navigateTo('dashboardPage');
+      } else {
+        // Jika belum login, tampilkan Landing Page
+        navigateTo('landingPage');
+      }
+    }
 
-            <!-- CARD 4 -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-slate-500">Status Gedung Aman</p>
-                    <h3 class="text-2xl font-bold text-emerald-600 mt-0.5">8 <span class="text-xs font-normal text-slate-400">/ 9 Lokasi</span></h3>
-                </div>
-                <div class="bg-emerald-100 p-3 rounded-lg text-emerald-600">
-                    <i data-lucide="shield-check" class="w-6 h-6"></i>
-                </div>
-            </div>
+    // Handle Form Login Submit
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('username').value;
 
-        </div>
+      // Simpan data ke localStorage
+      const userData = {
+        username: usernameInput,
+        isLoggedIn: true,
+        loginAt: new Date().toISOString()
+      };
+      localStorage.setItem('user_session', JSON.stringify(userData));
 
-        <!-- 2. TABEL RINGKASAN MONITORING 9 KANTOR -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                    <i data-lucide="building-2" class="w-4 h-4 text-blue-600"></i> Matriks Pemantauan 9 Kantor
-                </h2>
-                <span class="text-xs text-slate-500">Diperbarui: Hari Ini, 08:00 WIB</span>
-            </div>
+      // Update UI dan pindah ke Dashboard
+      document.getElementById('userDisplay').innerText = usernameInput;
+      navigateTo('dashboardPage');
+    });
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left border-collapse">
-                    <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
-                        <tr>
-                            <th class="p-3">Nama Kantor</th>
-                            <th class="p-3">Kondisi Gedung</th>
-                            <th class="p-3">Pekerjaan Aktif</th>
-                            <th class="p-3">Tagihan Utilitas</th>
-                            <th class="p-3">Catatan / Peringatan Terbaru</th>
-                            <th class="p-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200">
-                        <!-- KANTOR 1 -->
-                        <tr class="hover:bg-slate-50">
-                            <td class="p-3 font-bold text-slate-800">Kantor 1 - Pusat</td>
-                            <td class="p-3">
-                                <span class="bg-emerald-100 text-emerald-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aman
-                                </span>
-                            </td>
-                            <td class="p-3 text-slate-600">0 Pending</td>
-                            <td class="p-3 font-semibold text-slate-700">Rp 45.200.000</td>
-                            <td class="p-3 text-slate-500">Operasional normal, tidak ada isu teknis.</td>
-                            <td class="p-3 text-center">
-                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
-                            </td>
-                        </tr>
+    // Handle Logout
+    function handleLogout() {
+      localStorage.removeItem('user_session');
+      document.getElementById('loginForm').reset();
+      navigateTo('landingPage');
+    }
 
-                        <!-- KANTOR 2 -->
-                        <tr class="hover:bg-slate-50">
-                            <td class="p-3 font-bold text-slate-800">Kantor 2 - Cabang Utara</td>
-                            <td class="p-3">
-                                <span class="bg-amber-100 text-amber-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Perhatian
-                                </span>
-                            </td>
-                            <td class="p-3 font-semibold text-amber-600">2 Pending</td>
-                            <td class="p-3 font-semibold text-slate-700">Rp 18.500.000</td>
-                            <td class="p-3 text-slate-600">AC Ruang Server suhu naik (Freon bocor).</td>
-                            <td class="p-3 text-center">
-                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
-                            </td>
-                        </tr>
-
-                        <!-- KANTOR 4 -->
-                        <tr class="hover:bg-slate-50 bg-red-50/30">
-                            <td class="p-3 font-bold text-slate-800">Kantor 4 - Cabang Barat</td>
-                            <td class="p-3">
-                                <span class="bg-red-100 text-red-700 font-medium px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Kritis
-                                </span>
-                            </td>
-                            <td class="p-3 font-semibold text-red-600">3 Pending</td>
-                            <td class="p-3 font-semibold text-slate-700">Rp 22.800.000</td>
-                            <td class="p-3 text-slate-600 font-medium text-red-600">MCB Panel Utama Sering Trip (Menunggu RAB)</td>
-                            <td class="p-3 text-center">
-                                <button class="text-blue-600 hover:underline font-semibold">Detail</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </main>
-
-    <script>
-        lucide.createIcons();
-    </script>
+    // Jalankan pengecekan auth saat skrip berjalan
+    checkAuth();
+  </script>
 </body>
 </html>
