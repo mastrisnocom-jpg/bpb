@@ -174,7 +174,7 @@
                         <!-- VIEW HOME -->
                         <div id="view-home" class="space-y-6">
                             
-                            <!-- GRID CARD ATAS (SALDO & ANALISIS KEUANGAN DENGAN MULTI FILTER) -->
+                            <!-- GRID CARD ATAS (SALDO & ANALISIS KEUANGAN MULTI FILTER) -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <!-- Card Saldo Utama -->
                                 <section class="bg-gradient-to-br from-theme-500 to-theme-700 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden flex flex-col justify-between min-h-[180px]">
@@ -208,7 +208,7 @@
                                         <button id="tab-tanggal" onclick="switchChartFilter('tanggal')" class="flex-1 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Tanggal</button>
                                     </div>
 
-                                    <!-- INPUT PICKER TAMBAHAN (DITAMPILKAN SAAT TAB BULANAN / TANGGAL) -->
+                                    <!-- INPUT PICKER TAMBAHAN -->
                                     <div id="picker-container-bulanan" class="hidden space-y-1">
                                         <label class="text-[10px] font-bold text-slate-400">Pilih Bulan</label>
                                         <div class="relative">
@@ -224,14 +224,14 @@
                                         </div>
                                     </div>
 
-                                    <!-- SUB-TAB FILTER (SEMUA, PENDAPATAN, PENGELUARAN) KHUSUS BULANAN / TANGGAL -->
+                                    <!-- SUB-TAB FILTER (SEMUA, PENDAPATAN, PENGELUARAN) -->
                                     <div id="subtab-container" class="hidden flex bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl text-[11px] font-bold">
                                         <button id="subtab-semua" onclick="switchSubFilter('semua')" class="flex-1 py-1 rounded-lg bg-theme-600 text-white shadow-sm transition">Semua</button>
                                         <button id="subtab-masuk" onclick="switchSubFilter('masuk')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pendapatan</button>
                                         <button id="subtab-keluar" onclick="switchSubFilter('keluar')" class="flex-1 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 transition">Pengeluaran</button>
                                     </div>
 
-                                    <!-- KET DIPERBARUI (UNTUK TAHUNAN) -->
+                                    <!-- KET DIPERBARUI -->
                                     <div id="last-updated-container" class="text-[10px] font-medium text-slate-400 dark:text-slate-500">
                                         Terakhir diperbarui <span id="last-updated-time">-</span>
                                     </div>
@@ -282,28 +282,16 @@
                                         </div>
                                     </div>
 
-                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK DONUT CHART (BULANAN/TANGGAL) -->
+                                    <!-- TAMPILAN CONTAINER SUMMARY UNTUK DONUT CHART (DINAMIS SESUAI ACUAN GAMBAR) -->
                                     <div id="donut-summary-container" class="hidden space-y-3 pt-1">
-                                        <div class="text-center">
-                                            <p id="donut-title-label" class="text-[10px] font-bold text-slate-400">Selisih Arus Kas :</p>
-                                            <h3 id="donut-total-val" class="text-base font-extrabold text-theme-600 dark:text-theme-400">Rp 0</h3>
+                                        <div id="donut-header-box" class="text-left">
+                                            <p id="donut-title-label" class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Selisih Arus Kas :</p>
+                                            <h3 id="donut-total-val" class="text-lg font-extrabold text-theme-600 dark:text-theme-400">Rp 0</h3>
                                         </div>
 
-                                        <div id="donut-legend-box" class="flex justify-around items-center text-[11px] font-bold pt-1">
-                                            <div class="flex items-center gap-2">
-                                                <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
-                                                <div>
-                                                    <p class="text-slate-400 text-[9px]">Pengeluaran</p>
-                                                    <p id="donut-keluar-val" class="text-slate-700 dark:text-slate-200">Rp 0</p>
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center gap-2">
-                                                <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
-                                                <div>
-                                                    <p class="text-slate-400 text-[9px]">Pendapatan</p>
-                                                    <p id="donut-masuk-val" class="text-slate-700 dark:text-slate-200">Rp 0</p>
-                                                </div>
-                                            </div>
+                                        <!-- GRID BREAKDOWN KATEGORI / LEGEND -->
+                                        <div id="donut-legend-box" class="grid grid-cols-2 gap-3 text-[11px] font-bold pt-1">
+                                            <!-- Diisi Dinamis oleh JavaScript -->
                                         </div>
 
                                         <div class="text-center pt-2 border-t border-slate-100 dark:border-slate-700/60">
@@ -624,7 +612,6 @@
             const savedTheme = localStorage.getItem('user-theme');
             if(savedTheme) applyTheme(savedTheme);
 
-            // SET DEFAULT TANGGAL INPUT PICKER
             const nowStr = new Date();
             const year = nowStr.getFullYear();
             const month = String(nowStr.getMonth() + 1).padStart(2, '0');
@@ -895,7 +882,7 @@
         }
         async function deleteLink(id) { if(confirm('Hapus tautan ini secara permanen?')) { await _supabase.from('tautan').delete().eq('id', id); globalLinks = globalLinks.filter(l => l.id !== id); renderLinks(); } }
 
-        // --- SISTEM CHART INTERAKSI BARU: SWITCH FILTER TAHUNAN / BULANAN / TANGGAL ---
+        // --- SWITCH TAB MAIN & SUB TAB ---
         function switchChartFilter(filter) {
             currentFilter = filter;
             ['tahunan', 'bulanan', 'tanggal'].forEach(f => {
@@ -957,7 +944,6 @@
             renderExpenseChart();
         }
 
-        // FUNGSI MEMBACA BULAN DAN TANGGAL DARI DATA UNIK SUPABASE PROSESOR
         function parseTrxDate(trxStr) {
             if (!trxStr) return null;
             const clean = trxStr.toLowerCase();
@@ -1102,10 +1088,14 @@
                 });
 
             } else {
-                // 2. TAMPILAN FILTER BULANAN / TANGGAL (DONUT CHART ACCORDING TO USER UI IMAGE)
+                // 2. TAMPILAN FILTER BULANAN / TANGGAL (DONUT CHART PRESISI SESUAI DUA GAMBAR ACUAN BARU)
                 let totalMasukFiltered = 0;
                 let totalKeluarFiltered = 0;
                 let labelFooter = "";
+
+                // PENGELOMPOKAN SUB KATEGORI TRANSAKSI
+                let catMasuk = { "Transfer Masuk": 0, "Setor Tunai": 0, "Pendapatan Bunga": 0, "Lainnya": 0 };
+                let catKeluar = { "Transfer Keluar": 0, "Pembayaran": 0, "Pembayaran Kredit": 0, "Tarik Tunai": 0 };
 
                 if (currentFilter === 'bulanan') {
                     const pickerVal = document.getElementById('input-picker-bulan').value; // YYYY-MM
@@ -1124,8 +1114,20 @@
                         const nominal = parseFloat(trx.nominal) || 0;
                         const pDate = parseTrxDate(trx.waktu);
                         if (pDate && pDate.getMonth() === selMonth && pDate.getFullYear() === selYear) {
-                            if (trx.jenis === 'masuk') totalMasukFiltered += nominal;
-                            else totalKeluarFiltered += nominal;
+                            const desc = (trx.keterangan || '').toLowerCase();
+                            if (trx.jenis === 'masuk') {
+                                totalMasukFiltered += nominal;
+                                if (desc.includes('transfer')) catMasuk["Transfer Masuk"] += nominal;
+                                else if (desc.includes('setor')) catMasuk["Setor Tunai"] += nominal;
+                                else if (desc.includes('bunga')) catMasuk["Pendapatan Bunga"] += nominal;
+                                else catMasuk["Lainnya"] += nominal;
+                            } else {
+                                totalKeluarFiltered += nominal;
+                                if (desc.includes('transfer')) catKeluar["Transfer Keluar"] += nominal;
+                                else if (desc.includes('kredit')) catKeluar["Pembayaran Kredit"] += nominal;
+                                else if (desc.includes('tarik') || desc.includes('tunai')) catKeluar["Tarik Tunai"] += nominal;
+                                else catKeluar["Pembayaran"] += nominal;
+                            }
                         }
                     });
 
@@ -1145,43 +1147,155 @@
                         const nominal = parseFloat(trx.nominal) || 0;
                         const pDate = parseTrxDate(trx.waktu);
                         if (pDate && pDate >= startDate && pDate <= endDate) {
-                            if (trx.jenis === 'masuk') totalMasukFiltered += nominal;
-                            else totalKeluarFiltered += nominal;
+                            const desc = (trx.keterangan || '').toLowerCase();
+                            if (trx.jenis === 'masuk') {
+                                totalMasukFiltered += nominal;
+                                if (desc.includes('transfer')) catMasuk["Transfer Masuk"] += nominal;
+                                else if (desc.includes('setor')) catMasuk["Setor Tunai"] += nominal;
+                                else if (desc.includes('bunga')) catMasuk["Pendapatan Bunga"] += nominal;
+                                else catMasuk["Lainnya"] += nominal;
+                            } else {
+                                totalKeluarFiltered += nominal;
+                                if (desc.includes('transfer')) catKeluar["Transfer Keluar"] += nominal;
+                                else if (desc.includes('kredit')) catKeluar["Pembayaran Kredit"] += nominal;
+                                else if (desc.includes('tarik') || desc.includes('tunai')) catKeluar["Tarik Tunai"] += nominal;
+                                else catKeluar["Pembayaran"] += nominal;
+                            }
                         }
                     });
                 }
 
-                // Kalkulasi Nilai Donut Berdasarkan Sub-Filter ('semua', 'masuk', 'keluar')
+                // SETUP DATA DONUT & HEADER TEKS BERDASARKAN SUB-TAB ('semua', 'masuk', 'keluar')
                 let donutData = [];
                 let donutBg = [];
-                let selisihArusKas = totalMasukFiltered - totalKeluarFiltered;
+                let donutLabels = [];
+                const legendBox = document.getElementById('donut-legend-box');
+                const titleLabel = document.getElementById('donut-title-label');
+                const totalValEl = document.getElementById('donut-total-val');
 
-                document.getElementById('donut-total-val').innerText = formatRupiah(selisihArusKas);
-                document.getElementById('donut-keluar-val').innerText = formatRupiah(totalKeluarFiltered);
-                document.getElementById('donut-masuk-val').innerText = formatRupiah(totalMasukFiltered);
                 document.getElementById('donut-footer-period').innerText = labelFooter;
 
                 if (currentSubFilter === 'semua') {
+                    titleLabel.innerText = "Selisih Arus Kas :";
+                    titleLabel.className = "text-[11px] font-bold text-slate-500 dark:text-slate-400";
+                    totalValEl.innerText = formatRupiah(totalMasukFiltered - totalKeluarFiltered);
+                    totalValEl.className = "text-lg font-extrabold text-theme-600 dark:text-theme-400";
+
                     donutData = [totalKeluarFiltered, totalMasukFiltered];
                     donutBg = ['#ef4444', '#10b981'];
-                    if (totalKeluarFiltered === 0 && totalMasukFiltered === 0) {
-                        donutData = [1];
-                        donutBg = ['#e2e8f0'];
-                    }
+                    donutLabels = ['Pengeluaran', 'Pendapatan'];
+                    if (totalKeluarFiltered === 0 && totalMasukFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
+
+                    legendBox.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Pengeluaran</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(totalKeluarFiltered)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Pendapatan</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(totalMasukFiltered)}</p>
+                            </div>
+                        </div>
+                    `;
+
                 } else if (currentSubFilter === 'masuk') {
-                    donutData = [totalMasukFiltered];
-                    donutBg = ['#10b981'];
+                    titleLabel.innerText = "Total Pendapatan :";
+                    titleLabel.className = "text-[11px] font-bold text-slate-500 dark:text-slate-400";
+                    totalValEl.innerText = formatRupiah(totalMasukFiltered);
+                    totalValEl.className = "text-lg font-extrabold text-emerald-600 dark:text-emerald-400";
+
+                    const keys = Object.keys(catMasuk);
+                    donutData = Object.values(catMasuk);
+                    donutBg = ['#10b981', '#34d399', '#86efac', '#d1fae5'];
+                    donutLabels = keys;
+
                     if (totalMasukFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
+
+                    legendBox.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#10b981] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Transfer Masuk</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catMasuk["Transfer Masuk"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#86efac] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Pendapatan Bunga</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catMasuk["Pendapatan Bunga"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#34d399] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Setor Tunai</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catMasuk["Setor Tunai"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#d1fae5] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Lainnya</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catMasuk["Lainnya"])}</p>
+                            </div>
+                        </div>
+                    `;
+
                 } else if (currentSubFilter === 'keluar') {
-                    donutData = [totalKeluarFiltered];
-                    donutBg = ['#ef4444'];
+                    titleLabel.innerText = "Total Pengeluaran :";
+                    titleLabel.className = "text-[11px] font-bold text-slate-500 dark:text-slate-400";
+                    totalValEl.innerText = formatRupiah(totalKeluarFiltered);
+                    totalValEl.className = "text-lg font-extrabold text-rose-600 dark:text-rose-400";
+
+                    const keys = Object.keys(catKeluar);
+                    donutData = Object.values(catKeluar);
+                    donutBg = ['#7f1d1d', '#b91c1c', '#f87171', '#fca5a5'];
+                    donutLabels = keys;
+
                     if (totalKeluarFiltered === 0) { donutData = [1]; donutBg = ['#e2e8f0']; }
+
+                    legendBox.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#7f1d1d] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Transfer Keluar</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catKeluar["Transfer Keluar"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#f87171] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Pembayaran Kredit</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catKeluar["Pembayaran Kredit"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#b91c1c] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Pembayaran</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catKeluar["Pembayaran"])}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded bg-[#fca5a5] inline-block"></span>
+                            <div>
+                                <p class="text-slate-400 text-[9px]">Tarik Tunai</p>
+                                <p class="text-slate-700 dark:text-slate-200">${formatRupiah(catKeluar["Tarik Tunai"])}</p>
+                            </div>
+                        </div>
+                    `;
                 }
 
                 myExpenseChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: currentSubFilter === 'semua' ? ['Pengeluaran', 'Pendapatan'] : [currentSubFilter === 'masuk' ? 'Pendapatan' : 'Pengeluaran'],
+                        labels: donutLabels,
                         datasets: [{
                             data: donutData,
                             backgroundColor: donutBg,
