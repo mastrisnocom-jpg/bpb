@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Catatan Pekerjaan - Unit Building</title>
+    <!-- Tailwind CSS (Via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <i data-lucide="wrench" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Logbook Gedung</h1>
+                    <p class="text-xs text-slate-400">Pemantauan 9 Kantor Unit Building</p>
+                </div>
+            </div>
+            <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full border border-slate-700 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live Monitoring
+            </span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- ========================================== -->
+        <!-- KOLOM KIRI: FORM INPUT TEKNISI (MOBILE FRIENDLY) -->
+        <!-- ========================================== -->
+        <section class="lg:col-span-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-20">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-4 flex items-center justify-between">
+                    <h2 class="font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="plus-circle" class="w-5 h-5 text-blue-600"></i>
+                        Input Pekerjaan Baru
+                    </h2>
+                    <span class="text-xs bg-blue-100 text-blue-700 font-medium px-2 py-0.5 rounded">Form Teknisi</span>
+                </div>
+
+                <form class="p-5 space-y-4" onsubmit="event.preventDefault();">
+                    <!-- PILIH KANTOR -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Lokasi Kantor</label>
+                        <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="">-- Pilih Kantor (1-9) --</option>
+                            <option value="Kantor 1">Kantor 1 - Pusat</option>
+                            <option value="Kantor 2">Kantor 2 - Cabang Utara</option>
+                            <option value="Kantor 3">Kantor 3 - Cabang Selatan</option>
+                            <option value="Kantor 4">Kantor 4 - Cabang Barat</option>
+                            <option value="Kantor 5">Kantor 5 - Cabang Timur</option>
+                            <option value="Kantor 6">Kantor 6 - Gedung B</option>
+                            <option value="Kantor 7">Kantor 7 - Gudang Utama</option>
+                            <option value="Kantor 8">Kantor 8 - Annex</option>
+                            <option value="Kantor 9">Kantor 9 - Mess/Fasilitas</option>
+                        </select>
+                    </div>
+
+                    <!-- NAMA TEKNISI & KATEGORI -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Teknisi</label>
+                            <input type="text" placeholder="Nama Anda" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Kategori</label>
+                            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="AC">AC / HVAC</option>
+                                <option value="Listrik">Kelistrikan</option>
+                                <option value="Plumbing">Plumbing/Air</option>
+                                <option value="Sipil">Sipil/Gedung</option>
+                                <option value="Lainnya">Lain-lain</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- DESKRIPSI PEKERJAAN -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Detail Pekerjaan</label>
+                        <textarea rows="3" placeholder="Contoh: Perbaikan indoor AC bocor air di R. Rapat Lantai 2..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Status Pekerjaan</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="border border-slate-300 rounded-lg p-2.5 flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="status" value="Selesai" checked class="text-blue-600">
+                                <span class="text-sm font-medium text-emerald-600">Selesai</span>
+                            </label>
+                            <label class="border border-slate-300 rounded-lg p-2.5 flex items-center gap-2 cursor-pointer hover:bg-slate-50">
+                                <input type="radio" name="status" value="Pending" class="text-blue-600">
+                                <span class="text-sm font-medium text-amber-600">Pending</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- UPLOAD FOTO BUKTI -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Foto Bukti (Kamera/Gallery)</label>
+                        <div class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center bg-slate-50 hover:bg-slate-100 transition cursor-pointer">
+                            <i data-lucide="camera" class="w-8 h-8 text-slate-400 mx-auto mb-1"></i>
+                            <span class="text-xs text-slate-500 font-medium block">Klik untuk ambil/unggah foto</span>
+                            <span class="text-[10px] text-slate-400">Otomatis terkompresi (< 200KB)</span>
+                            <input type="file" accept="image/*" capture="environment" class="hidden">
+                        </div>
+                    </div>
+
+                    <!-- TOMBOL SUBMIT -->
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-sm transition flex items-center justify-center gap-2 text-sm">
+                        <i data-lucide="send" class="w-4 h-4"></i> Simpan Catatan
+                    </button>
+                </form>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- KOLOM KANAN: REKAP LOGBOOK KEPALA UNIT -->
+        <!-- ========================================== -->
+        <section class="lg:col-span-8 space-y-4">
+            
+            <!-- PANEL FILTER DATA -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-3 items-center justify-between">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <i data-lucide="filter" class="w-4 h-4 text-slate-400"></i>
+                    <select class="bg-slate-100 border-none rounded-lg text-sm px-3 py-2 font-medium focus:ring-0">
+                        <option>Semua Kantor (9)</option>
+                        <option>Kantor 1</option>
+                        <option>Kantor 2</option>
+                        <option>Kantor 3</option>
+                    </select>
+                    <select class="bg-slate-100 border-none rounded-lg text-sm px-3 py-2 font-medium focus:ring-0">
+                        <option>Hari Ini</option>
+                        <option>7 Hari Terakhir</option>
+                        <option>Bulan Ini</option>
+                    </select>
+                </div>
+                <div class="text-xs text-slate-500">
+                    Menampilkan <b>3</b> pekerjaan
+                </div>
+            </div>
+
+            <!-- LOGBOOK FEED / CARDS -->
+            <div class="space-y-3">
+                
+                <!-- CARD ITEM 1 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-4 items-start hover:border-blue-300 transition">
+                    <!-- Foto Bukti -->
+                    <div class="w-full sm:w-32 h-32 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative group border border-slate-200">
+                        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80" alt="Bukti AC" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <i data-lucide="image" class="w-3 h-3"></i> Foto
+                        </span>
+                    </div>
+                    <!-- Detail Informasi -->
+                    <div class="flex-1 space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block bg-slate-100 text-slate-700 text-[11px] font-semibold px-2 py-0.5 rounded-md mb-1">
+                                    Kantor 1 - Pusat
+                                </span>
+                                <h3 class="font-bold text-slate-800 text-sm">Cuci Filter & Tambah Freon AC Server</h3>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Selesai
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-600 line-clamp-2">
+                            Pembersihan rutin filter outdoor/indoor serta penambahan freon R32 karena suhu ruang server naik ke 26°C. Suhu kembali normal (20°C).
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Teknisi: <b>Budi Santoso</b></span>
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Hari ini, 10:15 WIB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD ITEM 2 -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-4 items-start hover:border-blue-300 transition">
+                    <!-- Foto Bukti -->
+                    <div class="w-full sm:w-32 h-32 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 relative group border border-slate-200">
+                        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80" alt="Bukti Listrik" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <i data-lucide="image" class="w-3 h-3"></i> Foto
+                        </span>
+                    </div>
+                    <!-- Detail Informasi -->
+                    <div class="flex-1 space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block bg-slate-100 text-slate-700 text-[11px] font-semibold px-2 py-0.5 rounded-md mb-1">
+                                    Kantor 4 - Cabang Barat
+                                </span>
+                                <h3 class="font-bold text-slate-800 text-sm">Penggantian MCB Panel Utama Lantai 1</h3>
+                            </div>
+                            <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Pending
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-600 line-clamp-2">
+                            MCB 3 Phase sering trip karena over-heat. Sudah dilakukan penanganan sementara, menunggu pembelian sparepart MCB Schneider 32A baru.
+                        </p>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Teknisi: <b>Ahmad R.</b></span>
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Hari ini, 08:45 WIB</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script Render Icon Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
