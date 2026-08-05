@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Binayasa Unit BSN KC Surabaya</title>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <style>
+        :root {
+            --primary: #198754;
+            --primary-light: #e8f5e9;
+            --bg: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+            --radius: 18px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f3f4f6;
+            --text-sub: #9ca3af;
+            --border: #2e2e2e;
+            --primary-light: #1b382b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
+
+        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+
+        /* AUTH SCREEN */
+        #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; }
+        .auth-card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); width: 100%; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
+        .auth-card h2 { color: var(--primary); margin-bottom: 6px; font-size: 1.1rem; }
+        .auth-card p { color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px; }
+
+        .form-group { text-align: left; margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--text-sub); }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text-main); outline: none; font-size: 0.9rem; }
+
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-secondary { background: var(--border); color: var(--text-main); }
+        .btn-info { background: #0dcaf0; color: #000; }
+        .btn-warning { background: #ffc107; color: #000; }
+        .btn-danger { background: #dc3545; color: #fff; }
+        .btn-share { background: #0d6efd; color: #fff; }
+        .btn-pay { background: #10b981; color: #fff; }
+        .btn-icon { width: 36px; height: 36px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
+
+        /* HEADER & STATS */
+        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .profile-left { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: #d1e7dd; color: #0f5132; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .user-info .email { font-size: 0.82rem; font-weight: 700; word-break: break-all; }
+        .user-info .role { font-size: 0.68rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+        .stat-box { background: var(--card-bg); border-radius: var(--radius); padding: 12px 6px; text-align: center; border: 1px solid var(--border); }
+        .stat-icon { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px auto; display: flex; align-items: center; justify-content: center; }
+        .stat-box h3 { font-size: 1.1rem; font-weight: 800; }
+        .stat-box p { font-size: 0.7rem; color: var(--text-sub); }
+
+        /* APP GRID */
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; margin-bottom: 24px; }
+        .grid-item { display: flex; flex-direction: column; align-items: center; color: var(--text-main); cursor: pointer; }
+        .grid-icon-wrapper { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 4px; border: 1px solid rgba(0,0,0,0.04); }
+        .grid-label { font-size: 0.72rem; font-weight: 600; text-align: center; }
+
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+
+        /* NOTIFICATION BOX */
+        .alert-box { border-radius: 12px; padding: 10px 12px; font-size: 0.78rem; font-weight: 600; margin-bottom: 12px; display: none; align-items: center; gap: 8px; }
+        .alert-danger-custom { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+        .alert-success-custom { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+
+        /* SUBPAGE & TABLES */
+        .sub-page { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 100; padding: 16px; overflow-y: auto; }
+        .sub-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+        .sub-header h2 { font-size: 0.95rem; flex: 1; text-transform: uppercase; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .table th, .table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
+        .table th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+
+        /* DROPDOWN ACTION MENU */
+        .dropdown-action { position: relative; display: inline-block; }
+        .btn-action-trigger { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .dropdown-menu-content { display: none; position: absolute; right: 0; top: 36px; background-color: var(--card-bg); min-width: 130px; box-shadow: 0px 8px 16px rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 10px; z-index: 105; overflow: hidden; }
+        .dropdown-menu-content button { color: var(--text-main); padding: 8px 12px; text-decoration: none; display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .dropdown-menu-content button:hover { background-color: var(--primary-light); }
+        .dropdown-action.active .dropdown-menu-content { display: block; }
+
+        .badge { padding: 3px 6px; border-radius: 4px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
+        .badge-success { background: #d1e7dd; color: #0f5132; }
+        .badge-danger { background: #f8d7da; color: #842029; }
+        .badge-warning { background: #fff3cd; color: #664d03; }
+
+        .checklist-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .checklist-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: var(--primary); }
+
+        /* BILL CHECK RESULT CARD */
+        .bill-result-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px; margin-top: 14px; display: none; }
+        .bill-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.82rem; }
+        .bill-row:last-child { border-bottom: none; }
+        .bill-label { color: var(--text-sub); }
+        .bill-val { font-weight: 700; color: var(--text-main); }
+        .bill-total { background: #e0f2fe; padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: 800; color: #0369a1; font-size: 0.95rem; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); border-radius: var(--radius); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-sub); }
+        .pay-banner { background: var(--primary-light); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
+        .pay-banner-title { font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .pay-banner-btns { display: flex; gap: 8px; justify-content: center; }
+        .img-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
+        .form-section-title { font-size: 0.78rem; font-weight: 700; color: var(--primary); margin: 10px 0 6px 0; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-shell">
+
+        <!-- AUTH SCREEN -->
+        <div id="auth-container">
+            <div class="auth-card">
+                <h2><i class="fa-solid fa-building-circle-check"></i> Binayasa BSN</h2>
+                <p>Silakan login untuk melanjutkan</p>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>Email Pengguna</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="admin@bms.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="******" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;"><i class="fa-solid fa-right-to-bracket"></i> Masuk Aplikasi</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- DASHBOARD MAIN -->
+        <div id="app-dashboard" style="display: none;">
+            <div class="profile-header">
+                <div class="profile-left">
+                    <div class="avatar" id="user-avatar">BS</div>
+                    <div class="user-info">
+                        <div class="email" id="user-email">admin@bms.com</div>
+                        <div class="role">BINAYASA UNIT BSN KC SURABAYA</div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-icon" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                    <button class="btn-icon" id="btn-logout" style="color: #dc3545;"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </div>
+            </div>
+
+            <!-- STATS BOXES -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-icon" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-building"></i></div>
+                    <h3 id="stat-kantor">0</h3>
+                    <p>Kantor</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon" style="background:#fff8e1; color:#ffa000;"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <h3 id="stat-asset">0</h3>
+                    <p>Asset</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon" style="background:#e3f2fd; color:#1e88e5;"><i class="fa-solid fa-credit-card"></i></div>
+                    <h3 id="stat-atm">0</h3>
+                    <p>Cek ATM</p>
+                </div>
+            </div>
+
+            <!-- APP GRID MENU -->
+            <div class="app-grid">
+                <div class="grid-item" onclick="openSubPage('kantor')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-building"></i></div><span class="grid-label">Kantor</span></div>
+                <div class="grid-item" onclick="openSubPage('asset')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-boxes-stacked"></i></div><span class="grid-label">Asset</span></div>
+                <div class="grid-item" onclick="openSubPage('utilitas')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-bolt"></i></div><span class="grid-label">Utilitas</span></div>
+                <div class="grid-item" onclick="openSubPage('cek_tagihan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-receipt"></i></div><span class="grid-label">Cek Tagihan</span></div>
+                <div class="grid-item" onclick="openSubPage('perawatan')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-screwdriver-wrench"></i></div><span class="grid-label">Perawatan</span></div>
+                <div class="grid-item" onclick="openSubPage('workorder')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-clipboard-list"></i></div><span class="grid-label">Work Order</span></div>
+                <div class="grid-item" onclick="openSubPage('pemeriksaan_atm')"><div class="grid-icon-wrapper" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div><span class="grid-label">Cek ATM</span></div>
+                <div class="grid-item" onclick="openSubPage('teknisi')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-user-gear"></i></div><span class="grid-label">Teknisi</span></div>
+                <div class="grid-item" onclick="openSubPage('jadwal')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-calendar-days"></i></div><span class="grid-label">Jadwal</span></div>
+                <div class="grid-item" onclick="openSubPage('laporan')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-file-invoice"></i></div><span class="grid-label">Laporan</span></div>
+                <div class="grid-item" onclick="openSubPage('pengaturan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-gear"></i></div><span class="grid-label">Pengaturan</span></div>
+                <div class="grid-item" onclick="scanQRModal()"><div class="grid-icon-wrapper" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-qrcode"></i></div><span class="grid-label">Scan QR</span></div>
+            </div>
+
+            <!-- CARD GRAFIK UTILITAS -->
+            <div class="card">
+                <div class="card-title" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+                    <span style="font-size:0.95rem; font-weight:700;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Tren Biaya Utilitas</span>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; width:100%;">
+                        <select id="chart-filter-kantor" class="form-control" style="padding: 6px 4px; font-size: 0.72rem; text-overflow: ellipsis;" onchange="renderChart()">
+                            <option value="ALL">Semua Kantor</option>
+                        </select>
+                        <select id="chart-filter-tahun" class="form-control" style="padding: 6px 4px; font-size: 0.72rem;" onchange="renderChart()">
+                            <option value="LAST_12">12 Bulan Terakhir</option>
+                            <option value="2026" selected>Tahun 2026</option>
+                            <option value="2025">Tahun 2025</option>
+                            <option value="2024">Tahun 2024</option>
+                        </select>
+                        <select id="chart-filter-jenis" class="form-control" style="padding: 6px 4px; font-size: 0.72rem;" onchange="renderChart()">
+                            <option value="ALL">Semua Layanan</option>
+                            <option value="Listrik">Listrik</option>
+                            <option value="Air">Air PDAM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="alert-trend" class="alert-box" style="flex-direction:column; align-items:flex-start; gap:4px; font-size:0.75rem;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <i id="alert-trend-icon" class="fa-solid fa-triangle-exclamation"></i>
+                        <b id="alert-trend-title">Analisis Tren Biaya Utilitas</b>
+                    </div>
+                    <div id="alert-trend-text" style="font-weight:normal; line-height:1.3;">-</div>
+                </div>
+
+                <div style="position: relative; height: 220px; width: 100%;">
+                    <canvas id="chartRealtime"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB PAGE OVERLAY VIEW -->
+        <div id="sub-page-overlay" class="sub-page">
+            <div class="sub-header">
+                <button class="btn-icon" onclick="closeSubPage()"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 id="sub-page-title">Detail Page</h2>
+                <div id="sub-header-actions" style="display:flex; gap:6px;">
+                    <button class="btn btn-warning" id="btn-manage-kriteria" style="display:none;" onclick="openManageKriteria()"><i class="fa-solid fa-list-check"></i> Kriteria</button>
+                    <button class="btn-icon" id="sub-action-btn" style="background:var(--primary); color:#fff; display:none;"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+            <div id="sub-page-content"></div>
+        </div>
+
+    </div>
+
+    <!-- MODAL POPUP -->
+    <div class="modal" id="app-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modal-title" style="font-size: 0.95rem;">Form Data</h4>
+                <button class="close-modal" id="btn-close-modal">&times;</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- External Script Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        const SUPABASE_URL = "https://pykkfcszdihobpwhqinq.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5a2tmY3N6ZGlob2Jwd2hxaW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3OTEyNjEsImV4cCI6MjEwMTM2NzI2MX0.Ig1GsJvn0jDobVCBGlp2lLwTLvtn6eAkzKKf3VxMFiA";
+        
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let currentUser = null;
+        let qrScanner = null;
+        let chartInstance = null;
+        let chartLaporanInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            setupEventListeners();
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-action')) {
+                document.querySelectorAll('.dropdown-action').forEach(el => el.classList.remove('active'));
+            }
+        });
+
+        function toggleDropdownMenu(button) {
+            const currentContainer = button.closest('.dropdown-action');
+            document.querySelectorAll('.dropdown-action').forEach(el => {
+                if (el !== currentContainer) el.classList.remove('active');
+            });
+            currentContainer.classList.toggle('active');
+        }
+
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await db.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    document.getElementById('auth-container').style.display = 'none';
+                    document.getElementById('app-dashboard').style.display = 'block';
+                    
+                    const emailStr = currentUser.email;
+                    document.getElementById('user-email').innerText = emailStr;
+
+                    loadDashboardStats();
+                    loadKantorFilter();
+                } else {
+                    document.getElementById('auth-container').style.display = 'flex';
+                    document.getElementById('app-dashboard').style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Auth Exception:", err);
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                Swal.fire({ title: 'Proses Login...', didOpen: () => Swal.showLoading() });
+                const { error } = await db.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    Swal.fire('Gagal Login', error.message, 'error');
+                } else {
+                    Swal.close();
+                    checkAuth();
+                }
+            });
+
+            document.getElementById('btn-logout').addEventListener('click', async () => {
+                await db.auth.signOut();
+                checkAuth();
+            });
+
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                if (document.body.getAttribute('data-theme') === 'dark') {
+                    document.body.removeAttribute('data-theme');
+                } else {
+                    document.body.setAttribute('data-theme', 'dark');
+                }
+            });
+
+            document.getElementById('btn-close-modal').addEventListener('click', () => {
+                stopQRScanner();
+                document.getElementById('app-modal').style.display = 'none';
+            });
+        }
+
+        async function loadKantorFilter() {
+            const { data } = await db.from('kantor').select('id, nama');
+            const select = document.getElementById('chart-filter-kantor');
+            if (data && data.length > 0) {
+                select.innerHTML = `<option value="ALL">Semua Kantor</option>` + 
+                    data.map(k => `<option value="${k.id}">${k.nama}</option>`).join('');
+            }
+        }
+
+        async function loadDashboardStats() {
+            const { count: countKantor } = await db.from('kantor').select('*', { count: 'exact', head: true });
+            const { count: countAsset } = await db.from('asset').select('*', { count: 'exact', head: true });
+            const { count: countATM } = await db.from('pemeriksaan_atm').select('*', { count: 'exact', head: true });
+
+            document.getElementById('stat-kantor').innerText = countKantor || 0;
+            document.getElementById('stat-asset').innerText = countAsset || 0;
+            document.getElementById('stat-atm').innerText = countATM || 0;
+
+            renderChart();
+        }
+
+        function processPaymentRedirect(type, idPelanggan) {
+            const cleanId = (idPelanggan || '').trim();
+            const targetUrl = type === 'Listrik' 
+                ? 'https://www.sepulsa.com/transaction/pln?type=postpaid' 
+                : 'https://www.sepulsa.com/transaction/pdam';
+
+            if (cleanId && cleanId !== '-') {
+                navigator.clipboard.writeText(cleanId).then(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: `ID ${cleanId} disalin!`,
+                        text: 'Tempelkan di situs Sepulsa',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }).catch(() => {});
+            }
+            window.open(targetUrl, '_blank');
+        }
+
+        async function shareData(title, text, url = null) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: title, text: text, url: url || window.location.href });
+                } catch (err) {}
+            } else {
+                navigator.clipboard.writeText(title + "\n" + text);
+                Swal.fire('Tersalin!', 'Detail data berhasil disalin ke clipboard.', 'success');
+            }
+        }
+
+        async function renderChart() {
+            const ctx = document.getElementById('chartRealtime').getContext('2d');
+            const selectedKantor = document.getElementById('chart-filter-kantor').value;
+            const selectedTahun = document.getElementById('chart-filter-tahun').value;
+            const selectedJenis = document.getElementById('chart-filter-jenis').value;
+
+            let labels = [];
+            let dataListrik = [];
+            let dataAir = [];
+            let kantorStats = {};
+
+            if (selectedTahun === 'LAST_12') {
+                const now = new Date();
+                for (let i = 11; i >= 0; i--) {
+                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const mName = d.toLocaleString('id-ID', { month: 'short' });
+                    const yShort = d.getFullYear().toString().slice(-2);
+                    labels.push(`${mName} '${yShort}`);
+                    dataListrik.push(0);
+                    dataAir.push(0);
+                }
+            } else {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                dataListrik = new Array(12).fill(0);
+                dataAir = new Array(12).fill(0);
+            }
+
+            labels.forEach((_, idx) => { kantorStats[idx] = {}; });
+
+            try {
+                let query = db.from('utilitas').select('*, kantor(nama)');
+                if (selectedKantor !== 'ALL') {
+                    query = query.eq('kantor_id', selectedKantor);
+                }
+
+                const { data } = await query;
+
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        if (!item.bulan_tahun) return;
+                        
+                        const dateObj = new Date(item.bulan_tahun);
+                        const itemYear = dateObj.getFullYear().toString();
+                        const itemMonth = dateObj.getMonth();
+                        const kantorNama = item.kantor ? item.kantor.nama : 'Kantor Unassigned';
+                        const biayaVal = Number(item.biaya || 0);
+
+                        let targetIdx = -1;
+
+                        if (selectedTahun === 'LAST_12') {
+                            const now = new Date();
+                            const diffMonths = (now.getFullYear() - dateObj.getFullYear()) * 12 + (now.getMonth() - dateObj.getMonth());
+                            if (diffMonths >= 0 && diffMonths < 12) {
+                                targetIdx = 11 - diffMonths;
+                            }
+                        } else if (itemYear === selectedTahun) {
+                            targetIdx = itemMonth;
+                        }
+
+                        if (targetIdx !== -1) {
+                            if (selectedJenis === 'ALL' || selectedJenis === item.jenis) {
+                                kantorStats[targetIdx][kantorNama] = (kantorStats[targetIdx][kantorNama] || 0) + biayaVal;
+                            }
+
+                            if (item.jenis === 'Listrik') dataListrik[targetIdx] += biayaVal;
+                            if (item.jenis === 'Air') dataAir[targetIdx] += biayaVal;
+                        }
+                    });
+                }
+
+                checkTrendAlert(dataListrik, dataAir, labels, kantorStats, selectedKantor);
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                const datasets = [];
+                
+                if (selectedJenis === 'ALL' || selectedJenis === 'Listrik') {
+                    datasets.push({
+                        label: 'Listrik (Rp)',
+                        data: dataListrik,
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25, 135, 84, 0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    });
+                }
+
+                if (selectedJenis === 'ALL' || selectedJenis === 'Air') {
+                    datasets.push({
+                        label: 'Air PDAM (Rp)',
+                        data: dataAir,
+                        borderColor: '#0dcaf0',
+                        backgroundColor: 'rgba(13, 202, 240, 0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    });
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels, datasets: datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { intersect: false, mode: 'index' },
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed.y !== null) {
+                                            label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(val) {
+                                        if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'Jt';
+                                        if (val >= 1000) return 'Rp ' + (val / 1000) + 'rb';
+                                        return 'Rp ' + val;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Error render chart:", err);
+            }
+        }
+
+        function checkTrendAlert(listrikArr, airArr, labels, kantorStats, selectedKantor) {
+            const alertBox = document.getElementById('alert-trend');
+            const alertText = document.getElementById('alert-trend-text');
+            const alertIcon = document.getElementById('alert-trend-icon');
+
+            let lastIdx = -1;
+            for (let i = labels.length - 1; i >= 0; i--) {
+                if (listrikArr[i] > 0 || airArr[i] > 0) {
+                    lastIdx = i;
+                    break;
+                }
+            }
+
+            if (lastIdx > 0) {
+                const prevTotal = listrikArr[lastIdx - 1] + airArr[lastIdx - 1];
+                const currTotal = listrikArr[lastIdx] + airArr[lastIdx];
+
+                if (prevTotal > 0) {
+                    const diff = currTotal - prevTotal;
+                    const percent = Math.round((diff / prevTotal) * 100);
+
+                    alertBox.style.display = 'flex';
+
+                    let detailMsg = "";
+                    if (percent > 0) {
+                        alertBox.className = 'alert-box alert-danger-custom';
+                        alertIcon.className = 'fa-solid fa-arrow-trend-up';
+                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> NAIK <b>${percent}%</b> (+Rp ${diff.toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                    } else if (percent < 0) {
+                        alertBox.className = 'alert-box alert-success-custom';
+                        alertIcon.className = 'fa-solid fa-arrow-trend-down';
+                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> TURUN <b>${Math.abs(percent)}%</b> (-Rp ${Math.abs(diff).toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                    } else {
+                        alertBox.style.display = 'none';
+                        return;
+                    }
+
+                    alertText.innerHTML = detailMsg;
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            } else {
+                alertBox.style.display = 'none';
+            }
+        }
+
+        async function openSubPage(pageKey) {
+            const overlay = document.getElementById('sub-page-overlay');
+            const titleEl = document.getElementById('sub-page-title');
+            const contentEl = document.getElementById('sub-page-content');
+            const actionBtn = document.getElementById('sub-action-btn');
+            const kriteriaBtn = document.getElementById('btn-manage-kriteria');
+
+            titleEl.innerText = pageKey.replace('_', ' ').toUpperCase();
+            contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:var(--text-sub);"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data...</p>`;
+            actionBtn.style.display = 'none';
+            kriteriaBtn.style.display = 'none';
+            overlay.style.display = 'block';
+
+            try {
+                if (pageKey === 'kantor') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormKantor();
+                    const { data } = await db.from('kantor').select('*').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Nama</th><th>Alamat</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(k => {
+                                        const detailStr = `Nama: ${k.nama}\nAlamat: ${k.alamat}\n\n[PLN]\nPelanggan: ${k.nama_pelanggan_pln || '-'}\nID: ${k.id_pelanggan_pln || '-'}\nTarif/Daya: ${k.tarif_daya_pln || '-'}\n\n[PDAM]\nPelanggan: ${k.nama_pelanggan_pdam || '-'}\nID: ${k.id_pelanggan_pdam || '-'}\nTarif/Daya: ${k.tarif_daya_pdam || '-'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${k.nama}</b></td>
+                                            <td>${k.alamat}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Kantor', '${k.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Kantor', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormKantor('${k.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('kantor','${k.id}','kantor')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada data kantor</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'asset') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormAsset();
+                    const { data } = await db.from('asset').select('*, kantor(nama)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(a => {
+                                        const detailStr = `Kode Asset: ${a.kode_asset}\nNama Asset: ${a.nama_asset}\nKantor: ${a.kantor ? a.kantor.nama : '-'}\nKategori: ${a.kategori}\nStatus: ${a.status}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${a.kode_asset}</b></td>
+                                            <td>${a.nama_asset}</td>
+                                            <td><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Asset', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormAsset('${a.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('asset','${a.id}','asset')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data asset</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'utilitas') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormUtilitas();
+                    const { data } = await db.from('utilitas').select('*, kantor(*)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="pay-banner">
+                            <div class="pay-banner-title"><i class="fa-solid fa-up-right-from-square"></i> Pembayaran Cepat via Sepulsa</div>
+                            <div class="pay-banner-btns">
+                                <button class="btn btn-pay" onclick="processPaymentRedirect('Listrik')"><i class="fa-solid fa-bolt"></i> Bayar Listrik</button>
+                                <button class="btn btn-pay" onclick="processPaymentRedirect('Air')"><i class="fa-solid fa-droplet"></i> Bayar PDAM</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Jenis</th><th>ID Pelanggan</th><th>Pemakaian</th><th>Biaya (Rp)</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(u => {
+                                        const k = u.kantor || {};
+                                        const isPLN = u.jenis === 'Listrik';
+                                        const namaPel = isPLN ? k.nama_pelanggan_pln : k.nama_pelanggan_pdam;
+                                        const tarifDaya = isPLN ? k.tarif_daya_pln : k.tarif_daya_pdam;
+                                        
+                                        const detailStr = `Jenis Utilitas: ${u.jenis}\nKantor: ${k.nama || '-'}\nNama Pelanggan: ${namaPel || '-'}\nID Pelanggan: ${u.id_pelanggan || '-'}\nPeriode Bulan: ${u.periode_bulan || '-'}\nTarif/Daya: ${tarifDaya || '-'}\nPemakaian: ${u.jumlah_pemakaian} ${u.satuan}\nBiaya: Rp ${Number(u.biaya).toLocaleString('id-ID')}\nTanggal Input: ${u.bulan_tahun || '-'}`;
+                                        
+                                        return `
+                                        <tr>
+                                            <td><b>${u.jenis}</b><br><small style="color:var(--text-sub);">${k.nama || '-'}</small></td>
+                                            <td><span class="badge badge-warning">${u.id_pelanggan || '-'}</span></td>
+                                            <td>${u.jumlah_pemakaian} ${u.satuan}</td>
+                                            <td>Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        ${(u.jenis === 'Listrik' || u.jenis === 'Air') ? `
+                                                            <button onclick="processPaymentRedirect('${u.jenis}', '${u.id_pelanggan}')"><i class="fa-solid fa-credit-card" style="color:#10b981;"></i> Bayar</button>
+                                                        ` : ''}
+                                                        <button onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Utilitas', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormUtilitas('${u.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('utilitas','${u.id}','utilitas')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data utilitas</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'laporan') {
+                    const { data: kantorList } = await db.from('kantor').select('id, nama');
+                    const currentYear = new Date().getFullYear();
+
+                    contentEl.innerHTML = `
+                        <!-- CARD GRAFIK REKAP LAPORAN -->
+                        <div class="card">
+                            <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span><i class="fa-solid fa-chart-bar" style="color:var(--primary);"></i> Visualisasi Tren Biaya</span>
+                            </div>
+                            
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Kantor</label>
+                                    <select id="lap-filter-kantor" class="form-control" style="font-size:0.78rem;" onchange="renderLaporanChart()">
+                                        <option value="ALL">Semua Kantor</option>
+                                        ${kantorList ? kantorList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('') : ''}
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Tipe Rekap Grafik</label>
+                                    <select id="lap-filter-tipe" class="form-control" style="font-size:0.78rem;" onchange="renderLaporanChart()">
+                                        <option value="BULANAN">Bulanan (Tahun ${currentYear})</option>
+                                        <option value="TAHUNAN">Tahunan (Multi-Tahun)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="position: relative; height: 180px; width: 100%; margin-bottom: 10px;">
+                                <canvas id="chartLaporan"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- PUSAT EKSPOR LAPORAN CUSTOM -->
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-file-export"></i> Pusat Ekspor Laporan Custom</div>
+                            <p style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">Atur parameter periode laporan yang ingin dicetak:</p>
+                            
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Filter Periode Bulan</label>
+                                    <select id="exp-bulan" class="form-control" style="font-size:0.8rem;">
+                                        <option value="ALL">Semua Bulan (Full Year)</option>
+                                        <option value="01">Januari</option>
+                                        <option value="02">Februari</option>
+                                        <option value="03">Maret</option>
+                                        <option value="04">April</option>
+                                        <option value="05">Mei</option>
+                                        <option value="06">Juni</option>
+                                        <option value="07">Juli</option>
+                                        <option value="08" selected>Agustus</option>
+                                        <option value="09">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Filter Tahun</label>
+                                    <select id="exp-tahun" class="form-control" style="font-size:0.8rem;">
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('utilitas', 'excel')"><i class="fa-solid fa-file-excel"></i> Utilitas (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('utilitas', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Utilitas (PDF)</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('asset', 'excel')"><i class="fa-solid fa-boxes-stacked"></i> Asset (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('asset', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Asset (PDF)</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('work_orders', 'excel')"><i class="fa-solid fa-clipboard-list"></i> Work Order (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('work_orders', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Work Order (PDF)</button>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    setTimeout(() => { renderLaporanChart(); }, 100);
+                } else if (pageKey === 'pemeriksaan_atm') {
+                    actionBtn.style.display = 'inline-flex';
+                    kriteriaBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormPemeriksaanATM();
+                    const { data } = await db.from('pemeriksaan_atm').select('*, kantor(nama)').order('tanggal_pemeriksaan', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Lokasi/KCP</th><th>Kategori</th><th>Periode</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(atm => {
+                                        const detailStr = `Lokasi/KCP: ${atm.kantor ? atm.kantor.nama : '-'}\nKategori: ${atm.kategori_atm}\nPeriode: ${atm.periode_minggu}\nPetugas: ${atm.petugas_nama || '-'}\nSupervisor: ${atm.supervisor_nama || '-'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${atm.kantor ? atm.kantor.nama : '-'}</b></td>
+                                            <td><span class="badge badge-success">${atm.kategori_atm}</span></td>
+                                            <td>${atm.periode_minggu}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewDetailATM('${atm.id}', '${atm.kantor ? atm.kantor.nama : ''}', '${atm.periode_minggu}')"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Laporan Pemeriksaan ATM', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="exportATMPDF('${atm.id}')"><i class="fa-solid fa-file-pdf" style="color:#198754;"></i> Unduh PDF</button>
+                                                        <button onclick="openFormPemeriksaanATM('${atm.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('pemeriksaan_atm','${atm.id}','pemeriksaan_atm')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada pemeriksaan ATM</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'workorder') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormWO();
+                    const { data } = await db.from('work_orders').select('*, asset(nama_asset)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Judul</th><th>Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(w => {
+                                        const detailStr = `Judul Work Order: ${w.judul}\nAsset Terkait: ${w.asset ? w.asset.nama_asset : '-'}\nStatus: ${w.status}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${w.judul}</b></td>
+                                            <td>${w.asset ? w.asset.nama_asset : '-'}</td>
+                                            <td><span class="badge badge-warning">${w.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Work Order', '${w.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Work Order', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormWO('${w.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('work_orders','${w.id}','workorder')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada Work Order</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'perawatan') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormPerawatan();
+                    const { data } = await db.from('maintenances').select('*, work_orders(judul), teknisi(nama)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>WO</th><th>Before</th><th>After</th><th>Biaya</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(m => {
+                                        const detailStr = `Work Order: ${m.work_orders ? m.work_orders.judul : '-'}\nTeknisi: ${m.teknisi ? m.teknisi.nama : '-'}\nBiaya Perawatan: Rp ${Number(m.biaya).toLocaleString('id-ID')}\nFoto Before: ${m.foto_before ? 'Ada' : 'Tidak Ada'}\nFoto After: ${m.foto_after ? 'Ada' : 'Tidak Ada'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
+                                            <td>${m.foto_before ? `<img src="${m.foto_before}" class="img-thumb">` : '-'}</td>
+                                            <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
+                                            <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Laporan Perawatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="deleteRecord('maintenances','${m.id}','perawatan')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'teknisi') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormTeknisi();
+                    const { data } = await db.from('teknisi').select('*').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Nama</th><th>Spesialisasi</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(t => {
+                                        const detailStr = `Nama Teknisi: ${t.nama}\nSpesialisasi: ${t.spesialisasi}\nStatus Saat Ini: ${t.status}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${t.nama}</b></td>
+                                            <td>${t.spesialisasi}</td>
+                                            <td><span class="badge badge-success">${t.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Teknisi', '${t.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Teknisi', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormTeknisi('${t.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('teknisi','${t.id}','teknisi')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data teknisi</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'jadwal') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormJadwal();
+                    const { data } = await db.from('jadwal').select('*').order('tanggal', {ascending:true});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Judul Kegiatan</th><th>Kategori</th><th>Tanggal</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(j => {
+                                        const detailStr = `Kegiatan: ${j.judul}\nKategori: ${j.kategori || '-'}\nTanggal: ${j.tanggal || '-'}\nStatus: ${j.status}\nKeterangan: ${j.keterangan || '-'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${j.judul}</b><br><small style="color:var(--text-sub);">${j.keterangan || ''}</small></td>
+                                            <td>${j.kategori || '-'}</td>
+                                            <td>${j.tanggal || '-'}</td>
+                                            <td><span class="badge badge-${j.status === 'Selesai' ? 'success' : 'warning'}">${j.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Jadwal', '${j.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Jadwal Kegiatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormJadwal('${j.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('jadwal','${j.id}','jadwal')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada jadwal pemeliharaan</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'cek_tagihan') {
+                    contentEl.innerHTML = `
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-receipt"></i> Cek Tagihan PLN & PDAM</div>
+                            <form id="f-cek-tagihan">
+                                <div class="form-group">
+                                    <label>Jenis Layanan</label>
+                                    <select id="ft-layanan" class="form-control" onchange="togglePDAMPicker()">
+                                        <option value="PLN">PLN (Listrik Pascapayar)</option>
+                                        <option value="PDAM">PDAM (Air Minum)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="group-pdam-wilayah" style="display:none;">
+                                    <label>Wilayah PDAM</label>
+                                    <select id="ft-wilayah-pdam" class="form-control">
+                                        <option value="PDAM Kota Surabaya">PDAM Kota Surabaya</option>
+                                        <option value="PDAM Kab. Sidoarjo">PDAM Kab. Sidoarjo</option>
+                                        <option value="PDAM Kota Jakarta (PAM Jaya)">PDAM Kota Jakarta (PAM Jaya)</option>
+                                        <option value="PDAM Kota Bandung">PDAM Kota Bandung</option>
+                                        <option value="PDAM Kota Semarang">PDAM Kota Semarang</option>
+                                        <option value="PDAM Kota Medan">PDAM Kota Medan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>ID Pelanggan / Nomor Meter</label>
+                                    <input type="number" id="ft-id-pelanggan" class="form-control" placeholder="Contoh: 531234567890" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning" style="width:100%; margin-top:6px;"><i class="fa-solid fa-magnifying-glass"></i> Cek Tagihan Sekarang</button>
+                            </form>
+
+                            <div id="bill-result" class="bill-result-card">
+                                <div class="checklist-title" id="res-layanan-title">HASIL PENGECEKAN TAGIHAN</div>
+                                <div class="bill-row"><span class="bill-label">ID Pelanggan:</span><span class="bill-val" id="res-id-pel">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Nama Pelanggan:</span><span class="bill-val" id="res-nama">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Periode Tagihan:</span><span class="bill-val" id="res-periode">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Pemakaian / Daya:</span><span class="bill-val" id="res-pemakaian">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Status Bayar:</span><span class="bill-val" id="res-status">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Biaya Admin:</span><span class="bill-val" id="res-admin">Rp 2.500</span></div>
+                                <div class="bill-total" id="res-total">TOTAL TAGIHAN: Rp 0</div>
+                                
+                                <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+                                    <button id="btn-redirect-pay" class="btn btn-pay" style="width:100%;"><i class="fa-solid fa-credit-card"></i> Bayar Sekarang via Sepulsa</button>
+                                    <button class="btn btn-share" style="width:100%;" onclick="shareBillResult()"><i class="fa-solid fa-share-nodes"></i> Bagikan Tagihan</button>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    document.getElementById('f-cek-tagihan').onsubmit = (e) => {
+                        e.preventDefault();
+                        const layanan = document.getElementById('ft-layanan').value;
+                        const idPel = document.getElementById('ft-id-pelanggan').value;
+                        const wilayah = document.getElementById('ft-wilayah-pdam').value;
+
+                        if (!idPel) return Swal.fire('Peringatan', 'Masukkan ID Pelanggan!', 'warning');
+
+                        Swal.fire({ title: 'Menghubungkan Server Cek Tagihan...', didOpen: () => Swal.showLoading() });
+
+                        setTimeout(() => {
+                            Swal.close();
+                            const billCard = document.getElementById('bill-result');
+                            billCard.style.display = 'block';
+
+                            const mockNames = ['PT BINAYASA PURABATARA', 'GEDUNG BSN KCP MULYOSARI', 'KCP RUNGKUT MERR', 'KANTOR CABANG BTN'];
+                            const selectedName = mockNames[Math.floor(Math.random() * mockNames.length)];
+                            const mockUsage = layanan === 'PLN' ? 'R1M / 1300 VA (342 kWh)' : 'Golongan IIB (32 m³)';
+                            const mockAmount = Math.floor(Math.random() * (450000 - 150000 + 1)) + 150000;
+                            const totalAmount = mockAmount + 2500;
+
+                            document.getElementById('res-layanan-title').innerText = `TAGIHAN ${layanan} ${layanan === 'PDAM' ? '(' + wilayah + ')' : ''}`;
+                            document.getElementById('res-id-pel').innerText = idPel;
+                            document.getElementById('res-nama').innerText = selectedName;
+                            document.getElementById('res-periode').innerText = 'Agustus 2026';
+                            document.getElementById('res-pemakaian').innerText = mockUsage;
+                            document.getElementById('res-status').innerHTML = `<span class="badge badge-danger">BELUM DIBAYAR</span>`;
+                            document.getElementById('res-total').innerText = `TOTAL TAGIHAN: Rp ${totalAmount.toLocaleString('id-ID')}`;
+                            
+                            const payBtn = document.getElementById('btn-redirect-pay');
+                            payBtn.onclick = () => processPaymentRedirect(layanan === 'PLN' ? 'Listrik' : 'Air', idPel);
+
+                            window.lastBillData = {
+                                layanan: layanan,
+                                idPel: idPel,
+                                nama: selectedName,
+                                total: totalAmount
+                            };
+                        }, 1200);
+                    };
+                } else if (pageKey === 'pengaturan') {
+                    contentEl.innerHTML = `
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-user-gear"></i> Pengaturan Akun & Profil</div>
+                            <form id="f-profile" style="margin-bottom:20px;">
+                                <div class="form-group"><label>Email Akun</label><input type="email" class="form-control" value="${currentUser ? currentUser.email : ''}" readonly></div>
+                                <div class="form-group"><label>Password Baru</label><input type="password" id="p-new-password" class="form-control" placeholder="Masukkan password baru..."></div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Update Password</button>
+                            </form>
+                            
+                            <div class="card-title"><i class="fa-solid fa-sliders"></i> Pengaturan Tampilan</div>
+                            <button class="btn btn-secondary" onclick="document.body.toggleAttribute('data-theme','dark')" style="width:100%;">Ganti Tema (Dark/Light)</button>
+                        </div>`;
+
+                    document.getElementById('f-profile').onsubmit = async (e) => {
+                        e.preventDefault();
+                        const newPass = document.getElementById('p-new-password').value;
+                        if (!newPass || newPass.length < 6) return Swal.fire('Peringatan', 'Password minimal 6 karakter', 'warning');
+                        
+                        Swal.fire({ title: 'Memproses update password...', didOpen: () => Swal.showLoading() });
+                        const { error } = await db.auth.updateUser({ password: newPass });
+                        if (error) Swal.fire('Gagal', error.message, 'error');
+                        else {
+                            Swal.fire('Berhasil', 'Password berhasil diubah!', 'success');
+                            document.getElementById('p-new-password').value = '';
+                        }
+                    };
+                }
+            } catch (err) {
+                contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#dc3545;"><i class="fa-solid fa-triangle-exclamation"></i> Gagal memuat data: ${err.message}</p>`;
+            }
+        }
+
+        async function renderLaporanChart() {
+            const canvasEl = document.getElementById('chartLaporan');
+            if (!canvasEl) return;
+            
+            const ctx = canvasEl.getContext('2d');
+            const selectedKantor = document.getElementById('lap-filter-kantor').value;
+            const selectedTipe = document.getElementById('lap-filter-tipe').value;
+            const currentYear = new Date().getFullYear();
+
+            let labels = [];
+            let dataListrik = [];
+            let dataAir = [];
+
+            if (selectedTipe === 'BULANAN') {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                dataListrik = new Array(12).fill(0);
+                dataAir = new Array(12).fill(0);
+            } else {
+                labels = [(currentYear - 2).toString(), (currentYear - 1).toString(), currentYear.toString()];
+                dataListrik = new Array(3).fill(0);
+                dataAir = new Array(3).fill(0);
+            }
+
+            try {
+                let query = db.from('utilitas').select('*');
+                if (selectedKantor !== 'ALL') {
+                    query = query.eq('kantor_id', selectedKantor);
+                }
+
+                const { data } = await query;
+
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        if (!item.bulan_tahun) return;
+                        const d = new Date(item.bulan_tahun);
+                        const itemYear = d.getFullYear();
+                        const itemMonth = d.getMonth();
+                        const biaya = Number(item.biaya || 0);
+
+                        if (selectedTipe === 'BULANAN') {
+                            if (itemYear === currentYear) {
+                                if (item.jenis === 'Listrik') dataListrik[itemMonth] += biaya;
+                                if (item.jenis === 'Air') dataAir[itemMonth] += biaya;
+                            }
+                        } else {
+                            const idx = labels.indexOf(itemYear.toString());
+                            if (idx !== -1) {
+                                if (item.jenis === 'Listrik') dataListrik[idx] += biaya;
+                                if (item.jenis === 'Air') dataAir[idx] += biaya;
+                            }
+                        }
+                    });
+                }
+
+                if (chartLaporanInstance) {
+                    chartLaporanInstance.destroy();
+                }
+
+                chartLaporanInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Listrik (Rp)',
+                                data: dataListrik,
+                                backgroundColor: '#198754',
+                                borderRadius: 6
+                            },
+                            {
+                                label: 'Air (Rp)',
+                                data: dataAir,
+                                backgroundColor: '#0dcaf0',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `${ctx.dataset.label}: Rp ${Number(ctx.raw).toLocaleString('id-ID')}`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: (val) => val >= 1000000 ? (val/1000000).toFixed(1) + 'Jt' : val >= 1000 ? (val/1000) + 'rb' : val
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Error renderLaporanChart:", err);
+            }
+        }
+
+        // LOGIKA EFEKTIF MENGAMBIL 1 TERINGGI DAN 1 TERRENDAH (TANPA EMOJI AGAR BERSIH DI PDF)
+        async function analyzeUtilityTrends(dataUtilitas, filterBulan, filterTahun) {
+            let insights = [];
+            let hookMessage = "PERHATIAN: Lakukan pemantauan berkala untuk menjaga efisiensi anggaran operasional.";
+
+            if (!dataUtilitas || dataUtilitas.length === 0) {
+                return { insights: ["Data tidak ditemukan pada periode ini."], hook: "Status: Tidak ada record data pada periode terpilih." };
+            }
+
+            let kantorList = [];
+            dataUtilitas.forEach(u => {
+                const kName = u.kantor ? u.kantor.nama : 'Kantor Unassigned';
+                const totalBiaya = Number(u.biaya || 0);
+                kantorList.push({ nama: kName, biaya: totalBiaya, jenis: u.jenis });
+            });
+
+            // Urutkan biaya dari tertinggi ke terendah
+            kantorList.sort((a, b) => b.biaya - a.biaya);
+
+            const tertinggi = kantorList[0];
+            const terendah = kantorList[kantorList.length - 1];
+
+            if (tertinggi) {
+                insights.push(`[1] KENAIKAN TERTINGGI: ${tertinggi.nama} (${tertinggi.jenis}) mencatatkan biaya terbesar Rp ${tertinggi.biaya.toLocaleString('id-ID')}. Perlu evaluasi penggunaan.`);
+            }
+
+            if (terendah && terendah.nama !== tertinggi.nama) {
+                insights.push(`[2] PEMAKAIAN TERENDAH: ${terendah.nama} (${terendah.jenis}) mencatatkan biaya efisien sebesar Rp ${terendah.biaya.toLocaleString('id-ID')}.`);
+            } else if (terendah) {
+                insights.push(`[2] STATUS PEMAKAIAN: Hanya terdapat 1 record data kantor pada periode ini.`);
+            }
+
+            if (tertinggi && tertinggi.biaya > 1000000) {
+                hookMessage = `PERHATIAN UTAMA: Terdeteksi biaya tinggi di ${tertinggi.nama}! SEGERA LAKUKAN INSPEKSI LAPANGAN untuk mencegah pemborosan!`;
+            } else {
+                hookMessage = `EVALUASI OPERASIONAL: Penggunaan utilitas secara umum terpantau stabil pada periode ini.`;
+            }
+
+            return { insights, hook: hookMessage };
+        }
+
+        // GENERATOR EKSPOR PDF / EXCEL DENGAN BRANDING LENGKAP & TEKS BEBAS CHARACTER CORRUPT
+        async function generateReport(type, format) {
+            const selBulan = document.getElementById('exp-bulan').value;
+            const selTahun = document.getElementById('exp-tahun').value;
+
+            Swal.fire({ title: 'Menyiapkan Laporan...', didOpen: () => Swal.showLoading() });
+
+            try {
+                let query = db.from(type).select(type === 'utilitas' ? '*, kantor(*)' : type === 'asset' ? '*, kantor(*)' : '*');
+                const { data } = await query;
+
+                let filteredData = (data || []).filter(item => {
+                    if (!item.bulan_tahun && !item.created_at) return true;
+                    const targetDate = new Date(item.bulan_tahun || item.created_at);
+                    const yyyy = targetDate.getFullYear().toString();
+                    const mm = (targetDate.getMonth() + 1).toString().padStart(2, '0');
+
+                    const matchYear = selTahun === 'ALL' || yyyy === selTahun;
+                    const matchMonth = selBulan === 'ALL' || mm === selBulan;
+                    return matchYear && matchMonth;
+                });
+
+                if (filteredData.length === 0) {
+                    Swal.close();
+                    return Swal.fire('Data Kosong', `Tidak ada data ${type} untuk periode terpilih (${selBulan}/${selTahun}).`, 'info');
+                }
+
+                const analysis = await analyzeUtilityTrends(filteredData, selBulan, selTahun);
+
+                if (format === 'excel') {
+                    const excelRows = [];
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "LAPORAN EVALUASI BIAYA & OPERASIONAL" });
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `PERIODE: BULAN ${selBulan} - TAHUN ${selTahun}` });
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `STATUS: ${analysis.hook}` });
+                    excelRows.push({}); 
+
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "--- CATATAN EVALUASI REKAP ---" });
+                    analysis.insights.forEach(msg => {
+                        excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": msg });
+                    });
+                    excelRows.push({}); 
+
+                    filteredData.forEach((row, idx) => {
+                        if (type === 'utilitas') {
+                            excelRows.push({
+                                "No": idx + 1,
+                                "Kantor": row.kantor ? row.kantor.nama : '-',
+                                "Jenis Layanan": row.jenis,
+                                "ID Pelanggan": row.id_pelanggan || '-',
+                                "Pemakaian": `${row.jumlah_pemakaian} ${row.satuan}`,
+                                "Biaya (Rp)": Number(row.biaya || 0),
+                                "Tanggal Record": row.bulan_tahun || '-'
+                            });
+                        } else {
+                            excelRows.push(row);
+                        }
+                    });
+
+                    const ws = XLSX.utils.json_to_sheet(excelRows);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Binayasa_Report");
+                    XLSX.writeFile(wb, `Laporan_${type}_${selBulan}_${selTahun}.xlsx`);
+                    Swal.close();
+
+                } else if (format === 'pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+
+                    // Header Branding
+                    doc.setFontSize(13);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(25, 135, 84);
+                    doc.text(`LAPORAN REKAP ${type.toUpperCase()} - BINAYASA UNIT BSN KC SURABAYA`, 14, 15);
+                    
+                    doc.setFontSize(9);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(100);
+                    doc.text(`Periode Filter: Bulan ${selBulan} / Tahun ${selTahun}`, 14, 21);
+
+                    // Box Hook Notifikasi Pemicu (Bersih Tanpa Karakter Aneh)
+                    doc.setFillColor(254, 242, 242);
+                    doc.setDrawColor(239, 68, 68);
+                    doc.roundedRect(14, 25, 182, 14, 2, 2, 'FD');
+                    
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(185, 28, 28);
+                    doc.text(doc.splitTextToSize(analysis.hook, 176), 18, 32);
+
+                    let yPos = 46;
+                    doc.setFontSize(9);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(0);
+                    doc.text("Catatan Evaluasi Kenaikan / Penurunan Biaya:", 14, yPos);
+                    yPos += 5;
+
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(50);
+                    analysis.insights.forEach(insight => {
+                        doc.text(insight, 14, yPos);
+                        yPos += 5;
+                    });
+
+                    yPos += 3;
+
+                    let tableBody = [];
+                    let tableHeaders = [];
+
+                    if (type === 'utilitas') {
+                        tableHeaders = [["No", "Kantor", "Jenis", "ID Pel", "Pemakaian", "Biaya (Rp)"]];
+                        tableBody = filteredData.map((u, i) => [
+                            i + 1,
+                            u.kantor ? u.kantor.nama : '-',
+                            u.jenis,
+                            u.id_pelanggan || '-',
+                            `${u.jumlah_pemakaian} ${u.satuan}`,
+                            `Rp ${Number(u.biaya).toLocaleString('id-ID')}`
+                        ]);
+                    } else {
+                        tableHeaders = [["No", "Kode", "Nama Item / WO", "Kategori", "Status"]];
+                        tableBody = filteredData.map((item, i) => [
+                            i + 1,
+                            item.kode_asset || item.id || '-',
+                            item.nama_asset || item.judul || '-',
+                            item.kategori || '-',
+                            item.status || '-'
+                        ]);
+                    }
+
+                    doc.autoTable({
+                        startY: yPos,
+                        head: tableHeaders,
+                        body: tableBody,
+                        theme: 'striped',
+                        headStyles: { fillColor: [25, 135, 84] },
+                        styles: { fontSize: 8, font: "helvetica" }
+                    });
+
+                    doc.save(`Laporan_${type}_${selBulan}_${selTahun}.pdf`);
+                    Swal.close();
+                }
+            } catch (err) {
+                Swal.fire('Gagal Ekspor', err.message, 'error');
+            }
+        }
+
+        function togglePDAMPicker() {
+            const layanan = document.getElementById('ft-layanan').value;
+            const pdamPicker = document.getElementById('group-pdam-wilayah');
+            if (layanan === 'PDAM') {
+                pdamPicker.style.display = 'block';
+            } else {
+                pdamPicker.style.display = 'none';
+            }
+        }
+
+        function shareBillResult() {
+            if (window.lastBillData) {
+                const b = window.lastBillData;
+                shareData(`Info Tagihan ${b.layanan}`, `ID Pelanggan: ${b.idPel}\nNama: ${b.nama}\nTotal Tagihan: Rp ${b.total.toLocaleString('id-ID')}\nStatus: BELUM DIBAYAR`);
+            }
+        }
+
+        // FORM KANTOR
+        async function openFormKantor(id = null) {
+            let editData = { 
+                nama: '', alamat: '', 
+                id_pelanggan_pln: '', nama_pelanggan_pln: '', tarif_daya_pln: '',
+                id_pelanggan_pdam: '', nama_pelanggan_pdam: '', tarif_daya_pdam: ''
+            };
+            if (id) {
+                const { data } = await db.from('kantor').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Data Kantor" : "Tambah Kantor";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-kantor">
+                    <div class="form-group"><label>Nama Kantor</label><input type="text" id="fk-nama" class="form-control" value="${editData.nama}" required></div>
+                    <div class="form-group"><label>Alamat</label><textarea id="fk-alamat" class="form-control" required>${editData.alamat}</textarea></div>
+                    
+                    <div class="form-section-title"><i class="fa-solid fa-bolt"></i> Layanan Listrik (PLN)</div>
+                    <div class="form-group"><label>Nama Pelanggan PLN</label><input type="text" id="fk-pln-nama" class="form-control" value="${editData.nama_pelanggan_pln || ''}" placeholder="Contoh: PT BINAYASA PURABATARA"></div>
+                    <div class="form-group"><label>ID Pelanggan PLN</label><input type="text" id="fk-pln-id" class="form-control" value="${editData.id_pelanggan_pln || ''}" placeholder="Contoh: 531234567890"></div>
+                    <div class="form-group"><label>Tarif / Daya PLN</label><input type="text" id="fk-pln-tarif" class="form-control" value="${editData.tarif_daya_pln || ''}" placeholder="Contoh: R1M / 1300 VA"></div>
+
+                    <div class="form-section-title"><i class="fa-solid fa-droplet"></i> Layanan Air (PDAM)</div>
+                    <div class="form-group"><label>Nama Pelanggan PDAM</label><input type="text" id="fk-pdam-nama" class="form-control" value="${editData.nama_pelanggan_pdam || ''}" placeholder="Contoh: PT BINAYASA PURABATARA"></div>
+                    <div class="form-group"><label>ID Pelanggan PDAM</label><input type="text" id="fk-pdam-id" class="form-control" value="${editData.id_pelanggan_pdam || ''}" placeholder="Contoh: 00123456"></div>
+                    <div class="form-group"><label>Golongan Tarif PDAM</label><input type="text" id="fk-pdam-tarif" class="form-control" value="${editData.tarif_daya_pdam || ''}" placeholder="Contoh: Golongan IIB"></div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:12px;">${id ? 'Update Kantor' : 'Simpan Kantor'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-kantor').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = { 
+                    nama: document.getElementById('fk-nama').value, 
+                    alamat: document.getElementById('fk-alamat').value,
+                    nama_pelanggan_pln: document.getElementById('fk-pln-nama').value,
+                    id_pelanggan_pln: document.getElementById('fk-pln-id').value,
+                    tarif_daya_pln: document.getElementById('fk-pln-tarif').value,
+                    nama_pelanggan_pdam: document.getElementById('fk-pdam-nama').value,
+                    id_pelanggan_pdam: document.getElementById('fk-pdam-id').value,
+                    tarif_daya_pdam: document.getElementById('fk-pdam-tarif').value
+                };
+                
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('kantor').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('kantor').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Data kantor tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('kantor');
+                    loadDashboardStats();
+                }
+            };
+        }
+
+        // FORM UTILITAS
+        async function openFormUtilitas(id = null) {
+            const { data: kantorList } = await db.from('kantor').select('*');
+            if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah data kantor dulu!', 'warning');
+
+            let editData = { kantor_id: kantorList[0].id, jenis: 'Listrik', id_pelanggan: '', periode_bulan: 'Agustus', jumlah_pemakaian: 0, satuan: 'kWh', biaya: 0, bulan_tahun: '' };
+            if (id) {
+                const { data } = await db.from('utilitas').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            window.kantorMap = {};
+            kantorList.forEach(k => {
+                window.kantorMap[k.id] = k;
+            });
+
+            document.getElementById('modal-title').innerText = id ? "Edit Utilitas" : "Catat Utilitas";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-utilitas">
+                    <div class="form-group">
+                        <label>Kantor</label>
+                        <select id="fu-kantor" class="form-control" onchange="autoFillIDPelanggan()">
+                            ${kantorList.map(k=>`<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected':''}>${k.nama}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Utilitas</label>
+                        <select id="fu-jenis" class="form-control" onchange="autoFillIDPelanggan()">
+                            <option value="Listrik" ${editData.jenis === 'Listrik' ? 'selected':''}>Listrik</option>
+                            <option value="Air" ${editData.jenis === 'Air' ? 'selected':''}>Air (PDAM)</option>
+                            <option value="Gas" ${editData.jenis === 'Gas' ? 'selected':''}>Gas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Pelanggan (Otomatis)</label>
+                        <input type="text" id="fu-nama-pelanggan" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Pelanggan (Otomatis)</label>
+                        <input type="text" id="fu-id-pelanggan" class="form-control" value="${editData.id_pelanggan || ''}" placeholder="ID Pelanggan PLN / PDAM" style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Tarif / Daya (Otomatis)</label>
+                        <input type="text" id="fu-tarif-daya" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Periode Bulan</label>
+                        <select id="fu-periode-bulan" class="form-control" required>
+                            <option value="Januari" ${editData.periode_bulan === 'Januari' ? 'selected':''}>Januari</option>
+                            <option value="Februari" ${editData.periode_bulan === 'Februari' ? 'selected':''}>Februari</option>
+                            <option value="Maret" ${editData.periode_bulan === 'Maret' ? 'selected':''}>Maret</option>
+                            <option value="April" ${editData.periode_bulan === 'April' ? 'selected':''}>April</option>
+                            <option value="Mei" ${editData.periode_bulan === 'Mei' ? 'selected':''}>Mei</option>
+                            <option value="Juni" ${editData.periode_bulan === 'Juni' ? 'selected':''}>Juni</option>
+                            <option value="Juli" ${editData.periode_bulan === 'Juli' ? 'selected':''}>Juli</option>
+                            <option value="Agustus" ${editData.periode_bulan === 'Agustus' || !editData.periode_bulan ? 'selected':''}>Agustus</option>
+                            <option value="September" ${editData.periode_bulan === 'September' ? 'selected':''}>September</option>
+                            <option value="Oktober" ${editData.periode_bulan === 'Oktober' ? 'selected':''}>Oktober</option>
+                            <option value="November" ${editData.periode_bulan === 'November' ? 'selected':''}>November</option>
+                            <option value="Desember" ${editData.periode_bulan === 'Desember' ? 'selected':''}>Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pemakaian</label>
+                        <input type="number" id="fu-jumlah" class="form-control" value="${editData.jumlah_pemakaian}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Satuan</label>
+                        <input type="text" id="fu-satuan" class="form-control" value="${editData.satuan}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Biaya (Rp)</label>
+                        <input type="number" id="fu-biaya" class="form-control" value="${editData.biaya}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal / Bulan</label>
+                        <input type="date" id="fu-bulan" class="form-control" value="${editData.bulan_tahun}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Utilitas' : 'Simpan Utilitas'}</button>
+                </form>`;
+            
+            document.getElementById('app-modal').style.display = 'flex';
+            autoFillIDPelanggan();
+
+            document.getElementById('f-utilitas').onsubmit = async (e) => {
+                e.preventDefault();
+
+                const kantorId = document.getElementById('fu-kantor').value;
+                const jenisVal = document.getElementById('fu-jenis').value;
+                const bulanVal = document.getElementById('fu-bulan').value;
+                const yyyyMm = bulanVal.slice(0, 7);
+
+                Swal.fire({ title: 'Memeriksa Data...', didOpen: () => Swal.showLoading() });
+
+                if (!id) {
+                    const { data: existing, error: checkErr } = await db
+                        .from('utilitas')
+                        .select('id, bulan_tahun')
+                        .eq('kantor_id', kantorId)
+                        .eq('jenis', jenisVal);
+
+                    if (!checkErr && existing && existing.length > 0) {
+                        const isDuplicate = existing.some(item => item.bulan_tahun && item.bulan_tahun.startsWith(yyyyMm));
+                        if (isDuplicate) {
+                            const selectedKantorName = document.getElementById('fu-kantor').options[document.getElementById('fu-kantor').selectedIndex].text;
+                            return Swal.fire({
+                                icon: 'warning',
+                                title: 'Gagal Input!',
+                                text: `Data ${jenisVal} untuk ${selectedKantorName} periode ${yyyyMm} sudah pernah diinput sebelumnya.`
+                            });
+                        }
+                    }
+                }
+
+                const payload = {
+                    kantor_id: kantorId,
+                    jenis: jenisVal,
+                    id_pelanggan: document.getElementById('fu-id-pelanggan').value,
+                    periode_bulan: document.getElementById('fu-periode-bulan').value,
+                    jumlah_pemakaian: document.getElementById('fu-jumlah').value,
+                    satuan: document.getElementById('fu-satuan').value,
+                    biaya: document.getElementById('fu-biaya').value,
+                    bulan_tahun: bulanVal
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('utilitas').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('utilitas').insert([payload]);
+                    err = error;
+                }
+
+                if (err) {
+                    Swal.fire('Gagal', err.message, 'error');
+                } else {
+                    Swal.fire('Berhasil', 'Utilitas berhasil tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('utilitas');
+                    renderChart();
+                }
+            };
+        }
+
+        function autoFillIDPelanggan() {
+            const kantorId = document.getElementById('fu-kantor').value;
+            const jenis = document.getElementById('fu-jenis').value;
+            
+            const idPelInput = document.getElementById('fu-id-pelanggan');
+            const namaPelInput = document.getElementById('fu-nama-pelanggan');
+            const tarifDayaInput = document.getElementById('fu-tarif-daya');
+            const satuanInput = document.getElementById('fu-satuan');
+
+            if (window.kantorMap && window.kantorMap[kantorId]) {
+                const infoKantor = window.kantorMap[kantorId];
+
+                if (jenis === 'Listrik') {
+                    namaPelInput.value = infoKantor.nama_pelanggan_pln || infoKantor.nama || '-';
+                    idPelInput.value = infoKantor.id_pelanggan_pln || '-';
+                    tarifDayaInput.value = infoKantor.tarif_daya_pln || 'R1M / 1300 VA';
+                    satuanInput.value = 'kWh';
+                } else if (jenis === 'Air') {
+                    namaPelInput.value = infoKantor.nama_pelanggan_pdam || infoKantor.nama || '-';
+                    idPelInput.value = infoKantor.id_pelanggan_pdam || '-';
+                    tarifDayaInput.value = infoKantor.tarif_daya_pdam || 'Golongan IIB';
+                    satuanInput.value = 'm³';
+                } else {
+                    namaPelInput.value = infoKantor.nama || '-';
+                    idPelInput.value = '-';
+                    tarifDayaInput.value = '-';
+                    satuanInput.value = 'Unit';
+                }
+            }
+        }
+
+        // FORM JADWAL
+        async function openFormJadwal(id = null) {
+            let editData = { judul: '', kategori: 'Pemeliharaan', tanggal: '', keterangan: '', status: 'Terjadwal' };
+            if (id) {
+                const { data } = await db.from('jadwal').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Jadwal" : "Tambah Jadwal Pemeliharaan";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-jadwal">
+                    <div class="form-group"><label>Judul Kegiatan</label><input type="text" id="fj-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Kategori</label><input type="text" id="fj-kategori" class="form-control" value="${editData.kategori}" placeholder="Lift, AC, Kebersihan ATM" required></div>
+                    <div class="form-group"><label>Tanggal Pelaksanaan</label><input type="date" id="fj-tanggal" class="form-control" value="${editData.tanggal}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fj-status" class="form-control">
+                            <option value="Terjadwal" ${editData.status === 'Terjadwal' ? 'selected':''}>Terjadwal</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Keterangan Tambahan</label><textarea id="fj-ket" class="form-control">${editData.keterangan || ''}</textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Jadwal' : 'Simpan Jadwal'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-jadwal').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    judul: document.getElementById('fj-judul').value,
+                    kategori: document.getElementById('fj-kategori').value,
+                    tanggal: document.getElementById('fj-tanggal').value,
+                    status: document.getElementById('fj-status').value,
+                    keterangan: document.getElementById('fj-ket').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('jadwal').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('jadwal').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Jadwal berhasil disimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('jadwal');
+                }
+            };
+        }
+
+        // FORM WORK ORDER
+        async function openFormWO(id = null) {
+            const { data: assetList } = await db.from('asset').select('id, nama_asset');
+            if (!assetList || assetList.length === 0) return Swal.fire('Peringatan', 'Tambah data asset dulu!', 'warning');
+
+            let editData = { asset_id: '', judul: '', status: 'Pending' };
+            if (id) {
+                const { data } = await db.from('work_orders').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Work Order" : "Buat Work Order";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-wo">
+                    <div class="form-group"><label>Asset</label><select id="fw-asset" class="form-control">${assetList.map(a=>`<option value="${a.id}" ${a.id === editData.asset_id ? 'selected':''}>${a.nama_asset}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>Judul Pekerjaan</label><input type="text" id="fw-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fw-status" class="form-control">
+                            <option value="Pending" ${editData.status === 'Pending' ? 'selected':''}>Pending</option>
+                            <option value="Proses" ${editData.status === 'Proses' ? 'selected':''}>Proses</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update WO' : 'Simpan Work Order'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-wo').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    asset_id: document.getElementById('fw-asset').value,
+                    judul: document.getElementById('fw-judul').value,
+                    status: document.getElementById('fw-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('work_orders').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('work_orders').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'WO tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('workorder');
+                    loadDashboardStats();
+                }
+            };
+        }
+
+        // FORM TEKNISI
+        async function openFormTeknisi(id = null) {
+            let editData = { nama: '', spesialisasi: '', status: 'Tersedia' };
+            if (id) {
+                const { data } = await db.from('teknisi').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Teknisi" : "Tambah Teknisi";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-teknisi">
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="ft-nama" class="form-control" value="${editData.nama}" required></div>
+                    <div class="form-group"><label>Spesialisasi</label><input type="text" id="ft-spesialisasi" class="form-control" value="${editData.spesialisasi}" placeholder="AC, Electrical" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="ft-status" class="form-control">
+                            <option value="Tersedia" ${editData.status === 'Tersedia' ? 'selected':''}>Tersedia</option>
+                            <option value="Bertugas" ${editData.status === 'Bertugas' ? 'selected':''}>Bertugas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Teknisi' : 'Simpan Teknisi'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-teknisi').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    nama: document.getElementById('ft-nama').value,
+                    spesialisasi: document.getElementById('ft-spesialisasi').value,
+                    status: document.getElementById('ft-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('teknisi').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('teknisi').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Teknisi tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('teknisi');
+                }
+            };
+        }
+
+        // FORM ASSET
+        async function openFormAsset(id = null) {
+            const { data: kantorList } = await db.from('kantor').select('id, nama');
+            if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah Data Kantor dulu!', 'warning');
+
+            let editData = { kantor_id: '', kode_asset: `AST-${Date.now().toString().slice(-4)}`, nama_asset: '', kategori: '', status: 'Baik' };
+            if (id) {
+                const { data } = await db.from('asset').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Asset" : "Tambah Asset";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-asset">
+                    <div class="form-group">
+                        <label>Kantor</label>
+                        <select id="fa-kantor" class="form-control" required>
+                            ${kantorList.map(k => `<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected' : ''}>${k.nama}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Kode Asset</label><input type="text" id="fa-kode" class="form-control" value="${editData.kode_asset}" required></div>
+                    <div class="form-group"><label>Nama Asset</label><input type="text" id="fa-nama" class="form-control" value="${editData.nama_asset}" required></div>
+                    <div class="form-group"><label>Kategori</label><input type="text" id="fa-kat" class="form-control" value="${editData.kategori}" required></div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="fa-status" class="form-control">
+                            <option value="Baik" ${editData.status === 'Baik' ? 'selected' : ''}>Baik</option>
+                            <option value="Rusak" ${editData.status === 'Rusak' ? 'selected' : ''}>Rusak</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Asset' : 'Simpan Asset'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-asset').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    kantor_id: document.getElementById('fa-kantor').value,
+                    kode_asset: document.getElementById('fa-kode').value,
+                    nama_asset: document.getElementById('fa-nama').value,
+                    kategori: document.getElementById('fa-kat').value,
+                    status: document.getElementById('fa-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('asset').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('asset').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Data asset tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('asset');
+                    loadDashboardStats();
+                }
+            };
+        }
+
+        function openFormPemeriksaanATM(id = null) {
+            Promise.all([
+                db.from('kantor').select('id, nama'),
+                db.from('kriteria_atm').select('*').order('no_kriteria', {ascending:true})
+            ]).then(([kantorRes, kriteriaRes]) => {
+                const kantorList = kantorRes.data;
+                const kriteriaList = kriteriaRes.data;
+
+                if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah Kantor dulu!', 'warning');
+                if (!kriteriaList || kriteriaList.length === 0) return Swal.fire('Peringatan', 'Kriteria ATM kosong!', 'warning');
+
+                document.getElementById('modal-title').innerText = "Form Pemeriksaan ATM";
+                document.getElementById('modal-body').innerHTML = `
+                    <form id="f-atm">
+                        <div class="form-group"><label>Kantor / KCP</label><select id="fa-kantor" class="form-control">${kantorList.map(k=>`<option value="${k.id}">${k.nama}</option>`).join('')}</select></div>
+                        <div class="form-group"><label>Kategori</label><select id="fa-kat" class="form-control"><option value="Onsite">Onsite</option><option value="Offsite">Offsite</option></select></div>
+                        <div class="form-group"><label>Periode</label><input type="text" id="fa-periode" class="form-control" placeholder="Minggu 1 Agustus" required></div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Pemeriksaan</button>
+                    </form>`;
+                document.getElementById('app-modal').style.display = 'flex';
+            });
+        }
+
+        function openFormPerawatan() {
+            Promise.all([db.from('work_orders').select('id, judul'), db.from('teknisi').select('id, nama')]).then(([woRes, tekRes]) => {
+                if (!woRes.data || woRes.data.length === 0) return Swal.fire('Peringatan', 'Buat Work Order dulu!', 'warning');
+                document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
+                document.getElementById('modal-body').innerHTML = `
+                    <form id="f-main">
+                        <div class="form-group"><label>Work Order</label><select id="fm-wo" class="form-control">${woRes.data.map(w=>`<option value="${w.id}">${w.judul}</option>`).join('')}</select></div>
+                        <div class="form-group"><label>Biaya (Rp)</label><input type="number" id="fm-biaya" class="form-control" value="0"></div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Pengerjaan</button>
+                    </form>`;
+                document.getElementById('app-modal').style.display = 'flex';
+            });
+        }
+
+        function closeSubPage() {
+            document.getElementById('sub-page-overlay').style.display = 'none';
+        }
+
+        function viewGenericDetail(title, subject, bodyText) {
+            document.getElementById('modal-title').innerText = `Detail ${title}: ${subject}`;
+            document.getElementById('modal-body').innerHTML = `
+                <div class="checklist-card">
+                    <div class="checklist-title">${subject}</div>
+                    <div style="white-space: pre-line; font-size:0.85rem; margin-top:8px;">${bodyText}</div>
+                </div>
+            `;
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+
+        async function deleteRecord(table, id, page) {
+            if (confirm('Hapus data ini?')) {
+                await db.from(table).delete().eq('id', id);
+                openSubPage(page);
+                loadDashboardStats();
+            }
+        }
+
+        function scanQRModal() {
+            document.getElementById('modal-title').innerText = "Scan QR Code Asset";
+            document.getElementById('modal-body').innerHTML = `<div id="qr-reader" style="width:100%;"></div>`;
+            document.getElementById('app-modal').style.display = 'flex';
+            qrScanner = new Html5Qrcode("qr-reader");
+            qrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 220 }, (decodedText) => {
+                stopQRScanner();
+                Swal.fire('QR Code Terdeteksi', `Kode: <b>${decodedText}</b>`, 'success');
+            }).catch(() => {});
+        }
+
+        function stopQRScanner() {
+            if (qrScanner) {
+                qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; }).catch(() => {});
+            }
+        }
+    </script>
+</body>
+</html>
