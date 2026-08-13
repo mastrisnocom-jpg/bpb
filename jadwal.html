@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Kerja & Laporan Pekerjaan (6 User)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1a252f;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+            border-top: 4px solid #3498db;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .role {
+            font-size: 0.85rem;
+            background: #e8f4fd;
+            color: #2980b9;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 0.88rem;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #64748b;
+        }
+
+        .status {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .done { background: #dcfce7; color: #15803d; }
+        .progress { background: #fef9c3; color: #a16207; }
+        .pending { background: #fee2e2; color: #b91c1c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dashboard Jadwal & Laporan Pekerjaan Tim</h1>
+    <div class="grid">
+
+        <!-- User 1 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 1: Ahmad Fauzi</span>
+                <span class="role">UI/UX Designer</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Senin</td><td>08:00 - 12:00</td><td>Wireframing Mobile App</td></tr>
+                <tr><td>Selasa</td><td>13:00 - 17:00</td><td>Design System Update</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>Wireframe Landing Page UI</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Prototyping Modul Checkout</td><td><span class="status progress">Proses</span></td></tr>
+            </table>
+        </div>
+
+        <!-- User 2 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 2: Budi Santoso</span>
+                <span class="role">Frontend Developer</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Senin</td><td>09:00 - 15:00</td><td>Slicing UI ke React</td></tr>
+                <tr><td>Rabu</td><td>08:00 - 12:00</td><td>Integrasi API Payment</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>Komponen Dashboard UI</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Fixing Bug Responsive Navbar</td><td><span class="status done">Selesai</span></td></tr>
+            </table>
+        </div>
+
+        <!-- User 3 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 3: Citra Dewi</span>
+                <span class="role">Backend Developer</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Selasa</td><td>08:00 - 14:00</td><td>Database Schema Migration</td></tr>
+                <tr><td>Kamis</td><td>10:00 - 16:00</td><td>Optimize SQL Query</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>API Endpoint Authentication</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Setup Redis Cache</td><td><span class="status pending">Pending</span></td></tr>
+            </table>
+        </div>
+
+        <!-- User 4 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 4: Dian Pratama</span>
+                <span class="role">QA Engineer</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Rabu</td><td>09:00 - 13:00</td><td>Manual Testing Release v1.2</td></tr>
+                <tr><td>Jumat</td><td>08:00 - 11:00</td><td>Automation Script Cypress</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>Dokumen Bug Report Sprint 4</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Regression Test Modul User</td><td><span class="status progress">Proses</span></td></tr>
+            </table>
+        </div>
+
+        <!-- User 5 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 5: Eko Wijaya</span>
+                <span class="role">Content Creator</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Senin</td><td>10:00 - 14:00</td><td>Riset Keyword & Naskah Video</td></tr>
+                <tr><td>Kamis</td><td>13:00 - 17:00</td><td>Production Video Review</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>Draft Naskah Review 50 Detik</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Editing Video Promosi TikTok</td><td><span class="status progress">Proses</span></td></tr>
+            </table>
+        </div>
+
+        <!-- User 6 -->
+        <div class="card">
+            <div class="user-header">
+                <span class="user-name">User 6: Farhan Rizky</span>
+                <span class="role">Project Manager</span>
+            </div>
+            <div class="section-title">📅 Jadwal Kerja</div>
+            <table>
+                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
+                <tr><td>Senin</td><td>08:00 - 10:00</td><td>Sprint Planning Meeting</td></tr>
+                <tr><td>Jumat</td><td>14:00 - 16:00</td><td>Weekly Client Progress Review</td></tr>
+            </table>
+            <div class="section-title">📝 Laporan Pekerjaan</div>
+            <table>
+                <tr><th>Hasil / Output</th><th>Status</th></tr>
+                <tr><td>Laporan Progres Bulanan Tim</td><td><span class="status done">Selesai</span></td></tr>
+                <tr><td>Alokasi Budget Resource Q3</td><td><span class="status done">Selesai</span></td></tr>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
