@@ -1,47 +1,94 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Jadwal Operasional</title>
-  <!-- Tailwind CSS CDN -->
+  
+  <!-- SEO & Social Meta Tags -->
+  <title>Aplikasi Jadwal Harian Teknisi & Cleaning Service</title>
+  <meta name="description" content="Sistem manajemen jadwal kerja harian untuk Teknisi, Cleaning Service, dan Admin Teknik. Kelola, pantau status, dan ekspor laporan tugas dengan mudah.">
+  <meta name="keywords" content="jadwal teknisi, jadwal cleaning, admin teknik, manajemen operasional, aplikasi jadwal kerja">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Tim Operasional">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aplikasi Jadwal Harian Teknisi & Cleaning">
+  <meta property="og:description" content="Sistem manajemen operasional harian teknisi dan cleaning service terintegrasi.">
+
+  <!-- Schema.org Structured Data (SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Jadwal Operasional Teknisi & Cleaning",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "description": "Sistem pengelolaan jadwal kerja harian untuk Teknisi, Cleaning Service, dan Admin Teknik."
+  }
+  </script>
+
+  <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts (Inter & Plus Jakarta Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8 relative selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 md:pb-8 relative selection:bg-indigo-500 selection:text-white">
 
   <!-- Background Decorative Blur Glows -->
-  <div class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-  <div class="max-w-6xl mx-auto space-y-6 relative z-10">
+  <div class="max-w-6xl mx-auto p-4 md:p-8 space-y-6 relative z-10">
     
-    <!-- Header Dashboard -->
-    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-800/60 backdrop-blur-xl p-6 rounded-2xl border border-slate-700/50 shadow-2xl">
+    <!-- Header SEO Friendly (Semantic HTML) -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/80 backdrop-blur-xl p-5 md:p-6 rounded-2xl border border-slate-800 shadow-2xl">
       <div>
         <div class="flex items-center gap-2 mb-1">
           <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <p class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">Sistem Manajemen Harian</p>
+          <span class="text-xs font-semibold tracking-wider text-emerald-400 uppercase">Sistem Manajemen Operasional</span>
         </div>
         <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Jadwal Teknisi & Cleaning</h1>
       </div>
       
-      <!-- Button Trigger Pop-up Form -->
-      <button onclick="toggleModal(true)" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-semibold px-5 py-3 rounded-xl shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        <span>Tambah Jadwal</span>
-      </button>
+      <!-- Action Toolbar (Desktop View) -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Button View Filter -->
+        <select id="roleFilter" onchange="renderTasks()" class="bg-slate-800 border border-slate-700 text-xs font-medium rounded-xl px-3 py-2.5 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+          <option value="All">🔍 View: Semua Divisi</option>
+          <option value="Teknisi">🛠️ View: Teknisi</option>
+          <option value="Cleaning">🧹 View: Cleaning</option>
+          <option value="Admin Teknik">📋 View: Admin Teknik</option>
+        </select>
+
+        <!-- Button Export CSV -->
+        <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3.5 py-2.5 rounded-xl border border-slate-700 transition">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Export CSV
+        </button>
+
+        <!-- Button Share -->
+        <button onclick="shareSchedule()" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3.5 py-2.5 rounded-xl border border-slate-700 transition">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+          Share
+        </button>
+
+        <!-- Button Trigger Modal (Desktop) -->
+        <button onclick="toggleModal(true)" class="hidden md:inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-600/30 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span>Tambah Jadwal</span>
+        </button>
+      </div>
     </header>
 
     <!-- Stat Ringkasan -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-slate-800/40 border border-slate-700/50 p-4 rounded-xl flex items-center gap-4">
+    <section aria-label="Statistik Tugas" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
         <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
         </div>
@@ -51,7 +98,7 @@
         </div>
       </div>
       
-      <div class="bg-slate-800/40 border border-slate-700/50 p-4 rounded-xl flex items-center gap-4">
+      <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
         <div class="p-3 bg-amber-500/10 text-amber-400 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -61,7 +108,7 @@
         </div>
       </div>
 
-      <div class="bg-slate-800/40 border border-slate-700/50 p-4 rounded-xl flex items-center gap-4">
+      <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
         <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
         </div>
@@ -70,14 +117,14 @@
           <p id="completedCount" class="text-xl font-bold text-emerald-400">0</p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Tabel Jadwal -->
-    <section class="bg-slate-800/60 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-xl overflow-hidden">
+    <!-- Tabel Utama Jadwal Kerja -->
+    <main class="bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-slate-700/80 bg-slate-800/80 text-slate-400 text-xs uppercase tracking-wider font-semibold">
+            <tr class="border-b border-slate-800 bg-slate-900/90 text-slate-400 text-xs uppercase tracking-wider font-semibold">
               <th class="p-4">Waktu</th>
               <th class="p-4">Petugas</th>
               <th class="p-4">Peran</th>
@@ -86,8 +133,7 @@
               <th class="p-4 text-center">Aksi</th>
             </tr>
           </thead>
-          <tbody id="scheduleTable" class="divide-y divide-slate-700/50 text-sm">
-            <!-- Empty State jika belum ada data -->
+          <tbody id="scheduleTable" class="divide-y divide-slate-800/60 text-sm">
             <tr id="emptyState">
               <td colspan="6" class="p-8 text-center text-slate-500">
                 <svg class="w-12 h-12 mx-auto mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -97,66 +143,82 @@
           </tbody>
         </table>
       </div>
-    </section>
+    </main>
 
   </div>
 
+  <!-- BOTTOM NAVIGATION (TAMPIL KHUSUS LAYAR HP / MOBILE) -->
+  <nav aria-label="Navigasi Seluler" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 z-40 flex justify-between items-center shadow-2xl">
+    <button onclick="filterMobile('All')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-400 focus:text-indigo-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+      <span class="text-[10px] font-medium">Semua</span>
+    </button>
+
+    <!-- Tombol (+) Tambah Jadwal Utama Mobile -->
+    <button onclick="toggleModal(true)" aria-label="Tambah Jadwal Baru" class="-mt-6 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white p-3.5 rounded-full shadow-lg shadow-indigo-500/40 border-4 border-slate-950 transition active:scale-95">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+    </button>
+
+    <button onclick="exportToCSV()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      <span class="text-[10px] font-medium">Export</span>
+    </button>
+
+    <button onclick="shareSchedule()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-400">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+      <span class="text-[10px] font-medium">Share</span>
+    </button>
+  </nav>
+
   <!-- POP-UP MODAL FORM -->
-  <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
-    
-    <div id="modalCard" class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300">
+  <div id="scheduleModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
+    <div id="modalCard" class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-300">
       
-      <!-- Header Modal -->
       <div class="flex justify-between items-center px-6 py-4 border-b border-slate-800 bg-slate-800/40">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
           Tambah Jadwal Kerja
-        </h3>
+        </h2>
         <button onclick="toggleModal(false)" class="text-slate-400 hover:text-white transition">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <!-- Form Modal -->
       <form id="scheduleForm" class="p-6 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Petugas</label>
-          <input type="text" id="name" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+          <label for="name" class="block text-xs font-semibold text-slate-300 mb-1">Nama Petugas</label>
+          <input type="text" id="name" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Peran / Divisi</label>
-          <select id="role" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+          <label for="role" class="block text-xs font-semibold text-slate-300 mb-1">Peran / Divisi</label>
+          <select id="role" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="Teknisi">Teknisi</option>
             <option value="Cleaning">Cleaning Service</option>
+            <option value="Admin Teknik">Admin Teknik</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Detail Tugas / Lokasi</label>
-          <input type="text" id="task" required placeholder="Contoh: Maintenance AC & Filter Lantai 3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+          <label for="task" class="block text-xs font-semibold text-slate-300 mb-1">Detail Tugas / Lokasi</label>
+          <input type="text" id="task" required placeholder="Contoh: Inspeksi Panel Listrik / General Cleaning" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Jam Mulai</label>
-            <input type="time" id="startTime" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+            <label for="startTime" class="block text-xs font-semibold text-slate-300 mb-1">Jam Mulai</label>
+            <input type="time" id="startTime" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Jam Berakhir</label>
-            <input type="time" id="endTime" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+            <label for="endTime" class="block text-xs font-semibold text-slate-300 mb-1">Jam Berakhir</label>
+            <input type="time" id="endTime" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
         </div>
 
-        <!-- Footer Modal Buttons -->
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-          <button type="button" onclick="toggleModal(false)" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
-            Batal
-          </button>
-          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition">
-            Simpan Jadwal
-          </button>
+          <button type="button" onclick="toggleModal(false)" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white transition">Batal</button>
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition">Simpan Jadwal</button>
         </div>
       </form>
 
@@ -170,10 +232,11 @@
     const form = document.getElementById('scheduleForm');
     const tableBody = document.getElementById('scheduleTable');
     const emptyState = document.getElementById('emptyState');
+    const roleFilter = document.getElementById('roleFilter');
 
     let tasks = [];
 
-    // Fungsi Toggle Modal Pop-up
+    // Toggle Pop-up Modal
     function toggleModal(show) {
       if (show) {
         modal.classList.remove('hidden');
@@ -193,7 +256,7 @@
       }
     }
 
-    // Submit Form
+    // Submit Form Tambah
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -212,34 +275,37 @@
       toggleModal(false);
     });
 
-    // Render Data Tabel & Counter Status
+    // Render Data Tabel & Filter View
     function renderTasks() {
-      // Hapus baris tabel yang ada (kecuali jika kosong)
       tableBody.innerHTML = '';
+      const selectedRole = roleFilter.value;
 
-      if (tasks.length === 0) {
+      const filteredTasks = tasks.filter(item => {
+        return selectedRole === 'All' || item.role === selectedRole;
+      });
+
+      if (filteredTasks.length === 0) {
         tableBody.appendChild(emptyState);
         updateCounters();
         return;
       }
 
-      tasks.forEach(item => {
+      filteredTasks.forEach(item => {
         const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-800/40 transition-colors group';
+        row.className = 'hover:bg-slate-800/40 transition-colors';
 
-        // Styling Badge Peran
-        const roleBadge = item.role === 'Teknisi' 
-          ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-              <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>Teknisi
-             </span>`
-          : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Cleaning
-             </span>`;
+        // Badge Peran (Termasuk Admin Teknik)
+        let roleBadge = '';
+        if (item.role === 'Teknisi') {
+          roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">🛠️ Teknisi</span>`;
+        } else if (item.role === 'Cleaning') {
+          roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">🧹 Cleaning</span>`;
+        } else {
+          roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">📋 Admin Teknik</span>`;
+        }
 
         row.innerHTML = `
-          <td class="p-4 font-mono text-slate-300 font-medium whitespace-nowrap">
-            ${item.startTime} - ${item.endTime}
-          </td>
+          <td class="p-4 font-mono text-slate-300 font-medium whitespace-nowrap">${item.startTime} - ${item.endTime}</td>
           <td class="p-4 font-semibold text-white">${item.name}</td>
           <td class="p-4">${roleBadge}</td>
           <td class="p-4 text-slate-300">${item.task}</td>
@@ -251,7 +317,7 @@
             </select>
           </td>
           <td class="p-4 text-center">
-            <button onclick="deleteTask(${item.id})" class="text-slate-500 hover:text-rose-400 p-1 rounded-lg transition" title="Hapus Jadwal">
+            <button onclick="deleteTask(${item.id})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Hapus">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
           </td>
@@ -263,7 +329,12 @@
       updateCounters();
     }
 
-    // Update Status
+    // Filter Khusus Mobile
+    function filterMobile(role) {
+      roleFilter.value = role;
+      renderTasks();
+    }
+
     function updateStatus(id, newStatus) {
       const task = tasks.find(t => t.id === id);
       if (task) {
@@ -272,17 +343,52 @@
       }
     }
 
-    // Hapus Task
     function deleteTask(id) {
       tasks = tasks.filter(t => t.id !== id);
       renderTasks();
     }
 
-    // Update Counter Dashboard Ringkasan
     function updateCounters() {
       document.getElementById('totalTaskCount').innerText = tasks.length;
       document.getElementById('inProgressCount').innerText = tasks.filter(t => t.status === 'Proses').length;
       document.getElementById('completedCount').innerText = tasks.filter(t => t.status === 'Selesai').length;
+    }
+
+    // FITUR EXPORT TO CSV
+    function exportToCSV() {
+      if (tasks.length === 0) {
+        alert("Tidak ada data jadwal untuk diekspor.");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "Jam Mulai,Jam Berakhir,Nama,Peran,Tugas,Status\n";
+
+      tasks.forEach(t => {
+        csvContent += `"${t.startTime}","${t.endTime}","${t.name}","${t.role}","${t.task}","${t.status}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Jadwal_Operasional_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // FITUR SHARE JADWAL
+    function shareSchedule() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Jadwal Harian Operasional',
+          text: `Berikut rekap jadwal kerja harian Teknisi, Cleaning, dan Admin Teknik hari ini. Total: ${tasks.length} tugas.`,
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link jadwal berhasil disalin ke clipboard!");
+      }
     }
   </script>
 </body>
