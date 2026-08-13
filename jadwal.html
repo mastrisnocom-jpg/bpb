@@ -1,239 +1,154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Kerja & Laporan Pekerjaan (6 User)</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f6f9;
-            color: #333;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #1a252f;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            padding: 20px;
-            border-top: 4px solid #3498db;
-        }
-
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .user-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .role {
-            font-size: 0.85rem;
-            background: #e8f4fd;
-            color: #2980b9;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .section-title {
-            font-size: 0.95rem;
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 6px;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 0.88rem;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        th {
-            background-color: #f8fafc;
-            color: #64748b;
-        }
-
-        .status {
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        .done { background: #dcfce7; color: #15803d; }
-        .progress { background: #fef9c3; color: #a16207; }
-        .pending { background: #fee2e2; color: #b91c1c; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Harian Teknisi & Cleaning</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-100 font-sans text-slate-800 p-4 md:p-8">
 
-<div class="container">
-    <h1>Dashboard Jadwal & Laporan Pekerjaan Tim</h1>
-    <div class="grid">
+  <div class="max-w-5xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h1 class="text-2xl font-bold text-slate-900">Jadwal Kerja Harian</h1>
+      <p class="text-sm text-slate-500">Kelola jadwal tugas Teknisi dan Cleaning Service dengan mudah.</p>
+    </header>
 
-        <!-- User 1 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 1: Ahmad Fauzi</span>
-                <span class="role">UI/UX Designer</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Senin</td><td>08:00 - 12:00</td><td>Wireframing Mobile App</td></tr>
-                <tr><td>Selasa</td><td>13:00 - 17:00</td><td>Design System Update</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>Wireframe Landing Page UI</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Prototyping Modul Checkout</td><td><span class="status progress">Proses</span></td></tr>
-            </table>
+    <!-- Form Tambah Jadwal -->
+    <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+      <h2 class="text-lg font-semibold text-slate-900 mb-4">Tambah Jadwal Baru</h2>
+      <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Nama Petugas</label>
+          <input type="text" id="name" required placeholder="Contoh: Budi Santoso" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- User 2 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 2: Budi Santoso</span>
-                <span class="role">Frontend Developer</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Senin</td><td>09:00 - 15:00</td><td>Slicing UI ke React</td></tr>
-                <tr><td>Rabu</td><td>08:00 - 12:00</td><td>Integrasi API Payment</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>Komponen Dashboard UI</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Fixing Bug Responsive Navbar</td><td><span class="status done">Selesai</span></td></tr>
-            </table>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Peran / Divisi</label>
+          <select id="role" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Teknisi">Teknisi</option>
+            <option value="Cleaning">Cleaning Service</option>
+          </select>
         </div>
 
-        <!-- User 3 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 3: Citra Dewi</span>
-                <span class="role">Backend Developer</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Selasa</td><td>08:00 - 14:00</td><td>Database Schema Migration</td></tr>
-                <tr><td>Kamis</td><td>10:00 - 16:00</td><td>Optimize SQL Query</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>API Endpoint Authentication</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Setup Redis Cache</td><td><span class="status pending">Pending</span></td></tr>
-            </table>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Deskripsi Tugas / Area</label>
+          <input type="text" id="task" required placeholder="Contoh: Perbaikan AC Lantai 2" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- User 4 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 4: Dian Pratama</span>
-                <span class="role">QA Engineer</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Rabu</td><td>09:00 - 13:00</td><td>Manual Testing Release v1.2</td></tr>
-                <tr><td>Jumat</td><td>08:00 - 11:00</td><td>Automation Script Cypress</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>Dokumen Bug Report Sprint 4</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Regression Test Modul User</td><td><span class="status progress">Proses</span></td></tr>
-            </table>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Jam Mulai</label>
+          <input type="time" id="startTime" required class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- User 5 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 5: Eko Wijaya</span>
-                <span class="role">Content Creator</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Senin</td><td>10:00 - 14:00</td><td>Riset Keyword & Naskah Video</td></tr>
-                <tr><td>Kamis</td><td>13:00 - 17:00</td><td>Production Video Review</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>Draft Naskah Review 50 Detik</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Editing Video Promosi TikTok</td><td><span class="status progress">Proses</span></td></tr>
-            </table>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Jam Berakhir</label>
+          <input type="time" id="endTime" required class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- User 6 -->
-        <div class="card">
-            <div class="user-header">
-                <span class="user-name">User 6: Farhan Rizky</span>
-                <span class="role">Project Manager</span>
-            </div>
-            <div class="section-title">📅 Jadwal Kerja</div>
-            <table>
-                <tr><th>Hari</th><th>Jam</th><th>Tugas</th></tr>
-                <tr><td>Senin</td><td>08:00 - 10:00</td><td>Sprint Planning Meeting</td></tr>
-                <tr><td>Jumat</td><td>14:00 - 16:00</td><td>Weekly Client Progress Review</td></tr>
-            </table>
-            <div class="section-title">📝 Laporan Pekerjaan</div>
-            <table>
-                <tr><th>Hasil / Output</th><th>Status</th></tr>
-                <tr><td>Laporan Progres Bulanan Tim</td><td><span class="status done">Selesai</span></td></tr>
-                <tr><td>Alokasi Budget Resource Q3</td><td><span class="status done">Selesai</span></td></tr>
-            </table>
+        <div class="flex items-end">
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition">
+            + Tambah Jadwal
+          </button>
         </div>
 
-    </div>
-</div>
+      </form>
+    </section>
 
+    <!-- Tabel Jadwal -->
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-slate-900">Daftar Jadwal Harian</h2>
+        <span id="totalTask" class="text-xs bg-blue-100 text-blue-700 font-semibold px-2.5 py-1 rounded-full">0 Tugas</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 bg-slate-100/50 text-slate-600 text-xs uppercase font-semibold">
+              <th class="p-3">Waktu</th>
+              <th class="p-3">Nama</th>
+              <th class="p-3">Peran</th>
+              <th class="p-3">Tugas / Area</th>
+              <th class="p-3">Status</th>
+              <th class="p-3 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleTable" class="divide-y divide-slate-100 text-sm">
+            <!-- Data akan ditambahkan di sini secara dinamis -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- JavaScript Sederhana untuk Interaktivitas -->
+  <script>
+    const form = document.getElementById('scheduleForm');
+    const tableBody = document.getElementById('scheduleTable');
+    const totalTaskLabel = document.getElementById('totalTask');
+    let count = 0;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const role = document.getElementById('role').value;
+      const task = document.getElementById('task').value;
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+
+      // Badge Warna berdasarkan Peran
+      const roleBadge = role === 'Teknisi' 
+        ? `<span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-2 py-0.5 rounded">Teknisi</span>`
+        : `<span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded">Cleaning</span>`;
+
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-slate-50 transition';
+      row.innerHTML = `
+        <td class="p-3 whitespace-nowrap font-medium text-slate-700">${startTime} - ${endTime}</td>
+        <td class="p-3 font-semibold text-slate-900">${name}</td>
+        <td class="p-3">${roleBadge}</td>
+        <td class="p-3 text-slate-600">${task}</td>
+        <td class="p-3">
+          <select onchange="updateStatus(this)" class="text-xs bg-slate-100 border border-slate-300 rounded px-2 py-1 focus:outline-none">
+            <option value="Belum">Belum</option>
+            <option value="Proses">Proses</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </td>
+        <td class="p-3 text-center">
+          <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 text-xs font-medium">Hapus</button>
+        </td>
+      `;
+
+      tableBody.appendChild(row);
+      count++;
+      totalTaskLabel.innerText = `${count} Tugas`;
+      form.reset();
+    });
+
+    function deleteRow(button) {
+      button.closest('tr').remove();
+      count--;
+      totalTaskLabel.innerText = `${count} Tugas`;
+    }
+
+    function updateStatus(select) {
+      select.className = 'text-xs border rounded px-2 py-1 focus:outline-none ';
+      if (select.value === 'Selesai') {
+        select.classList.add('bg-green-100', 'text-green-700', 'border-green-300');
+      } else if (select.value === 'Proses') {
+        select.classList.add('bg-yellow-100', 'text-yellow-700', 'border-yellow-300');
+      } else {
+        select.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-300');
+      }
+    }
+  </script>
 </body>
 </html>
