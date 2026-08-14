@@ -34,48 +34,46 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Library jsPDF & autoTable untuk Export PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; }
         @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        .animate-slide-down { animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-6">
 
     <!-- SCREEN AUTHENTICATION -->
-    <div id="auth-screen" class="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-[100] flex flex-col items-center justify-center hidden">
-        <div class="bg-white dark:bg-slate-800 p-8 rounded-[32px] shadow-2xl w-11/12 max-w-sm text-center border border-slate-100 dark:border-slate-700/80">
-            <div class="w-16 h-16 bg-theme-50 dark:bg-theme-900/30 text-theme-600 dark:text-theme-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 transition-colors">
-                <i id="auth-icon" class="fa-solid fa-user-gear"></i>
+    <div id="auth-screen" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-[28px] shadow-2xl w-11/12 max-w-xs text-center border border-emerald-100 dark:border-slate-800">
+            <div class="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-emerald-500/30">
+                <i id="auth-icon" class="fa-solid fa-shield-halved"></i>
             </div>
-            <h2 id="auth-title" class="text-2xl font-extrabold text-slate-800 dark:text-white mb-2">Login Operasional</h2>
-            <p id="auth-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mb-6">Kelola Jadwal Teknisi & Cleaning.</p>
+            <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">M-Ops Schedule</h2>
+            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian</p>
             
-            <div id="form-container" class="space-y-3">
-                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
-                <input type="password" id="input-password" placeholder="Kata Sandi (Min. 6 Karakter)" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 text-center text-slate-800 dark:text-white font-bold focus:outline-none focus:border-theme-500 transition">
+            <div id="form-container" class="space-y-2.5">
+                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-emerald-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-emerald-500 transition">
             </div>
             
-            <p id="auth-error" class="text-xs text-rose-500 dark:text-rose-400 font-bold mt-3 hidden">Error message</p>
+            <p id="auth-error" class="text-[10px] text-rose-500 font-bold mt-2.5 hidden">Error message</p>
             
-            <button id="btn-action" class="w-full bg-theme-600 text-white font-bold py-3.5 rounded-xl hover:bg-theme-700 active:scale-95 transition shadow-lg shadow-theme-200 dark:shadow-none mt-5">Masuk</button>
+            <button id="btn-action" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold py-2.5 rounded-xl hover:opacity-95 active:scale-95 transition text-xs shadow-md shadow-emerald-600/20 mt-4">Masuk</button>
             
-            <div class="flex items-center my-4 text-xs text-slate-400 dark:text-slate-500">
-                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div><span class="px-3">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+            <div class="flex items-center my-3 text-[10px] text-slate-400">
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div><span class="px-2">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
             </div>
 
-            <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-white font-bold py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-600 active:scale-95 transition flex items-center justify-center gap-2.5 text-sm shadow-sm">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl active:scale-95 transition flex items-center justify-center gap-2 text-[11px] shadow-sm">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.357 2.673 1.386 6.577l3.88 3.188z"/>
                     <path fill="#4285F4" d="M23.605 12.3c0-.823-.074-1.614-.211-2.373H12v4.582h6.51c-.28 1.514-1.137 2.795-2.42 3.655v3.036h3.914c2.29-2.11 3.601-5.214 3.601-8.9z"/>
                     <path fill="#FBBC05" d="M5.266 14.235A7.087 7.087 0 0 1 4.909 12c0-.795.132-1.559.357-2.265L1.386 6.577A11.948 11.948 0 0 0 0 12c0 1.959.473 3.81 1.309 5.455l3.957-3.22z"/>
@@ -83,168 +81,172 @@
                 </svg>
                 Masuk dengan Google
             </button>
-            <button id="btn-switch" class="text-slate-400 dark:text-slate-500 text-xs font-bold mt-5 hover:text-theme-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-emerald-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
         </div>
     </div>
 
     <!-- LAYOUT UTAMA DASHBOARD -->
     <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
         
-        <!-- SIDEBAR UTAMA -->
-        <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700/80 fixed top-0 bottom-0 left-0 p-6 z-30 justify-between">
+        <!-- SIDEBAR UTAMA (DESKTOP VIEW) -->
+        <aside class="hidden md:flex flex-col w-56 bg-gradient-to-b from-emerald-900 to-teal-950 text-white fixed top-0 bottom-0 left-0 p-5 z-30 justify-between shadow-xl">
             <div>
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-10 h-10 bg-theme-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-theme-200 dark:shadow-none">
-                        <i class="fa-solid fa-calendar-check"></i>
+                <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-8 h-8 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-base shadow-sm">
+                        <i class="fa-solid fa-list-check"></i>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-slate-800 dark:text-white tracking-tight">OpsSchedule</h3>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase">Workforce v1.0</p>
+                        <h3 class="font-extrabold text-sm tracking-tight leading-none">M-Ops Mobile</h3>
+                        <p class="text-[9px] text-emerald-300 font-medium uppercase tracking-wider mt-0.5">Operational App</p>
                     </div>
                 </div>
 
-                <nav class="space-y-1.5">
-                    <button onclick="filterTasks('All')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm bg-theme-50 dark:bg-theme-950/40 text-theme-600 dark:text-theme-400 transition">
-                        <i class="fa-solid fa-list-check text-base"></i> Semua Jadwal
+                <nav class="space-y-1">
+                    <button onclick="filterTasks('All')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
+                        <i class="fa-solid fa-layer-group text-xs"></i> Semua Tugas
                     </button>
                     
-                    <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
+                    <div class="pt-3 border-t border-emerald-800/50 my-3"></div>
                     
-                    <button onclick="openTaskModal()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none mb-2">
-                        <i class="fa-solid fa-plus"></i> Tambah Jadwal
+                    <button onclick="openTaskModal()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md mb-2">
+                        <i class="fa-solid fa-plus text-xs"></i> Tambah Single
                     </button>
 
-                    <button onclick="openBulkTextModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 mb-2">
-                        <i class="fa-solid fa-paste text-indigo-500"></i> Import Teks Pesan
+                    <button onclick="openBulkTextModal()" class="w-full bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 mb-2">
+                        <i class="fa-solid fa-paste text-xs text-emerald-300"></i> Import Teks WA
                     </button>
 
-                    <button onclick="openAutoGenerateModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-bolt"></i> Generate (07-17)
+                    <button onclick="openAutoGenerateModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-bolt text-xs"></i> Auto 07-17
                     </button>
                 </nav>
             </div>
 
-            <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700/50 flex flex-col gap-3">
-                <div onclick="openProfileModal()" class="flex items-center gap-3 cursor-pointer p-1 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/40 transition">
-                    <div class="w-9 h-9 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-bold shadow-inner" id="user-avatar-placeholder">
+            <div class="mt-auto pt-3 border-t border-emerald-800/50 flex flex-col gap-2">
+                <div onclick="openProfileModal()" class="flex items-center gap-2.5 cursor-pointer p-1 rounded-xl hover:bg-emerald-800/40 transition">
+                    <div class="w-7 h-7 rounded-full overflow-hidden bg-emerald-700 text-emerald-100 flex items-center justify-center text-xs font-bold" id="user-avatar-placeholder">
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] text-slate-400 font-medium leading-none mb-1">Masuk sebagai:</p>
-                        <p class="text-xs font-bold text-slate-700 dark:text-slate-300 truncate" id="user-display-side">User</p>
+                        <p class="text-[9px] text-emerald-300 font-medium leading-none mb-0.5">Petugas:</p>
+                        <p class="text-[11px] font-bold text-white truncate" id="user-display-side">User</p>
                     </div>
-                    <i class="fa-solid fa-gear text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-gear text-emerald-400 text-[10px]"></i>
                 </div>
             </div>
         </aside>
 
         <!-- KONTEN UTAMA DASHBOARD -->
-        <main class="flex-1 md:pl-64 flex flex-col min-h-screen">
-            <div class="w-full mx-auto px-5 pt-6 pb-24 md:pb-12 flex-grow">
+        <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
+            <div class="w-full mx-auto px-4 pt-4 pb-20 md:pb-8 flex-grow">
                 
-                <!-- HEADER ATAS -->
-                <header class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-theme-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-theme-200 dark:shadow-none">
-                            <i class="fa-solid fa-calendar-days"></i>
+                <!-- HEADER M-BANKING VIBE -->
+                <header class="mb-4 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center text-emerald-300 text-sm">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 class="text-lg font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight">Jadwal Teknisi & Cleaning</h1>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sistem Manajemen Operasional Harian</p>
+
+                        <!-- TOOLBAR ATAS DESKTOP/MOBILE -->
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="toggleTheme()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
+                                <i id="theme-icon" class="fa-solid fa-moon"></i>
+                            </button>
+                            <button onclick="shareSchedule()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Share">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- ACTION TOOLBAR (DESKTOP) -->
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <select id="roleFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-xl px-3 py-2 text-slate-700 dark:text-white focus:outline-none focus:border-theme-500">
-                            <option value="All">🔍 View: Semua Divisi</option>
-                            <option value="Teknisi">🛠️ View: Teknisi</option>
-                            <option value="Cleaning">🧹 View: Cleaning</option>
-                            <option value="Admin Teknik">📋 View: Admin Teknik</option>
-                        </select>
+                    <!-- ACTION BUTTONS KOMPAK DESKTOP -->
+                    <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none">
+                                <option value="All">🔍 Semua Divisi</option>
+                                <option value="Teknisi">🛠️ Teknisi</option>
+                                <option value="Cleaning">🧹 Cleaning</option>
+                                <option value="Admin Teknik">📋 Admin Teknik</option>
+                            </select>
 
-                        <button onclick="openBulkTextModal()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-paste"></i> Import Teks
-                        </button>
+                            <button onclick="exportToCSV()" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
+                                <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
+                            </button>
+                            <button onclick="exportToPDF()" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
+                                <i class="fa-solid fa-file-pdf text-rose-300"></i> PDF
+                            </button>
+                        </div>
 
-                        <button onclick="openAutoGenerateModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-bolt"></i> Auto 07-17
-                        </button>
-
-                        <button onclick="exportToCSV()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-csv text-emerald-500"></i> CSV
-                        </button>
-
-                        <button onclick="exportToPDF()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF
-                        </button>
-
-                        <button onclick="shareSchedule()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-share-nodes text-indigo-500"></i> Share
-                        </button>
-
-                        <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 text-slate-400 dark:text-amber-400 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center transition active:scale-95 shadow-sm">
-                            <i id="theme-icon" class="fa-solid fa-moon"></i>
-                        </button>
-
-                        <button onclick="openTaskModal()" class="hidden md:inline-flex bg-theme-600 hover:bg-theme-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition items-center gap-1.5 shadow-md shadow-theme-100 dark:shadow-none">
-                            <i class="fa-solid fa-plus"></i> Tambah
-                        </button>
+                        <div class="hidden md:flex items-center gap-1.5">
+                            <button onclick="openBulkTextModal()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+                                <i class="fa-solid fa-paste"></i> Import WA
+                            </button>
+                            <button onclick="openAutoGenerateModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+                                <i class="fa-solid fa-bolt"></i> Auto (07-17)
+                            </button>
+                        </div>
                     </div>
                 </header>
 
-                <!-- KARTU RINGKASAN STATISTIK -->
-                <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/80 shadow-sm flex items-center gap-4">
-                        <div class="p-3 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 rounded-xl">
-                            <i class="fa-solid fa-list-check text-xl"></i>
+                <!-- KARTU RINGKASAN STATISTIK (M-BANKING CARD STYLE) -->
+                <section class="grid grid-cols-3 gap-2 mb-4">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                        <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                            <i class="fa-solid fa-list-check"></i>
                         </div>
-                        <div>
-                            <p class="text-xs text-slate-400 font-medium">Total Tugas</p>
-                            <p id="totalTaskCount" class="text-xl font-extrabold text-slate-800 dark:text-white">0</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/80 shadow-sm flex items-center gap-4">
-                        <div class="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-500 rounded-xl">
-                            <i class="fa-solid fa-spinner text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs text-slate-400 font-medium">Dalam Proses</p>
-                            <p id="inProgressCount" class="text-xl font-extrabold text-amber-500">0</p>
+                        <div class="min-w-0">
+                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Total</p>
+                            <p id="totalTaskCount" class="text-sm font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/80 shadow-sm flex items-center gap-4">
-                        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 rounded-xl">
-                            <i class="fa-solid fa-circle-check text-xl"></i>
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                        <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                            <i class="fa-solid fa-spinner"></i>
                         </div>
-                        <div>
-                            <p class="text-xs text-slate-400 font-medium">Selesai</p>
-                            <p id="completedCount" class="text-xl font-extrabold text-emerald-500">0</p>
+                        <div class="min-w-0">
+                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Proses</p>
+                            <p id="inProgressCount" class="text-sm font-extrabold text-amber-500 leading-tight">0</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                        <div class="w-7 h-7 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
+                            <p id="completedCount" class="text-sm font-extrabold text-teal-600 dark:text-teal-400 leading-tight">0</p>
                         </div>
                     </div>
                 </section>
 
-                <!-- TABEL UTAMA JADWAL -->
-                <main class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700/80 shadow-sm overflow-hidden">
+                <!-- TABEL UTAMA JADWAL KOMPAK -->
+                <main class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="border-b border-slate-100 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider font-semibold">
-                                    <th class="p-4">Waktu</th>
-                                    <th class="p-4">Petugas</th>
-                                    <th class="p-4">Peran / Divisi</th>
-                                    <th class="p-4">Detail Tugas / Area</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4 text-center">Aksi</th>
+                                <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
+                                    <th class="p-3">Waktu</th>
+                                    <th class="p-3">Petugas</th>
+                                    <th class="p-3">Divisi</th>
+                                    <th class="p-3">Detail Tugas / Area</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="scheduleTable" class="divide-y divide-slate-100 dark:divide-slate-700/60 text-sm">
+                            <tbody id="scheduleTable" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
                                 <tr id="emptyState">
-                                    <td colspan="6" class="p-8 text-center text-slate-400">
-                                        <i class="fa-solid fa-calendar-xmark text-4xl mb-2 opacity-40"></i>
-                                        <p class="text-xs font-semibold">Belum ada jadwal yang ditambahkan hari ini.</p>
+                                    <td colspan="6" class="p-6 text-center text-slate-400">
+                                        <i class="fa-solid fa-calendar-xmark text-3xl mb-1.5 opacity-40"></i>
+                                        <p class="text-[11px] font-semibold">Belum ada tugas jadwal hari ini.</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -254,34 +256,33 @@
 
             </div>
 
-            <footer class="hidden md:block w-full py-4 mt-auto text-center border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-800/20 text-slate-400 text-[11px] font-medium">
-                <div>Created with ❤️ for Personal Operational Workspace</div>
-                <div class="text-[9px] text-slate-300 dark:text-slate-600 mt-0.5">&copy; 2026 Personal SuperApp. All rights reserved.</div>
+            <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
+                <div>Created for Mobile Banking Vibe Experience &bull; M-Ops Workspace</div>
             </footer>
         </main>
     </div>
 
-    <!-- POP-UP MODAL 1: FORM TAMBAH MANUAL (SINGLE) -->
-    <div id="scheduleModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div id="modalCard" class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
-            <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
-                <h3 id="modalTitle" class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-theme-500"></span> Tambah Jadwal Kerja
+    <!-- MODAL 1: FORM TAMBAH MANUAL -->
+    <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 id="modalTitle" class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tambah Tugas Baru
                 </h3>
-                <button onclick="toggleModal(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button onclick="toggleModal(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <form id="scheduleForm" class="space-y-4">
+            <form id="scheduleForm" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nama Petugas</label>
-                    <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Nama Petugas</label>
+                    <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Peran / Divisi</label>
-                    <select id="input-role" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Divisi / Peran</label>
+                    <select id="input-role" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                         <option value="Teknisi">🛠️ Teknisi</option>
                         <option value="Cleaning">🧹 Cleaning Service</option>
                         <option value="Admin Teknik">📋 Admin Teknik</option>
@@ -289,51 +290,51 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Detail Tugas / Area</label>
-                    <input type="text" id="input-task" required placeholder="Contoh: Inspeksi Panel AC Lantai 2" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Detail Tugas / Area</label>
+                    <input type="text" id="input-task" required placeholder="Contoh: Maintenance AC Lantai 2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2.5">
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Jam Mulai</label>
-                        <input type="time" id="input-start-time" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Jam Mulai</label>
+                        <input type="time" id="input-start-time" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Jam Berakhir</label>
-                        <input type="time" id="input-end-time" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-theme-500">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Jam Berakhir</label>
+                        <input type="time" id="input-end-time" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                     </div>
                 </div>
 
-                <div class="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-700/80">
-                    <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-3 rounded-xl text-xs transition">Batal</button>
-                    <button type="submit" id="btn-save-task" class="flex-[2] bg-theme-600 text-white font-bold py-3 rounded-xl text-xs hover:bg-theme-700 transition">Simpan Jadwal</button>
+                <div class="flex gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                    <button type="submit" id="btn-save-task" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- POP-UP MODAL 2: IMPORT TEKS BANYAK (PASTE CHAT WA) -->
-    <div id="bulkTextModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl border border-slate-100 dark:border-slate-700/80">
-            <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-paste text-indigo-500"></i> Import Banyak via Teks
+    <!-- MODAL 2: IMPORT TEKS PASTE CHAT -->
+    <div id="bulkTextModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center pb-2 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-paste text-emerald-500"></i> Import Banyak via Teks
                 </h3>
                 <button onclick="closeBulkTextModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    <i class="fa-solid fa-xmark"></i>
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <div class="space-y-3 text-xs">
+            <div class="space-y-2.5 text-xs">
                 <div>
-                    <label class="block font-bold text-slate-400 uppercase mb-1">Nama Petugas</label>
-                    <input type="text" id="bulk-name" placeholder="Contoh: FIKRI" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Petugas</label>
+                    <input type="text" id="bulk-name" placeholder="Contoh: FIKRI" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-400 uppercase mb-1">Peran / Divisi</label>
-                    <select id="bulk-role" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Divisi / Peran</label>
+                    <select id="bulk-role" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                         <option value="Teknisi">🛠️ Teknisi</option>
                         <option value="Cleaning">🧹 Cleaning Service</option>
                         <option value="Admin Teknik">📋 Admin Teknik</option>
@@ -341,48 +342,48 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal di Sini</label>
-                    <textarea id="bulk-text-area" rows="6" placeholder="09.30-10.00 : pengisian tandon&#10;10.30-11.30 : perbaikan monitor sound&#10;13.00-14.00 : check perlengkapan" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 font-mono text-slate-800 dark:text-white focus:outline-none focus:border-indigo-500"></textarea>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal Chat</label>
+                    <textarea id="bulk-text-area" rows="5" placeholder="09.30-10.00 : pengisian tandon&#10;10.30-11.30 : perbaikan monitor sound" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
             </div>
 
-            <div class="flex gap-2 mt-4">
-                <button onclick="closeBulkTextModal()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs">Batal</button>
-                <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs">Proses & Simpan Semua</button>
+            <div class="flex gap-2 mt-3">
+                <button onclick="closeBulkTextModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs">Simpan Semua</button>
             </div>
         </div>
     </div>
 
-    <!-- POP-UP MODAL 3: GENERATE SEHARIAN (07:00 - 17:00) -->
-    <div id="autoGenerateModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl border border-slate-100 dark:border-slate-700/80">
-            <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
-                <h3 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-amber-500"></i> Generate Jadwal (07.00 - 17.00)
+    <!-- MODAL 3: GENERATE SEHARIAN (07:00 - 17:00) -->
+    <div id="autoGenerateModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center pb-2 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> Auto Generate (07.00-17.00)
                 </h3>
-                <button onclick="closeAutoGenerateModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    <i class="fa-solid fa-xmark"></i>
+                <button onclick="closeAutoGenerateModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <div class="space-y-3 text-xs">
+            <div class="space-y-2 text-xs">
                 <div>
-                    <label class="block font-bold text-slate-400 uppercase mb-1">Nama Petugas</label>
-                    <input type="text" id="gen-name" placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Petugas</label>
+                    <input type="text" id="gen-name" placeholder="Contoh: Budi" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-400 uppercase mb-1">Peran / Divisi</label>
-                    <select id="gen-role" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Divisi</label>
+                    <select id="gen-role" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                         <option value="Teknisi">🛠️ Teknisi</option>
                         <option value="Cleaning">🧹 Cleaning Service</option>
                         <option value="Admin Teknik">📋 Admin Teknik</option>
                     </select>
                 </div>
 
-                <div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl text-amber-800 dark:text-amber-300">
-                    <p class="font-bold mb-1">Otomatis buat 5 jam rutin:</p>
-                    <ul class="list-disc list-inside space-y-0.5 text-[11px] opacity-90">
+                <div class="p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/50 rounded-xl text-amber-800 dark:text-amber-300 text-[10px]">
+                    <p class="font-extrabold mb-1">Otomatis buat 5 slot kerja:</p>
+                    <ul class="list-disc list-inside space-y-0.5 opacity-90">
                         <li>07:00 - 09:00 (Persiapan & Cek Area)</li>
                         <li>09:00 - 12:00 (Pekerjaan Lapangan)</li>
                         <li>12:00 - 13:00 (Istirahat & Standby)</li>
@@ -392,77 +393,77 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 mt-5">
-                <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs">Batal</button>
-                <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-xs">Buat 5 Jadwal</button>
+            <div class="flex gap-2 mt-4">
+                <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs">Generate</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL PROFIL & TEMA -->
-    <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
-            <div class="text-center relative pb-4 border-b border-slate-100 dark:border-slate-700/80 mb-5">
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
+    <div id="form-profile-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="text-center relative pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="absolute top-0 right-0 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
 
-                <div class="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-tr from-theme-500 to-theme-400 text-white flex items-center justify-center text-2xl font-bold shadow-lg mx-auto mb-3" id="modal-user-avatar">
+                <div class="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center text-lg font-bold shadow-md mx-auto mb-2" id="modal-user-avatar">
                     <i class="fa-solid fa-user"></i>
                 </div>
 
-                <h3 class="text-base font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
-                <p class="text-xs font-bold text-theme-600 dark:text-theme-400 mb-2" id="profile-email-display">email@domain.com</p>
+                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
+                <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400" id="profile-email-display">email@domain.com</p>
             </div>
 
-            <div class="mb-6">
-                <h4 class="text-xs font-extrabold text-slate-800 dark:text-white mb-3 uppercase tracking-wider text-center">Pilih Tema Warna</h4>
-                <div class="grid grid-cols-5 gap-3">
-                    <button onclick="applyTheme('emerald')" class="w-9 h-9 rounded-full bg-[#10b981] shadow-md border-2 border-white dark:border-slate-800"></button>
-                    <button onclick="applyTheme('blue')" class="w-9 h-9 rounded-full bg-[#3b82f6] shadow-md border-2 border-white dark:border-slate-800"></button>
-                    <button onclick="applyTheme('indigo')" class="w-9 h-9 rounded-full bg-[#6366f1] shadow-md border-2 border-white dark:border-slate-800"></button>
-                    <button onclick="applyTheme('violet')" class="w-9 h-9 rounded-full bg-[#8b5cf6] shadow-md border-2 border-white dark:border-slate-800"></button>
-                    <button onclick="applyTheme('rose')" class="w-9 h-9 rounded-full bg-[#f43f5e] shadow-md border-2 border-white dark:border-slate-800"></button>
+            <div class="mb-4">
+                <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider text-center mb-2">Tema Aplikasi</h4>
+                <div class="grid grid-cols-5 gap-2">
+                    <button onclick="applyTheme('emerald')" class="w-7 h-7 rounded-full bg-[#10b981] shadow-sm border border-white dark:border-slate-800"></button>
+                    <button onclick="applyTheme('blue')" class="w-7 h-7 rounded-full bg-[#3b82f6] shadow-sm border border-white dark:border-slate-800"></button>
+                    <button onclick="applyTheme('indigo')" class="w-7 h-7 rounded-full bg-[#6366f1] shadow-sm border border-white dark:border-slate-800"></button>
+                    <button onclick="applyTheme('violet')" class="w-7 h-7 rounded-full bg-[#8b5cf6] shadow-sm border border-white dark:border-slate-800"></button>
+                    <button onclick="applyTheme('rose')" class="w-7 h-7 rounded-full bg-[#f43f5e] shadow-sm border border-white dark:border-slate-800"></button>
                 </div>
             </div>
 
-            <div class="flex gap-3 pt-2 border-t border-slate-100 dark:border-slate-700/80">
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl text-xs">Tutup</button>
-                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold py-3 rounded-xl text-xs hover:bg-rose-100 border border-rose-200 dark:border-rose-800/50 flex items-center justify-center gap-1.5"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+            <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
+                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-bold py-2 rounded-xl text-xs hover:bg-rose-100 flex items-center justify-center gap-1"><i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar</button>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (KHUSUS SELULER / HP) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border-t border-slate-100 dark:border-slate-700/80 px-4 py-2.5 z-40 flex justify-between items-center shadow-2xl">
-        <button onclick="filterTasks('All')" class="flex flex-col items-center gap-1 text-theme-600 dark:text-theme-400">
-            <i class="fa-solid fa-list-check text-base"></i>
-            <span class="text-[9px] font-bold">Semua</span>
+    <!-- BOTTOM NAVIGATION (M-BANKING STYLE SELULER) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-5 py-2 z-40 flex justify-between items-center shadow-lg">
+        <button onclick="filterTasks('All')" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
+            <i class="fa-solid fa-list-check text-sm"></i>
+            <span class="text-[8px] font-extrabold">Semua</span>
         </button>
 
-        <button onclick="exportToPDF()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-rose-500">
-            <i class="fa-solid fa-file-pdf text-base"></i>
-            <span class="text-[9px] font-bold">PDF</span>
+        <button onclick="openAutoGenerateModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-500">
+            <i class="fa-solid fa-bolt text-sm"></i>
+            <span class="text-[8px] font-extrabold">Auto</span>
         </button>
 
         <!-- Tombol (+) Tambah Utama Mobile -->
-        <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-6 bg-theme-600 hover:bg-theme-700 text-white p-3.5 rounded-full shadow-lg shadow-theme-200 dark:shadow-none border-4 border-slate-50 dark:border-slate-900 transition active:scale-95">
-            <i class="fa-solid fa-plus text-xl"></i>
+        <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
+            <i class="fa-solid fa-plus text-base"></i>
         </button>
 
-        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-500">
-            <i class="fa-solid fa-paste text-base"></i>
-            <span class="text-[9px] font-bold">Import</span>
+        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
+            <i class="fa-solid fa-paste text-sm"></i>
+            <span class="text-[8px] font-extrabold">Import</span>
         </button>
 
-        <button onclick="openProfileModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-theme-500">
-            <i class="fa-solid fa-user text-base"></i>
-            <span class="text-[9px] font-bold">Profil</span>
+        <button onclick="openProfileModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
+            <i class="fa-solid fa-user text-sm"></i>
+            <span class="text-[8px] font-extrabold">Profil</span>
         </button>
     </nav>
 
     <!-- TOAST NOTIFIKASI -->
-    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-slate-800 dark:bg-slate-700 text-white text-sm px-5 py-2.5 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">Pesan</div>
+    <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">Pesan</div>
 
     <!-- JAVASCRIPT LOGIKA & INTEGRASI SUPABASE -->
     <script>
@@ -624,36 +625,36 @@
 
             filteredTasks.forEach(item => {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors';
+                row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors';
 
                 let roleBadge = '';
                 if (item.peran === 'Teknisi') {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">🛠️ Teknisi</span>`;
+                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🛠️ Teknisi</span>`;
                 } else if (item.peran === 'Cleaning') {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🧹 Cleaning</span>`;
+                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800">🧹 Cleaning</span>`;
                 } else {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin Teknik</span>`;
+                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                 }
 
                 row.innerHTML = `
-                    <td class="p-4 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
-                    <td class="p-4 font-bold text-slate-900 dark:text-white">${item.nama}</td>
-                    <td class="p-4">${roleBadge}</td>
-                    <td class="p-4 text-slate-600 dark:text-slate-300 font-medium">${item.tugas}</td>
-                    <td class="p-4">
-                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-theme-500 cursor-pointer">
+                    <td class="p-3 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap text-[11px]">${item.jam_mulai} - ${item.jam_selesai}</td>
+                    <td class="p-3 font-bold text-slate-900 dark:text-white text-[11px]">${item.nama}</td>
+                    <td class="p-3">${roleBadge}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300 font-semibold text-[11px] leading-snug">${item.tugas}</td>
+                    <td class="p-3">
+                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
                             <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
                             <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
                             <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
                         </select>
                     </td>
-                    <td class="p-4 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-500 transition" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
                             </button>
-                            <button onclick="deleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 transition" title="Hapus">
-                                <i class="fa-solid fa-trash-can"></i>
+                            <button onclick="deleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </div>
                     </td>
@@ -674,8 +675,8 @@
 
         function openTaskModal() {
             editingTaskId = null;
-            document.getElementById('modalTitle').innerText = "Tambah Jadwal Kerja";
-            document.getElementById('btn-save-task').innerText = "Simpan Jadwal";
+            document.getElementById('modalTitle').innerText = "Tambah Tugas Baru";
+            document.getElementById('btn-save-task').innerText = "Simpan";
             toggleModal(true);
         }
 
@@ -690,8 +691,8 @@
             document.getElementById('input-start-time').value = item.jam_mulai;
             document.getElementById('input-end-time').value = item.jam_selesai;
 
-            document.getElementById('modalTitle').innerText = "Edit Jadwal Kerja";
-            document.getElementById('btn-save-task').innerText = "Update Jadwal";
+            document.getElementById('modalTitle').innerText = "Edit Tugas";
+            document.getElementById('btn-save-task').innerText = "Update";
             toggleModal(true);
         }
 
@@ -711,19 +712,19 @@
                     nama, peran, tugas, jam_mulai, jam_selesai
                 }).eq('id', editingTaskId);
 
-                if (!error) { showToast("Jadwal diperbarui!"); fetchTasksSupabase(); toggleModal(false); } 
+                if (!error) { showToast("Tugas diperbarui!"); fetchTasksSupabase(); toggleModal(false); } 
                 else { alert("Gagal memperbarui data: " + (error.message || "")); }
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
-                if (!error) { showToast("Jadwal ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
+                if (!error) { showToast("Tugas ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
                 else { alert("Gagal menyimpan ke Supabase: " + (error.message || "")); }
             }
         });
 
-        // MODAL 2: IMPORT TEKS PASTE CHAT (DIPERBAIKI SECARA FLEKSIBEL)
+        // MODAL 2: IMPORT TEKS PASTE CHAT
         function openBulkTextModal() { document.getElementById('bulkTextModal').classList.remove('hidden'); }
         function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
 
@@ -739,7 +740,6 @@
             const bulkPayload = [];
 
             lines.forEach(line => {
-                // Regex fleksibel: Mendukung format jam titik (11.00) atau titik dua (11:00), dengan pemisah strip (-) atau titik dua (:)
                 const match = line.match(/(\d{1,2}[.:]\d{2})\s*[-–]\s*(\d{1,2}[.:]\d{2})\s*[:\s-]*\s*(.+)/);
                 if (match) {
                     const startTime = match[1].replace('.', ':');
@@ -763,18 +763,17 @@
             if (bulkPayload.length > 0) {
                 const { error } = await _supabase.from('jadwal').insert(bulkPayload);
                 if (!error) {
-                    showToast(`${bulkPayload.length} jadwal berhasil diimport!`);
+                    showToast(`${bulkPayload.length} tugas berhasil diimport!`);
                     fetchTasksSupabase();
                     closeBulkTextModal();
                     document.getElementById('bulk-text-area').value = '';
                 } else {
-                    console.error("Error Supabase:", error);
-                    alert("Gagal mengimport data. Detail error: " + (error.message || error.details || "Pastikan RLS Supabase mengizinkan Insert"));
+                    alert("Gagal mengimport data. Detail error: " + (error.message || ""));
                 }
             } else {
-                alert("Format teks tidak terdeteksi! Contoh format yang benar:\n09.30-10.00 : pengisian tandon\n10.30-11.30 : perbaikan monitor");
+                alert("Format teks tidak terdeteksi! Format:\n09.30-10.00 : pengisian tandon");
             }
-            document.getElementById('btn-process-bulk').innerText = "Proses & Simpan Semua";
+            document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
         }
 
         // MODAL 3: GENERATE SEHARIAN (07:00 - 17:00)
@@ -810,14 +809,14 @@
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
 
             if (!error) {
-                showToast("5 Jadwal harian berhasil dibuat otomatis!");
+                showToast("5 Tugas rutin otomatis dibuat!");
                 fetchTasksSupabase();
                 closeAutoGenerateModal();
             } else {
                 alert("Gagal membuat jadwal otomatis: " + (error.message || ""));
             }
 
-            document.getElementById('btn-process-gen').innerText = "Buat 5 Jadwal";
+            document.getElementById('btn-process-gen').innerText = "Generate";
         }
 
         // STATUS & COUNTER
@@ -832,12 +831,12 @@
         }
 
         async function deleteTask(id) {
-            if (confirm("Hapus jadwal ini secara permanen?")) {
+            if (confirm("Hapus tugas ini?")) {
                 const { error } = await _supabase.from('jadwal').delete().eq('id', id);
                 if (!error) {
                     globalTasks = globalTasks.filter(t => t.id != id);
                     renderTasks();
-                    showToast("Jadwal dihapus");
+                    showToast("Tugas dihapus");
                 }
             }
         }
@@ -855,7 +854,7 @@
 
         // EXPORT TO CSV
         function exportToCSV() {
-            if (globalTasks.length === 0) return alert("Tidak ada data jadwal untuk diekspor.");
+            if (globalTasks.length === 0) return alert("Tidak ada data tugas.");
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Jam Mulai,Jam Berakhir,Nama,Peran,Tugas,Status\n";
@@ -875,19 +874,19 @@
 
         // EXPORT TO PDF
         function exportToPDF() {
-            if (globalTasks.length === 0) return alert("Tidak ada data jadwal untuk diekspor.");
+            if (globalTasks.length === 0) return alert("Tidak ada data tugas.");
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
             doc.setFont("Helvetica", "bold");
-            doc.setFontSize(16);
-            doc.text("LAPORAN JADWAL OPERASIONAL HARIAN", 14, 18);
+            doc.setFontSize(14);
+            doc.text("LAPORAN JADWAL OPERASIONAL HARIAN", 14, 16);
             
             doc.setFont("Helvetica", "normal");
-            doc.setFontSize(10);
-            doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 25);
-            doc.text(`Dicetak Oleh   : ${currentUser ? currentUser.email : 'User'}`, 14, 30);
+            doc.setFontSize(9);
+            doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 22);
+            doc.text(`Petugas       : ${currentUser ? currentUser.email : 'User'}`, 14, 27);
 
             const rows = globalTasks.map((item, index) => [
                 index + 1,
@@ -899,23 +898,23 @@
             ]);
 
             doc.autoTable({
-                startY: 36,
-                head: [['No', 'Waktu', 'Nama Petugas', 'Peran/Divisi', 'Detail Tugas/Area', 'Status']],
+                startY: 32,
+                head: [['No', 'Waktu', 'Nama', 'Divisi', 'Detail Tugas', 'Status']],
                 body: rows,
-                headStyles: { fillColor: [16, 185, 129], fontStyle: 'bold', textColor: [255, 255, 255] },
-                styles: { font: 'Helvetica', fontSize: 9 },
+                headStyles: { fillColor: [5, 150, 105], fontStyle: 'bold', textColor: [255, 255, 255] },
+                styles: { font: 'Helvetica', fontSize: 8 },
                 columnStyles: {
-                    0: { cellWidth: 10, halign: 'center' },
-                    1: { cellWidth: 32 },
-                    2: { cellWidth: 35 },
-                    3: { cellWidth: 28 },
+                    0: { cellWidth: 8, halign: 'center' },
+                    1: { cellWidth: 28 },
+                    2: { cellWidth: 30 },
+                    3: { cellWidth: 25 },
                     4: { cellWidth: 'auto' },
-                    5: { cellWidth: 22, halign: 'center' }
+                    5: { cellWidth: 20, halign: 'center' }
                 }
             });
 
             doc.save(`Jadwal_Operasional_${new Date().toISOString().slice(0,10)}.pdf`);
-            showToast("Mengekspor laporan ke PDF...");
+            showToast("Mengekspor ke PDF...");
         }
 
         function shareSchedule() {
@@ -927,7 +926,7 @@
                 }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert("Link jadwal berhasil disalin ke clipboard!");
+                alert("Link disalin!");
             }
         }
 
