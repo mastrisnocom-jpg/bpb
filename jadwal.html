@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <!-- SEO & Social Meta Tags -->
     <meta name="description" content="Sistem manajemen jadwal harian operasional untuk Teknisi, Cleaning Service, dan Admin Teknik terintegrasi Supabase.">
     <meta name="keywords" content="jadwal kerja, teknisi, cleaning service, admin teknik, superapp, supabase">
     <meta name="robots" content="index, follow">
@@ -108,8 +107,16 @@
                     
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
                     
-                    <button onclick="openTaskModal()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none">
+                    <button onclick="openTaskModal()" class="w-full bg-theme-600 hover:bg-theme-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-theme-100 dark:shadow-none mb-2">
                         <i class="fa-solid fa-plus"></i> Tambah Jadwal
+                    </button>
+
+                    <button onclick="openBulkTextModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 mb-2">
+                        <i class="fa-solid fa-paste text-indigo-500"></i> Import Teks Pesan
+                    </button>
+
+                    <button onclick="openAutoGenerateModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-bolt"></i> Generate (07-17)
                     </button>
                 </nav>
             </div>
@@ -153,6 +160,14 @@
                             <option value="Admin Teknik">📋 View: Admin Teknik</option>
                         </select>
 
+                        <button onclick="openBulkTextModal()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-paste"></i> Import Teks
+                        </button>
+
+                        <button onclick="openAutoGenerateModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-bolt"></i> Auto 07-17
+                        </button>
+
                         <button onclick="exportToCSV()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-file-csv text-emerald-500"></i> Export CSV
                         </button>
@@ -166,7 +181,7 @@
                         </button>
 
                         <button onclick="openTaskModal()" class="hidden md:inline-flex bg-theme-600 hover:bg-theme-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition items-center gap-1.5 shadow-md shadow-theme-100 dark:shadow-none">
-                            <i class="fa-solid fa-plus"></i> Tambah Jadwal
+                            <i class="fa-solid fa-plus"></i> Tambah Single
                         </button>
                     </div>
                 </header>
@@ -239,7 +254,7 @@
         </main>
     </div>
 
-    <!-- POP-UP MODAL FORM JADWAL -->
+    <!-- POP-UP MODAL 1: FORM TAMBAH MANUAL (SINGLE) -->
     <div id="scheduleModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div id="modalCard" class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
             <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
@@ -291,6 +306,92 @@
         </div>
     </div>
 
+    <!-- POP-UP MODAL 2: IMPORT TEKS BANYAK (PASTE CHAT WA) -->
+    <div id="bulkTextModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl border border-slate-100 dark:border-slate-700/80">
+            <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-paste text-indigo-500"></i> Import Banyak via Teks
+                </h3>
+                <button onclick="closeBulkTextModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-400 uppercase mb-1">Nama Petugas</label>
+                    <input type="text" id="bulk-name" placeholder="Contoh: Petugas" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-400 uppercase mb-1">Peran / Divisi</label>
+                    <select id="bulk-role" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                        <option value="Teknisi">🛠️ Teknisi</option>
+                        <option value="Cleaning">🧹 Cleaning Service</option>
+                        <option value="Admin Teknik">📋 Admin Teknik</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal di Sini</label>
+                    <textarea id="bulk-text-area" rows="6" placeholder="Contoh format:&#10;11.00-12.00 pengisian tandon&#10;12.00-13.00 stand by gedung&#10;13.00-14.30 cuci outdoor" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 font-mono text-slate-800 dark:text-white focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button onclick="closeBulkTextModal()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs">Batal</button>
+                <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs">Proses & Simpan Semua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP MODAL 3: GENERATE SEHARIAN (07:00 - 17:00) -->
+    <div id="autoGenerateModal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm p-6 shadow-2xl border border-slate-100 dark:border-slate-700/80">
+            <div class="flex justify-between items-center pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/80">
+                <h3 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> Generate Jadwal (07.00 - 17.00)
+                </h3>
+                <button onclick="closeAutoGenerateModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-400 uppercase mb-1">Nama Petugas</label>
+                    <input type="text" id="gen-name" placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-400 uppercase mb-1">Peran / Divisi</label>
+                    <select id="gen-role" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-bold text-slate-800 dark:text-white">
+                        <option value="Teknisi">🛠️ Teknisi</option>
+                        <option value="Cleaning">🧹 Cleaning Service</option>
+                        <option value="Admin Teknik">📋 Admin Teknik</option>
+                    </select>
+                </div>
+
+                <div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl text-amber-800 dark:text-amber-300">
+                    <p class="font-bold mb-1">Otomatis buat 5 jam rutin:</p>
+                    <ul class="list-disc list-inside space-y-0.5 text-[11px] opacity-90">
+                        <li>07:00 - 09:00 (Persiapan & Cek Area)</li>
+                        <li>09:00 - 12:00 (Pekerjaan Lapangan)</li>
+                        <li>12:00 - 13:00 (Istirahat & Standby)</li>
+                        <li>13:00 - 15:30 (Lanjutan Maintenance)</li>
+                        <li>15:30 - 17:00 (Evaluasi & Kontrol)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-5">
+                <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs">Batal</button>
+                <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl text-xs">Buat 5 Jadwal</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL PROFIL & TEMA -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-700/80">
@@ -307,7 +408,6 @@
                 <p class="text-xs font-bold text-theme-600 dark:text-theme-400 mb-2" id="profile-email-display">email@domain.com</p>
             </div>
 
-            <!-- PILIHAN TEMA WARNA -->
             <div class="mb-6">
                 <h4 class="text-xs font-extrabold text-slate-800 dark:text-white mb-3 uppercase tracking-wider text-center">Pilih Tema Warna</h4>
                 <div class="grid grid-cols-5 gap-3">
@@ -333,14 +433,19 @@
             <span class="text-[9px] font-bold">Semua</span>
         </button>
 
+        <button onclick="openAutoGenerateModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-amber-500">
+            <i class="fa-solid fa-bolt text-lg"></i>
+            <span class="text-[9px] font-bold">Auto</span>
+        </button>
+
         <!-- Tombol (+) Tambah Utama Mobile -->
         <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-6 bg-theme-600 hover:bg-theme-700 text-white p-3.5 rounded-full shadow-lg shadow-theme-200 dark:shadow-none border-4 border-slate-50 dark:border-slate-900 transition active:scale-95">
             <i class="fa-solid fa-plus text-xl"></i>
         </button>
 
-        <button onclick="exportToCSV()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-file-csv text-lg"></i>
-            <span class="text-[9px] font-bold">Export</span>
+        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-500">
+            <i class="fa-solid fa-paste text-lg"></i>
+            <span class="text-[9px] font-bold">Import</span>
         </button>
 
         <button onclick="openProfileModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-theme-500">
@@ -354,9 +459,8 @@
 
     <!-- JAVASCRIPT LOGIKA & INTEGRASI SUPABASE -->
     <script>
-        // INI SAMA DENGAN KONFIGURASI SUPABASE ANDA
-        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
+        const SUPABASE_URL = 'https://hfzypmsizjixiyafnidz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_odb3LHDHn608mTIlCOdi9Q_jC86R5-O'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
@@ -410,7 +514,7 @@
             }
         }
 
-        // --- SISTEM AUTENTIKASI ---
+        // AUTENTIKASI
         let authMode = 'login';
         async function checkAuth() {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -480,7 +584,7 @@
             fetchTasksSupabase();
         }
 
-        // --- MANAJEMEN DATA JADWAL (SUPABASE) ---
+        // LOGIKA TABEL & DATABASE
         async function fetchTasksSupabase() {
             const { data, error } = await _supabase
                 .from('jadwal')
@@ -554,15 +658,11 @@
             updateCounters();
         }
 
+        // MODAL 1: SINGLE TASK
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
-            if (show) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-                document.getElementById('scheduleForm').reset();
-                editingTaskId = null;
-            }
+            if (show) { modal.classList.remove('hidden'); } 
+            else { modal.classList.add('hidden'); document.getElementById('scheduleForm').reset(); editingTaskId = null; }
         }
 
         function openTaskModal() {
@@ -604,30 +704,112 @@
                     nama, peran, tugas, jam_mulai, jam_selesai
                 }).eq('id', editingTaskId);
 
-                if (!error) {
-                    showToast("Jadwal berhasil diperbarui!");
-                    fetchTasksSupabase();
-                    toggleModal(false);
-                } else {
-                    alert("Gagal memperbarui data.");
-                }
+                if (!error) { showToast("Jadwal diperbarui!"); fetchTasksSupabase(); toggleModal(false); } 
+                else { alert("Gagal memperbarui data."); }
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
-                    user_id: currentUser.id,
-                    nama, peran, tugas, jam_mulai, jam_selesai,
-                    status: 'Belum'
+                    user_id: currentUser.id, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
-                if (!error) {
-                    showToast("Jadwal baru ditambahkan!");
-                    fetchTasksSupabase();
-                    toggleModal(false);
-                } else {
-                    alert("Gagal menyimpan data ke Supabase.");
-                }
+                if (!error) { showToast("Jadwal ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
+                else { alert("Gagal menyimpan ke Supabase."); }
             }
         });
 
+        // MODAL 2: IMPORT TEKS PASTE CHAT
+        function openBulkTextModal() { document.getElementById('bulkTextModal').classList.remove('hidden'); }
+        function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
+
+        async function processBulkTextImport() {
+            const name = document.getElementById('bulk-name').value || 'Petugas';
+            const role = document.getElementById('bulk-role').value;
+            const rawText = document.getElementById('bulk-text-area').value;
+
+            if (!rawText.trim()) return alert("Silakan tempel teks jadwal terlebih dahulu!");
+
+            document.getElementById('btn-process-bulk').innerText = "Memproses...";
+            const lines = rawText.split('\n');
+            const bulkPayload = [];
+
+            lines.forEach(line => {
+                const match = line.match(/(\d{2}[.:]\d{2})\s*[-–]\s*(\d{2}[.:]\d{2})\s+(.+)/);
+                if (match) {
+                    const startTime = match[1].replace('.', ':');
+                    const endTime = match[2].replace('.', ':');
+                    const taskName = match[3].trim();
+
+                    bulkPayload.push({
+                        user_id: currentUser.id,
+                        nama: name,
+                        peran: role,
+                        tugas: taskName,
+                        jam_mulai: startTime,
+                        jam_selesai: endTime,
+                        status: 'Belum'
+                    });
+                }
+            });
+
+            if (bulkPayload.length > 0) {
+                const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+                if (!error) {
+                    showToast(`${bulkPayload.length} jadwal berhasil diimport!`);
+                    fetchTasksSupabase();
+                    closeBulkTextModal();
+                    document.getElementById('bulk-text-area').value = '';
+                } else {
+                    alert("Gagal mengimport data.");
+                }
+            } else {
+                alert("Format teks tidak cocok! Gunakan format:\nHH.MM-HH.MM Deskripsi Tugas");
+            }
+            document.getElementById('btn-process-bulk').innerText = "Proses & Simpan Semua";
+        }
+
+        // MODAL 3: GENERATE SEHARIAN (07:00 - 17:00)
+        function openAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.remove('hidden'); }
+        function closeAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.add('hidden'); }
+
+        async function processAutoGenerate() {
+            const name = document.getElementById('gen-name').value;
+            const role = document.getElementById('gen-role').value;
+
+            if (!name) return alert("Silakan isi nama petugas terlebih dahulu!");
+
+            document.getElementById('btn-process-gen').innerText = "Memproses...";
+
+            const templateTasks = [
+                { jam_mulai: '07:00', jam_selesai: '09:00', tugas: 'Persiapan Alat & Cek Rutin Area' },
+                { jam_mulai: '09:00', jam_selesai: '12:00', tugas: 'Pekerjaan Utama Lapangan / Maintenance' },
+                { jam_mulai: '12:00', jam_selesai: '13:00', tugas: 'Istirahat & Standby Gedung' },
+                { jam_mulai: '13:00', jam_selesai: '15:30', tugas: 'Lanjutan Pemeliharaan & Cuci Unit' },
+                { jam_mulai: '15:30', jam_selesai: '17:00', tugas: 'Pengecekan Akhir & Kontrol Ruangan' }
+            ];
+
+            const bulkPayload = templateTasks.map(t => ({
+                user_id: currentUser.id,
+                nama: name,
+                peran: role,
+                tugas: t.tugas,
+                jam_mulai: t.jam_mulai,
+                jam_selesai: t.jam_selesai,
+                status: 'Belum'
+            }));
+
+            const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+
+            if (!error) {
+                showToast("5 Jadwal harian berhasil dibuat otomatis!");
+                fetchTasksSupabase();
+                closeAutoGenerateModal();
+            } else {
+                alert("Gagal membuat jadwal otomatis.");
+            }
+
+            document.getElementById('btn-process-gen').innerText = "Buat 5 Jadwal";
+        }
+
+        // STATUS & COUNTER
         async function updateStatus(id, newStatus) {
             const { error } = await _supabase.from('jadwal').update({ status: newStatus }).eq('id', id);
             if (!error) {
@@ -703,7 +885,6 @@
             setTimeout(() => t.classList.add('opacity-0'), 2500); 
         }
 
-        // Inisialisasi awal
         initTheme();
         checkAuth();
     </script>
