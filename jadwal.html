@@ -239,7 +239,7 @@
                     </div>
                 </section>
 
-                <!-- TABEL UTAMA JADWAL KOMPAK -->
+                <!-- TABEL UTAMA JADWAL KOMPAK (DIKELOMPOKKAN PER USER) -->
                 <main class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
@@ -629,7 +629,6 @@
         async function fetchTasksSupabase() {
             let query = _supabase.from('jadwal').select('*');
 
-            // Jika BUKAN Super Admin, hanya bisa ambil data miliknya sendiri
             if (!isSuperAdmin) {
                 query = query.eq('user_id', currentUser.id);
             }
@@ -639,7 +638,6 @@
             if (!error && data) {
                 globalTasks = data;
                 
-                // Update dropdown user filter khusus Super Admin
                 if (isSuperAdmin) {
                     populateUserFilterDropdown();
                 }
@@ -655,7 +653,7 @@
             const uniqueUsers = [...new Set(globalTasks.map(item => item.user_id))];
             
             let optionsHtml = `<option value="All">👥 Semua User (${globalTasks.length})</option>`;
-            uniqueUsers.forEach((uid, index) => {
+            uniqueUsers.forEach((uid) => {
                 const count = globalTasks.filter(t => t.user_id === uid).length;
                 optionsHtml += `<option value="${uid}">👤 User ID: ...${uid.slice(-5)} (${count})</option>`;
             });
@@ -663,6 +661,7 @@
             userFilterSelect.innerHTML = optionsHtml;
         }
 
+        // FUNGSI RENDER DENGAN PENGELOMPOKAN PETUGAS PER BAGIAN
         function renderTasks() {
             const tableBody = document.getElementById('scheduleTable');
             const emptyState = document.getElementById('emptyState');
@@ -671,6 +670,7 @@
 
             tableBody.innerHTML = '';
 
+            // 1. Filter data
             const filteredTasks = globalTasks.filter(item => {
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
@@ -683,44 +683,86 @@
                 return;
             }
 
-            filteredTasks.forEach(item => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors';
-
-                let roleBadge = '';
-                if (item.peran === 'Teknisi') {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🛠️ Teknisi</span>`;
-                } else if (item.peran === 'Cleaning') {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800">🧹 Cleaning</span>`;
-                } else {
-                    roleBadge = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
+            // 2. Kelompokkan data berdasarkan Nama Petugas
+            const groupedByUser = {};
+            filteredTasks.forEach(task => {
+                const userKey = task.nama || 'Tanpa Nama';
+                if (!groupedByUser[userKey]) {
+                    groupedByUser[userKey] = [];
                 }
+                groupedByUser[userKey].push(task);
+            });
 
-                row.innerHTML = `
-                    <td class="p-3 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap text-[11px]">${item.jam_mulai} - ${item.jam_selesai}</td>
-                    <td class="p-3 font-bold text-slate-900 dark:text-white text-[11px]">${item.nama}</td>
-                    <td class="p-3">${roleBadge}</td>
-                    <td class="p-3 text-slate-600 dark:text-slate-300 font-semibold text-[11px] leading-snug">${item.tugas}</td>
-                    <td class="p-3">
-                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
-                            <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
-                            <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
-                            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                        </select>
-                    </td>
-                    <td class="p-3 text-center">
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit">
-                                <i class="fa-solid fa-pen-to-square text-xs"></i>
-                            </button>
-                            <button onclick="deleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
+            // 3. Render per Kelompok User
+            Object.keys(groupedByUser).forEach(petugasName => {
+                const tasksOfUser = groupedByUser[petugasName];
+
+                // Header Pemisah Petugas
+                const groupHeader = document.createElement('tr');
+                groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80 dark:border-emerald-800/60';
+                groupHeader.innerHTML = `
+                    <td colspan="6" class="px-3 py-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div>
+                                    <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName}</span>
+                                    <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold ml-1">(${tasksOfUser[0]?.peran || 'Divisi'})</span>
+                                </div>
+                            </div>
+                            <span class="bg-emerald-200/60 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">
+                                ${tasksOfUser.length} Tugas
+                            </span>
                         </div>
                     </td>
                 `;
+                tableBody.appendChild(groupHeader);
 
-                tableBody.appendChild(row);
+                // Urutkan jam tugas milik petugas ini
+                tasksOfUser.sort((a, b) => a.jam_mulai.localeCompare(b.jam_mulai));
+
+                // Render baris tugas untuk petugas ini
+                tasksOfUser.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
+
+                    let roleBadge = '';
+                    if (item.peran === 'Teknisi') {
+                        roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🛠️ Teknisi</span>`;
+                    } else if (item.peran === 'Cleaning') {
+                        roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800">🧹 Cleaning</span>`;
+                    } else {
+                        roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
+                    }
+
+                    row.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap text-[11px]">${item.jam_mulai} - ${item.jam_selesai}</td>
+                        <td class="p-3 font-bold text-slate-900 dark:text-white text-[11px]">${item.nama}</td>
+                        <td class="p-3">${roleBadge}</td>
+                        <td class="p-3 text-slate-600 dark:text-slate-300 font-semibold text-[11px] leading-snug">${item.tugas}</td>
+                        <td class="p-3">
+                            <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
+                                <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                                <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
+                                <button onclick="deleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
             });
 
             updateCounters();
