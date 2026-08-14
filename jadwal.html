@@ -34,6 +34,7 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Library jsPDF & autoTable untuk Export PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
@@ -1000,71 +1001,133 @@
             renderTasks();
         }
 
-        // EXPORT TO CSV
+        // EXPORT TO CSV (DIKELOMPOKKAN PER PETUGAS & TANGGAL PRESISI)
         function exportToCSV() {
-            if (globalTasks.length === 0) return alert("Tidak ada data tugas.");
+            const selectedDate = document.getElementById('dateFilter').value;
+            const selectedRole = document.getElementById('roleFilter').value;
+            const selectedUser = document.getElementById('userFilter').value;
+
+            // 1. Ambil data yang aktif sesuai filter
+            const tasksToExport = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate || (!item.tanggal && selectedDate === todayStr);
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
+                return matchDate && matchRole && matchUser;
+            });
+
+            if (tasksToExport.length === 0) return alert("Tidak ada data tugas pada tanggal ini untuk diekspor.");
+
+            // 2. Kelompokkan per Petugas
+            const grouped = {};
+            tasksToExport.forEach(t => {
+                const key = t.nama || 'Tanpa Nama';
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(t);
+            });
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Tanggal,Jam Mulai,Jam Berakhir,Nama,Peran,Tugas,Status\n";
+            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS\n";
 
-            globalTasks.forEach(t => {
-                csvContent += `"${t.tanggal || todayStr}","${t.jam_mulai}","${t.jam_selesai}","${t.nama}","${t.peran}","${t.tugas}","${t.status}"\n`;
+            Object.keys(grouped).forEach(namaPetugas => {
+                const list = grouped[namaPetugas];
+                list.sort((a, b) => a.jam_mulai.localeCompare(b.jam_mulai));
+
+                list.forEach(t => {
+                    csvContent += `"${namaPetugas}","${t.tanggal || selectedDate}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas}","${t.status}"\n`;
+                });
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Jadwal_Operasional_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `Jadwal_Operasional_${selectedDate || 'Harian'}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        // EXPORT TO PDF
+        // EXPORT TO PDF (TAMPILAN FORMAL, RAPI PER KELOMPOK PETUGAS & TANGGAL PRESISI)
         function exportToPDF() {
-            if (globalTasks.length === 0) return alert("Tidak ada data tugas.");
+            const selectedDate = document.getElementById('dateFilter').value;
+            const selectedRole = document.getElementById('roleFilter').value;
+            const selectedUser = document.getElementById('userFilter').value;
+
+            // 1. Ambil data yang aktif sesuai filter
+            const tasksToExport = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate || (!item.tanggal && selectedDate === todayStr);
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
+                return matchDate && matchRole && matchUser;
+            });
+
+            if (tasksToExport.length === 0) return alert("Tidak ada data tugas pada tanggal ini untuk diekspor.");
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
+            // 2. Header Dokumen PDF
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(14);
             doc.text("LAPORAN JADWAL OPERASIONAL HARIAN", 14, 16);
             
             doc.setFont("Helvetica", "normal");
             doc.setFontSize(9);
-            doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 22);
-            doc.text(`Petugas       : ${currentUser ? currentUser.email : 'User'}`, 14, 27);
+            doc.text(`Tanggal Kerja : ${selectedDate || todayStr}`, 14, 22);
+            doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 27);
+            doc.text(`Dicetak Oleh   : ${currentUser ? currentUser.email : 'User'}`, 14, 32);
 
-            const rows = globalTasks.map((item, index) => [
-                index + 1,
-                item.tanggal || todayStr,
-                `${item.jam_mulai} - ${item.jam_selesai}`,
-                item.nama,
-                item.peran,
-                item.tugas,
-                item.status
-            ]);
+            // 3. Kelompokkan per Petugas
+            const grouped = {};
+            tasksToExport.forEach(t => {
+                const key = t.nama || 'Tanpa Nama';
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(t);
+            });
 
+            // 4. Susun Baris Tabel PDF dengan Section Header Petugas
+            const tableRows = [];
+            let globalNo = 1;
+
+            Object.keys(grouped).forEach(namaPetugas => {
+                const list = grouped[namaPetugas];
+                list.sort((a, b) => a.jam_mulai.localeCompare(b.jam_mulai));
+
+                // Baris Sub-Header Kelompok Nama Petugas
+                tableRows.push([
+                    { content: `PETUGAS: ${namaPetugas.toUpperCase()} (${list[0]?.peran || 'Divisi'}) - Total: ${list.length} Tugas`, colSpan: 6, styles: { fillColor: [209, 250, 229], textColor: [4, 120, 87], fontStyle: 'bold' } }
+                ]);
+
+                list.forEach((item) => {
+                    tableRows.push([
+                        globalNo++,
+                        `${item.jam_mulai} - ${item.jam_selesai}`,
+                        item.nama,
+                        item.peran,
+                        item.tugas,
+                        item.status
+                    ]);
+                });
+            });
+
+            // 5. Generasi Tabel PDF Rapi
             doc.autoTable({
-                startY: 32,
-                head: [['No', 'Tanggal', 'Waktu', 'Nama', 'Divisi', 'Detail Tugas', 'Status']],
-                body: rows,
+                startY: 37,
+                head: [['No', 'Waktu Jam', 'Nama', 'Divisi', 'Detail Tugas / Area', 'Status']],
+                body: tableRows,
                 headStyles: { fillColor: [5, 150, 105], fontStyle: 'bold', textColor: [255, 255, 255] },
-                styles: { font: 'Helvetica', fontSize: 8 },
+                styles: { font: 'Helvetica', fontSize: 8.5, cellPadding: 2.5 },
                 columnStyles: {
-                    0: { cellWidth: 8, halign: 'center' },
-                    1: { cellWidth: 22 },
-                    2: { cellWidth: 26 },
-                    3: { cellWidth: 28 },
-                    4: { cellWidth: 22 },
-                    5: { cellWidth: 'auto' },
-                    6: { cellWidth: 18, halign: 'center' }
+                    0: { cellWidth: 10, halign: 'center' },
+                    1: { cellWidth: 32 },
+                    2: { cellWidth: 30 },
+                    3: { cellWidth: 25 },
+                    4: { cellWidth: 'auto' },
+                    5: { cellWidth: 22, halign: 'center' }
                 }
             });
 
-            doc.save(`Jadwal_Operasional_${new Date().toISOString().slice(0,10)}.pdf`);
-            showToast("Mengekspor ke PDF...");
+            doc.save(`Jadwal_Operasional_${selectedDate || 'Harian'}.pdf`);
+            showToast("Mengekspor laporan PDF Rapi...");
         }
 
         function shareSchedule() {
