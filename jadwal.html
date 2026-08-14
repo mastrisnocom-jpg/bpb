@@ -128,7 +128,10 @@
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[9px] text-emerald-300 font-medium leading-none mb-0.5">Petugas:</p>
+                        <div class="flex items-center gap-1">
+                            <p class="text-[9px] text-emerald-300 font-medium leading-none mb-0.5">Petugas:</p>
+                            <span id="side-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1 rounded">ADMIN</span>
+                        </div>
                         <p class="text-[11px] font-bold text-white truncate" id="user-display-side">User</p>
                     </div>
                     <i class="fa-solid fa-gear text-emerald-400 text-[10px]"></i>
@@ -150,7 +153,10 @@
                                 <i class="fa-solid fa-wallet"></i>
                             </div>
                             <div>
-                                <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                <div class="flex items-center gap-2">
+                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                    <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
+                                </div>
                                 <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
                             </div>
                         </div>
@@ -168,12 +174,17 @@
 
                     <!-- ACTION BUTTONS KOMPAK DESKTOP -->
                     <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2 flex-wrap">
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-wrap">
                             <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none">
                                 <option value="All">🔍 Semua Divisi</option>
                                 <option value="Teknisi">🛠️ Teknisi</option>
                                 <option value="Cleaning">🧹 Cleaning</option>
                                 <option value="Admin Teknik">📋 Admin Teknik</option>
+                            </select>
+
+                            <!-- Filter Pengguna Khusus Super Admin -->
+                            <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none">
+                                <option value="All">👥 Filter: Semua User</option>
                             </select>
 
                             <button onclick="exportToCSV()" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
@@ -412,7 +423,10 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
 
-                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
+                <div class="flex items-center justify-center gap-1">
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
+                    <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">SUPER ADMIN</span>
+                </div>
                 <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400" id="profile-email-display">email@domain.com</p>
             </div>
 
@@ -471,9 +485,13 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // CONFIG EMAIL SUPER ADMIN
+        const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
+
         let currentUser = null;
         let globalTasks = [];
         let editingTaskId = null;
+        let isSuperAdmin = false;
 
         const colorPalettes = {
             emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
@@ -589,32 +607,74 @@
             document.getElementById('modal-user-name').innerText = username;
             document.getElementById('profile-email-display').innerText = currentUser.email;
 
+            // CEK STATUS SUPER ADMIN
+            if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                isSuperAdmin = true;
+                document.getElementById('superadmin-indicator').classList.remove('hidden');
+                document.getElementById('side-superadmin-badge').classList.remove('hidden');
+                document.getElementById('profile-superadmin-badge').classList.remove('hidden');
+                document.getElementById('userFilter').classList.remove('hidden');
+            } else {
+                isSuperAdmin = false;
+                document.getElementById('superadmin-indicator').classList.add('hidden');
+                document.getElementById('side-superadmin-badge').classList.add('hidden');
+                document.getElementById('profile-superadmin-badge').classList.add('hidden');
+                document.getElementById('userFilter').classList.add('hidden');
+            }
+
             fetchTasksSupabase();
         }
 
-        // LOGIKA TABEL & DATABASE
+        // LOGIKA TABEL & DATABASE SUPABASE
         async function fetchTasksSupabase() {
-            const { data, error } = await _supabase
-                .from('jadwal')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('jam_mulai', { ascending: true });
+            let query = _supabase.from('jadwal').select('*');
+
+            // Jika BUKAN Super Admin, hanya bisa ambil data miliknya sendiri
+            if (!isSuperAdmin) {
+                query = query.eq('user_id', currentUser.id);
+            }
+
+            const { data, error } = await query.order('jam_mulai', { ascending: true });
 
             if (!error && data) {
                 globalTasks = data;
+                
+                // Update dropdown user filter khusus Super Admin
+                if (isSuperAdmin) {
+                    populateUserFilterDropdown();
+                }
+
                 renderTasks();
+            } else if (error) {
+                console.error("Fetch Tasks Error:", error);
             }
+        }
+
+        function populateUserFilterDropdown() {
+            const userFilterSelect = document.getElementById('userFilter');
+            const uniqueUsers = [...new Set(globalTasks.map(item => item.user_id))];
+            
+            let optionsHtml = `<option value="All">👥 Semua User (${globalTasks.length})</option>`;
+            uniqueUsers.forEach((uid, index) => {
+                const count = globalTasks.filter(t => t.user_id === uid).length;
+                optionsHtml += `<option value="${uid}">👤 User ID: ...${uid.slice(-5)} (${count})</option>`;
+            });
+
+            userFilterSelect.innerHTML = optionsHtml;
         }
 
         function renderTasks() {
             const tableBody = document.getElementById('scheduleTable');
             const emptyState = document.getElementById('emptyState');
             const selectedRole = document.getElementById('roleFilter').value;
+            const selectedUser = document.getElementById('userFilter').value;
 
             tableBody.innerHTML = '';
 
             const filteredTasks = globalTasks.filter(item => {
-                return selectedRole === 'All' || item.peran === selectedRole;
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
+                return matchRole && matchUser;
             });
 
             if (filteredTasks.length === 0) {
