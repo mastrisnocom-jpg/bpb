@@ -172,9 +172,12 @@
                         </div>
                     </div>
 
-                    <!-- ACTION BUTTONS KOMPAK DESKTOP -->
+                    <!-- ACTION BUTTONS KOMPAK DESKTOP & FILTER TANGGAL -->
                     <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2 flex-wrap">
                         <div class="flex items-center gap-1.5 flex-wrap">
+                            <!-- Filter Tanggal -->
+                            <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none">
+
                             <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none">
                                 <option value="All">🔍 Semua Divisi</option>
                                 <option value="Teknisi">🛠️ Teknisi</option>
@@ -239,12 +242,13 @@
                     </div>
                 </section>
 
-                <!-- TABEL UTAMA JADWAL KOMPAK (DIKELOMPOKKAN PER USER) -->
+                <!-- TABEL UTAMA JADWAL KOMPAK -->
                 <main class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
+                                    <th class="p-3">Tanggal</th>
                                     <th class="p-3">Waktu</th>
                                     <th class="p-3">Petugas</th>
                                     <th class="p-3">Divisi</th>
@@ -255,9 +259,9 @@
                             </thead>
                             <tbody id="scheduleTable" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
                                 <tr id="emptyState">
-                                    <td colspan="6" class="p-6 text-center text-slate-400">
+                                    <td colspan="7" class="p-6 text-center text-slate-400">
                                         <i class="fa-solid fa-calendar-xmark text-3xl mb-1.5 opacity-40"></i>
-                                        <p class="text-[11px] font-semibold">Belum ada tugas jadwal hari ini.</p>
+                                        <p class="text-[11px] font-semibold">Belum ada tugas jadwal pada tanggal ini.</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -286,6 +290,11 @@
             </div>
 
             <form id="scheduleForm" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Tanggal Kerja</label>
+                    <input type="date" id="input-date" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                </div>
+
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Nama Petugas</label>
                     <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
@@ -339,6 +348,11 @@
 
             <div class="space-y-2.5 text-xs">
                 <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal Kerja</label>
+                    <input type="date" id="bulk-date" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                </div>
+
+                <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Petugas</label>
                     <input type="text" id="bulk-name" placeholder="Contoh: FIKRI" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                 </div>
@@ -378,6 +392,11 @@
             </div>
 
             <div class="space-y-2 text-xs">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tanggal Kerja</label>
+                    <input type="date" id="gen-date" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                </div>
+
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Petugas</label>
                     <input type="text" id="gen-name" placeholder="Contoh: Budi" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
@@ -493,6 +512,9 @@
         let editingTaskId = null;
         let isSuperAdmin = false;
 
+        // Tanggal default hari ini (YYYY-MM-DD)
+        const todayStr = new Date().toISOString().slice(0, 10);
+
         const colorPalettes = {
             emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
             blue: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a', 950: '#172554' },
@@ -526,6 +548,12 @@
             }
             const savedColor = localStorage.getItem('user-theme');
             if(savedColor) applyTheme(savedColor);
+
+            // Set Tanggal Default di Filter & Form Modal
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('input-date').value = todayStr;
+            document.getElementById('bulk-date').value = todayStr;
+            document.getElementById('gen-date').value = todayStr;
         }
 
         function toggleTheme() {
@@ -661,20 +689,22 @@
             userFilterSelect.innerHTML = optionsHtml;
         }
 
-        // FUNGSI RENDER DENGAN PENGELOMPOKAN PETUGAS PER BAGIAN
+        // FUNGSI RENDER DENGAN FILTER TANGGAL & PENGELOMPOKAN PETUGAS
         function renderTasks() {
             const tableBody = document.getElementById('scheduleTable');
             const emptyState = document.getElementById('emptyState');
             const selectedRole = document.getElementById('roleFilter').value;
             const selectedUser = document.getElementById('userFilter').value;
+            const selectedDate = document.getElementById('dateFilter').value;
 
             tableBody.innerHTML = '';
 
-            // 1. Filter data
+            // 1. Filter data berdasarkan Tanggal, Role, dan User
             const filteredTasks = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate || (!item.tanggal && selectedDate === todayStr);
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
-                return matchRole && matchUser;
+                return matchDate && matchRole && matchUser;
             });
 
             if (filteredTasks.length === 0) {
@@ -701,7 +731,7 @@
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80 dark:border-emerald-800/60';
                 groupHeader.innerHTML = `
-                    <td colspan="6" class="px-3 py-2">
+                    <td colspan="7" class="px-3 py-2">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
@@ -723,7 +753,7 @@
                 // Urutkan jam tugas milik petugas ini
                 tasksOfUser.sort((a, b) => a.jam_mulai.localeCompare(b.jam_mulai));
 
-                // Render baris tugas untuk petugas ini
+                // Render baris tugas
                 tasksOfUser.forEach(item => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
@@ -737,7 +767,10 @@
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                     }
 
+                    const formattedDate = item.tanggal || todayStr;
+
                     row.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap text-[10px]">${formattedDate}</td>
                         <td class="p-3 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap text-[11px]">${item.jam_mulai} - ${item.jam_selesai}</td>
                         <td class="p-3 font-bold text-slate-900 dark:text-white text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
@@ -777,6 +810,7 @@
 
         function openTaskModal() {
             editingTaskId = null;
+            document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
             document.getElementById('modalTitle').innerText = "Tambah Tugas Baru";
             document.getElementById('btn-save-task').innerText = "Simpan";
             toggleModal(true);
@@ -787,6 +821,7 @@
             if (!item) return;
 
             editingTaskId = item.id;
+            document.getElementById('input-date').value = item.tanggal || todayStr;
             document.getElementById('input-name').value = item.nama;
             document.getElementById('input-role').value = item.peran;
             document.getElementById('input-task').value = item.tugas;
@@ -801,6 +836,7 @@
         document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const tanggal = document.getElementById('input-date').value;
             const nama = document.getElementById('input-name').value;
             const peran = document.getElementById('input-role').value;
             const tugas = document.getElementById('input-task').value;
@@ -811,14 +847,14 @@
 
             if (editingTaskId) {
                 const { error } = await _supabase.from('jadwal').update({
-                    nama, peran, tugas, jam_mulai, jam_selesai
+                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai
                 }).eq('id', editingTaskId);
 
                 if (!error) { showToast("Tugas diperbarui!"); fetchTasksSupabase(); toggleModal(false); } 
                 else { alert("Gagal memperbarui data: " + (error.message || "")); }
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
-                    user_id: currentUser.id, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
+                    user_id: currentUser.id, tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
                 if (!error) { showToast("Tugas ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
@@ -827,10 +863,14 @@
         });
 
         // MODAL 2: IMPORT TEKS PASTE CHAT
-        function openBulkTextModal() { document.getElementById('bulkTextModal').classList.remove('hidden'); }
+        function openBulkTextModal() { 
+            document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr;
+            document.getElementById('bulkTextModal').classList.remove('hidden'); 
+        }
         function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
 
         async function processBulkTextImport() {
+            const tanggal = document.getElementById('bulk-date').value || todayStr;
             const name = document.getElementById('bulk-name').value || 'Petugas';
             const role = document.getElementById('bulk-role').value;
             const rawText = document.getElementById('bulk-text-area').value;
@@ -851,6 +891,7 @@
                     if (taskName) {
                         bulkPayload.push({
                             user_id: currentUser.id,
+                            tanggal: tanggal,
                             nama: name,
                             peran: role,
                             tugas: taskName,
@@ -879,10 +920,14 @@
         }
 
         // MODAL 3: GENERATE SEHARIAN (07:00 - 17:00)
-        function openAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.remove('hidden'); }
+        function openAutoGenerateModal() { 
+            document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr;
+            document.getElementById('autoGenerateModal').classList.remove('hidden'); 
+        }
         function closeAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.add('hidden'); }
 
         async function processAutoGenerate() {
+            const tanggal = document.getElementById('gen-date').value || todayStr;
             const name = document.getElementById('gen-name').value;
             const role = document.getElementById('gen-role').value;
 
@@ -900,6 +945,7 @@
 
             const bulkPayload = templateTasks.map(t => ({
                 user_id: currentUser.id,
+                tanggal: tanggal,
                 nama: name,
                 peran: role,
                 tugas: t.tugas,
@@ -959,10 +1005,10 @@
             if (globalTasks.length === 0) return alert("Tidak ada data tugas.");
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Jam Mulai,Jam Berakhir,Nama,Peran,Tugas,Status\n";
+            csvContent += "Tanggal,Jam Mulai,Jam Berakhir,Nama,Peran,Tugas,Status\n";
 
             globalTasks.forEach(t => {
-                csvContent += `"${t.jam_mulai}","${t.jam_selesai}","${t.nama}","${t.peran}","${t.tugas}","${t.status}"\n`;
+                csvContent += `"${t.tanggal || todayStr}","${t.jam_mulai}","${t.jam_selesai}","${t.nama}","${t.peran}","${t.tugas}","${t.status}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
@@ -992,6 +1038,7 @@
 
             const rows = globalTasks.map((item, index) => [
                 index + 1,
+                item.tanggal || todayStr,
                 `${item.jam_mulai} - ${item.jam_selesai}`,
                 item.nama,
                 item.peran,
@@ -1001,17 +1048,18 @@
 
             doc.autoTable({
                 startY: 32,
-                head: [['No', 'Waktu', 'Nama', 'Divisi', 'Detail Tugas', 'Status']],
+                head: [['No', 'Tanggal', 'Waktu', 'Nama', 'Divisi', 'Detail Tugas', 'Status']],
                 body: rows,
                 headStyles: { fillColor: [5, 150, 105], fontStyle: 'bold', textColor: [255, 255, 255] },
                 styles: { font: 'Helvetica', fontSize: 8 },
                 columnStyles: {
                     0: { cellWidth: 8, halign: 'center' },
-                    1: { cellWidth: 28 },
-                    2: { cellWidth: 30 },
-                    3: { cellWidth: 25 },
-                    4: { cellWidth: 'auto' },
-                    5: { cellWidth: 20, halign: 'center' }
+                    1: { cellWidth: 22 },
+                    2: { cellWidth: 26 },
+                    3: { cellWidth: 28 },
+                    4: { cellWidth: 22 },
+                    5: { cellWidth: 'auto' },
+                    6: { cellWidth: 18, halign: 'center' }
                 }
             });
 
