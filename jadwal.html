@@ -34,6 +34,9 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Library jsPDF & autoTable untuk Export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -169,7 +172,12 @@
                         </button>
 
                         <button onclick="exportToCSV()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-csv text-emerald-500"></i> Export CSV
+                            <i class="fa-solid fa-file-csv text-emerald-500"></i> CSV
+                        </button>
+
+                        <!-- Tombol Export PDF -->
+                        <button onclick="exportToPDF()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF
                         </button>
 
                         <button onclick="shareSchedule()" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
@@ -181,7 +189,7 @@
                         </button>
 
                         <button onclick="openTaskModal()" class="hidden md:inline-flex bg-theme-600 hover:bg-theme-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition items-center gap-1.5 shadow-md shadow-theme-100 dark:shadow-none">
-                            <i class="fa-solid fa-plus"></i> Tambah Single
+                            <i class="fa-solid fa-plus"></i> Tambah
                         </button>
                     </div>
                 </header>
@@ -427,15 +435,15 @@
     </div>
 
     <!-- BOTTOM NAVIGATION (KHUSUS SELULER / HP) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border-t border-slate-100 dark:border-slate-700/80 px-6 py-2.5 z-40 flex justify-between items-center shadow-2xl">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border-t border-slate-100 dark:border-slate-700/80 px-4 py-2.5 z-40 flex justify-between items-center shadow-2xl">
         <button onclick="filterTasks('All')" class="flex flex-col items-center gap-1 text-theme-600 dark:text-theme-400">
-            <i class="fa-solid fa-list-check text-lg"></i>
+            <i class="fa-solid fa-list-check text-base"></i>
             <span class="text-[9px] font-bold">Semua</span>
         </button>
 
-        <button onclick="openAutoGenerateModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-amber-500">
-            <i class="fa-solid fa-bolt text-lg"></i>
-            <span class="text-[9px] font-bold">Auto</span>
+        <button onclick="exportToPDF()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-rose-500">
+            <i class="fa-solid fa-file-pdf text-base"></i>
+            <span class="text-[9px] font-bold">PDF</span>
         </button>
 
         <!-- Tombol (+) Tambah Utama Mobile -->
@@ -444,12 +452,12 @@
         </button>
 
         <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-indigo-500">
-            <i class="fa-solid fa-paste text-lg"></i>
+            <i class="fa-solid fa-paste text-base"></i>
             <span class="text-[9px] font-bold">Import</span>
         </button>
 
         <button onclick="openProfileModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-theme-500">
-            <i class="fa-solid fa-user text-lg"></i>
+            <i class="fa-solid fa-user text-base"></i>
             <span class="text-[9px] font-bold">Profil</span>
         </button>
     </nav>
@@ -842,6 +850,7 @@
             renderTasks();
         }
 
+        // EXPORT TO CSV
         function exportToCSV() {
             if (globalTasks.length === 0) return alert("Tidak ada data jadwal untuk diekspor.");
 
@@ -859,6 +868,55 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // FITUR BARU: EXPORT TO PDF
+        function exportToPDF() {
+            if (globalTasks.length === 0) return alert("Tidak ada data jadwal untuk diekspor.");
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Header Dokumen PDF
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("LAPORAN JADWAL OPERASIONAL HARIAN", 14, 18);
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 25);
+            doc.text(`Dicetak Oleh   : ${currentUser ? currentUser.email : 'User'}`, 14, 30);
+
+            // Menyiapkan Data Baris untuk Tabel PDF
+            const rows = globalTasks.map((item, index) => [
+                index + 1,
+                `${item.jam_mulai} - ${item.jam_selesai}`,
+                item.nama,
+                item.peran,
+                item.tugas,
+                item.status
+            ]);
+
+            // Generasi Tabel PDF dengan autoTable
+            doc.autoTable({
+                startY: 36,
+                head: [['No', 'Waktu', 'Nama Petugas', 'Peran/Divisi', 'Detail Tugas/Area', 'Status']],
+                body: rows,
+                headStyles: { fillColor: [16, 185, 129], fontStyle: 'bold', textColor: [255, 255, 255] },
+                styles: { font: 'Helvetica', fontSize: 9 },
+                columnStyles: {
+                    0: { cellWidth: 10, halign: 'center' },
+                    1: { cellWidth: 32 },
+                    2: { cellWidth: 35 },
+                    3: { cellWidth: 28 },
+                    4: { cellWidth: 'auto' },
+                    5: { cellWidth: 22, halign: 'center' }
+                }
+            });
+
+            // Simpan Berkas PDF
+            doc.save(`Jadwal_Operasional_${new Date().toISOString().slice(0,10)}.pdf`);
+            showToast("Mengekspor laporan ke PDF...");
         }
 
         function shareSchedule() {
