@@ -167,7 +167,7 @@
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-0 md:px-6 pt-2 md:pt-4 pb-12 flex-grow">
                 
-                <!-- HEADER (DESKTOP & MOBILE WRAPPER) -->
+                <!-- HEADER -->
                 <div class="px-3.5 md:px-0">
                     <header class="mb-3 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                         <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
@@ -315,7 +315,7 @@
                         </div>
                     </div>
 
-                    <!-- TAMPILAN MOBILE FB FEED (BORDER FULL KIRI-KANAN) -->
+                    <!-- TAMPILAN MOBILE FB FEED -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
@@ -356,17 +356,15 @@
                 </div>
 
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                    <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                        <i class="fa-solid fa-circle-info text-emerald-500"></i> Ketentuan Skema Poin & Waktu
-                    </h4>
-                    <ul class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300">
-                        <li class="flex items-center justify-between"><span>🌅 Buat Jadwal Sebelum Jam 06:00</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+100 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+100 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>⚡ Status Proses</span><span class="font-extrabold text-amber-500">+50 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>⚠️ Selesai Lewat Jam Selesai</span><span class="font-extrabold text-slate-400">0 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>❌ Belum Selesai (Lewat Hari/Expired)</span><span class="font-extrabold text-rose-500">-50 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>🔥 Bonus Streak 5 Hari Berturut-turut</span><span class="font-extrabold text-teal-600 dark:text-teal-400">+200 Poin</span></li>
-                    </ul>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info text-emerald-500"></i> Ketentuan Skema Poin & Waktu
+                        </h4>
+                        <button id="btnEditPointScheme" onclick="closeEarningsModal(); openBudgetConfigModal();" class="hidden text-[10px] font-extrabold text-amber-500 hover:underline">
+                            <i class="fa-solid fa-pen mr-0.5"></i> Edit
+                        </button>
+                    </div>
+                    <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
                 </div>
 
                 <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
@@ -391,37 +389,69 @@
         </div>
     </div>
 
-    <!-- MODAL SETTING ANGGARAN (KHUSUS SUPER ADMIN) -->
+    <!-- MODAL SETTING ANGGARAN & SKEMA POIN (KHUSUS SUPER ADMIN) -->
     <div id="budgetConfigModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-1.5">
                     <i class="fa-solid fa-coins text-amber-500"></i>
-                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pengaturan Anggaran (Admin)</h3>
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pengaturan Anggaran & Poin</h3>
                 </div>
                 <button onclick="closeBudgetConfigModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <form id="formBudgetConfig" class="space-y-3 text-xs">
+            <form id="formBudgetConfig" class="space-y-3 text-xs overflow-y-auto pr-1 flex-1">
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Total Anggaran Bulanan (Rp)</label>
                     <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tarif per 100 Poin (Rp)</label>
-                    <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tarif / 100 Poin (Rp)</label>
+                        <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Max Tugas/Hari</label>
+                        <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Maksimal Tugas / Hari / Orang</label>
-                    <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                <!-- EDIT SKEMA NILAI POIN -->
+                <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Penyesuaian Nilai Poin</label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🌅 Buat &lt;06:00</span>
+                            <input type="number" id="inputPointsEarly" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">✅ Selesai Tepat Jam</span>
+                            <input type="number" id="inputPointsOnTime" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚡ Status Proses</span>
+                            <input type="number" id="inputPointsProcess" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚠️ Selesai Lewat Jam</span>
+                            <input type="number" id="inputPointsLate" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">❌ Expired (Lewat Hari)</span>
+                            <input type="number" id="inputPointsExpired" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🔥 Streak 5 Hari</span>
+                            <input type="number" id="inputPointsStreak" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[10px] leading-snug">
-                    <i class="fa-solid fa-info-circle mr-1"></i> Data anggaran ini bersifat internal super admin dan tidak dipublikasikan ke staf umum.
+                    <i class="fa-solid fa-info-circle mr-1"></i> Perubahan nilai skema poin akan langsung mengkalkulasi ulang estimasi insentif tim secara realtime.
                 </div>
 
                 <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
@@ -481,7 +511,7 @@
         </div>
     </div>
 
-    <!-- TOAST KOMENTAR -->
+    <!-- TOAST KOMENTAR / NOTIFIKASI -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
             <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -784,7 +814,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION STYLE M-BANKING CURVED DOCK -->
+    <!-- BOTTOM NAVIGATION STYLE DOCK -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 select-none filter drop-shadow-[0_-6px_16px_rgba(0,0,0,0.08)]">
         <div class="relative w-full h-[66px]">
             <svg class="w-full h-full text-white dark:text-slate-900 transition-colors duration-300 fill-current" viewBox="0 0 375 66" preserveAspectRatio="none">
@@ -874,11 +904,17 @@
         let onlineUsersState = {};
         let presenceChannel = null;
 
-        // PENGATURAN ANGGARAN & REWARD
+        // PENGATURAN ANGGARAN & REWARD DEFAULT
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
-            maxDailyTasks: 5
+            maxDailyTasks: 5,
+            pointsEarly: 100,
+            pointsOnTime: 100,
+            pointsProcess: 50,
+            pointsLate: 0,
+            pointsExpired: -50,
+            pointsStreak: 200
         };
 
         const localNow = new Date();
@@ -909,13 +945,11 @@
             return dateStr;
         }
 
-        // VALIDASI HARI LEWAT (EXPIRED)
         function isTaskExpired(taskDate) {
             if (!taskDate) return false;
             return taskDate < todayStr;
         }
 
-        // CEK APAKAH WAKTU PENYELESAIAN MELEBIHI JAM BERAKHIR TUGAS
         function isCompletedLate(task) {
             if (task.status !== 'Selesai') return false;
             if (isTaskExpired(task.tanggal)) return true;
@@ -930,7 +964,6 @@
             return false;
         }
 
-        // CEK APAKAH JADWAL DIBUAT SEBELUM JAM 06:00 PAGI
         function isCreatedBefore6AM(task) {
             if (!task.created_at) return false;
             const createDate = new Date(task.created_at);
@@ -939,7 +972,6 @@
             return (hour < 6) || (hour === 6 && minute === 0);
         }
 
-        // HELPER AVATAR GOOGLE PROFILE
         function getAvatarUrl(userObj) {
             return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
         }
@@ -952,7 +984,30 @@
             return `<div class="${sizeClass} rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">${initial}</div>`;
         }
 
-        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD
+        // RENDER LIST KETENTUAN SKEMA POIN DINAMIS
+        function renderPointSchemeList() {
+            const list = document.getElementById('pointSchemeList');
+            if (!list) return;
+
+            if (isSuperAdmin) {
+                document.getElementById('btnEditPointScheme')?.classList.remove('hidden');
+            } else {
+                document.getElementById('btnEditPointScheme')?.classList.add('hidden');
+            }
+
+            const expiredSign = budgetSettings.pointsExpired >= 0 ? `+${budgetSettings.pointsExpired}` : `${budgetSettings.pointsExpired}`;
+
+            list.innerHTML = `
+                <li class="flex items-center justify-between"><span>🌅 Buat Jadwal Sebelum Jam 06:00</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsEarly} Poin</span></li>
+                <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚡ Status Proses</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsProcess} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚠️ Selesai Lewat Jam Selesai</span><span class="font-extrabold text-slate-400">${budgetSettings.pointsLate} Poin</span></li>
+                <li class="flex items-center justify-between"><span>❌ Belum Selesai (Lewat Hari/Expired)</span><span class="font-extrabold text-rose-500">${expiredSign} Poin</span></li>
+                <li class="flex items-center justify-between"><span>🔥 Bonus Streak 5 Hari Berturut-turut</span><span class="font-extrabold text-teal-600 dark:text-teal-400">+${budgetSettings.pointsStreak} Poin</span></li>
+            `;
+        }
+
+        // LOAD BUDGET & POINT SETTINGS DARI SUPABASE
         async function loadBudgetSettings() {
             try {
                 const { data, error } = await _supabase
@@ -962,9 +1017,13 @@
                     .single();
 
                 if (!error && data) {
-                    budgetSettings.monthlyBudget = Number(data.monthly_budget) || 100000;
-                    budgetSettings.ratePerTask = Number(data.rate_per_task) || 10;
-                    budgetSettings.maxDailyTasks = Number(data.max_daily_tasks) || 5;
+                    if (data.config_data && typeof data.config_data === 'object') {
+                        budgetSettings = Object.assign(budgetSettings, data.config_data);
+                    } else {
+                        budgetSettings.monthlyBudget = Number(data.monthly_budget) || budgetSettings.monthlyBudget;
+                        budgetSettings.ratePerTask = Number(data.rate_per_task) || budgetSettings.ratePerTask;
+                        budgetSettings.maxDailyTasks = Number(data.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                    }
                     localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
                 } else {
                     const saved = localStorage.getItem('mops_budget_settings');
@@ -974,6 +1033,7 @@
                 const saved = localStorage.getItem('mops_budget_settings');
                 if (saved) budgetSettings = Object.assign(budgetSettings, JSON.parse(saved));
             }
+            renderPointSchemeList();
         }
 
         function setupAppConfigRealtime() {
@@ -981,9 +1041,14 @@
             appConfigSubscription = _supabase.channel('public:app_config')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
                     if (payload.new && payload.new.id === 'budget_settings') {
-                        budgetSettings.monthlyBudget = Number(payload.new.monthly_budget);
-                        budgetSettings.ratePerTask = Number(payload.new.rate_per_task);
-                        budgetSettings.maxDailyTasks = Number(payload.new.max_daily_tasks);
+                        if (payload.new.config_data && typeof payload.new.config_data === 'object') {
+                            budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
+                        } else {
+                            budgetSettings.monthlyBudget = Number(payload.new.monthly_budget) || budgetSettings.monthlyBudget;
+                            budgetSettings.ratePerTask = Number(payload.new.rate_per_task) || budgetSettings.ratePerTask;
+                            budgetSettings.maxDailyTasks = Number(payload.new.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                        }
+                        renderPointSchemeList();
                         calculateAndRenderEarnings();
                     }
                 })
@@ -995,6 +1060,14 @@
             document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
             document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
             document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+
+            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
+            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
+            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
+            document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
+            document.getElementById('inputPointsExpired').value = budgetSettings.pointsExpired;
+            document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
+
             document.getElementById('budgetConfigModal').classList.remove('hidden');
         }
 
@@ -1002,38 +1075,47 @@
             document.getElementById('budgetConfigModal').classList.add('hidden');
         }
 
-        // SIMPAN PENGATURAN ANGGARAN
+        // SIMPAN PENGATURAN ANGGARAN & SKEMA POIN
         document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const monthlyBudget = parseInt(document.getElementById('inputMonthlyBudget').value) || 100000;
-            const ratePerTask = parseInt(document.getElementById('inputRatePerTask').value) || 10;
-            const maxDailyTasks = parseInt(document.getElementById('inputMaxDailyTasks').value) || 5;
+            
+            const newConfig = {
+                monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
+                ratePerTask: parseInt(document.getElementById('inputRatePerTask').value) || 10,
+                maxDailyTasks: parseInt(document.getElementById('inputMaxDailyTasks').value) || 5,
+                pointsEarly: parseInt(document.getElementById('inputPointsEarly').value) || 100,
+                pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
+                pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
+                pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
+                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || -50,
+                pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200
+            };
 
             const { error } = await _supabase
                 .from('app_config')
                 .upsert({
                     id: 'budget_settings',
-                    monthly_budget: monthlyBudget,
-                    rate_per_task: ratePerTask,
-                    max_daily_tasks: maxDailyTasks,
+                    monthly_budget: newConfig.monthlyBudget,
+                    rate_per_task: newConfig.ratePerTask,
+                    max_daily_tasks: newConfig.maxDailyTasks,
+                    config_data: newConfig,
                     updated_at: new Date().toISOString()
                 });
 
             if (!error) {
-                budgetSettings.monthlyBudget = monthlyBudget;
-                budgetSettings.ratePerTask = ratePerTask;
-                budgetSettings.maxDailyTasks = maxDailyTasks;
+                budgetSettings = Object.assign(budgetSettings, newConfig);
                 localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
 
-                showToast("Pengaturan anggaran admin berhasil disimpan!");
+                showToast("Pengaturan anggaran & skema poin berhasil disimpan!");
                 closeBudgetConfigModal();
+                renderPointSchemeList();
                 calculateAndRenderEarnings();
             } else {
                 showToast("Gagal menyimpan ke cloud: " + error.message);
             }
         });
 
-        // PERHITUNGAN POIN & INSENTIF
+        // PERHITUNGAN POIN & INSENTIF BERDASARKAN SKEMA DINAMIS
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -1075,20 +1157,22 @@
                     const isExpired = isTaskExpired(taskDateStr);
 
                     if (isCreatedBefore6AM(t)) {
-                        userEarningsMap[uid].points += 100;
-                        userEarningsMap[uid].earlyBirdBonus += 100;
+                        userEarningsMap[uid].points += budgetSettings.pointsEarly;
+                        userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
                     }
 
                     if (t.status === 'Selesai') {
                         if (!isCompletedLate(t)) {
-                            userEarningsMap[uid].points += 100;
+                            userEarningsMap[uid].points += budgetSettings.pointsOnTime;
+                        } else {
+                            userEarningsMap[uid].points += budgetSettings.pointsLate;
                         }
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Proses') {
-                        userEarningsMap[uid].points += 50;
+                        userEarningsMap[uid].points += budgetSettings.pointsProcess;
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isExpired) {
-                        userEarningsMap[uid].points -= 50;
+                        userEarningsMap[uid].points += budgetSettings.pointsExpired;
                     }
                 }
             });
@@ -1100,7 +1184,7 @@
 
                 if (u.activeDates.size >= 5) {
                     const streakCount = Math.floor(u.activeDates.size / 5);
-                    u.streakBonus = streakCount * 200;
+                    u.streakBonus = streakCount * budgetSettings.pointsStreak;
                 }
 
                 const totalPoints = Math.max(0, u.points + u.streakBonus);
@@ -1116,6 +1200,7 @@
         }
 
         function openEarningsModal() {
+            renderPointSchemeList();
             const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
 
             document.getElementById('modalMyTotalEarnings').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
@@ -1178,7 +1263,6 @@
             document.getElementById('earningsModal').classList.add('hidden');
         }
 
-        // HOME JADWAL
         function goToHomeJadwal() {
             document.getElementById('dateFilter').value = todayStr;
             document.getElementById('roleFilter').value = 'All';
@@ -1341,7 +1425,6 @@
             document.getElementById('modal-user-name').innerText = username;
             document.getElementById('profile-email-display').innerText = currentUser.email;
 
-            // Render Google Avatar pada Sidebar dan Modal Profil
             if (avatarUrl) {
                 document.getElementById('user-avatar-placeholder').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
                 document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
@@ -1378,7 +1461,6 @@
             setupPresenceSync();
         }
 
-        // SUPABASE PRESENCE (STATUS ONLINE/OFFLINE)
         function setupPresenceSync() {
             if (presenceChannel) _supabase.removeChannel(presenceChannel);
 
@@ -1861,7 +1943,6 @@
             }
         });
 
-        // BAGIKAN JADWAL TERTENTU / SINGLE TASK
         function shareSpecificTask(task) {
             const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
             const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${task.nama}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
@@ -1878,7 +1959,7 @@
             }
         }
 
-        // RENDER TASKS (FB STYLE POST GROUPED FULL-WIDTH BORDER)
+        // RENDER TASKS (FB STYLE & TABEL DESKTOP DENGAN NILAI SKEMA DINAMIS)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1939,7 +2020,7 @@
                 groupedByUser[userKey].push(task);
             });
 
-            // 1. RENDER FEED MOBILE FB STYLE (1 NAMA PETUGAS DI ATAS -> DAFTAR JADWAL DENGAN IKON & WARNA STATUS)
+            // 1. RENDER FEED MOBILE FB STYLE
             Object.keys(groupedByUser).forEach(petugasName => {
                 const tasksOfUser = groupedByUser[petugasName];
                 tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
@@ -1966,7 +2047,6 @@
                     const isLate = isCompletedLate(item);
                     const isEarly = isCreatedBefore6AM(item);
 
-                    // Pewarnaan Status: Hijau (Selesai), Kuning (Proses), Merah (Belum)
                     let statusBadgeHtml = '';
                     let pointRewardBadge = '';
 
@@ -1976,19 +2056,19 @@
                             : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">✅ Selesai</span>`;
                         
                         pointRewardBadge = isLate 
-                            ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin (Terlambat)</span>` 
-                            : `<span class="font-extrabold text-[9.5px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/60">+100 Poin</span>`;
+                            ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">${budgetSettings.pointsLate} Poin (Terlambat)</span>` 
+                            : `<span class="font-extrabold text-[9.5px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/60">+${budgetSettings.pointsOnTime} Poin</span>`;
                     } else if (item.status === 'Proses') {
                         statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-700/60">⚡ Sedang Dikerjakan</span>`;
-                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60">+50 Poin</span>`;
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60">+${budgetSettings.pointsProcess} Poin</span>`;
                     } else {
                         statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-500 border border-rose-200 dark:border-rose-800">⏱️ Belum Dikerjakan</span>`;
+                        const expSign = budgetSettings.pointsExpired >= 0 ? `+${budgetSettings.pointsExpired}` : `${budgetSettings.pointsExpired}`;
                         pointRewardBadge = isPastDay 
-                            ? `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-700/60">-50 Poin (Expired)</span>` 
+                            ? `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-700/60">${expSign} Poin (Expired)</span>` 
                             : `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin</span>`;
                     }
 
-                    // Dropdown Titik 3 pada setiap tugas
                     let taskMenuDropdown = '';
                     if (isOwner && !isLocked) {
                         taskMenuDropdown = `
@@ -2016,7 +2096,7 @@
                                     <span class="font-mono font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
                                         <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
                                     </span>
-                                    ${isEarly ? '<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00 (+100 Poin)</span>' : ''}
+                                    ${isEarly ? `<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00 (+${budgetSettings.pointsEarly} Poin)</span>` : ''}
                                 </div>
                                 
                                 <div class="relative flex items-center gap-1">
@@ -2037,14 +2117,13 @@
                                 ${item.tugas}
                             </p>
 
-                            <!-- Bar Status + Poin + Icon Action per Item -->
+                            <!-- Bar Status + Poin + Icon Action -->
                             <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-slate-100/60 dark:border-slate-800/60">
                                 <div class="flex items-center gap-1.5">
                                     ${statusBadgeHtml}
                                     ${pointRewardBadge}
                                 </div>
 
-                                <!-- SEMUA DI BUAT ICON SAJA -->
                                 <div class="flex items-center gap-3">
                                     <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-xs font-bold transition active:scale-125 ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 hover:text-blue-500'}" title="Suka">
                                         <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
@@ -2066,7 +2145,6 @@
                 });
 
                 fbPostCard.innerHTML = `
-                    <!-- HEADER PROFIL SATU KALI DI ATAS (FOTO GOOGLE JIKA ADA) -->
                     <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2.5 min-w-0">
                             <div class="relative flex-shrink-0">
@@ -2091,7 +2169,6 @@
                         </span>
                     </div>
 
-                    <!-- DAFTAR JADWAL HARIAN DI BAWAH NAMA -->
                     <div class="py-1">
                         ${tasksListHtml}
                     </div>
@@ -2187,7 +2264,7 @@
                         <td class="p-3 font-mono font-bold text-[10px] text-slate-500 whitespace-nowrap">${item.tanggal || '-'}</td>
                         <td class="p-3 font-mono font-bold text-[11px] whitespace-nowrap">
                             ${item.jam_mulai} - ${item.jam_selesai}
-                            ${isEarly ? '<span class="ml-1 bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold text-[8px] px-1 rounded border border-amber-400/40" title="Dibuat sebelum jam 06:00 (+100 Poin)">🌅</span>' : ''}
+                            ${isEarly ? `<span class="ml-1 bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold text-[8px] px-1 rounded border border-amber-400/40" title="Dibuat sebelum jam 06:00 (+${budgetSettings.pointsEarly} Poin)">🌅</span>` : ''}
                         </td>
                         <td class="p-3 font-bold text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
@@ -2710,7 +2787,6 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // FORM SINGLE TASK
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
@@ -2774,14 +2850,18 @@
                     alert("Gagal memperbarui data: " + (error.message || "")); 
                 }
             } else {
-                const { error } = await _supabase.from('jadwal').insert([{
+                const insertPayload = {
                     user_id: currentUser.id,
                     user_email: currentUser.email,
-                    user_avatar: getAvatarUrl(currentUser),
                     tanggal, nama, peran, tugas, jam_mulai, jam_selesai, 
                     status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0,
                     created_at: new Date().toISOString()
-                }]);
+                };
+
+                const avatarUrl = getAvatarUrl(currentUser);
+                if (avatarUrl) insertPayload.user_avatar = avatarUrl;
+
+                const { error } = await _supabase.from('jadwal').insert([insertPayload]);
 
                 if (!error) { 
                     showToast("Tugas ditambahkan!"); 
@@ -2793,7 +2873,6 @@
             document.getElementById('btn-save-task').innerText = "Simpan";
         });
 
-        // IMPORT CHAT WA
         function openBulkTextModal() { 
             document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr;
             document.getElementById('bulkTextModal').classList.remove('hidden'); 
@@ -2822,10 +2901,9 @@
                     const taskName = match[3].trim();
 
                     if (taskName) {
-                        bulkPayload.push({
+                        const itemObj = {
                             user_id: currentUser.id,
                             user_email: currentUser.email,
-                            user_avatar: avatarUrl,
                             tanggal: tanggal,
                             nama: name,
                             peran: role,
@@ -2837,7 +2915,9 @@
                             liked_users: [],
                             comments_count: 0,
                             created_at: nowIso
-                        });
+                        };
+                        if (avatarUrl) itemObj.user_avatar = avatarUrl;
+                        bulkPayload.push(itemObj);
                     }
                 }
             });
@@ -2857,7 +2937,6 @@
             document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
         }
 
-        // AUTO GENERATE
         function openAutoGenerateModal() { 
             document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr;
             document.getElementById('autoGenerateModal').classList.remove('hidden'); 
@@ -2883,22 +2962,25 @@
 
             const nowIso = new Date().toISOString();
             const avatarUrl = getAvatarUrl(currentUser);
-            const bulkPayload = templateTasks.map(t => ({
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                user_avatar: avatarUrl,
-                tanggal: tanggal,
-                nama: name,
-                peran: role,
-                tugas: t.tugas,
-                jam_mulai: t.jam_mulai,
-                jam_selesai: t.jam_selesai,
-                status: 'Belum',
-                likes_count: 0,
-                liked_users: [],
-                comments_count: 0,
-                created_at: nowIso
-            }));
+            const bulkPayload = templateTasks.map(t => {
+                const itemObj = {
+                    user_id: currentUser.id,
+                    user_email: currentUser.email,
+                    tanggal: tanggal,
+                    nama: name,
+                    peran: role,
+                    tugas: t.tugas,
+                    jam_mulai: t.jam_mulai,
+                    jam_selesai: t.jam_selesai,
+                    status: 'Belum',
+                    likes_count: 0,
+                    liked_users: [],
+                    comments_count: 0,
+                    created_at: nowIso
+                };
+                if (avatarUrl) itemObj.user_avatar = avatarUrl;
+                return itemObj;
+            });
 
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
 
