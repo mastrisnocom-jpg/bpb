@@ -187,23 +187,19 @@
 
                         <!-- TOOLBAR ATAS HEADER -->
                         <div class="flex items-center gap-1.5">
-                            <!-- Lonceng Notifikasi + Badge Merah -->
                             <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
                                 <i class="fa-solid fa-bell"></i>
                                 <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
                             </button>
 
-                            <!-- Dompet Insentif -->
                             <button onclick="openEarningsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-400 flex items-center justify-center transition active:scale-95 text-xs" title="Dompet Pendapatan">
                                 <i class="fa-solid fa-wallet"></i>
                             </button>
 
-                            <!-- Kelola Anggaran (Super Admin) -->
                             <button id="btnHeaderBudget" onclick="openBudgetConfigModal()" class="hidden w-7 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition active:scale-95 text-xs font-bold" title="Pengaturan Anggaran">
                                 <i class="fa-solid fa-coins"></i>
                             </button>
 
-                            <!-- Home hanya di Desktop -->
                             <a href="/" title="Halaman Utama" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 items-center justify-center transition active:scale-95 text-xs">
                                 <i class="fa-solid fa-house"></i>
                             </a>
@@ -781,7 +777,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
+    <!-- BOTTOM NAVIGATION (MOBILE - 5 MENU RAPI) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
         <!-- 1. Home Jadwal -->
         <button onclick="goToHomeJadwal()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
@@ -800,10 +796,10 @@
             <i class="fa-solid fa-plus text-base"></i>
         </button>
 
-        <!-- 4. Dompet Pendapatan Mobile -->
-        <button onclick="openEarningsModal()" class="flex flex-col items-center gap-0.5 text-amber-500">
-            <i class="fa-solid fa-wallet text-sm"></i>
-            <span class="text-[8px] font-extrabold">Dompet</span>
+        <!-- 4. Import Teks WA -->
+        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
+            <i class="fa-solid fa-paste text-sm"></i>
+            <span class="text-[8px] font-extrabold">Import</span>
         </button>
 
         <!-- 5. Profil Akun -->
@@ -848,7 +844,7 @@
         let notificationsList = [];
         let unreadNotificationsCount = 0;
 
-        // PENGATURAN ANGGARAN & REWARD DARI SUPABASE
+        // PENGATURAN ANGGARAN & REWARD DEFAULT
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -888,7 +884,7 @@
             return taskDate < todayStr;
         }
 
-        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD (FALLBACK KE LOCALSTORAGE JIKA OFFLINE)
+        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD (FALLBACK KE LOCALSTORAGE)
         async function loadBudgetSettings() {
             try {
                 const { data, error } = await _supabase
@@ -938,7 +934,7 @@
             document.getElementById('budgetConfigModal').classList.add('hidden');
         }
 
-        // SIMPAN PENGATURAN ANGGARAN KE SUPABASE OLEH SUPER ADMIN
+        // SIMPAN PENGATURAN ANGGARAN KE SUPABASE (SUPER ADMIN ONLY)
         document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
             e.preventDefault();
             const monthlyBudget = parseInt(document.getElementById('inputMonthlyBudget').value) || 100000;
@@ -2016,11 +2012,12 @@
             });
         }
 
-        // LIKE & UNLIKE JADWAL
+        // FITUR LIKE VIA RPC (ANTI BENTROK RLS)
         async function toggleLikeTask(taskId) {
-            const task = globalTasks.find(t => t.id == taskId);
+            const task = globalTasks.find(t => String(t.id) === String(taskId));
             if (!task) return;
 
+            // Optimistic UI Update di frontend
             let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : [];
             const userIndex = likedUsers.indexOf(currentUser.id);
 
@@ -2030,18 +2027,22 @@
                 likedUsers.splice(userIndex, 1);
             }
 
-            const newLikesCount = likedUsers.length;
+            task.likes_count = likedUsers.length;
+            task.liked_users = likedUsers;
+            renderTasks();
 
-            const { error } = await _supabase.from('jadwal').update({
-                likes_count: newLikesCount,
-                liked_users: likedUsers
-            }).eq('id', taskId);
+            // Panggil fungsi RPC ke Supabase
+            const { data, error } = await _supabase.rpc('toggle_jadwal_like', {
+                p_jadwal_id: parseInt(taskId)
+            });
 
             if (error) {
-                showToast("Gagal menyukai tugas!");
-            } else {
-                task.likes_count = newLikesCount;
-                task.liked_users = likedUsers;
+                console.error("Like error:", error);
+                showToast("Gagal menyukai tugas: " + error.message);
+                await fetchTasksSupabase(); // Rollback
+            } else if (data) {
+                task.likes_count = data.likes_count;
+                task.liked_users = data.liked_users;
                 renderTasks();
             }
         }
@@ -2274,7 +2275,7 @@
             }
         }
 
-        // DELETE MODAL JADWAL
+        // DELETE MODAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
