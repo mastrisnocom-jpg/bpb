@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Like, Komentar Counter, dan Proteksi Status.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Notifikasi Komentar Realtime.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -248,9 +248,9 @@
                     </div>
                 </section>
 
-                <!-- CONTAINER JADWAL: CARD DI MOBILE & TABEL DI DESKTOP -->
+                <!-- CONTAINER JADWAL -->
                 <section>
-                    <!-- 1. Tampilan Desktop (Tabel) -->
+                    <!-- Desktop Table -->
                     <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -271,7 +271,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. Tampilan Mobile (Kartu Vertikal) -->
+                    <!-- Mobile Cards -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-3"></div>
                 </section>
 
@@ -283,7 +283,24 @@
         </main>
     </div>
 
-    <!-- MODAL KOMENTAR (REALTIME INTERACTION) -->
+    <!-- POP-UP NOTIFIKASI KOMENTAR REALTIME DENGAN SUARA -->
+    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
+        <div class="flex items-start gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Komentar Baru</p>
+                    <span class="text-[8px] text-slate-400">Baru saja</span>
+                </div>
+                <p id="notifSender" class="text-xs font-bold truncate">User</p>
+                <p id="notifMessage" class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 mt-0.5">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KOMENTAR -->
     <div id="commentModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
@@ -370,7 +387,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: FORM TAMBAH / EDIT SINGLE -->
+    <!-- MODAL 1: FORM SINGLE -->
     <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -592,7 +609,7 @@
         </button>
     </nav>
 
-    <!-- TOAST NOTIFIKASI -->
+    <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
     <!-- JAVASCRIPT LOGIKA LENGKAP -->
@@ -610,8 +627,11 @@
         let activeExportFormat = 'pdf';
         let realtimeSubscription = null;
         let commentsSubscription = null;
+        let globalCommentsListener = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
+        let notifiedTaskId = null;
+        let audioCtx = null;
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
@@ -644,6 +664,39 @@
         function isTaskExpired(taskDate) {
             if (!taskDate) return false;
             return taskDate < todayStr;
+        }
+
+        // AUDIO SYNTH NOTIFIKASI CHIME (TANPA FILE MP3 EKSTERNAL)
+        function playNotificationChime() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, now); // D5
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } catch (e) {
+                console.log("Audio play suppressed:", e);
+            }
+        }
+
+        function requestNotificationPermission() {
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission();
+            }
         }
 
         function applyTheme(themeName) {
@@ -749,6 +802,7 @@
         async function logout() {
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
             if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -776,12 +830,80 @@
                 document.getElementById('userFilter').classList.add('hidden');
             }
 
+            requestNotificationPermission();
             await fetchTasksSupabase();
             await handleAutoRollForwardTasks();
             setupRealtimeListener();
+            setupGlobalCommentNotificationListener();
         }
 
-        // AUTO ROLL-FORWARD TUGAS PENDING
+        // LISTENER NOTIFIKASI GLOBAL UNTUK SETIAP KOMENTAR BARU
+        function setupGlobalCommentNotificationListener() {
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
+
+            globalCommentsListener = _supabase.channel('public:jadwal_comments_global')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments' }, payload => {
+                    const newComment = payload.new;
+                    
+                    // Jangan notifikasi jika kita sendiri yang menulis komentar
+                    if (newComment.user_id === currentUser.id) return;
+
+                    // Temukan tugas yang dikomentari
+                    const targetTask = globalTasks.find(t => String(t.id) === String(newComment.jadwal_id));
+                    
+                    if (targetTask) {
+                        // Update counter lokal
+                        targetTask.comments_count = (targetTask.comments_count || 0) + 1;
+                        renderTasks();
+
+                        // Tampilkan Notifikasi jika komentar ditujukan ke tugas milik user yang sedang aktif
+                        if (targetTask.user_id === currentUser.id) {
+                            showCommentNotification(newComment, targetTask);
+                        }
+                    }
+                })
+                .subscribe();
+        }
+
+        // TAMPILKAN POPUP TOAST & AUDIO CHIME NOTIFIKASI
+        function showCommentNotification(comment, task) {
+            playNotificationChime();
+
+            const toast = document.getElementById('commentNotificationToast');
+            const senderName = comment.user_email ? comment.user_email.split('@')[0] : 'Rekan Kerja';
+            
+            document.getElementById('notifSender').innerText = `${senderName} mengomentari tugas: "${task.tugas}"`;
+            document.getElementById('notifMessage').innerText = `"${comment.comment}"`;
+            notifiedTaskId = task.id;
+
+            toast.classList.remove('hidden');
+
+            // Browser Notification (Saat tab sedang di background)
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(`Komentar baru dari ${senderName}`, {
+                    body: `${task.tugas}: "${comment.comment}"`,
+                    icon: '/icon-192.png'
+                });
+            }
+
+            // Hilang otomatis setelah 5.5 detik
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5500);
+        }
+
+        function handleNotificationClick() {
+            const toast = document.getElementById('commentNotificationToast');
+            toast.classList.add('hidden');
+            if (notifiedTaskId) {
+                const task = globalTasks.find(t => t.id == notifiedTaskId);
+                if (task) {
+                    openCommentModal(task.id, task.tugas);
+                }
+            }
+        }
+
+        // AUTO ROLL-FORWARD TUGAS PENDING DARI HARI KEMARIN
         async function handleAutoRollForwardTasks() {
             if (!currentUser) return;
             
@@ -867,7 +989,7 @@
             let query = _supabase.from('jadwal').select('*');
 
             if (!isSuperAdmin) {
-                query = query.neq('user_email', SUPER_ADMIN_EMAIL);
+                query = query.or(`user_email.neq.${SUPER_ADMIN_EMAIL},user_email.is.null`);
             }
 
             const { data, error } = await query.order('jam_mulai', { ascending: true });
@@ -906,7 +1028,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS DENGAN ANGKA COUNTER KOMENTAR
+        // RENDER TASKS (PROTEKSI LOCKING STATUS & EXPIRED 24:00)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1047,7 +1169,6 @@
                                 ${item.tugas}
                             </p>
 
-                            <!-- Social Bar: Like Counter & Comment Counter -->
                             <div class="flex items-center justify-between pt-1.5 mt-0.5 border-t border-slate-200/50 dark:border-slate-700/50">
                                 <div class="flex items-center gap-3">
                                     <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold transition active:scale-125 ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
@@ -1198,7 +1319,7 @@
             }
         }
 
-        // KOMENTAR REALTIME (TEXT ID + AUTO REFRESH COUNTER)
+        // KOMENTAR REALTIME
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId); 
             document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
@@ -1232,7 +1353,6 @@
                 return;
             }
 
-            // Sinkronkan counter lokal
             const task = globalTasks.find(t => t.id == taskId);
             if (task) {
                 task.comments_count = data ? data.length : 0;
@@ -1577,7 +1697,7 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // FORM SINGLE TASK
+        // FORM SINGLE
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
