@@ -82,6 +82,10 @@
                 Masuk dengan Google
             </button>
             <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-emerald-500 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            
+            <a href="/" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-400 hover:text-emerald-500 text-[10px] font-bold flex items-center justify-center gap-1.5 transition">
+                <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
+            </a>
         </div>
     </div>
 
@@ -102,6 +106,11 @@
                 </div>
 
                 <nav class="space-y-1">
+                    <!-- Tombol Kembali ke Halaman Utama -->
+                    <a href="/" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-200 hover:text-white transition mb-2">
+                        <i class="fa-solid fa-house text-xs"></i> Halaman Utama
+                    </a>
+
                     <button onclick="filterTasks('All')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
                         <i class="fa-solid fa-layer-group text-xs"></i> Semua Tugas
                     </button>
@@ -149,9 +158,9 @@
 
                     <div class="flex items-center justify-between relative z-10">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center text-emerald-300 text-sm">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
+                            <a href="/" title="Kembali ke Halaman Utama" class="w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-emerald-300 text-sm transition active:scale-95">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
@@ -163,6 +172,9 @@
 
                         <!-- TOOLBAR ATAS DESKTOP/MOBILE -->
                         <div class="flex items-center gap-1.5">
+                            <a href="/" title="Halaman Utama" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
+                                <i class="fa-solid fa-house"></i>
+                            </a>
                             <button onclick="toggleTheme()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
                                 <i id="theme-icon" class="fa-solid fa-moon"></i>
                             </button>
@@ -463,7 +475,7 @@
                     <ul class="list-disc list-inside space-y-0.5 opacity-90">
                         <li>07:00 - 09:00 (Persiapan & Cek Area)</li>
                         <li>09:00 - 12:00 (Pekerjaan Lapangan)</li>
-                        <li>12:00 - 13:00 (Istirahat & Standby)</li>
+                        <li>12:00 - 13:00 (Istirahat & Standby Gedung)</li>
                         <li>13:00 - 15:30 (Lanjutan Maintenance)</li>
                         <li>15:30 - 17:00 (Evaluasi & Kontrol)</li>
                     </ul>
@@ -507,23 +519,29 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
-                <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-bold py-2 rounded-xl text-xs hover:bg-rose-100 flex items-center justify-center gap-1"><i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar</button>
+            <div class="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <a href="/" class="w-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-bold py-2 rounded-xl text-xs hover:bg-emerald-100 dark:hover:bg-emerald-900/50 flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-house text-xs"></i> Kembali ke Menu Utama
+                </a>
+                <div class="flex gap-2">
+                    <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
+                    <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-bold py-2 rounded-xl text-xs hover:bg-rose-100 flex items-center justify-center gap-1"><i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- BOTTOM NAVIGATION (M-BANKING STYLE SELULER) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-5 py-2 z-40 flex justify-between items-center shadow-lg">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
+        <!-- Tombol Utama Mobile: Beranda -->
+        <a href="/" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600">
+            <i class="fa-solid fa-house text-sm"></i>
+            <span class="text-[8px] font-extrabold">Utama</span>
+        </a>
+
         <button onclick="filterTasks('All')" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
             <i class="fa-solid fa-list-check text-sm"></i>
             <span class="text-[8px] font-extrabold">Semua</span>
-        </button>
-
-        <button onclick="openAutoGenerateModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-amber-500">
-            <i class="fa-solid fa-bolt text-sm"></i>
-            <span class="text-[8px] font-extrabold">Auto</span>
         </button>
 
         <!-- Tombol (+) Tambah Utama Mobile -->
@@ -744,7 +762,6 @@
 
             globalTasks.forEach(item => {
                 const uid = item.user_id;
-                // Mengambil user_email yang tersimpan di record data
                 const email = item.user_email || `User (${uid ? uid.slice(-5) : 'unknown'})`;
                 
                 if (!userMap[uid]) {
@@ -1125,7 +1142,7 @@
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id,
-                    user_email: currentUser.email, // Simpan email user
+                    user_email: currentUser.email,
                     tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
@@ -1163,7 +1180,7 @@
                     if (taskName) {
                         bulkPayload.push({
                             user_id: currentUser.id,
-                            user_email: currentUser.email, // Simpan email user
+                            user_email: currentUser.email,
                             tanggal: tanggal,
                             nama: name,
                             peran: role,
@@ -1218,7 +1235,7 @@
 
             const bulkPayload = templateTasks.map(t => ({
                 user_id: currentUser.id,
-                user_email: currentUser.email, // Simpan email user
+                user_email: currentUser.email,
                 tanggal: tanggal,
                 nama: name,
                 peran: role,
