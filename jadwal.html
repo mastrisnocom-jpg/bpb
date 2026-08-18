@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Insentif Poin, dan Kunci Otomatis Lewat Hari.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Insentif Poin, dan Proteksi Waktu.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -359,12 +359,13 @@
                 <!-- Aturan Skema Poin -->
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                     <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                        <i class="fa-solid fa-circle-info text-emerald-500"></i> Ketentuan Skema Poin
+                        <i class="fa-solid fa-circle-info text-emerald-500"></i> Ketentuan Skema Poin & Waktu
                     </h4>
                     <ul class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300">
-                        <li class="flex items-center justify-between"><span>✅ Selesai Tepat Waktu</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+100 Poin</span></li>
+                        <li class="flex items-center justify-between"><span>🌅 Buat Jadwal Sebelum Jam 06:00</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+100 Poin</span></li>
+                        <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+100 Poin</span></li>
                         <li class="flex items-center justify-between"><span>⚡ Status Proses</span><span class="font-extrabold text-amber-500">+50 Poin</span></li>
-                        <li class="flex items-center justify-between"><span>⚠️ Selesai Terlambat</span><span class="font-extrabold text-amber-600">+50 Poin</span></li>
+                        <li class="flex items-center justify-between"><span>⚠️ Selesai Lewat Jam Selesai</span><span class="font-extrabold text-slate-400">0 Poin</span></li>
                         <li class="flex items-center justify-between"><span>❌ Belum Selesai (Lewat Hari/Expired)</span><span class="font-extrabold text-rose-500">-50 Poin</span></li>
                         <li class="flex items-center justify-between"><span>🔥 Bonus Streak 5 Hari Berturut-turut</span><span class="font-extrabold text-teal-600 dark:text-teal-400">+200 Poin</span></li>
                     </ul>
@@ -884,13 +885,37 @@
             return dateStr;
         }
 
-        // VALIDASI HARI LEWAT (EXPIRED / HARI KEMARIN KE BELAKANG)
+        // VALIDASI HARI LEWAT (EXPIRED)
         function isTaskExpired(taskDate) {
             if (!taskDate) return false;
             return taskDate < todayStr;
         }
 
-        // LOAD PENGATURAN ANGGARAN DARI SUPABASE CLOUD (ADMIN ONLY SYNC)
+        // CEK APAKAH WAKTU PENYELESAIAN MELEBIHI JAM BERAKHIR TUGAS
+        function isCompletedLate(task) {
+            if (task.status !== 'Selesai') return false;
+            if (isTaskExpired(task.tanggal)) return true;
+
+            if (task.completed_at && task.jam_selesai) {
+                const compTime = new Date(task.completed_at);
+                const compHours = String(compTime.getHours()).padStart(2, '0');
+                const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
+                const compTimeStr = `${compHours}:${compMinutes}`;
+                return compTimeStr > task.jam_selesai;
+            }
+            return false;
+        }
+
+        // CEK APAKAH JADWAL DIBUAT SEBELUM JAM 06:00 PAGI
+        function isCreatedBefore6AM(task) {
+            if (!task.created_at) return false;
+            const createDate = new Date(task.created_at);
+            const hour = createDate.getHours();
+            const minute = createDate.getMinutes();
+            return (hour < 6) || (hour === 6 && minute === 0);
+        }
+
+        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD (ADMIN ONLY SYNC)
         async function loadBudgetSettings() {
             try {
                 const { data, error } = await _supabase
@@ -971,7 +996,7 @@
             }
         });
 
-        // PERHITUNGAN POIN & INSENTIF OTOMATIS
+        // PERHITUNGAN POIN & INSENTIF DENGAN ATURAN WAKTU
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -997,6 +1022,7 @@
                         activeDates: new Set(),
                         points: 0,
                         eligibleTasks: 0,
+                        earlyBirdBonus: 0,
                         streakBonus: 0,
                         totalEarning: 0
                     };
@@ -1012,19 +1038,27 @@
 
                     const isExpired = isTaskExpired(taskDateStr);
 
-                    // SKEMA PERHITUNGAN POIN
+                    // 1. POIN PEMBUATAN JADWAL (SEBELUM JAM 06:00 PAGI = +100 POIN)
+                    if (isCreatedBefore6AM(t)) {
+                        userEarningsMap[uid].points += 100;
+                        userEarningsMap[uid].earlyBirdBonus += 100;
+                    }
+
+                    // 2. POIN PENGERJAAN TUGAS SESUAI WAKTU
                     if (t.status === 'Selesai') {
-                        if (isExpired) {
-                            userEarningsMap[uid].points += 50; // Selesai terlambat
+                        if (isCompletedLate(t)) {
+                            // Melebihi jam selesai / terlambat = 0 Poin
+                            userEarningsMap[uid].points += 0;
                         } else {
-                            userEarningsMap[uid].points += 100; // Selesai tepat waktu
+                            // Selesai tepat waktu = +100 Poin
+                            userEarningsMap[uid].points += 100;
                         }
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Proses') {
-                        userEarningsMap[uid].points += 50; // Status proses
+                        userEarningsMap[uid].points += 50; // Status proses = +50 Poin
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isExpired) {
-                        userEarningsMap[uid].points -= 50; // Belum dikerjakan (mengurangi)
+                        userEarningsMap[uid].points -= 50; // Belum dikerjakan (lewat hari) = -50 Poin
                     }
                 }
             });
@@ -1034,7 +1068,7 @@
             Object.keys(userEarningsMap).forEach(uid => {
                 const u = userEarningsMap[uid];
 
-                // Bonus streak 5 hari kerja (+200 poin)
+                // 3. BONUS STREAK 5 HARI KERJA (+200 POIN)
                 if (u.activeDates.size >= 5) {
                     const streakCount = Math.floor(u.activeDates.size / 5);
                     u.streakBonus = streakCount * 200;
@@ -1048,7 +1082,7 @@
                 totalTeamBudgetUsed += u.totalEarning;
             });
 
-            const myData = userEarningsMap[currentUser?.id] || { totalPoints: 0, points: 0, streakBonus: 0, eligibleTasks: 0, totalEarning: 0 };
+            const myData = userEarningsMap[currentUser?.id] || { totalPoints: 0, points: 0, earlyBirdBonus: 0, streakBonus: 0, eligibleTasks: 0, totalEarning: 0 };
             document.getElementById('myEarningsBadge').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
 
             return { userEarningsMap, totalTeamBudgetUsed, myData };
@@ -1058,10 +1092,10 @@
             const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
 
             document.getElementById('modalMyTotalEarnings').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
-            document.getElementById('modalMyPointsDetail').innerText = `${myData.totalPoints || 0} Poin (Poin: ${myData.points || 0}, Streak: +${myData.streakBonus || 0})`;
+            document.getElementById('modalMyPointsDetail').innerText = `${myData.totalPoints || 0} Poin (Kerja: ${myData.points || 0}, Early <06:00: +${myData.earlyBirdBonus || 0}, Streak: +${myData.streakBonus || 0})`;
             document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
 
-            // Proteksi: Total tim & rincian anggota hanya ditampilkan jika Super Admin
+            // Proteksi Admin: Info anggaran & seluruh tim hanya untuk super admin
             const adminBudgetCard = document.getElementById('adminTeamBudgetCard');
             const adminListContainer = document.getElementById('adminTeamListContainer');
 
@@ -1736,7 +1770,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS DENGAN PROTEKSI OTOMATIS TERKUNCI STATUS JIKA LEWAT HARI
+        // RENDER TASKS
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1833,9 +1867,11 @@
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
                     const isLocked = isCompleted || isPastDay;
+                    const isLate = isCompletedLate(item);
+                    const isEarly = isCreatedBefore6AM(item);
 
                     let statusColor = isCompleted 
-                        ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' 
+                        ? (isLate ? 'border-amber-400/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20')
                         : (item.status === 'Proses' 
                             ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' 
                             : (isPastDay ? 'border-rose-300/80 bg-rose-50/10 dark:bg-rose-950/10' : 'border-slate-200 dark:border-slate-700/80'));
@@ -1844,9 +1880,9 @@
                     if (!isOwner) {
                         actionButtons = `<span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Mutual Friend</span>`;
                     } else if (isPastDay && !isSuperAdmin) {
-                        actionButtons = `<span class="text-[8.5px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci (Lewat Hari)</span>`;
+                        actionButtons = `<span class="text-[8.5px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`;
                     } else if (isCompleted && !isSuperAdmin) {
-                        actionButtons = `<span class="text-[8.5px] font-extrabold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci (Selesai)</span>`;
+                        actionButtons = `<span class="text-[8.5px] font-extrabold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci</span>`;
                     } else {
                         actionButtons = `
                             <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
@@ -1871,12 +1907,12 @@
                         statusControl = `
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 ${
                                 item.status === 'Selesai' 
-                                ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800' 
+                                ? (isLate ? 'text-amber-700 bg-amber-50 dark:bg-amber-950/60 border border-amber-300' : 'text-teal-600 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800')
                                 : (item.status === 'Proses' 
                                     ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800' 
                                     : 'text-rose-500 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800')
                             }">
-                                ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                                ${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai (Lewat Jam)' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
                                 ${isLocked ? '<i class="fa-solid fa-lock text-[8px] ml-0.5 opacity-80"></i>' : ''}
                             </span>
                         `;
@@ -1885,9 +1921,12 @@
                     mobileTasksHtml += `
                         <div class="p-2.5 rounded-xl border ${statusColor} bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-1.5 transition">
                             <div class="flex items-center justify-between">
-                                <span class="text-[10px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
-                                    <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
-                                </span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
+                                        <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
+                                    </span>
+                                    ${isEarly ? '<span class="bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold text-[8px] px-1 rounded border border-amber-400/40" title="Dibuat sebelum jam 06:00 (+100 Poin)">🌅 <06:00</span>' : ''}
+                                </div>
                                 <div class="flex items-center gap-1">
                                     ${actionButtons}
                                 </div>
@@ -1945,6 +1984,8 @@
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
                     const isLocked = isCompleted || isPastDay;
+                    const isLate = isCompletedLate(item);
+                    const isEarly = isCreatedBefore6AM(item);
 
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
@@ -1971,12 +2012,12 @@
                         statusCell = `
                             <span class="text-[10px] font-bold px-2 py-1 rounded-lg flex items-center justify-center gap-1 ${
                                 item.status === 'Selesai' 
-                                ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800' 
+                                ? (isLate ? 'text-amber-700 bg-amber-50 dark:bg-amber-950/60 border border-amber-300' : 'text-teal-600 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800')
                                 : (item.status === 'Proses' 
                                     ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800' 
                                     : 'text-rose-500 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800')
                             }">
-                                ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                                ${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai (Lewat Jam)' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
                                 ${isLocked ? '<i class="fa-solid fa-lock text-[8px] opacity-80"></i>' : ''}
                             </span>
                         `;
@@ -1986,9 +2027,9 @@
                     if (!isOwner) {
                         actionCell = `<span class="text-[10px] text-slate-400 font-medium">Mutual Friend</span>`;
                     } else if (isPastDay && !isSuperAdmin) {
-                        actionCell = `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci (Lewat Hari)</span>`;
+                        actionCell = `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`;
                     } else if (isCompleted && !isSuperAdmin) {
-                        actionCell = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci (Selesai)</span>`;
+                        actionCell = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci</span>`;
                     } else {
                         actionCell = `
                             <div class="flex items-center justify-center gap-1.5">
@@ -2000,7 +2041,10 @@
 
                     row.innerHTML = `
                         <td class="p-3 font-mono font-bold text-[10px] text-slate-500 whitespace-nowrap">${item.tanggal || '-'}</td>
-                        <td class="p-3 font-mono font-bold text-[11px] whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
+                        <td class="p-3 font-mono font-bold text-[11px] whitespace-nowrap">
+                            ${item.jam_mulai} - ${item.jam_selesai}
+                            ${isEarly ? '<span class="ml-1 bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold text-[8px] px-1 rounded border border-amber-400/40" title="Dibuat sebelum jam 06:00 (+100 Poin)">🌅</span>' : ''}
+                        </td>
                         <td class="p-3 font-bold text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
                         <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
@@ -2258,7 +2302,7 @@
                 .subscribe();
         }
 
-        // UPDATE STATUS
+        // UPDATE STATUS DENGAN PENCATATAN WAKTU SELESAI
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id);
             if (!target) return;
@@ -2275,11 +2319,17 @@
                 return;
             }
 
-            const { error } = await _supabase.from('jadwal').update({ status: newStatus }).eq('id', id);
+            const updatePayload = { status: newStatus };
+            if (newStatus === 'Selesai') {
+                updatePayload.completed_at = new Date().toISOString();
+            }
+
+            const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', id);
             if (error) {
                 showToast("Gagal memperbarui status!");
             } else {
                 target.status = newStatus;
+                if (newStatus === 'Selesai') target.completed_at = updatePayload.completed_at;
                 renderTasks();
                 showToast(newStatus === 'Selesai' ? "Tugas Selesai dan otomatis dikunci!" : "Status diperbarui");
             }
@@ -2588,7 +2638,9 @@
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id,
                     user_email: currentUser.email,
-                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0
+                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, 
+                    status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0,
+                    created_at: new Date().toISOString()
                 }]);
 
                 if (!error) { 
@@ -2619,6 +2671,7 @@
             document.getElementById('btn-process-bulk').innerText = "Memproses...";
             const lines = rawText.split('\n');
             const bulkPayload = [];
+            const nowIso = new Date().toISOString();
 
             lines.forEach(line => {
                 const match = line.match(/(\d{1,2}[.:]\d{2})\s*[-–]\s*(\d{1,2}[.:]\d{2})\s*[:\s-]*\s*(.+)/);
@@ -2640,7 +2693,8 @@
                             status: 'Belum',
                             likes_count: 0,
                             liked_users: [],
-                            comments_count: 0
+                            comments_count: 0,
+                            created_at: nowIso
                         });
                     }
                 }
@@ -2685,6 +2739,7 @@
                 { jam_mulai: '15:30', jam_selesai: '17:00', tugas: 'Pengecekan Akhir & Kontrol Ruangan' }
             ];
 
+            const nowIso = new Date().toISOString();
             const bulkPayload = templateTasks.map(t => ({
                 user_id: currentUser.id,
                 user_email: currentUser.email,
@@ -2697,7 +2752,8 @@
                 status: 'Belum',
                 likes_count: 0,
                 liked_users: [],
-                comments_count: 0
+                comments_count: 0,
+                created_at: nowIso
             }));
 
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
