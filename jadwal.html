@@ -843,12 +843,14 @@
         let notifiedTaskId = null;
         let audioCtx = null;
 
-        // Data Relasi Follow & Notifikasi
+        // Data Relasi Follow & Notifikasi & Online Presence
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
         let notificationsList = [];
         let unreadNotificationsCount = 0;
+        let onlineUsersState = {};
+        let presenceChannel = null;
 
         // PENGATURAN ANGGARAN & REWARD
         let budgetSettings = {
@@ -1289,7 +1291,7 @@
 
         async function loginWithGoogle() {
             const { error } = await _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-            if (error) { const errEl = document.getElementById('auth-error'); errEl.innerText = "Gagal masuk menggunakan Google."; errEl.classList.remove('hidden'); }
+            if (error) { const errEl = document.getElementById('auth-error'); errEl.innerText = "Gagal masuk menggunakan Google."; errEl.classList.add('hidden'); }
         }
 
         async function logout() {
@@ -1299,6 +1301,7 @@
             if (followsSubscription) _supabase.removeChannel(followsSubscription);
             if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
             if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            if (presenceChannel) _supabase.removeChannel(presenceChannel);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -1340,6 +1343,41 @@
             setupFollowsRealtime();
             setupFollowNotificationListener();
             setupAppConfigRealtime();
+            setupPresenceSync();
+        }
+
+        // SUPABASE PRESENCE (STATUS ONLINE/OFFLINE)
+        function setupPresenceSync() {
+            if (presenceChannel) _supabase.removeChannel(presenceChannel);
+
+            presenceChannel = _supabase.channel('online_users_room', {
+                config: {
+                    presence: {
+                        key: currentUser.id,
+                    },
+                },
+            });
+
+            presenceChannel
+                .on('presence', { event: 'sync' }, () => {
+                    const state = presenceChannel.presenceState();
+                    onlineUsersState = {};
+                    Object.keys(state).forEach(userId => {
+                        onlineUsersState[userId] = true;
+                    });
+                    if (!document.getElementById('followsModal').classList.contains('hidden')) {
+                        renderUsersFollowModal();
+                    }
+                })
+                .subscribe(async (status) => {
+                    if (status === 'SUBSCRIBED') {
+                        await presenceChannel.track({
+                            user_id: currentUser.id,
+                            email: currentUser.email,
+                            online_at: new Date().toISOString(),
+                        });
+                    }
+                });
         }
 
         // UPDATE BADGE NOTIFIKASI
@@ -1550,6 +1588,7 @@
                 const isFollowing = myFollowings.includes(u.id);
                 const isFollower = myFollowers.includes(u.id);
                 const isMutual = isFollowing && isFollower;
+                const isOnline = !!onlineUsersState[u.id];
 
                 let statusBadge = '';
                 if (isMutual) {
@@ -1563,11 +1602,18 @@
                 
                 userRow.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                            <i class="fa-solid fa-user"></i>
+                        <div class="relative flex-shrink-0">
+                            <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <!-- Indikator Online (Hijau) / Offline (Merah) -->
+                            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
                         </div>
                         <div class="min-w-0">
-                            <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${u.nama}</p>
+                            <div class="flex items-center gap-1.5">
+                                <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${u.nama}</p>
+                                <span class="text-[9px] font-semibold ${isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">(${isOnline ? 'Online' : 'Offline'})</span>
+                            </div>
                             <div class="flex items-center gap-1 mt-0.5">
                                 <span class="text-[9px] text-slate-400 truncate">${u.email}</span>
                                 ${statusBadge}
