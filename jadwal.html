@@ -939,7 +939,7 @@
             return (hour < 6) || (hour === 6 && minute === 0);
         }
 
-        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD (ADMIN ONLY SYNC)
+        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD
         async function loadBudgetSettings() {
             try {
                 const { data, error } = await _supabase
@@ -989,7 +989,7 @@
             document.getElementById('budgetConfigModal').classList.add('hidden');
         }
 
-        // SIMPAN PENGATURAN ANGGARAN (ADMIN ONLY)
+        // SIMPAN PENGATURAN ANGGARAN
         document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
             e.preventDefault();
             const monthlyBudget = parseInt(document.getElementById('inputMonthlyBudget').value) || 100000;
@@ -1823,40 +1823,28 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        function togglePostMenu(id) {
-            const menu = document.getElementById(`post-menu-${id}`);
-            if (!menu) return;
-            const isHidden = menu.classList.contains('hidden');
-            document.querySelectorAll('[id^="post-menu-"]').forEach(el => el.classList.add('hidden'));
-            if (isHidden) {
-                menu.classList.remove('hidden');
-            }
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('[id^="post-menu-"]') && !e.target.closest('[onclick^="togglePostMenu"]')) {
-                document.querySelectorAll('[id^="post-menu-"]').forEach(el => el.classList.add('hidden'));
-            }
-        });
-
-        // BAGIKAN JADWAL SPESIFIK LANGSUNG
-        function shareSpecificTask(task) {
-            const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
-            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${task.nama}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
+        // BAGIKAN JADWAL HARIAN SPESIFIK PETUGAS
+        function shareUserScheduleDay(petugasName, tanggalStr, tasks) {
+            let textToShare = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${petugasName}\n🗓️ Tanggal: ${formatTanggalIndo(tanggalStr)}\n\n`;
+            
+            tasks.forEach((t, i) => {
+                const iconStatus = t.status === 'Selesai' ? '✅' : (t.status === 'Proses' ? '⚡' : '⏱️');
+                textToShare += `${i + 1}. [${t.jam_mulai} - ${t.jam_selesai}] ${iconStatus} ${t.tugas}\n`;
+            });
 
             if (navigator.share) {
                 navigator.share({
-                    title: `Jadwal Kerja - ${task.nama}`,
-                    text: shareText,
+                    title: `Jadwal Kerja - ${petugasName}`,
+                    text: textToShare,
                     url: window.location.href,
                 }).catch(() => {});
             } else {
-                navigator.clipboard.writeText(shareText);
-                showToast("Detail jadwal berhasil disalin ke clipboard!");
+                navigator.clipboard.writeText(textToShare);
+                showToast("Jadwal harian petugas berhasil disalin!");
             }
         }
 
-        // RENDER TASKS (DESKTOP TABEL + MOBILE FB STYLE POST CARDS FULL BORDER)
+        // RENDER TASKS (1 NAMA PETUGAS DI ATAS -> DAFTAR JADWAL DI BAWAH)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1910,153 +1898,170 @@
                 return;
             }
 
-            // 1. RENDER FEED MOBILE FB STYLE (FULL LEBAR BORDER KIRI-KANAN)
-            filteredTasks.forEach(item => {
-                const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
-                const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
-                const isLiked = likedUsers.includes(currentUser.id);
-                const likesCount = item.likes_count || 0;
-                const commentsCount = item.comments_count || 0;
-                const isOnline = !!onlineUsersState[item.user_id];
-                
-                const isCompleted = item.status === 'Selesai';
-                const isPastDay = isTaskExpired(item.tanggal);
-                const isLocked = isCompleted || isPastDay;
-                const isLate = isCompletedLate(item);
-                const isEarly = isCreatedBefore6AM(item);
+            // Kelompokkan tugas per Petugas
+            const groupedByUser = {};
+            filteredTasks.forEach(task => {
+                const userKey = task.nama || 'Tanpa Nama';
+                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
+                groupedByUser[userKey].push(task);
+            });
 
-                // Hitung estimasi perolehan poin per post
-                let pointRewardBadge = '';
-                if (isCompleted) {
-                    pointRewardBadge = isLate 
-                        ? `<span class="font-extrabold text-[10px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin (Terlambat)</span>` 
-                        : `<span class="font-extrabold text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/60">+100 Poin</span>`;
-                } else if (item.status === 'Proses') {
-                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-amber-500 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60">+50 Poin</span>`;
-                } else if (item.status === 'Belum' && isPastDay) {
-                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-700/60">-50 Poin (Expired)</span>`;
-                } else {
-                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin</span>`;
-                }
+            // 1. RENDER FEED MOBILE FB STYLE (FULL LEBAR BORDER)
+            Object.keys(groupedByUser).forEach(petugasName => {
+                const tasksOfUser = groupedByUser[petugasName];
+                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
 
-                let statusBadgeHtml = '';
-                if (isCompleted) {
-                    statusBadgeHtml = isLate 
-                        ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">⚠️ Selesai</span>`
-                        : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">✅ Selesai</span>`;
-                } else if (item.status === 'Proses') {
-                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-700/60">⚡ Sedang Dikerjakan</span>`;
-                } else {
-                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">⏱️ Belum Selesai</span>`;
-                }
+                const sampleTask = tasksOfUser[0];
+                const isOnline = !!onlineUsersState[sampleTask?.user_id];
+                const postDate = sampleTask?.tanggal || todayStr;
 
-                let postMenuDropdown = '';
-                if (isOwner && !isLocked) {
-                    postMenuDropdown = `
-                        <div id="post-menu-${item.id}" class="hidden absolute right-0 top-7 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
-                            <button onclick="updateStatus('${item.id}', 'Proses'); togglePostMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses
-                            </button>
-                            <button onclick="updateStatus('${item.id}', 'Selesai'); togglePostMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-check text-emerald-500 text-xs"></i> Set: Selesai
-                            </button>
-                            <button onclick="editTask('${item.id}'); togglePostMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700">
-                                <i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas
-                            </button>
-                            <button onclick="askDeleteTask('${item.id}'); togglePostMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2">
-                                <i class="fa-solid fa-trash text-xs"></i> Hapus Post
-                            </button>
-                        </div>
-                    `;
-                }
+                let totalLikesGroup = 0;
+                let totalCommentsGroup = 0;
+                let isGroupLiked = false;
+
+                tasksOfUser.forEach(t => {
+                    const likedUsers = Array.isArray(t.liked_users) ? t.liked_users : [];
+                    if (likedUsers.includes(currentUser.id)) isGroupLiked = true;
+                    totalLikesGroup += (t.likes_count || 0);
+                    totalCommentsGroup += (t.comments_count || 0);
+                });
 
                 const fbPostCard = document.createElement('div');
                 fbPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-300 dark:border-slate-800 shadow-sm transition';
 
+                let tasksListHtml = '';
+                tasksOfUser.forEach((item, index) => {
+                    const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
+                    const isCompleted = item.status === 'Selesai';
+                    const isPastDay = isTaskExpired(item.tanggal);
+                    const isLocked = isCompleted || isPastDay;
+                    const isLate = isCompletedLate(item);
+                    const isEarly = isCreatedBefore6AM(item);
+
+                    // Badge Poin di sebelah Status Selesai
+                    let pointRewardBadge = '';
+                    if (isCompleted) {
+                        pointRewardBadge = isLate 
+                            ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin (Terlambat)</span>` 
+                            : `<span class="font-extrabold text-[9.5px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/60">+100 Poin</span>`;
+                    } else if (item.status === 'Proses') {
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60">+50 Poin</span>`;
+                    } else if (item.status === 'Belum' && isPastDay) {
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-700/60">-50 Poin (Expired)</span>`;
+                    } else {
+                        pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin</span>`;
+                    }
+
+                    let statusBadgeHtml = '';
+                    if (isCompleted) {
+                        statusBadgeHtml = isLate 
+                            ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">⚠️ Selesai</span>`
+                            : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">✅ Selesai</span>`;
+                    } else if (item.status === 'Proses') {
+                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-700/60">⚡ Proses</span>`;
+                    } else {
+                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">⏱️ Belum</span>`;
+                    }
+
+                    let statusControl = '';
+                    if (isOwner && !isLocked) {
+                        statusControl = `
+                            <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
+                                <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                                <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                            </select>
+                        `;
+                    } else {
+                        statusControl = statusBadgeHtml;
+                    }
+
+                    let actionBtns = '';
+                    if (isOwner && !isLocked) {
+                        actionBtns = `
+                            <div class="flex items-center gap-2">
+                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-500 text-xs p-1" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `;
+                    }
+
+                    tasksListHtml += `
+                        <div class="py-2.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="font-mono font-bold text-[11px] text-emerald-600 dark:text-emerald-400">
+                                        <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
+                                    </span>
+                                    ${isEarly ? '<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00 (+100 Poin)</span>' : ''}
+                                </div>
+                                ${actionBtns}
+                            </div>
+
+                            <p class="text-[13px] font-medium text-slate-900 dark:text-slate-100 leading-snug break-words mb-2">
+                                ${item.tugas}
+                            </p>
+
+                            <div class="flex items-center justify-between flex-wrap gap-1.5">
+                                <div class="flex items-center gap-1.5">
+                                    ${statusControl}
+                                    ${pointRewardBadge}
+                                </div>
+                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="text-[10px] font-bold text-slate-400 hover:text-emerald-500 transition flex items-center gap-1">
+                                    <i class="fa-regular fa-comment-dots"></i>
+                                    <span>${item.comments_count || 0} komentar</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
                 fbPostCard.innerHTML = `
-                    <!-- Header Post FB: Avatar + Nama Petugas (Tanpa Divisi di Nama) + Tanggal/Waktu + Menu Titik 3 -->
-                    <div class="flex items-start justify-between relative mb-2">
+                    <!-- HEADER PROFIL FB SATU KALI DI ATAS -->
+                    <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2.5 min-w-0">
-                            <!-- Avatar dengan Online Status -->
                             <div class="relative flex-shrink-0">
                                 <div class="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-bold shadow-inner">
                                     <i class="fa-solid fa-user"></i>
                                 </div>
-                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
+                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
                             </div>
 
                             <div class="min-w-0">
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${item.nama || 'Petugas'}</h4>
-                                    ${isEarly ? '<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00 (+100 Poin)</span>' : ''}
-                                </div>
+                                <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
                                 <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium">
-                                    <span>${formatTanggalIndo(item.tanggal || todayStr)}</span>
+                                    <span>${formatTanggalIndo(postDate)}</span>
                                     <span>&bull;</span>
-                                    <span class="font-mono font-bold text-slate-600 dark:text-slate-300">${item.jam_mulai} - ${item.jam_selesai}</span>
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-bold">${tasksOfUser.length} Tugas</span>
                                     <span>&bull;</span>
                                     <i class="fa-solid fa-earth-americas text-[9px] opacity-70"></i>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Menu Titik 3 / Action -->
-                        <div class="relative">
-                            ${isOwner && !isLocked ? `
-                                <button onclick="togglePostMenu('${item.id}')" class="w-7 h-7 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 flex items-center justify-center text-sm transition">
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                </button>
-                                ${postMenuDropdown}
-                            ` : (isLocked ? `
-                                <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-[10px]" title="Terkunci">
-                                    <i class="fa-solid fa-lock"></i>
-                                </span>
-                            ` : `
-                                <span class="text-[9px] text-slate-400 font-medium px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-full">Mutual</span>
-                            `)}
-                        </div>
+                        
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+                            ${sampleTask?.peran || 'Divisi'}
+                        </span>
                     </div>
 
-                    <!-- Post Body: Teks Tugas -->
+                    <!-- DAFTAR JADWAL HARIAN DI BAWAH NAMA -->
                     <div class="py-1">
-                        <p class="text-[13px] font-normal text-slate-900 dark:text-slate-100 leading-relaxed break-words">
-                            ${item.tugas}
-                        </p>
+                        ${tasksListHtml}
                     </div>
 
-                    <!-- Status Pekerjaan + Estimasi Poin + Info Reaksi -->
-                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
-                        <div class="flex items-center gap-1.5">
-                            ${statusBadgeHtml}
-                            ${pointRewardBadge}
-                        </div>
-
-                        <div class="flex items-center gap-1.5 ml-auto">
-                            ${likesCount > 0 ? `
-                                <div class="flex items-center gap-1 text-[10px] text-slate-400 font-bold">
-                                    <span class="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[8px] shadow-sm"><i class="fa-solid fa-thumbs-up"></i></span>
-                                    <span>${likesCount}</span>
-                                </div>
-                            ` : ''}
-                            ${commentsCount > 0 ? `
-                                <span class="text-[10px] text-slate-400 font-bold ml-1">${commentsCount} komentar</span>
-                            ` : ''}
-                        </div>
-                    </div>
-
-                    <!-- Footer Action Bar FB (Like Jempol, Komentar, Share Spesifik Tugas) -->
+                    <!-- FOOTER ACTION BAR POST FB -->
                     <div class="mt-2 pt-1 border-t border-slate-100 dark:border-slate-800 grid grid-cols-3 text-center">
-                        <button onclick="toggleLikeTask('${item.id}')" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}">
-                            <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
-                            <span>Suka</span>
+                        <button onclick="toggleLikeTask('${sampleTask.id}')" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold ${isGroupLiked ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}">
+                            <i class="${isGroupLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
+                            <span>Suka ${totalLikesGroup > 0 ? `(${totalLikesGroup})` : ''}</span>
                         </button>
 
-                        <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+                        <button onclick="openCommentModal('${sampleTask.id}', '${sampleTask.tugas.replace(/'/g, "\\'")}')" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
                             <i class="fa-regular fa-comment text-sm"></i>
                             <span>Komentar</span>
                         </button>
 
-                        <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+                        <button onclick="shareUserScheduleDay('${petugasName}', '${postDate}', ${JSON.stringify(tasksOfUser).replace(/"/g, '&quot;')})" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
                             <i class="fa-solid fa-share text-sm"></i>
                             <span>Bagikan</span>
                         </button>
@@ -2067,13 +2072,6 @@
             });
 
             // 2. RENDER TABEL DESKTOP
-            const groupedByUser = {};
-            filteredTasks.forEach(task => {
-                const userKey = task.nama || 'Tanpa Nama';
-                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
-                groupedByUser[userKey].push(task);
-            });
-
             Object.keys(groupedByUser).forEach(petugasName => {
                 const tasksOfUser = groupedByUser[petugasName];
                 tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
@@ -2149,7 +2147,7 @@
                     } else {
                         actionCell = `
                             <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-emerald-600 p-1" title="Bagikan Jadwal"><i class="fa-solid fa-share"></i></button>
+                                <button onclick="shareUserScheduleDay('${item.nama}', '${item.tanggal || todayStr}', [${JSON.stringify(item).replace(/"/g, '&quot;')}])" class="text-slate-400 hover:text-emerald-600 p-1" title="Bagikan Jadwal"><i class="fa-solid fa-share"></i></button>
                                 <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
