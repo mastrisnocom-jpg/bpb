@@ -89,7 +89,7 @@
     <!-- LAYOUT UTAMA DASHBOARD -->
     <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
         
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR (DESKTOP) -->
         <aside class="hidden md:flex flex-col w-56 bg-gradient-to-b from-emerald-900 to-teal-950 text-white fixed top-0 bottom-0 left-0 p-5 z-30 justify-between shadow-xl">
             <div>
                 <div class="flex items-center gap-2.5 mb-6">
@@ -107,8 +107,8 @@
                         <i class="fa-solid fa-house text-xs"></i> Halaman Utama
                     </a>
 
-                    <button onclick="resetFilters()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
-                        <i class="fa-solid fa-layer-group text-xs"></i> Semua Tugas
+                    <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
+                        <i class="fa-solid fa-calendar-day text-xs"></i> Home Jadwal
                     </button>
 
                     <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 hover:text-white transition">
@@ -159,13 +159,14 @@
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-3.5 md:px-6 pt-4 pb-12 flex-grow">
                 
-                <!-- HEADER M-BANKING -->
+                <!-- HEADER M-BANKING (HOME DI HP DINONAKTIFKAN) -->
                 <header class="mb-3.5 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                     <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
 
                     <div class="flex items-center justify-between relative z-10">
                         <div class="flex items-center gap-2.5">
-                            <a href="/" title="Kembali ke Halaman Utama" class="w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-emerald-300 text-sm transition active:scale-95">
+                            <!-- Tombol Kembali hanya tampil di Laptop/Desktop (hidden di mobile) -->
+                            <a href="/" title="Kembali ke Halaman Utama" class="hidden md:flex w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-emerald-300 text-sm transition active:scale-95">
                                 <i class="fa-solid fa-arrow-left"></i>
                             </a>
                             <div>
@@ -177,14 +178,18 @@
                             </div>
                         </div>
 
-                        <!-- TOOLBAR ATAS DENGAN IKON LONCENG BADGE MERAH -->
+                        <!-- TOOLBAR ATAS HEADER -->
                         <div class="flex items-center gap-1.5">
-                            <!-- Tombol Lonceng Notifikasi -->
+                            <!-- Tombol Lonceng Notifikasi + Badge Merah -->
                             <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
                                 <i class="fa-solid fa-bell"></i>
-                                <!-- Badge Angka Merah -->
                                 <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
                             </button>
+
+                            <!-- Tombol Home di kanan atas HANYA tampil di Desktop (hidden di mobile) -->
+                            <a href="/" title="Halaman Utama" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 items-center justify-center transition active:scale-95 text-xs">
+                                <i class="fa-solid fa-house"></i>
+                            </a>
 
                             <button onclick="openFollowsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Kelola Teman / Follow">
                                 <i class="fa-solid fa-user-plus"></i>
@@ -299,7 +304,7 @@
         </main>
     </div>
 
-    <!-- MODAL PUSAT NOTIFIKASI (NOTIFICATION CENTER) -->
+    <!-- MODAL PUSAT NOTIFIKASI -->
     <div id="notificationsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
@@ -318,7 +323,6 @@
             </div>
 
             <div id="notificationsList" class="flex-1 overflow-y-auto space-y-2 py-1 pr-1 min-h-[160px] max-h-[320px] text-xs">
-                <!-- List Notifikasi terisi otomatis -->
             </div>
 
             <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
@@ -655,34 +659,32 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
+    <!-- BOTTOM NAVIGATION (MOBILE - 5 MENU RAPI) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
-        <a href="/" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600">
-            <i class="fa-solid fa-house text-sm"></i>
-            <span class="text-[8px] font-extrabold">Utama</span>
-        </a>
-
-        <button onclick="resetFilters()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
-            <i class="fa-solid fa-list-check text-sm"></i>
-            <span class="text-[8px] font-extrabold">Semua</span>
+        <!-- 1. Home Jadwal -->
+        <button onclick="goToHomeJadwal()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
+            <i class="fa-solid fa-calendar-day text-sm"></i>
+            <span class="text-[8px] font-extrabold whitespace-nowrap">Home Jadwal</span>
         </button>
 
-        <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
-            <i class="fa-solid fa-plus text-base"></i>
-        </button>
-
-        <!-- Tombol Lonceng Notifikasi Mobile -->
-        <button onclick="openNotificationsModal()" class="flex flex-col items-center gap-0.5 text-amber-500 relative">
-            <i class="fa-solid fa-bell text-sm"></i>
-            <span id="bottomNotifBadge" class="hidden absolute -top-1 right-2 bg-rose-600 text-white text-[7px] font-extrabold px-1 rounded-full">0</span>
-            <span class="text-[8px] font-extrabold">Notif</span>
-        </button>
-
+        <!-- 2. Relasi Teman / Follow -->
         <button onclick="openFollowsModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
             <i class="fa-solid fa-user-group text-sm"></i>
             <span class="text-[8px] font-extrabold">Teman</span>
         </button>
 
+        <!-- 3. (+) Tambah Jadwal Utama -->
+        <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
+            <i class="fa-solid fa-plus text-base"></i>
+        </button>
+
+        <!-- 4. Import Teks WA -->
+        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
+            <i class="fa-solid fa-paste text-sm"></i>
+            <span class="text-[8px] font-extrabold">Import</span>
+        </button>
+
+        <!-- 5. Profil Akun -->
         <button onclick="openProfileModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
             <i class="fa-solid fa-user text-sm"></i>
             <span class="text-[8px] font-extrabold">Profil</span>
@@ -716,7 +718,6 @@
         let notifiedTaskId = null;
         let audioCtx = null;
 
-        // Data Relasi Follow & Notifikasi
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -754,6 +755,16 @@
         function isTaskExpired(taskDate) {
             if (!taskDate) return false;
             return taskDate < todayStr;
+        }
+
+        // FUNGSI HOME JADWAL (RESET KE HARI INI & RENDER SEMUA)
+        function goToHomeJadwal() {
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            if (isSuperAdmin) document.getElementById('userFilter').value = 'All';
+            renderTasks();
+            showToast("Menampilkan jadwal hari ini");
         }
 
         function playNotificationChime() {
@@ -935,11 +946,9 @@
         function updateNotificationBadge() {
             const headerBadge = document.getElementById('headerNotifBadge');
             const sideBadge = document.getElementById('sideNotifBadge');
-            const bottomBadge = document.getElementById('bottomNotifBadge');
 
             if (unreadNotificationsCount > 0) {
                 const countText = unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount;
-                
                 headerBadge.innerText = countText;
                 headerBadge.classList.remove('hidden');
 
@@ -947,14 +956,9 @@
                     sideBadge.innerText = countText;
                     sideBadge.classList.remove('hidden');
                 }
-                if (bottomBadge) {
-                    bottomBadge.innerText = countText;
-                    bottomBadge.classList.remove('hidden');
-                }
             } else {
                 headerBadge.classList.add('hidden');
                 if (sideBadge) sideBadge.classList.add('hidden');
-                if (bottomBadge) bottomBadge.classList.add('hidden');
             }
         }
 
@@ -992,7 +996,7 @@
                 return;
             }
 
-            notificationsList.forEach((n, idx) => {
+            notificationsList.forEach((n) => {
                 const item = document.createElement('div');
                 item.className = `p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition`;
                 
@@ -1075,7 +1079,6 @@
             const senderName = followData.follower_email ? followData.follower_email.split('@')[0] : 'Seseorang';
             const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-            // Simpan ke daftar notifikasi & update badge
             notificationsList.unshift({
                 type: 'follow',
                 title: 'Pengikut Baru! 🎉',
@@ -1086,7 +1089,6 @@
             unreadNotificationsCount++;
             updateNotificationBadge();
 
-            // Toast Pop-up
             const toast = document.getElementById('commentNotificationToast');
             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-user-plus';
@@ -1247,7 +1249,6 @@
             const senderName = comment.user_email ? comment.user_email.split('@')[0] : 'Rekan Kerja';
             const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-            // Simpan ke daftar notifikasi & update badge
             notificationsList.unshift({
                 type: 'comment',
                 title: `Komentar Baru dari ${senderName}`,
@@ -1258,7 +1259,6 @@
             unreadNotificationsCount++;
             updateNotificationBadge();
 
-            // Toast Pop-up
             const toast = document.getElementById('commentNotificationToast');
             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-comments';
@@ -1420,7 +1420,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS (FILTER MUTUAL FOLLOW)
+        // RENDER TASKS
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
