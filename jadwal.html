@@ -45,7 +45,7 @@
         ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-24 md:pb-8">
+<body class="min-h-screen bg-slate-200 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-24 md:pb-8">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
@@ -165,142 +165,141 @@
 
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
-            <div class="w-full mx-auto px-3.5 md:px-6 pt-4 pb-12 flex-grow">
+            <div class="w-full mx-auto px-0 md:px-6 pt-2 md:pt-4 pb-12 flex-grow">
                 
-                <!-- HEADER -->
-                <header class="mb-3.5 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+                <!-- HEADER (DESKTOP & MOBILE WRAPPER) -->
+                <div class="px-3.5 md:px-0">
+                    <header class="mb-3 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
 
-                    <div class="flex items-center justify-between relative z-10">
-                        <div class="flex items-center gap-2.5">
-                            <a href="/" title="Kembali ke Halaman Utama" class="hidden md:flex w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-emerald-300 text-sm transition active:scale-95">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </a>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
-                                    <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
+                        <div class="flex items-center justify-between relative z-10">
+                            <div class="flex items-center gap-2.5">
+                                <a href="/" title="Kembali ke Halaman Utama" class="hidden md:flex w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-emerald-300 text-sm transition active:scale-95">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </a>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                        <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
+                                    </div>
+                                    <p class="text-[9px] font-semibold text-emerald-200">Manajemen Tugas & Poin Insentif</p>
                                 </div>
-                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Tugas & Poin Insentif</p>
+                            </div>
+
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
+                                    <i class="fa-solid fa-bell"></i>
+                                    <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
+                                </button>
+
+                                <button onclick="openEarningsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-400 flex items-center justify-center transition active:scale-95 text-xs" title="Dompet Insentif">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </button>
+
+                                <button id="btnHeaderBudget" onclick="openBudgetConfigModal()" class="hidden w-7 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition active:scale-95 text-xs font-bold" title="Pengaturan Anggaran (Admin)">
+                                    <i class="fa-solid fa-coins"></i>
+                                </button>
+
+                                <a href="/" title="Halaman Utama" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 items-center justify-center transition active:scale-95 text-xs">
+                                    <i class="fa-solid fa-house"></i>
+                                </a>
+
+                                <button onclick="openFollowsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Kelola Teman / Follow">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                </button>
+                                <button onclick="toggleTheme()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
+                                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- TOOLBAR ATAS HEADER -->
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
-                                <i class="fa-solid fa-bell"></i>
-                                <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
-                            </button>
+                        <!-- ACTION BUTTONS & FILTER RESPONSIVE -->
+                        <div class="mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
+                            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
+                                <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
 
-                            <button onclick="openEarningsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-400 flex items-center justify-center transition active:scale-95 text-xs" title="Dompet Insentif">
+                                <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
+                                    <option value="All">🔍 Semua Divisi</option>
+                                    <option value="Teknisi">🛠️ Teknisi</option>
+                                    <option value="Cleaning">🧹 Cleaning</option>
+                                    <option value="Admin Teknik">📋 Admin Teknik</option>
+                                </select>
+
+                                <select id="statusFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
+                                    <option value="All">📌 Semua Status</option>
+                                    <option value="Belum">⏱️ Belum</option>
+                                    <option value="Proses">⚡ Proses</option>
+                                    <option value="Selesai">✅ Selesai</option>
+                                </select>
+
+                                <div class="flex items-center gap-1 w-full sm:w-auto">
+                                    <button onclick="openExportModal('csv')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
+                                    </button>
+                                    <button onclick="openExportModal('pdf')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-file-pdf text-rose-300"></i> PDF
+                                    </button>
+                                </div>
+                            </div>
+
+                            <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none w-full">
+                                <option value="All">👥 Filter: Semua User</option>
+                            </select>
+                        </div>
+                    </header>
+
+                    <!-- KARTU STATISTIK & ESTIMASI PENDAPATAN -->
+                    <section class="grid grid-cols-4 gap-2 mb-3">
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-300 dark:border-slate-800 shadow-sm flex items-center gap-2">
+                            <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Total</p>
+                                <p id="totalTaskCount" class="text-sm font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-300 dark:border-slate-800 shadow-sm flex items-center gap-2">
+                            <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-spinner"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Proses</p>
+                                <p id="inProgressCount" class="text-sm font-extrabold text-amber-500 leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-300 dark:border-slate-800 shadow-sm flex items-center gap-2">
+                            <div class="w-7 h-7 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
+                                <p id="completedCount" class="text-sm font-extrabold text-teal-600 dark:text-teal-400 leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <div onclick="openEarningsModal()" class="bg-gradient-to-tr from-amber-500/10 to-amber-600/20 dark:from-amber-950/40 dark:to-amber-900/20 rounded-xl p-2.5 border border-amber-300 dark:border-amber-700/60 shadow-sm flex items-center gap-2 cursor-pointer active:scale-95 transition">
+                            <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm shadow-amber-500/30">
                                 <i class="fa-solid fa-wallet"></i>
-                            </button>
-
-                            <button id="btnHeaderBudget" onclick="openBudgetConfigModal()" class="hidden w-7 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition active:scale-95 text-xs font-bold" title="Pengaturan Anggaran (Admin)">
-                                <i class="fa-solid fa-coins"></i>
-                            </button>
-
-                            <a href="/" title="Halaman Utama" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 items-center justify-center transition active:scale-95 text-xs">
-                                <i class="fa-solid fa-house"></i>
-                            </a>
-
-                            <button onclick="openFollowsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Kelola Teman / Follow">
-                                <i class="fa-solid fa-user-plus"></i>
-                            </button>
-                            <button onclick="toggleTheme()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
-                                <i id="theme-icon" class="fa-solid fa-moon"></i>
-                            </button>
-                            <button onclick="shareSchedule()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Share">
-                                <i class="fa-solid fa-share-nodes"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- ACTION BUTTONS & FILTER RESPONSIVE -->
-                    <div class="mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
-                        <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
-                            <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
-
-                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
-                                <option value="All">🔍 Semua Divisi</option>
-                                <option value="Teknisi">🛠️ Teknisi</option>
-                                <option value="Cleaning">🧹 Cleaning</option>
-                                <option value="Admin Teknik">📋 Admin Teknik</option>
-                            </select>
-
-                            <select id="statusFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
-                                <option value="All">📌 Semua Status</option>
-                                <option value="Belum">⏱️ Belum</option>
-                                <option value="Proses">⚡ Proses</option>
-                                <option value="Selesai">✅ Selesai</option>
-                            </select>
-
-                            <div class="flex items-center gap-1 w-full sm:w-auto">
-                                <button onclick="openExportModal('csv')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
-                                    <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
-                                </button>
-                                <button onclick="openExportModal('pdf')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
-                                    <i class="fa-solid fa-file-pdf text-rose-300"></i> PDF
-                                </button>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[8.5px] text-amber-700 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif Saya</p>
+                                <p id="myEarningsBadge" class="text-xs font-extrabold text-amber-800 dark:text-amber-300 leading-tight">Rp 0</p>
                             </div>
                         </div>
+                    </section>
+                </div>
 
-                        <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none w-full">
-                            <option value="All">👥 Filter: Semua User</option>
-                        </select>
-                    </div>
-                </header>
-
-                <!-- KARTU STATISTIK & ESTIMASI PENDAPATAN -->
-                <section class="grid grid-cols-4 gap-2 mb-4">
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
-                        <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
-                            <i class="fa-solid fa-list-check"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Total</p>
-                            <p id="totalTaskCount" class="text-sm font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
-                        <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
-                            <i class="fa-solid fa-spinner"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Proses</p>
-                            <p id="inProgressCount" class="text-sm font-extrabold text-amber-500 leading-tight">0</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
-                        <div class="w-7 h-7 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
-                            <p id="completedCount" class="text-sm font-extrabold text-teal-600 dark:text-teal-400 leading-tight">0</p>
-                        </div>
-                    </div>
-
-                    <div onclick="openEarningsModal()" class="bg-gradient-to-tr from-amber-500/10 to-amber-600/20 dark:from-amber-950/40 dark:to-amber-900/20 rounded-xl p-2.5 border border-amber-300 dark:border-amber-700/60 shadow-sm flex items-center gap-2 cursor-pointer active:scale-95 transition">
-                        <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm shadow-amber-500/30">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[8.5px] text-amber-700 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif Saya</p>
-                            <p id="myEarningsBadge" class="text-xs font-extrabold text-amber-800 dark:text-amber-300 leading-tight">Rp 0</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- CONTAINER JADWAL (DESKTOP & MOBILE FB-STYLE FEED) -->
+                <!-- CONTAINER JADWAL -->
                 <section>
-                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <!-- TAMPILAN DESKTOP (TABEL) -->
+                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-800 shadow-sm overflow-hidden mx-3.5 md:mx-0">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
+                                    <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
                                         <th class="p-3">Tanggal</th>
                                         <th class="p-3">Waktu</th>
                                         <th class="p-3">Petugas</th>
@@ -311,18 +310,18 @@
                                         <th class="p-3 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]"></tbody>
+                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-200 dark:divide-slate-800 text-[11px]"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- MOBILE FEED FB STYLE -->
-                    <div id="scheduleCardsMobile" class="md:hidden space-y-3.5"></div>
+                    <!-- TAMPILAN MOBILE FB FEED (BORDER FULL KIRI-KANAN) -->
+                    <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
             </div>
 
-            <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200/60 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
+            <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
                 <div>Operational Management System &bull; M-Ops Workspace</div>
             </footer>
         </main>
@@ -459,7 +458,7 @@
         </div>
     </div>
 
-    <!-- MODAL RELASI FOLLOW / MUTUAL FRIENDS DENGAN STATUS ONLINE/OFFLINE -->
+    <!-- MODAL RELASI FOLLOW -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -482,7 +481,7 @@
         </div>
     </div>
 
-    <!-- POP-UP NOTIFIKASI TOAST -->
+    <!-- TOAST KOMENTAR -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
             <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -794,7 +793,7 @@
 
             <!-- Tombol Tambah Tengah Melayang -->
             <div class="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center justify-center">
-                <div class="p-1 rounded-full bg-slate-100/60 dark:bg-slate-950/60 backdrop-blur-xs">
+                <div class="p-1 rounded-full bg-slate-200/80 dark:bg-slate-950/80 backdrop-blur-xs">
                     <button onclick="openTaskModal()" 
                             aria-label="Tambah Jadwal Baru" 
                             class="w-[54px] h-[54px] rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-500 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/40 border-[3px] border-white dark:border-slate-900 active:scale-90 transition-all duration-200 focus:outline-none">
@@ -1021,7 +1020,7 @@
             }
         });
 
-        // PERHITUNGAN POIN & INSENTIF DENGAN ATURAN WAKTU
+        // PERHITUNGAN POIN & INSENTIF
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -1033,7 +1032,6 @@
 
                 if (!taskDateStr.startsWith(currentYearMonth)) return;
 
-                // Hari kerja Senin-Jumat
                 const parts = taskDateStr.split('-');
                 const taskDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
                 const dayOfWeek = taskDateObj.getDay();
@@ -1394,7 +1392,6 @@
                 });
         }
 
-        // UPDATE BADGE NOTIFIKASI
         function updateNotificationBadge() {
             const headerBadge = document.getElementById('headerNotifBadge');
             const sideBadge = document.getElementById('sideNotifBadge');
@@ -1480,7 +1477,6 @@
             });
         }
 
-        // SISTEM MUTUAL FOLLOWING
         async function fetchFollowRelations() {
             if (!currentUser) return;
             const { data, error } = await _supabase.from('user_follows').select('*');
@@ -1678,7 +1674,6 @@
             }
         }
 
-        // LISTENER NOTIFIKASI GLOBAL KOMENTAR
         function setupGlobalCommentNotificationListener() {
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
 
@@ -1752,7 +1747,6 @@
             }
         }
 
-        // REALTIME LISTENER JADWAL
         function setupRealtimeListener() {
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
 
@@ -1829,7 +1823,6 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // TOGGLE MENU TITIK 3 MOBILE POST FB
         function togglePostMenu(id) {
             const menu = document.getElementById(`post-menu-${id}`);
             if (!menu) return;
@@ -1846,7 +1839,24 @@
             }
         });
 
-        // RENDER TASKS (DESKTOP TABEL + MOBILE FB STYLE POST CARDS)
+        // BAGIKAN JADWAL SPESIFIK LANGSUNG
+        function shareSpecificTask(task) {
+            const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
+            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${task.nama}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Jadwal Kerja - ${task.nama}`,
+                    text: shareText,
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText);
+                showToast("Detail jadwal berhasil disalin ke clipboard!");
+            }
+        }
+
+        // RENDER TASKS (DESKTOP TABEL + MOBILE FB STYLE POST CARDS FULL BORDER)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1889,7 +1899,7 @@
                     </tr>
                 `;
                 const emptyMobileHtml = `
-                    <div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                    <div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 border-y border-slate-300 dark:border-slate-800 shadow-sm">
                         <i class="fa-solid fa-newspaper text-3xl mb-2 opacity-40"></i>
                         <p class="text-xs font-semibold">Belum ada postingan jadwal.</p>
                         <p class="text-[10px] text-slate-400 mt-0.5">Postingan jadwal kerja rekan hanya muncul jika sudah <b>saling follow</b>.</p>
@@ -1900,7 +1910,7 @@
                 return;
             }
 
-            // 1. RENDER FEED MOBILE ALA POSTINGAN FACEBOOK
+            // 1. RENDER FEED MOBILE FB STYLE (FULL LEBAR BORDER KIRI-KANAN)
             filteredTasks.forEach(item => {
                 const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
                 const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
@@ -1915,21 +1925,35 @@
                 const isLate = isCompletedLate(item);
                 const isEarly = isCreatedBefore6AM(item);
 
+                // Hitung estimasi perolehan poin per post
+                let pointRewardBadge = '';
+                if (isCompleted) {
+                    pointRewardBadge = isLate 
+                        ? `<span class="font-extrabold text-[10px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin (Terlambat)</span>` 
+                        : `<span class="font-extrabold text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/60">+100 Poin</span>`;
+                } else if (item.status === 'Proses') {
+                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-amber-500 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700/60">+50 Poin</span>`;
+                } else if (item.status === 'Belum' && isPastDay) {
+                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-rose-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-300 dark:border-rose-700/60">-50 Poin (Expired)</span>`;
+                } else {
+                    pointRewardBadge = `<span class="font-extrabold text-[10px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-700">0 Poin</span>`;
+                }
+
                 let statusBadgeHtml = '';
                 if (isCompleted) {
                     statusBadgeHtml = isLate 
-                        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">⚠️ Selesai (Terlambat)</span>`
-                        : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">✅ Selesai</span>`;
+                        ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60">⚠️ Selesai</span>`
+                        : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700/60">✅ Selesai</span>`;
                 } else if (item.status === 'Proses') {
-                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-700/60">⚡ Sedang Dikerjakan</span>`;
+                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-500 border border-amber-300 dark:border-amber-700/60">⚡ Sedang Dikerjakan</span>`;
                 } else {
-                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">⏱️ Belum Selesai</span>`;
+                    statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">⏱️ Belum Selesai</span>`;
                 }
 
                 let postMenuDropdown = '';
                 if (isOwner && !isLocked) {
                     postMenuDropdown = `
-                        <div id="post-menu-${item.id}" class="hidden absolute right-0 top-7 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-1 z-30 animate-slide-down">
+                        <div id="post-menu-${item.id}" class="hidden absolute right-0 top-7 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
                             <button onclick="updateStatus('${item.id}', 'Proses'); togglePostMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
                                 <i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses
                             </button>
@@ -1947,13 +1971,13 @@
                 }
 
                 const fbPostCard = document.createElement('div');
-                fbPostCard.className = 'bg-white dark:bg-slate-900 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 shadow-sm transition';
+                fbPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-300 dark:border-slate-800 shadow-sm transition';
 
                 fbPostCard.innerHTML = `
-                    <!-- Header Post FB: Avatar + Nama Petugas + Waktu + Menu Titik Tiga -->
-                    <div class="flex items-start justify-between relative mb-2.5">
+                    <!-- Header Post FB: Avatar + Nama Petugas (Tanpa Divisi di Nama) + Tanggal/Waktu + Menu Titik 3 -->
+                    <div class="flex items-start justify-between relative mb-2">
                         <div class="flex items-center gap-2.5 min-w-0">
-                            <!-- Avatar dengan Online indicator -->
+                            <!-- Avatar dengan Online Status -->
                             <div class="relative flex-shrink-0">
                                 <div class="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm font-bold shadow-inner">
                                     <i class="fa-solid fa-user"></i>
@@ -1964,20 +1988,19 @@
                             <div class="min-w-0">
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${item.nama || 'Petugas'}</h4>
-                                    <span class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.2 rounded">${item.peran || 'Operasional'}</span>
-                                    ${isEarly ? '<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00</span>' : ''}
+                                    ${isEarly ? '<span class="text-[8.5px] bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold px-1 rounded">🌅 &lt;06:00 (+100 Poin)</span>' : ''}
                                 </div>
                                 <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium">
                                     <span>${formatTanggalIndo(item.tanggal || todayStr)}</span>
                                     <span>&bull;</span>
-                                    <span class="font-mono">${item.jam_mulai} - ${item.jam_selesai}</span>
+                                    <span class="font-mono font-bold text-slate-600 dark:text-slate-300">${item.jam_mulai} - ${item.jam_selesai}</span>
                                     <span>&bull;</span>
                                     <i class="fa-solid fa-earth-americas text-[9px] opacity-70"></i>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Menu Titik 3 / Status Lock -->
+                        <!-- Menu Titik 3 / Action -->
                         <div class="relative">
                             ${isOwner && !isLocked ? `
                                 <button onclick="togglePostMenu('${item.id}')" class="w-7 h-7 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 flex items-center justify-center text-sm transition">
@@ -2001,10 +2024,14 @@
                         </p>
                     </div>
 
-                    <!-- Status Pekerjaan Badge (Insight Style) -->
-                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                        ${statusBadgeHtml}
+                    <!-- Status Pekerjaan + Estimasi Poin + Info Reaksi -->
+                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
                         <div class="flex items-center gap-1.5">
+                            ${statusBadgeHtml}
+                            ${pointRewardBadge}
+                        </div>
+
+                        <div class="flex items-center gap-1.5 ml-auto">
                             ${likesCount > 0 ? `
                                 <div class="flex items-center gap-1 text-[10px] text-slate-400 font-bold">
                                     <span class="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[8px] shadow-sm"><i class="fa-solid fa-thumbs-up"></i></span>
@@ -2017,7 +2044,7 @@
                         </div>
                     </div>
 
-                    <!-- Footer Action Bar FB (Like Jempol, Komentar, Share) -->
+                    <!-- Footer Action Bar FB (Like Jempol, Komentar, Share Spesifik Tugas) -->
                     <div class="mt-2 pt-1 border-t border-slate-100 dark:border-slate-800 grid grid-cols-3 text-center">
                         <button onclick="toggleLikeTask('${item.id}')" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}">
                             <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
@@ -2029,7 +2056,7 @@
                             <span>Komentar</span>
                         </button>
 
-                        <button onclick="shareSchedule()" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+                        <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
                             <i class="fa-solid fa-share text-sm"></i>
                             <span>Bagikan</span>
                         </button>
@@ -2056,7 +2083,7 @@
                 groupHeader.innerHTML = `
                     <td colspan="8" class="px-3 py-2">
                         <div class="flex items-center justify-between">
-                            <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName} (${tasksOfUser[0]?.peran || 'Divisi'})</span>
+                            <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName}</span>
                             <span class="bg-emerald-200/60 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span>
                         </div>
                     </td>
@@ -2077,7 +2104,7 @@
                     const isEarly = isCreatedBefore6AM(item);
 
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
+                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800/60';
                     
                     let roleBadge = '';
                     if (item.peran === 'Teknisi') {
@@ -2122,6 +2149,7 @@
                     } else {
                         actionCell = `
                             <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-emerald-600 p-1" title="Bagikan Jadwal"><i class="fa-solid fa-share"></i></button>
                                 <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
@@ -2157,7 +2185,6 @@
             });
         }
 
-        // LIKE VIA SUPABASE RPC
         async function toggleLikeTask(taskId) {
             const task = globalTasks.find(t => String(t.id) === String(taskId));
             if (!task) return;
@@ -2190,7 +2217,6 @@
             }
         }
 
-        // KOMENTAR
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId); 
             cancelEditComment();
@@ -2391,7 +2417,6 @@
                 .subscribe();
         }
 
-        // UPDATE STATUS DENGAN PENCATATAN WAKTU SELESAI
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id);
             if (!target) return;
@@ -2424,7 +2449,6 @@
             }
         }
 
-        // DELETE MODAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
@@ -2459,7 +2483,6 @@
             closeConfirmModal();
         };
 
-        // EXPORT MODAL & GENERATOR
         function openExportModal(format) {
             activeExportFormat = format;
             document.getElementById('exportModal').classList.remove('hidden');
@@ -2855,19 +2878,6 @@
             }
 
             document.getElementById('btn-process-gen').innerText = "Generate";
-        }
-
-        function shareSchedule() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Jadwal Operasional Harian',
-                    text: `Jadwal kerja harian hari ini. Total: ${globalTasks.length} tugas.`,
-                    url: window.location.href,
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showToast("Link berhasil disalin!");
-            }
         }
 
         function openProfileModal() {
