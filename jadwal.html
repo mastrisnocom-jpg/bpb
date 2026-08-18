@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional untuk Teknisi, Cleaning Service, dan Admin Teknik terintegrasi Supabase.">
-    <meta name="keywords" content="jadwal kerja, teknisi, cleaning service, admin teknik, superapp, supabase">
-    <meta name="robots" content="index, follow">
-
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan interaksi Like & Komentar.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -92,7 +89,7 @@
     <!-- LAYOUT UTAMA DASHBOARD -->
     <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
         
-        <!-- SIDEBAR (DESKTOP VIEW) -->
+        <!-- SIDEBAR -->
         <aside class="hidden md:flex flex-col w-56 bg-gradient-to-b from-emerald-900 to-teal-950 text-white fixed top-0 bottom-0 left-0 p-5 z-30 justify-between shadow-xl">
             <div>
                 <div class="flex items-center gap-2.5 mb-6">
@@ -151,7 +148,7 @@
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-3.5 md:px-6 pt-4 pb-12 flex-grow">
                 
-                <!-- HEADER M-BANKING VIBE -->
+                <!-- HEADER M-BANKING -->
                 <header class="mb-3.5 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                     <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
 
@@ -165,7 +162,7 @@
                                     <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
-                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
+                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Kolaboratif</p>
                             </div>
                         </div>
 
@@ -195,7 +192,7 @@
                                 <option value="Admin Teknik">📋 Admin Teknik</option>
                             </select>
 
-                            <select id="statusFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
+                            <select id="statusFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
                                 <option value="All">📌 Semua Status</option>
                                 <option value="Belum">⏱️ Belum</option>
                                 <option value="Proses">⚡ Proses</option>
@@ -212,14 +209,14 @@
                             </div>
                         </div>
 
-                        <!-- Dropdown Super Admin (Full width di Mobile jika aktif) -->
+                        <!-- Filter Khusus Super Admin -->
                         <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none w-full">
                             <option value="All">👥 Filter: Semua User</option>
                         </select>
                     </div>
                 </header>
 
-                <!-- KARTU STATISTIK (REAKTIF FILTER) -->
+                <!-- KARTU STATISTIK -->
                 <section class="grid grid-cols-3 gap-2 mb-4">
                     <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
                         <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
@@ -266,20 +263,17 @@
                                         <th class="p-3">Divisi</th>
                                         <th class="p-3">Detail Tugas / Area</th>
                                         <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Interaksi</th>
                                         <th class="p-3 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
-                                    <!-- Render via JavaScript -->
-                                </tbody>
+                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- 2. Tampilan Mobile (Kartu Vertikal - Anti Overflow) -->
-                    <div id="scheduleCardsMobile" class="md:hidden space-y-3">
-                        <!-- Render via JavaScript -->
-                    </div>
+                    <!-- 2. Tampilan Mobile (Kartu Vertikal) -->
+                    <div id="scheduleCardsMobile" class="md:hidden space-y-3"></div>
                 </section>
 
             </div>
@@ -288,6 +282,34 @@
                 <div>Created for Mobile Banking Vibe Experience &bull; M-Ops Workspace</div>
             </footer>
         </main>
+    </div>
+
+    <!-- MODAL KOMENTAR (REALTIME INTERACTION) -->
+    <div id="commentModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-comments text-emerald-500"></i> Komentar Tugas
+                    </h3>
+                    <p id="commentModalSubtitle" class="text-[9px] text-slate-400 truncate max-w-[240px]">Tugas: -</p>
+                </div>
+                <button onclick="closeCommentModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div id="commentList" class="flex-1 overflow-y-auto space-y-2 py-2 pr-1 min-h-[140px] max-h-[260px] text-xs">
+                <!-- List komentar terisi otomatis -->
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
+                <input type="text" id="inputNewComment" placeholder="Tulis komentar..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                <button onclick="sendComment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
@@ -452,7 +474,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: GENERATE SEHARIAN (07:00 - 17:00) -->
+    <!-- MODAL 3: AUTO GENERATE -->
     <div id="autoGenerateModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
             <div class="flex justify-between items-center pb-2 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -575,7 +597,7 @@
     <!-- TOAST NOTIFIKASI -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <!-- JAVASCRIPT LOGIKA LENGKAP -->
+    <!-- JAVASCRIPT LOGIKA LENGKAP DENGAN RBAC, LIKES, & COMMENTS -->
     <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
@@ -589,7 +611,9 @@
         let isSuperAdmin = false;
         let activeExportFormat = 'pdf';
         let realtimeSubscription = null;
+        let commentsSubscription = null;
         let deleteTargetId = null;
+        let activeCommentJadwalId = null;
 
         const todayStr = new Date().toISOString().slice(0, 10);
 
@@ -713,6 +737,7 @@
 
         async function logout() {
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -758,19 +783,19 @@
         function handleRealtimeChange(payload) {
             const { eventType, new: newRow, old: oldRow } = payload;
             
+            // JANGAN tampilkan data Super Admin kepada user biasa
+            if (!isSuperAdmin && newRow?.user_email === SUPER_ADMIN_EMAIL) {
+                return;
+            }
+
             if (eventType === 'INSERT') {
-                if (isSuperAdmin || newRow.user_id === currentUser.id) {
-                    if (!globalTasks.some(t => t.id === newRow.id)) {
-                        globalTasks.push(newRow);
-                    }
+                if (!globalTasks.some(t => t.id === newRow.id)) {
+                    globalTasks.push(newRow);
                 }
             } else if (eventType === 'UPDATE') {
                 const idx = globalTasks.findIndex(t => t.id === newRow.id);
-                if (idx !== -1) {
-                    globalTasks[idx] = newRow;
-                } else if (isSuperAdmin || newRow.user_id === currentUser.id) {
-                    globalTasks.push(newRow);
-                }
+                if (idx !== -1) globalTasks[idx] = newRow;
+                else globalTasks.push(newRow);
             } else if (eventType === 'DELETE') {
                 globalTasks = globalTasks.filter(t => t.id !== oldRow.id);
             }
@@ -779,12 +804,13 @@
             renderTasks();
         }
 
-        // FETCH DATA SUPABASE
+        // FETCH DATA SUPABASE: SEMUA USER BISA LIHAT TUGAS REKAN, TAPI TIDAK BISA MELIHAT SUPER ADMIN
         async function fetchTasksSupabase() {
             let query = _supabase.from('jadwal').select('*');
 
+            // Jika BUKAN Super Admin, sembunyikan tugas milik Super Admin
             if (!isSuperAdmin) {
-                query = query.eq('user_id', currentUser.id);
+                query = query.neq('user_email', SUPER_ADMIN_EMAIL);
             }
 
             const { data, error } = await query.order('jam_mulai', { ascending: true });
@@ -823,7 +849,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS (DESKTOP TABEL + MOBILE CARDS)
+        // RENDER TASKS DENGAN HAK AKSES LIKE & COMMENT
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -836,7 +862,6 @@
             tableBodyDesktop.innerHTML = '';
             cardsContainerMobile.innerHTML = '';
 
-            // Saring tugas sesuai filter aktif
             const filteredTasks = globalTasks.filter(item => {
                 const matchDate = !selectedDate || item.tanggal === selectedDate;
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
@@ -845,7 +870,6 @@
                 return matchDate && matchRole && matchStatus && matchUser;
             });
 
-            // Update Counter Sinkron
             document.getElementById('totalTaskCount').innerText = filteredTasks.length;
             document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
             document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
@@ -853,7 +877,7 @@
             if (filteredTasks.length === 0) {
                 const emptyDesktopHtml = `
                     <tr>
-                        <td colspan="7" class="p-8 text-center text-slate-400">
+                        <td colspan="8" class="p-8 text-center text-slate-400">
                             <i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i>
                             <p class="text-xs font-semibold">Tidak ada jadwal yang cocok dengan filter.</p>
                         </td>
@@ -870,7 +894,6 @@
                 return;
             }
 
-            // Kelompokkan data per Petugas
             const groupedByUser = {};
             filteredTasks.forEach(task => {
                 const userKey = task.nama || 'Tanpa Nama';
@@ -905,7 +928,37 @@
                 `;
 
                 tasksOfUser.forEach(item => {
+                    const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
+                    const isLiked = likedUsers.includes(currentUser.id);
+                    const likesCount = item.likes_count || 0;
+
                     let statusColor = item.status === 'Selesai' ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' : (item.status === 'Proses' ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-700/80');
+
+                    // Tombol Edit/Delete hanya untuk pemilik / Super Admin
+                    const actionButtons = isOwner ? `
+                        <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    ` : `
+                        <span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">View Only</span>
+                    `;
+
+                    // Pilihan Ubah Status
+                    const statusControl = isOwner ? `
+                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
+                            <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                            <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                        </select>
+                    ` : `
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
+                            ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                        </span>
+                    `;
 
                     mobileTasksHtml += `
                         <div class="p-2.5 rounded-xl border ${statusColor} bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-1.5 transition">
@@ -914,12 +967,7 @@
                                     <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
                                 </span>
                                 <div class="flex items-center gap-2">
-                                    <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
+                                    ${actionButtons}
                                 </div>
                             </div>
                             
@@ -927,13 +975,23 @@
                                 ${item.tugas}
                             </p>
 
+                            <!-- Social Bar: Like & Komentar -->
                             <div class="flex items-center justify-between pt-1.5 mt-0.5 border-t border-slate-200/50 dark:border-slate-700/50">
-                                <span class="text-[9px] text-slate-400 font-medium">${formatTanggalIndo(item.tanggal)}</span>
-                                <select onchange="updateStatus('${item.id}', this.value)" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
-                                    <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
-                                    <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
-                                    <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                                </select>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[10px] font-bold transition active:scale-125 ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
+                                        <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                                        <span>${likesCount}</span>
+                                    </button>
+
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-emerald-500 transition">
+                                        <i class="fa-regular fa-comment-dots"></i>
+                                        <span>Komen</span>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    ${statusControl}
+                                </div>
                             </div>
                         </div>
                     `;
@@ -947,7 +1005,7 @@
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80 dark:border-emerald-800/60';
                 groupHeader.innerHTML = `
-                    <td colspan="7" class="px-3 py-2">
+                    <td colspan="8" class="px-3 py-2">
                         <div class="flex items-center justify-between">
                             <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName} (${tasksOfUser[0]?.peran || 'Divisi'})</span>
                             <span class="bg-emerald-200/60 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span>
@@ -957,6 +1015,11 @@
                 tableBodyDesktop.appendChild(groupHeader);
 
                 tasksOfUser.forEach(item => {
+                    const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
+                    const isLiked = likedUsers.includes(currentUser.id);
+                    const likesCount = item.likes_count || 0;
+
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
                     
@@ -969,29 +1032,171 @@
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                     }
 
+                    const statusCell = isOwner ? `
+                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
+                            <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                            <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                        </select>
+                    ` : `
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
+                            ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                        </span>
+                    `;
+
+                    const actionCell = isOwner ? `
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    ` : `
+                        <span class="text-[10px] text-slate-400 font-medium">Read Only</span>
+                    `;
+
                     row.innerHTML = `
                         <td class="p-3 font-mono font-bold text-[10px] text-slate-500 whitespace-nowrap">${item.tanggal || '-'}</td>
                         <td class="p-3 font-mono font-bold text-[11px] whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
                         <td class="p-3 font-bold text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
                         <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
-                        <td class="p-3">
-                            <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
-                                <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
-                                <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
-                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                            </select>
-                        </td>
+                        <td class="p-3">${statusCell}</td>
                         <td class="p-3 text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                            <div class="flex items-center justify-center gap-2.5">
+                                <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
+                                    <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                                    <span>${likesCount}</span>
+                                </button>
+                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Komentar">
+                                    <i class="fa-regular fa-comment-dots"></i>
+                                </button>
                             </div>
                         </td>
+                        <td class="p-3 text-center">${actionCell}</td>
                     `;
                     tableBodyDesktop.appendChild(row);
                 });
             });
+        }
+
+        // FITUR LIKE & UNLIKE JADWAL
+        async function toggleLikeTask(taskId) {
+            const task = globalTasks.find(t => t.id == taskId);
+            if (!task) return;
+
+            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : [];
+            const userIndex = likedUsers.indexOf(currentUser.id);
+
+            if (userIndex === -1) {
+                likedUsers.push(currentUser.id);
+            } else {
+                likedUsers.splice(userIndex, 1);
+            }
+
+            const newLikesCount = likedUsers.length;
+
+            const { error } = await _supabase.from('jadwal').update({
+                likes_count: newLikesCount,
+                liked_users: likedUsers
+            }).eq('id', taskId);
+
+            if (error) {
+                showToast("Gagal menyukai tugas!");
+            } else {
+                task.likes_count = newLikesCount;
+                task.liked_users = likedUsers;
+                renderTasks();
+            }
+        }
+
+        // FITUR KOMENTAR REALTIME
+        async function openCommentModal(taskId, taskTitle) {
+            activeCommentJadwalId = taskId;
+            document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat komentar...</div>';
+            document.getElementById('commentModal').classList.remove('hidden');
+
+            await fetchComments(taskId);
+            setupCommentsRealtime(taskId);
+        }
+
+        function closeCommentModal() {
+            activeCommentJadwalId = null;
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            document.getElementById('commentModal').classList.add('hidden');
+        }
+
+        async function fetchComments(taskId) {
+            const { data, error } = await _supabase
+                .from('jadwal_comments')
+                .select('*')
+                .eq('jadwal_id', taskId)
+                .order('created_at', { ascending: true });
+
+            const commentList = document.getElementById('commentList');
+            if (error || !data || data.length === 0) {
+                commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-4">Belum ada komentar. Jadilah yang pertama!</div>';
+                return;
+            }
+
+            renderCommentList(data);
+        }
+
+        function renderCommentList(comments) {
+            const commentList = document.getElementById('commentList');
+            commentList.innerHTML = '';
+
+            comments.forEach(c => {
+                const isMe = c.user_id === currentUser.id;
+                const commentEl = document.createElement('div');
+                commentEl.className = `p-2 rounded-xl text-xs ${isMe ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-4 border border-emerald-200/60 dark:border-emerald-800/40' : 'bg-slate-100 dark:bg-slate-800/60 mr-4 border border-slate-200/60 dark:border-slate-700/60'}`;
+                
+                commentEl.innerHTML = `
+                    <div class="flex items-center justify-between mb-0.5">
+                        <span class="font-extrabold ${isMe ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'} text-[10px]">
+                            ${isMe ? 'Saya' : (c.user_email?.split('@')[0] || 'User')}
+                        </span>
+                        <span class="text-[8px] text-slate-400">${new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p class="text-slate-700 dark:text-slate-300 leading-snug break-words">${c.comment}</p>
+                `;
+                commentList.appendChild(commentEl);
+            });
+
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+
+        async function sendComment() {
+            const input = document.getElementById('inputNewComment');
+            const commentText = input.value.trim();
+            if (!commentText || !activeCommentJadwalId) return;
+
+            input.value = '';
+
+            const { error } = await _supabase.from('jadwal_comments').insert([{
+                jadwal_id: activeCommentJadwalId,
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                comment: commentText
+            }]);
+
+            if (error) {
+                showToast("Gagal mengirim komentar!");
+            }
+        }
+
+        function setupCommentsRealtime(taskId) {
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+
+            commentsSubscription = _supabase.channel(`comments:${taskId}`)
+                .on('postgres_changes', { 
+                    event: 'INSERT', 
+                    schema: 'public', 
+                    table: 'jadwal_comments',
+                    filter: `jadwal_id=eq.${taskId}`
+                }, payload => {
+                    fetchComments(taskId);
+                })
+                .subscribe();
         }
 
         // UPDATE STATUS
@@ -1007,7 +1212,7 @@
             }
         }
 
-        // CUSTOM MODAL DELETE
+        // MODAL CUSTOM DELETE
         function askDeleteTask(id) {
             deleteTargetId = id;
             document.getElementById('confirmModal').classList.remove('hidden');
@@ -1031,7 +1236,7 @@
             closeConfirmModal();
         };
 
-        // EXPORT HANDLER
+        // EXPORT MODAL & GENERATOR
         function openExportModal(format) {
             activeExportFormat = format;
             document.getElementById('exportModal').classList.remove('hidden');
@@ -1129,13 +1334,13 @@
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()})\n`;
-            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS\n";
+            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS,LIKES\n";
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}"\n`;
                 });
             });
 
@@ -1286,7 +1491,7 @@
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id,
                     user_email: currentUser.email,
-                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
+                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum', likes_count: 0, liked_users: []
                 }]);
 
                 if (!error) { 
@@ -1335,7 +1540,9 @@
                             tugas: taskName,
                             jam_mulai: startTime,
                             jam_selesai: endTime,
-                            status: 'Belum'
+                            status: 'Belum',
+                            likes_count: 0,
+                            liked_users: []
                         });
                     }
                 }
@@ -1351,7 +1558,7 @@
                     alert("Gagal mengimport data: " + (error.message || ""));
                 }
             } else {
-                alert("Format teks tidak terdeteksi! Contoh: 09.30-10.00 : Pengisian tandon");
+                alert("Format teks tidak terdeteksi! Format contoh:\n09.30-10.00 : Pengisian tandon");
             }
             document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
         }
@@ -1389,7 +1596,9 @@
                 tugas: t.tugas,
                 jam_mulai: t.jam_mulai,
                 jam_selesai: t.jam_selesai,
-                status: 'Belum'
+                status: 'Belum',
+                likes_count: 0,
+                liked_users: []
             }));
 
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
