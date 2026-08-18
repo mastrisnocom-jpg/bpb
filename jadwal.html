@@ -48,7 +48,7 @@
         ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-6">
+<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-24 md:pb-8">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-emerald-950/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
@@ -92,7 +92,7 @@
     <!-- LAYOUT UTAMA DASHBOARD -->
     <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
         
-        <!-- SIDEBAR UTAMA (DESKTOP VIEW) -->
+        <!-- SIDEBAR (DESKTOP VIEW) -->
         <aside class="hidden md:flex flex-col w-56 bg-gradient-to-b from-emerald-900 to-teal-950 text-white fixed top-0 bottom-0 left-0 p-5 z-30 justify-between shadow-xl">
             <div>
                 <div class="flex items-center gap-2.5 mb-6">
@@ -106,12 +106,11 @@
                 </div>
 
                 <nav class="space-y-1">
-                    <!-- Tombol Kembali ke Halaman Utama -->
                     <a href="/" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-200 hover:text-white transition mb-2">
                         <i class="fa-solid fa-house text-xs"></i> Halaman Utama
                     </a>
 
-                    <button onclick="filterTasks('All')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
+                    <button onclick="resetFilters()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
                         <i class="fa-solid fa-layer-group text-xs"></i> Semua Tugas
                     </button>
                     
@@ -150,10 +149,10 @@
 
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
-            <div class="w-full mx-auto px-4 pt-4 pb-20 md:pb-8 flex-grow">
+            <div class="w-full mx-auto px-3.5 md:px-6 pt-4 pb-12 flex-grow">
                 
                 <!-- HEADER M-BANKING VIBE -->
-                <header class="mb-4 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
+                <header class="mb-3.5 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                     <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
 
                     <div class="flex items-center justify-between relative z-10">
@@ -163,14 +162,14 @@
                             </a>
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                    <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
                                 <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
                             </div>
                         </div>
 
-                        <!-- TOOLBAR ATAS DESKTOP/MOBILE -->
+                        <!-- TOOLBAR ATAS -->
                         <div class="flex items-center gap-1.5">
                             <a href="/" title="Halaman Utama" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
                                 <i class="fa-solid fa-house"></i>
@@ -184,47 +183,45 @@
                         </div>
                     </div>
 
-                    <!-- ACTION BUTTONS KOMPAK DESKTOP & FILTER TANGGAL -->
-                    <div class="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between gap-2 flex-wrap">
-                        <div class="flex items-center gap-1.5 flex-wrap">
-                            <!-- Filter Tanggal -->
-                            <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none">
+                    <!-- ACTION BUTTONS & FILTER RESPONSIVE -->
+                    <div class="mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
+                        <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
+                            <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
 
-                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none">
+                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
                                 <option value="All">🔍 Semua Divisi</option>
                                 <option value="Teknisi">🛠️ Teknisi</option>
                                 <option value="Cleaning">🧹 Cleaning</option>
                                 <option value="Admin Teknik">📋 Admin Teknik</option>
                             </select>
 
-                            <!-- Filter Pengguna Khusus Super Admin (Menampilkan Email) -->
-                            <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none">
-                                <option value="All">👥 Filter: Semua User</option>
+                            <select id="statusFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
+                                <option value="All">📌 Semua Status</option>
+                                <option value="Belum">⏱️ Belum</option>
+                                <option value="Proses">⚡ Proses</option>
+                                <option value="Selesai">✅ Selesai</option>
                             </select>
 
-                            <!-- Tombol Trigger Modal Export -->
-                            <button onclick="openExportModal('csv')" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
-                                <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
-                            </button>
-                            <button onclick="openExportModal('pdf')" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf text-rose-300"></i> PDF
-                            </button>
+                            <div class="flex items-center gap-1 w-full sm:w-auto">
+                                <button onclick="openExportModal('csv')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
+                                </button>
+                                <button onclick="openExportModal('pdf')" class="flex-1 sm:flex-none bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition border border-white/10 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-file-pdf text-rose-300"></i> PDF
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="hidden md:flex items-center gap-1.5">
-                            <button onclick="openBulkTextModal()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-lg transition flex items-center gap-1">
-                                <i class="fa-solid fa-paste"></i> Import WA
-                            </button>
-                            <button onclick="openAutoGenerateModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-lg transition flex items-center gap-1">
-                                <i class="fa-solid fa-bolt"></i> Auto (07-17)
-                            </button>
-                        </div>
+                        <!-- Dropdown Super Admin (Full width di Mobile jika aktif) -->
+                        <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none w-full">
+                            <option value="All">👥 Filter: Semua User</option>
+                        </select>
                     </div>
                 </header>
 
-                <!-- KARTU RINGKASAN STATISTIK -->
+                <!-- KARTU STATISTIK (REAKTIF FILTER) -->
                 <section class="grid grid-cols-3 gap-2 mb-4">
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
                         <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
                             <i class="fa-solid fa-list-check"></i>
                         </div>
@@ -234,7 +231,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
                         <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
                             <i class="fa-solid fa-spinner"></i>
                         </div>
@@ -244,7 +241,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
+                    <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
                         <div class="w-7 h-7 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
@@ -255,32 +252,35 @@
                     </div>
                 </section>
 
-                <!-- TABEL UTAMA JADWAL KOMPAK -->
-                <main class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
-                                    <th class="p-3">Tanggal</th>
-                                    <th class="p-3">Waktu</th>
-                                    <th class="p-3">Petugas</th>
-                                    <th class="p-3">Divisi</th>
-                                    <th class="p-3">Detail Tugas / Area</th>
-                                    <th class="p-3">Status</th>
-                                    <th class="p-3 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="scheduleTable" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
-                                <tr id="emptyState">
-                                    <td colspan="7" class="p-6 text-center text-slate-400">
-                                        <i class="fa-solid fa-calendar-xmark text-3xl mb-1.5 opacity-40"></i>
-                                        <p class="text-[11px] font-semibold">Belum ada tugas jadwal pada tanggal ini.</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- CONTAINER JADWAL: CARD DI MOBILE & TABEL DI DESKTOP -->
+                <section>
+                    <!-- 1. Tampilan Desktop (Tabel) -->
+                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
+                                        <th class="p-3">Tanggal</th>
+                                        <th class="p-3">Waktu</th>
+                                        <th class="p-3">Petugas</th>
+                                        <th class="p-3">Divisi</th>
+                                        <th class="p-3">Detail Tugas / Area</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-[11px]">
+                                    <!-- Render via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </main>
+
+                    <!-- 2. Tampilan Mobile (Kartu Vertikal - Anti Overflow) -->
+                    <div id="scheduleCardsMobile" class="md:hidden space-y-3">
+                        <!-- Render via JavaScript -->
+                    </div>
+                </section>
 
             </div>
 
@@ -288,6 +288,21 @@
                 <div>Created for Mobile Banking Vibe Experience &bull; M-Ops Workspace</div>
             </footer>
         </main>
+    </div>
+
+    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down text-center">
+            <div class="w-10 h-10 bg-rose-100 dark:bg-rose-950/50 text-rose-500 rounded-xl flex items-center justify-center text-lg mx-auto mb-2.5">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h3 class="text-xs font-extrabold text-slate-900 dark:text-white mb-1">Hapus Jadwal?</h3>
+            <p class="text-[10px] text-slate-400 mb-4">Tugas yang dihapus tidak dapat dipulihkan kembali.</p>
+            <div class="flex gap-2">
+                <button onclick="closeConfirmModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                <button id="btn-confirm-delete" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 rounded-xl text-xs transition">Hapus</button>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL EXPORT PERIODE -->
@@ -314,7 +329,6 @@
                     </select>
                 </div>
 
-                <!-- Input Rentang Tanggal Kustom -->
                 <div id="customDateRangeContainer" class="hidden space-y-2 pt-1">
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Dari Tanggal</label>
@@ -336,7 +350,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: FORM TAMBAH MANUAL -->
+    <!-- MODAL 1: FORM TAMBAH / EDIT SINGLE -->
     <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -531,20 +545,18 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (M-BANKING STYLE SELULER) -->
+    <!-- BOTTOM NAVIGATION (MOBILE BAR) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
-        <!-- Tombol Utama Mobile: Beranda -->
         <a href="/" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[8px] font-extrabold">Utama</span>
         </a>
 
-        <button onclick="filterTasks('All')" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
+        <button onclick="resetFilters()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
             <i class="fa-solid fa-list-check text-sm"></i>
             <span class="text-[8px] font-extrabold">Semua</span>
         </button>
 
-        <!-- Tombol (+) Tambah Utama Mobile -->
         <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
             <i class="fa-solid fa-plus text-base"></i>
         </button>
@@ -561,24 +573,24 @@
     </nav>
 
     <!-- TOAST NOTIFIKASI -->
-    <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-50">Pesan</div>
+    <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <!-- JAVASCRIPT LOGIKA & INTEGRASI SUPABASE -->
+    <!-- JAVASCRIPT LOGIKA LENGKAP -->
     <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // CONFIG EMAIL SUPER ADMIN
         const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
 
         let currentUser = null;
         let globalTasks = [];
         let editingTaskId = null;
         let isSuperAdmin = false;
-        let activeExportFormat = 'pdf'; // 'pdf' atau 'csv'
+        let activeExportFormat = 'pdf';
+        let realtimeSubscription = null;
+        let deleteTargetId = null;
 
-        // Tanggal default hari ini (YYYY-MM-DD)
         const todayStr = new Date().toISOString().slice(0, 10);
 
         const colorPalettes = {
@@ -589,7 +601,6 @@
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
 
-        // Format Tanggal Indonesia (Contoh: 18 Agustus 2026)
         function formatTanggalIndo(dateStr) {
             if (!dateStr) return '-';
             const date = new Date(dateStr);
@@ -626,7 +637,6 @@
             const savedColor = localStorage.getItem('user-theme');
             if(savedColor) applyTheme(savedColor);
 
-            // Set Tanggal Default di Filter & Form Modal
             document.getElementById('dateFilter').value = todayStr;
             document.getElementById('input-date').value = todayStr;
             document.getElementById('bulk-date').value = todayStr;
@@ -688,7 +698,7 @@
             if (authMode === 'signup') {
                 const { error } = await _supabase.auth.signUp({ email, password });
                 if (error) { errEl.innerText = error.message; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Daftar Sekarang"; } 
-                else { alert("Pendaftaran berhasil! Silakan login."); setAuthMode('login'); }
+                else { showToast("Pendaftaran berhasil! Silakan login."); setAuthMode('login'); }
             } else {
                 const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) { errEl.innerText = "Login gagal. Cek kembali email & sandi Anda."; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Masuk Dashboard"; } 
@@ -702,7 +712,9 @@
         }
 
         async function logout() {
-            if(confirm('Yakin ingin keluar dari akun?')) { await _supabase.auth.signOut(); location.reload(); }
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
+            await _supabase.auth.signOut(); 
+            location.reload();
         }
 
         async function showDashboard() {
@@ -714,7 +726,6 @@
             document.getElementById('modal-user-name').innerText = username;
             document.getElementById('profile-email-display').innerText = currentUser.email;
 
-            // CEK STATUS SUPER ADMIN
             if (currentUser.email === SUPER_ADMIN_EMAIL) {
                 isSuperAdmin = true;
                 document.getElementById('superadmin-indicator').classList.remove('hidden');
@@ -729,10 +740,46 @@
                 document.getElementById('userFilter').classList.add('hidden');
             }
 
-            fetchTasksSupabase();
+            await fetchTasksSupabase();
+            setupRealtimeListener();
         }
 
-        // LOGIKA TABEL & DATABASE SUPABASE
+        // SUPABASE REALTIME
+        function setupRealtimeListener() {
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
+
+            realtimeSubscription = _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, payload => {
+                    handleRealtimeChange(payload);
+                })
+                .subscribe();
+        }
+
+        function handleRealtimeChange(payload) {
+            const { eventType, new: newRow, old: oldRow } = payload;
+            
+            if (eventType === 'INSERT') {
+                if (isSuperAdmin || newRow.user_id === currentUser.id) {
+                    if (!globalTasks.some(t => t.id === newRow.id)) {
+                        globalTasks.push(newRow);
+                    }
+                }
+            } else if (eventType === 'UPDATE') {
+                const idx = globalTasks.findIndex(t => t.id === newRow.id);
+                if (idx !== -1) {
+                    globalTasks[idx] = newRow;
+                } else if (isSuperAdmin || newRow.user_id === currentUser.id) {
+                    globalTasks.push(newRow);
+                }
+            } else if (eventType === 'DELETE') {
+                globalTasks = globalTasks.filter(t => t.id !== oldRow.id);
+            }
+
+            if (isSuperAdmin) populateUserFilterDropdown();
+            renderTasks();
+        }
+
+        // FETCH DATA SUPABASE
         async function fetchTasksSupabase() {
             let query = _supabase.from('jadwal').select('*');
 
@@ -744,20 +791,17 @@
 
             if (!error && data) {
                 globalTasks = data;
-                
-                if (isSuperAdmin) {
-                    populateUserFilterDropdown();
-                }
-
+                if (isSuperAdmin) populateUserFilterDropdown();
                 renderTasks();
             } else if (error) {
                 console.error("Fetch Tasks Error:", error);
+                renderTasks();
             }
         }
 
-        // TAMPILKAN EMAIL PADA DROPDOWN FILTER SUPER ADMIN
         function populateUserFilterDropdown() {
             const userFilterSelect = document.getElementById('userFilter');
+            const currentSelected = userFilterSelect.value;
             const userMap = {};
 
             globalTasks.forEach(item => {
@@ -770,80 +814,152 @@
                 userMap[uid].count++;
             });
 
-            let optionsHtml = `<option value="All">👥 Semua User (${globalTasks.length})</option>`;
+            let optionsHtml = `<option value="All">👥 Filter: Semua User (${globalTasks.length})</option>`;
             Object.keys(userMap).forEach(uid => {
                 optionsHtml += `<option value="${uid}">👤 ${userMap[uid].email} (${userMap[uid].count})</option>`;
             });
 
             userFilterSelect.innerHTML = optionsHtml;
+            userFilterSelect.value = currentSelected || 'All';
         }
 
-        // FUNGSI RENDER TABEL
+        // RENDER TASKS (DESKTOP TABEL + MOBILE CARDS)
         function renderTasks() {
-            const tableBody = document.getElementById('scheduleTable');
-            const emptyState = document.getElementById('emptyState');
+            const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
+            const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
+            
             const selectedRole = document.getElementById('roleFilter').value;
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
             const selectedUser = document.getElementById('userFilter').value;
             const selectedDate = document.getElementById('dateFilter').value;
 
-            tableBody.innerHTML = '';
+            tableBodyDesktop.innerHTML = '';
+            cardsContainerMobile.innerHTML = '';
 
-            // Filter data
+            // Saring tugas sesuai filter aktif
             const filteredTasks = globalTasks.filter(item => {
-                const matchDate = !selectedDate || item.tanggal === selectedDate || (!item.tanggal && selectedDate === todayStr);
+                const matchDate = !selectedDate || item.tanggal === selectedDate;
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
-                return matchDate && matchRole && matchUser;
+                return matchDate && matchRole && matchStatus && matchUser;
             });
 
+            // Update Counter Sinkron
+            document.getElementById('totalTaskCount').innerText = filteredTasks.length;
+            document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
+            document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
+
             if (filteredTasks.length === 0) {
-                tableBody.appendChild(emptyState);
-                updateCounters();
+                const emptyDesktopHtml = `
+                    <tr>
+                        <td colspan="7" class="p-8 text-center text-slate-400">
+                            <i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i>
+                            <p class="text-xs font-semibold">Tidak ada jadwal yang cocok dengan filter.</p>
+                        </td>
+                    </tr>
+                `;
+                const emptyMobileHtml = `
+                    <div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                        <i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i>
+                        <p class="text-xs font-semibold">Tidak ada jadwal pada filter ini.</p>
+                    </div>
+                `;
+                tableBodyDesktop.innerHTML = emptyDesktopHtml;
+                cardsContainerMobile.innerHTML = emptyMobileHtml;
                 return;
             }
 
-            // Kelompokkan data berdasarkan Nama Petugas
+            // Kelompokkan data per Petugas
             const groupedByUser = {};
             filteredTasks.forEach(task => {
                 const userKey = task.nama || 'Tanpa Nama';
-                if (!groupedByUser[userKey]) {
-                    groupedByUser[userKey] = [];
-                }
+                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
                 groupedByUser[userKey].push(task);
             });
 
             Object.keys(groupedByUser).forEach(petugasName => {
                 const tasksOfUser = groupedByUser[petugasName];
+                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
 
-                // Header Pemisah Petugas
+                // --- 1. RENDER KARTU MOBILE ---
+                const mobileGroupCard = document.createElement('div');
+                mobileGroupCard.className = 'bg-white dark:bg-slate-900 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2.5';
+
+                let mobileTasksHtml = `
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                                <span class="font-extrabold text-slate-900 dark:text-white text-xs">${petugasName}</span>
+                                <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold ml-1">(${tasksOfUser[0]?.peran || 'Divisi'})</span>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">
+                            ${tasksOfUser.length} Tugas
+                        </span>
+                    </div>
+                    <div class="space-y-2">
+                `;
+
+                tasksOfUser.forEach(item => {
+                    let statusColor = item.status === 'Selesai' ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' : (item.status === 'Proses' ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-700/80');
+
+                    mobileTasksHtml += `
+                        <div class="p-2.5 rounded-xl border ${statusColor} bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-1.5 transition">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
+                                    <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-snug break-words">
+                                ${item.tugas}
+                            </p>
+
+                            <div class="flex items-center justify-between pt-1.5 mt-0.5 border-t border-slate-200/50 dark:border-slate-700/50">
+                                <span class="text-[9px] text-slate-400 font-medium">${formatTanggalIndo(item.tanggal)}</span>
+                                <select onchange="updateStatus('${item.id}', this.value)" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
+                                    <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                                    <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                                    <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                mobileTasksHtml += `</div>`;
+                mobileGroupCard.innerHTML = mobileTasksHtml;
+                cardsContainerMobile.appendChild(mobileGroupCard);
+
+                // --- 2. RENDER DESKTOP (TABEL) ---
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80 dark:border-emerald-800/60';
                 groupHeader.innerHTML = `
                     <td colspan="7" class="px-3 py-2">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
-                                <div>
-                                    <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName}</span>
-                                    <span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold ml-1">(${tasksOfUser[0]?.peran || 'Divisi'})</span>
-                                </div>
-                            </div>
-                            <span class="bg-emerald-200/60 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">
-                                ${tasksOfUser.length} Tugas
-                            </span>
+                            <span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName} (${tasksOfUser[0]?.peran || 'Divisi'})</span>
+                            <span class="bg-emerald-200/60 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span>
                         </div>
                     </td>
                 `;
-                tableBody.appendChild(groupHeader);
-
-                tasksOfUser.sort((a, b) => a.jam_mulai.localeCompare(b.jam_mulai));
+                tableBodyDesktop.appendChild(groupHeader);
 
                 tasksOfUser.forEach(item => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
-
+                    
                     let roleBadge = '';
                     if (item.peran === 'Teknisi') {
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">🛠️ Teknisi</span>`;
@@ -853,14 +969,12 @@
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                     }
 
-                    const formattedDate = item.tanggal || todayStr;
-
                     row.innerHTML = `
-                        <td class="p-3 font-mono font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap text-[10px]">${formattedDate}</td>
-                        <td class="p-3 font-mono font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap text-[11px]">${item.jam_mulai} - ${item.jam_selesai}</td>
-                        <td class="p-3 font-bold text-slate-900 dark:text-white text-[11px]">${item.nama}</td>
+                        <td class="p-3 font-mono font-bold text-[10px] text-slate-500 whitespace-nowrap">${item.tanggal || '-'}</td>
+                        <td class="p-3 font-mono font-bold text-[11px] whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
+                        <td class="p-3 font-bold text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
-                        <td class="p-3 text-slate-600 dark:text-slate-300 font-semibold text-[11px] leading-snug">${item.tugas}</td>
+                        <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
                         <td class="p-3">
                             <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
                                 <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
@@ -870,24 +984,54 @@
                         </td>
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit">
-                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
-                                </button>
-                                <button onclick="deleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus">
-                                    <i class="fa-solid fa-trash-can text-xs"></i>
-                                </button>
+                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </td>
                     `;
-
-                    tableBody.appendChild(row);
+                    tableBodyDesktop.appendChild(row);
                 });
             });
-
-            updateCounters();
         }
 
-        // LOGIKA EXPORT HARIAN, MINGGUAN, BULANAN, TAHUNAN, DAN CUSTOM
+        // UPDATE STATUS
+        async function updateStatus(id, newStatus) {
+            const { error } = await _supabase.from('jadwal').update({ status: newStatus }).eq('id', id);
+            if (error) {
+                showToast("Gagal memperbarui status!");
+            } else {
+                const target = globalTasks.find(t => t.id == id);
+                if (target) target.status = newStatus;
+                renderTasks();
+                showToast("Status diperbarui");
+            }
+        }
+
+        // CUSTOM MODAL DELETE
+        function askDeleteTask(id) {
+            deleteTargetId = id;
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            deleteTargetId = null;
+            document.getElementById('confirmModal').classList.add('hidden');
+        }
+
+        document.getElementById('btn-confirm-delete').onclick = async () => {
+            if (!deleteTargetId) return;
+            const { error } = await _supabase.from('jadwal').delete().eq('id', deleteTargetId);
+            if (!error) {
+                globalTasks = globalTasks.filter(t => t.id != deleteTargetId);
+                renderTasks();
+                showToast("Tugas berhasil dihapus");
+            } else {
+                showToast("Gagal menghapus tugas!");
+            }
+            closeConfirmModal();
+        };
+
+        // EXPORT HANDLER
         function openExportModal(format) {
             activeExportFormat = format;
             document.getElementById('exportModal').classList.remove('hidden');
@@ -910,6 +1054,7 @@
         function processExportExecution() {
             const rangeType = document.getElementById('exportRangeType').value;
             const selectedRole = document.getElementById('roleFilter').value;
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
             const selectedUser = document.getElementById('userFilter').value;
             const activeDate = document.getElementById('dateFilter').value || todayStr;
 
@@ -943,17 +1088,17 @@
             } else if (rangeType === 'custom') {
                 startDate = document.getElementById('exportStartDate').value;
                 endDate = document.getElementById('exportEndDate').value;
-                if (!startDate || !endDate) return alert("Silakan isi tanggal awal dan tanggal akhir kustom!");
+                if (!startDate || !endDate) return alert("Silakan tentukan tanggal awal dan akhir!");
                 labelRange = `Kustom (${formatTanggalIndo(startDate)} s.d ${formatTanggalIndo(endDate)})`;
             }
 
-            // Saring data tugas berdasarkan rentang tanggal yang dipilah
             const tasksToExport = globalTasks.filter(item => {
                 const taskDate = item.tanggal || todayStr;
                 const matchDateRange = taskDate >= startDate && taskDate <= endDate;
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
-                return matchDateRange && matchRole && matchUser;
+                return matchDateRange && matchRole && matchStatus && matchUser;
             });
 
             if (tasksToExport.length === 0) {
@@ -963,18 +1108,15 @@
             if (activeExportFormat === 'csv') {
                 generateCSVFile(tasksToExport, labelRange);
             } else {
-                generatePDFFile(tasksToExport, labelRange, startDate, endDate);
+                generatePDFFile(tasksToExport, labelRange);
             }
 
             closeExportModal();
         }
 
-        // GENERATE CSV FILE
         function generateCSVFile(tasks, labelRange) {
             const activeDate = document.getElementById('dateFilter').value || todayStr;
             const tanggalFormatted = formatTanggalIndo(activeDate);
-
-            // Ambil nama petugas atau email pengguna yang sedang login
             const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua_Petugas');
 
@@ -992,9 +1134,8 @@
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
-
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas}","${t.status}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}"\n`;
                 });
             });
 
@@ -1008,8 +1149,7 @@
             showToast("Berhasil mengekspor CSV!");
         }
 
-        // GENERATE PDF FILE
-        function generatePDFFile(tasks, labelRange, startDate, endDate) {
+        function generatePDFFile(tasks, labelRange) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
@@ -1019,7 +1159,6 @@
             const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua Petugas');
 
-            // Header Laporan
             doc.setFont("Helvetica", "bold");
             doc.setFontSize(13);
             doc.text(`LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()}`, 14, 16);
@@ -1088,7 +1227,7 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // MODAL 1: SINGLE TASK
+        // FORM SINGLE TASK
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
@@ -1137,8 +1276,12 @@
                     tanggal, nama, peran, tugas, jam_mulai, jam_selesai
                 }).eq('id', editingTaskId);
 
-                if (!error) { showToast("Tugas diperbarui!"); fetchTasksSupabase(); toggleModal(false); } 
-                else { alert("Gagal memperbarui data: " + (error.message || "")); }
+                if (!error) { 
+                    showToast("Tugas diperbarui!"); 
+                    toggleModal(false); 
+                } else { 
+                    alert("Gagal memperbarui data: " + (error.message || "")); 
+                }
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id,
@@ -1146,12 +1289,17 @@
                     tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
-                if (!error) { showToast("Tugas ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
-                else { alert("Gagal menyimpan ke Supabase: " + (error.message || "")); }
+                if (!error) { 
+                    showToast("Tugas ditambahkan!"); 
+                    toggleModal(false); 
+                } else { 
+                    alert("Gagal menyimpan ke Supabase: " + (error.message || "")); 
+                }
             }
+            document.getElementById('btn-save-task').innerText = "Simpan";
         });
 
-        // MODAL 2: IMPORT TEKS PASTE CHAT
+        // IMPORT CHAT WA
         function openBulkTextModal() { 
             document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr;
             document.getElementById('bulkTextModal').classList.remove('hidden'); 
@@ -1197,19 +1345,18 @@
                 const { error } = await _supabase.from('jadwal').insert(bulkPayload);
                 if (!error) {
                     showToast(`${bulkPayload.length} tugas berhasil diimport!`);
-                    fetchTasksSupabase();
                     closeBulkTextModal();
                     document.getElementById('bulk-text-area').value = '';
                 } else {
-                    alert("Gagal mengimport data. Detail error: " + (error.message || ""));
+                    alert("Gagal mengimport data: " + (error.message || ""));
                 }
             } else {
-                alert("Format teks tidak terdeteksi! Format:\n09.30-10.00 : pengisian tandon");
+                alert("Format teks tidak terdeteksi! Contoh: 09.30-10.00 : Pengisian tandon");
             }
             document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
         }
 
-        // MODAL 3: GENERATE SEHARIAN (07:00 - 17:00)
+        // AUTO GENERATE
         function openAutoGenerateModal() { 
             document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr;
             document.getElementById('autoGenerateModal').classList.remove('hidden'); 
@@ -1249,7 +1396,6 @@
 
             if (!error) {
                 showToast("5 Tugas rutin otomatis dibuat!");
-                fetchTasksSupabase();
                 closeAutoGenerateModal();
             } else {
                 alert("Gagal membuat jadwal otomatis: " + (error.message || ""));
@@ -1258,36 +1404,10 @@
             document.getElementById('btn-process-gen').innerText = "Generate";
         }
 
-        // STATUS & COUNTER
-        async function updateStatus(id, newStatus) {
-            const { error } = await _supabase.from('jadwal').update({ status: newStatus }).eq('id', id);
-            if (!error) {
-                const t = globalTasks.find(item => item.id == id);
-                if (t) t.status = newStatus;
-                updateCounters();
-                showToast("Status diperbarui");
-            }
-        }
-
-        async function deleteTask(id) {
-            if (confirm("Hapus tugas ini?")) {
-                const { error } = await _supabase.from('jadwal').delete().eq('id', id);
-                if (!error) {
-                    globalTasks = globalTasks.filter(t => t.id != id);
-                    renderTasks();
-                    showToast("Tugas dihapus");
-                }
-            }
-        }
-
-        function updateCounters() {
-            document.getElementById('totalTaskCount').innerText = globalTasks.length;
-            document.getElementById('inProgressCount').innerText = globalTasks.filter(t => t.status === 'Proses').length;
-            document.getElementById('completedCount').innerText = globalTasks.filter(t => t.status === 'Selesai').length;
-        }
-
-        function filterTasks(role) {
-            document.getElementById('roleFilter').value = role;
+        function resetFilters() {
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            if (isSuperAdmin) document.getElementById('userFilter').value = 'All';
             renderTasks();
         }
 
@@ -1295,12 +1415,12 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Jadwal Operasional Harian',
-                    text: `Jadwal kerja harian Teknisi & Cleaning Service hari ini. Total: ${globalTasks.length} tugas.`,
+                    text: `Jadwal kerja harian hari ini. Total: ${globalTasks.length} tugas.`,
                     url: window.location.href,
                 }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert("Link disalin!");
+                showToast("Link berhasil disalin!");
             }
         }
 
