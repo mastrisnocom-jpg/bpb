@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Operasional - Personal Super App</title>
+    <title>Jadwal Operasional - Unit BSN Surabaya</title>
     
     <meta name="description" content="Sistem manajemen jadwal harian operasional untuk Teknisi, Cleaning Service, dan Admin Teknik terintegrasi Supabase.">
     <meta name="keywords" content="jadwal kerja, teknisi, cleaning service, admin teknik, superapp, supabase">
@@ -154,7 +154,7 @@
                             </div>
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
+                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">OPS. UNIT BSN SURABAYA</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
                                 <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
@@ -318,7 +318,7 @@
             <div class="flex gap-2 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="closeExportModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
                 <button onclick="processExportExecution()" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-file-export"></i> Undah Laporan
+                    <i class="fa-solid fa-file-export"></i> Unduh Laporan
                 </button>
             </div>
         </div>
@@ -570,6 +570,17 @@
             violet: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 900: '#4c1d95', 950: '#2e1065' },
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
+
+        // Helper Format Tanggal Indonesia (Contoh: 18 Agustus 2026)
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
 
         function applyTheme(themeName) {
             const t = colorPalettes[themeName];
@@ -880,21 +891,22 @@
             if (rangeType === 'daily') {
                 startDate = activeDate;
                 endDate = activeDate;
-                labelRange = `Harian (${activeDate})`;
+                labelRange = `Harian (${formatTanggalIndo(activeDate)})`;
             } else if (rangeType === 'weekly') {
                 const curr = new Date(activeDate);
                 const first = curr.getDate() - curr.getDay();
                 const last = first + 6;
                 startDate = new Date(curr.setDate(first)).toISOString().slice(0, 10);
                 endDate = new Date(curr.setDate(last)).toISOString().slice(0, 10);
-                labelRange = `Mingguan (${startDate} s.d ${endDate})`;
+                labelRange = `Mingguan (${formatTanggalIndo(startDate)} s.d ${formatTanggalIndo(endDate)})`;
             } else if (rangeType === 'monthly') {
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const lastDay = new Date(year, now.getMonth() + 1, 0).getDate();
                 startDate = `${year}-${month}-01`;
                 endDate = `${year}-${month}-${lastDay}`;
-                labelRange = `Bulanan (${month}/${year})`;
+                const namaBulan = now.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                labelRange = `Bulanan (${namaBulan})`;
             } else if (rangeType === 'yearly') {
                 const year = now.getFullYear();
                 startDate = `${year}-01-01`;
@@ -904,7 +916,7 @@
                 startDate = document.getElementById('exportStartDate').value;
                 endDate = document.getElementById('exportEndDate').value;
                 if (!startDate || !endDate) return alert("Silakan isi tanggal awal dan tanggal akhir kustom!");
-                labelRange = `Kustom (${startDate} s.d ${endDate})`;
+                labelRange = `Kustom (${formatTanggalIndo(startDate)} s.d ${formatTanggalIndo(endDate)})`;
             }
 
             // Saring data tugas berdasarkan rentang tanggal yang dipilah
@@ -931,6 +943,13 @@
 
         // GENERATE CSV FILE
         function generateCSVFile(tasks, labelRange) {
+            const activeDate = document.getElementById('dateFilter').value || todayStr;
+            const tanggalFormatted = formatTanggalIndo(activeDate);
+
+            // Ambil nama petugas jika difilter 1 orang, atau gunakan akun login
+            const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
+            const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua_Petugas');
+
             const grouped = {};
             tasks.forEach(t => {
                 const key = t.nama || 'Tanpa Nama';
@@ -939,22 +958,22 @@
             });
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `LAPORAN JADWAL OPERASIONAL - ${labelRange.toUpperCase()}\n`;
+            csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()})\n`;
             csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS\n";
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
-                list.sort((a, b) => a.tanggal.localeCompare(b.tanggal) || a.jam_mulai.localeCompare(b.jam_mulai));
+                list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
 
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${t.tanggal || todayStr}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas}","${t.status}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas}","${t.status}"\n`;
                 });
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Laporan_Jadwal_${labelRange.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+            link.setAttribute("download", `Laporan_${namaLabel.replace(/\s+/g, '_')}_${tanggalFormatted.replace(/\s+/g, '_')}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -966,15 +985,25 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            doc.setFont("Helvetica", "bold");
-            doc.setFontSize(14);
-            doc.text("LAPORAN JADWAL OPERASIONAL HARIAN", 14, 16);
+            const activeDate = document.getElementById('dateFilter').value || todayStr;
+            const tanggalFormatted = formatTanggalIndo(activeDate);
             
+            // Tentukan label nama
+            const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
+            const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua Petugas');
+
+            // Header Laporan
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(13);
+            doc.text(`LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()}`, 14, 16);
+            doc.setFontSize(10);
+            doc.text(`TANGGAL: ${tanggalFormatted.toUpperCase()}`, 14, 22);
+
             doc.setFont("Helvetica", "normal");
-            doc.setFontSize(9);
-            doc.text(`Periode Laporan : ${labelRange}`, 14, 22);
-            doc.text(`Tanggal Cetak   : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 14, 27);
-            doc.text(`Dicetak Oleh     : ${currentUser ? currentUser.email : 'User'}`, 14, 32);
+            doc.setFontSize(8.5);
+            doc.text(`Rentang Periode : ${labelRange}`, 14, 28);
+            doc.text(`Waktu Unduh    : ${new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} pukul ${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`, 14, 33);
+            doc.text(`Dicetak Oleh   : ${currentUser ? currentUser.email : 'User'}`, 14, 38);
 
             const grouped = {};
             tasks.forEach(t => {
@@ -991,13 +1020,17 @@
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
 
                 tableRows.push([
-                    { content: `PETUGAS: ${namaPetugas.toUpperCase()} (${list[0]?.peran || 'Divisi'}) - Total: ${list.length} Tugas`, colSpan: 7, styles: { fillColor: [209, 250, 229], textColor: [4, 120, 87], fontStyle: 'bold' } }
+                    { 
+                        content: `PETUGAS: ${namaPetugas.toUpperCase()} (${list[0]?.peran || 'Divisi'}) - Total: ${list.length} Tugas`, 
+                        colSpan: 7, 
+                        styles: { fillColor: [209, 250, 229], textColor: [4, 120, 87], fontStyle: 'bold' } 
+                    }
                 ]);
 
                 list.forEach((item) => {
                     tableRows.push([
                         globalNo++,
-                        item.tanggal || todayStr,
+                        formatTanggalIndo(item.tanggal || todayStr),
                         `${item.jam_mulai} - ${item.jam_selesai}`,
                         item.nama,
                         item.peran,
@@ -1008,23 +1041,23 @@
             });
 
             doc.autoTable({
-                startY: 37,
+                startY: 43,
                 head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Divisi', 'Detail Tugas / Area', 'Status']],
                 body: tableRows,
                 headStyles: { fillColor: [5, 150, 105], fontStyle: 'bold', textColor: [255, 255, 255] },
-                styles: { font: 'Helvetica', fontSize: 8, cellPadding: 2 },
+                styles: { font: 'Helvetica', fontSize: 8, cellPadding: 2.5 },
                 columnStyles: {
                     0: { cellWidth: 8, halign: 'center' },
-                    1: { cellWidth: 22 },
-                    2: { cellWidth: 26 },
-                    3: { cellWidth: 25 },
+                    1: { cellWidth: 26 },
+                    2: { cellWidth: 24 },
+                    3: { cellWidth: 24 },
                     4: { cellWidth: 20 },
                     5: { cellWidth: 'auto' },
                     6: { cellWidth: 18, halign: 'center' }
                 }
             });
 
-            doc.save(`Laporan_Jadwal_${labelRange.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+            doc.save(`Laporan_${namaLabel.replace(/\s+/g, '_')}_${tanggalFormatted.replace(/\s+/g, '_')}.pdf`);
             showToast("Berhasil mengekspor PDF!");
         }
 
