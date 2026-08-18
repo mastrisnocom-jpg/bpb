@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan interaksi Like, Komentar, dan Proteksi Status.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Like, Komentar Counter, dan Proteksi Status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -613,7 +613,6 @@
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
 
-        // Tanggal lokal hari ini (YYYY-MM-DD)
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
         const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
@@ -644,7 +643,6 @@
 
         function isTaskExpired(taskDate) {
             if (!taskDate) return false;
-            // Jika tanggal tugas lebih kecil dari hari ini, berarti telah melewati jam 24:00 hari tersebut
             return taskDate < todayStr;
         }
 
@@ -783,7 +781,7 @@
             setupRealtimeListener();
         }
 
-        // AUTO ROLL-FORWARD JADWAL YANG BELUM SELESAI DARI HARI KEMARIN KE HARI INI
+        // AUTO ROLL-FORWARD TUGAS PENDING
         async function handleAutoRollForwardTasks() {
             if (!currentUser) return;
             
@@ -816,7 +814,8 @@
                         jam_selesai: pastTask.jam_selesai,
                         status: 'Belum',
                         likes_count: 0,
-                        liked_users: []
+                        liked_users: [],
+                        comments_count: 0
                     });
                 }
             });
@@ -907,7 +906,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS (PROTEKSI LOCKING STATUS & EXPIRED 24:00)
+        // RENDER TASKS DENGAN ANGKA COUNTER KOMENTAR
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -990,6 +989,7 @@
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
                     const isLiked = likedUsers.includes(currentUser.id);
                     const likesCount = item.likes_count || 0;
+                    const commentsCount = item.comments_count || 0;
                     
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
@@ -1047,16 +1047,17 @@
                                 ${item.tugas}
                             </p>
 
+                            <!-- Social Bar: Like Counter & Comment Counter -->
                             <div class="flex items-center justify-between pt-1.5 mt-0.5 border-t border-slate-200/50 dark:border-slate-700/50">
                                 <div class="flex items-center gap-3">
-                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[10px] font-bold transition active:scale-125 ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold transition active:scale-125 ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
                                         <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                                         <span>${likesCount}</span>
                                     </button>
 
-                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-emerald-500 transition">
-                                        <i class="fa-regular fa-comment-dots"></i>
-                                        <span>Komen</span>
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 hover:text-emerald-500'} transition">
+                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i>
+                                        <span>${commentsCount}</span>
                                     </button>
                                 </div>
 
@@ -1090,6 +1091,7 @@
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
                     const isLiked = likedUsers.includes(currentUser.id);
                     const likesCount = item.likes_count || 0;
+                    const commentsCount = item.comments_count || 0;
                     
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
@@ -1153,8 +1155,9 @@
                                     <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                                     <span>${likesCount}</span>
                                 </button>
-                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Komentar">
-                                    <i class="fa-regular fa-comment-dots"></i>
+                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 hover:text-emerald-500'} p-1" title="Komentar">
+                                    <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i>
+                                    <span>${commentsCount}</span>
                                 </button>
                             </div>
                         </td>
@@ -1195,7 +1198,7 @@
             }
         }
 
-        // KOMENTAR REALTIME (UPDATED TO TEXT ID)
+        // KOMENTAR REALTIME (TEXT ID + AUTO REFRESH COUNTER)
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId); 
             document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
@@ -1227,6 +1230,13 @@
                 console.error("Fetch comments error:", error);
                 commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-4">Gagal memuat komentar: ${error.message}</div>`;
                 return;
+            }
+
+            // Sinkronkan counter lokal
+            const task = globalTasks.find(t => t.id == taskId);
+            if (task) {
+                task.comments_count = data ? data.length : 0;
+                renderTasks();
             }
 
             if (!data || data.length === 0) {
@@ -1299,7 +1309,7 @@
 
             commentsSubscription = _supabase.channel(`comments-realtime-${taskId}`)
                 .on('postgres_changes', { 
-                    event: 'INSERT', 
+                    event: '*', 
                     schema: 'public', 
                     table: 'jadwal_comments',
                     filter: `jadwal_id=eq.${String(taskId)}`
@@ -1309,7 +1319,7 @@
                 .subscribe();
         }
 
-        // UPDATE STATUS DENGAN VALIDASI WAKTU 24:00 & LOCK SELESAI
+        // UPDATE STATUS
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id);
             if (!target) return;
@@ -1336,7 +1346,7 @@
             }
         }
 
-        // DELETE MODAL VALIDASI
+        // DELETE MODAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
@@ -1469,13 +1479,13 @@
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()})\n`;
-            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS,LIKES\n";
+            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS,LIKES,KOMENTAR\n";
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
                 });
             });
 
@@ -1634,7 +1644,7 @@
                 const { error } = await _supabase.from('jadwal').insert([{
                     user_id: currentUser.id,
                     user_email: currentUser.email,
-                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum', likes_count: 0, liked_users: []
+                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0
                 }]);
 
                 if (!error) { 
@@ -1685,7 +1695,8 @@
                             jam_selesai: endTime,
                             status: 'Belum',
                             likes_count: 0,
-                            liked_users: []
+                            liked_users: [],
+                            comments_count: 0
                         });
                     }
                 }
@@ -1741,7 +1752,8 @@
                 jam_selesai: t.jam_selesai,
                 status: 'Belum',
                 likes_count: 0,
-                liked_users: []
+                liked_users: [],
+                comments_count: 0
             }));
 
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
