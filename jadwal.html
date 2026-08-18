@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan auto rollover dan proteksi status.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan interaksi Like, Komentar, dan Proteksi Status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -302,7 +302,7 @@
             </div>
 
             <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
-                <input type="text" id="inputNewComment" placeholder="Tulis komentar..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
                 <button onclick="sendComment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -787,7 +787,6 @@
         async function handleAutoRollForwardTasks() {
             if (!currentUser) return;
             
-            // Cari tugas milik user aktif dari tanggal sebelum hari ini yang statusnya BELUM atau PROSES
             const pendingPastTasks = globalTasks.filter(t => 
                 t.user_id === currentUser.id && 
                 t.tanggal < todayStr && 
@@ -796,7 +795,6 @@
 
             if (pendingPastTasks.length === 0) return;
 
-            // Periksa apakah tugas tersebut sudah pernah di-roll ke hari ini agar tidak duplikat ganda
             const todayTasks = globalTasks.filter(t => t.user_id === currentUser.id && t.tanggal === todayStr);
             const tasksToMigrate = [];
 
@@ -994,11 +992,10 @@
                     const likesCount = item.likes_count || 0;
                     
                     const isCompleted = item.status === 'Selesai';
-                    const isPastDay = isTaskExpired(item.tanggal); // Melewati jam 24:00 hari kerja
+                    const isPastDay = isTaskExpired(item.tanggal);
 
                     let statusColor = isCompleted ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' : (item.status === 'Proses' ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-700/80');
 
-                    // Tombol Edit/Hapus: Terkunci jika BUKAN pemilik, atau jika SUDAH SELESAI, atau MELEWATI JAM 24:00
                     let actionButtons = '';
                     if (!isOwner) {
                         actionButtons = `<span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">View Only</span>`;
@@ -1017,7 +1014,6 @@
                         `;
                     }
 
-                    // Kontrol Status: Terkunci jika bukan owner, jika sudah selesai, atau jika tanggal sudah lewat jam 24:00
                     let statusControl = '';
                     if (isOwner && !isCompleted && !isPastDay) {
                         statusControl = `
@@ -1199,20 +1195,23 @@
             }
         }
 
-        // KOMENTAR REALTIME
+        // KOMENTAR REALTIME (UPDATED TO TEXT ID)
         async function openCommentModal(taskId, taskTitle) {
-            activeCommentJadwalId = taskId;
+            activeCommentJadwalId = String(taskId); 
             document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
             document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat komentar...</div>';
             document.getElementById('commentModal').classList.remove('hidden');
 
-            await fetchComments(taskId);
-            setupCommentsRealtime(taskId);
+            await fetchComments(activeCommentJadwalId);
+            setupCommentsRealtime(activeCommentJadwalId);
         }
 
         function closeCommentModal() {
             activeCommentJadwalId = null;
-            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            if (commentsSubscription) {
+                _supabase.removeChannel(commentsSubscription);
+                commentsSubscription = null;
+            }
             document.getElementById('commentModal').classList.add('hidden');
         }
 
@@ -1220,11 +1219,17 @@
             const { data, error } = await _supabase
                 .from('jadwal_comments')
                 .select('*')
-                .eq('jadwal_id', taskId)
+                .eq('jadwal_id', String(taskId))
                 .order('created_at', { ascending: true });
 
             const commentList = document.getElementById('commentList');
-            if (error || !data || data.length === 0) {
+            if (error) {
+                console.error("Fetch comments error:", error);
+                commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-4">Gagal memuat komentar: ${error.message}</div>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
                 commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-4">Belum ada komentar. Jadilah yang pertama!</div>';
                 return;
             }
@@ -1239,14 +1244,20 @@
             comments.forEach(c => {
                 const isMe = c.user_id === currentUser.id;
                 const commentEl = document.createElement('div');
-                commentEl.className = `p-2 rounded-xl text-xs ${isMe ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-4 border border-emerald-200/60 dark:border-emerald-800/40' : 'bg-slate-100 dark:bg-slate-800/60 mr-4 border border-slate-200/60 dark:border-slate-700/60'}`;
+                commentEl.className = `p-2.5 rounded-xl text-xs ${
+                    isMe 
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-5 border border-emerald-200/60 dark:border-emerald-800/40' 
+                    : 'bg-slate-100 dark:bg-slate-800/60 mr-5 border border-slate-200/60 dark:border-slate-700/60'
+                }`;
                 
                 commentEl.innerHTML = `
                     <div class="flex items-center justify-between mb-0.5">
                         <span class="font-extrabold ${isMe ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'} text-[10px]">
-                            ${isMe ? 'Saya' : (c.user_email?.split('@')[0] || 'User')}
+                            ${isMe ? 'Saya' : (c.user_email ? c.user_email.split('@')[0] : 'User')}
                         </span>
-                        <span class="text-[8px] text-slate-400">${new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span class="text-[8px] text-slate-400">
+                            ${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
+                        </span>
                     </div>
                     <p class="text-slate-700 dark:text-slate-300 leading-snug break-words">${c.comment}</p>
                 `;
@@ -1259,38 +1270,46 @@
         async function sendComment() {
             const input = document.getElementById('inputNewComment');
             const commentText = input.value.trim();
-            if (!commentText || !activeCommentJadwalId) return;
+            
+            if (!commentText) return;
+            if (!activeCommentJadwalId) return showToast("ID Jadwal tidak ditemukan!");
 
             input.value = '';
 
-            const { error } = await _supabase.from('jadwal_comments').insert([{
-                jadwal_id: activeCommentJadwalId,
+            const payload = {
+                jadwal_id: String(activeCommentJadwalId),
                 user_id: currentUser.id,
                 user_email: currentUser.email,
                 comment: commentText
-            }]);
+            };
+
+            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
 
             if (error) {
-                showToast("Gagal mengirim komentar!");
+                console.error("Kirim komentar error:", error);
+                showToast("Gagal kirim komentar: " + error.message);
+                input.value = commentText;
+            } else {
+                fetchComments(activeCommentJadwalId);
             }
         }
 
         function setupCommentsRealtime(taskId) {
             if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
 
-            commentsSubscription = _supabase.channel(`comments:${taskId}`)
+            commentsSubscription = _supabase.channel(`comments-realtime-${taskId}`)
                 .on('postgres_changes', { 
                     event: 'INSERT', 
                     schema: 'public', 
                     table: 'jadwal_comments',
-                    filter: `jadwal_id=eq.${taskId}`
-                }, payload => {
+                    filter: `jadwal_id=eq.${String(taskId)}`
+                }, () => {
                     fetchComments(taskId);
                 })
                 .subscribe();
         }
 
-        // UPDATE STATUS DENGAN VALIDASI WAKTU 24:00
+        // UPDATE STATUS DENGAN VALIDASI WAKTU 24:00 & LOCK SELESAI
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id);
             if (!target) return;
