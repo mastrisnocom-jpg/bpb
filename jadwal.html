@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Notifikasi Komentar Realtime.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan fitur Like, Komentar Edit & Hapus, dan Proteksi Status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -283,7 +283,7 @@
         </main>
     </div>
 
-    <!-- POP-UP NOTIFIKASI KOMENTAR REALTIME DENGAN SUARA -->
+    <!-- POP-UP NOTIFIKASI KOMENTAR REALTIME -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
             <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -300,7 +300,7 @@
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR -->
+    <!-- MODAL KOMENTAR (DENGAN FITUR EDIT & HAPUS) -->
     <div id="commentModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
@@ -318,16 +318,22 @@
             <div id="commentList" class="flex-1 overflow-y-auto space-y-2 py-2 pr-1 min-h-[140px] max-h-[260px] text-xs">
             </div>
 
-            <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
+            <!-- Box Indikator Mode Edit -->
+            <div id="editCommentIndicator" class="hidden items-center justify-between bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2.5 py-1 rounded-lg text-[10px] text-amber-800 dark:text-amber-300 mb-1.5">
+                <span class="font-bold"><i class="fa-solid fa-pen mr-1"></i> Edit Komentar</span>
+                <button onclick="cancelEditComment()" class="text-amber-600 hover:text-rose-500 font-extrabold">Batal</button>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
                 <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
-                <button onclick="sendComment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center">
+                <button id="btnSendComment" onclick="sendComment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
+    <!-- MODAL CUSTOM KONFIRMASI HAPUS JADWAL -->
     <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down text-center">
             <div class="w-10 h-10 bg-rose-100 dark:bg-rose-950/50 text-rose-500 rounded-xl flex items-center justify-center text-lg mx-auto mb-2.5">
@@ -630,6 +636,7 @@
         let globalCommentsListener = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
+        let editingCommentId = null;
         let notifiedTaskId = null;
         let audioCtx = null;
 
@@ -666,7 +673,6 @@
             return taskDate < todayStr;
         }
 
-        // AUDIO SYNTH NOTIFIKASI CHIME (TANPA FILE MP3 EKSTERNAL)
         function playNotificationChime() {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -837,7 +843,7 @@
             setupGlobalCommentNotificationListener();
         }
 
-        // LISTENER NOTIFIKASI GLOBAL UNTUK SETIAP KOMENTAR BARU
+        // LISTENER NOTIFIKASI GLOBAL
         function setupGlobalCommentNotificationListener() {
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
 
@@ -845,18 +851,14 @@
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments' }, payload => {
                     const newComment = payload.new;
                     
-                    // Jangan notifikasi jika kita sendiri yang menulis komentar
                     if (newComment.user_id === currentUser.id) return;
 
-                    // Temukan tugas yang dikomentari
                     const targetTask = globalTasks.find(t => String(t.id) === String(newComment.jadwal_id));
                     
                     if (targetTask) {
-                        // Update counter lokal
                         targetTask.comments_count = (targetTask.comments_count || 0) + 1;
                         renderTasks();
 
-                        // Tampilkan Notifikasi jika komentar ditujukan ke tugas milik user yang sedang aktif
                         if (targetTask.user_id === currentUser.id) {
                             showCommentNotification(newComment, targetTask);
                         }
@@ -865,7 +867,6 @@
                 .subscribe();
         }
 
-        // TAMPILKAN POPUP TOAST & AUDIO CHIME NOTIFIKASI
         function showCommentNotification(comment, task) {
             playNotificationChime();
 
@@ -878,7 +879,6 @@
 
             toast.classList.remove('hidden');
 
-            // Browser Notification (Saat tab sedang di background)
             if ("Notification" in window && Notification.permission === "granted") {
                 new Notification(`Komentar baru dari ${senderName}`, {
                     body: `${task.tugas}: "${comment.comment}"`,
@@ -886,7 +886,6 @@
                 });
             }
 
-            // Hilang otomatis setelah 5.5 detik
             setTimeout(() => {
                 toast.classList.add('hidden');
             }, 5500);
@@ -903,7 +902,7 @@
             }
         }
 
-        // AUTO ROLL-FORWARD TUGAS PENDING DARI HARI KEMARIN
+        // AUTO ROLL-FORWARD TUGAS PENDING
         async function handleAutoRollForwardTasks() {
             if (!currentUser) return;
             
@@ -1028,7 +1027,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS (PROTEKSI LOCKING STATUS & EXPIRED 24:00)
+        // RENDER TASKS
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1319,9 +1318,10 @@
             }
         }
 
-        // KOMENTAR REALTIME
+        // KOMENTAR: BUKA MODAL
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId); 
+            cancelEditComment();
             document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
             document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat komentar...</div>';
             document.getElementById('commentModal').classList.remove('hidden');
@@ -1332,6 +1332,7 @@
 
         function closeCommentModal() {
             activeCommentJadwalId = null;
+            cancelEditComment();
             if (commentsSubscription) {
                 _supabase.removeChannel(commentsSubscription);
                 commentsSubscription = null;
@@ -1367,27 +1368,51 @@
             renderCommentList(data);
         }
 
+        // RENDER KOMENTAR DENGAN TOMBOL EDIT & HAPUS
         function renderCommentList(comments) {
             const commentList = document.getElementById('commentList');
             commentList.innerHTML = '';
 
             comments.forEach(c => {
-                const isMe = c.user_id === currentUser.id;
+                const isMyComment = c.user_id === currentUser.id;
+                const canDelete = isMyComment || isSuperAdmin;
                 const commentEl = document.createElement('div');
-                commentEl.className = `p-2.5 rounded-xl text-xs ${
-                    isMe 
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-5 border border-emerald-200/60 dark:border-emerald-800/40' 
-                    : 'bg-slate-100 dark:bg-slate-800/60 mr-5 border border-slate-200/60 dark:border-slate-700/60'
+                
+                commentEl.className = `p-2.5 rounded-xl text-xs relative group ${
+                    isMyComment 
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-4 border border-emerald-200/60 dark:border-emerald-800/40' 
+                    : 'bg-slate-100 dark:bg-slate-800/60 mr-4 border border-slate-200/60 dark:border-slate-700/60'
                 }`;
                 
+                let actionIcons = '';
+                if (isMyComment || canDelete) {
+                    actionIcons = `
+                        <div class="flex items-center gap-1.5">
+                            ${isMyComment ? `
+                                <button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-600 text-[10px]" title="Edit Komentar">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            ` : ''}
+                            ${canDelete ? `
+                                <button onclick="deleteComment('${c.id}')" class="text-slate-400 hover:text-rose-500 text-[10px]" title="Hapus Komentar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
                 commentEl.innerHTML = `
-                    <div class="flex items-center justify-between mb-0.5">
-                        <span class="font-extrabold ${isMe ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'} text-[10px]">
-                            ${isMe ? 'Saya' : (c.user_email ? c.user_email.split('@')[0] : 'User')}
-                        </span>
-                        <span class="text-[8px] text-slate-400">
-                            ${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
-                        </span>
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold ${isMyComment ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'} text-[10px]">
+                                ${isMyComment ? 'Saya' : (c.user_email ? c.user_email.split('@')[0] : 'User')}
+                            </span>
+                            <span class="text-[8px] text-slate-400">
+                                ${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
+                            </span>
+                        </div>
+                        ${actionIcons}
                     </div>
                     <p class="text-slate-700 dark:text-slate-300 leading-snug break-words">${c.comment}</p>
                 `;
@@ -1397,6 +1422,50 @@
             commentList.scrollTop = commentList.scrollHeight;
         }
 
+        // EDIT KOMENTAR
+        function startEditComment(commentId, commentText) {
+            editingCommentId = commentId;
+            const input = document.getElementById('inputNewComment');
+            input.value = commentText;
+            input.focus();
+
+            document.getElementById('editCommentIndicator').classList.remove('hidden');
+            document.getElementById('editCommentIndicator').classList.add('flex');
+            document.getElementById('btnSendComment').innerHTML = '<i class="fa-solid fa-check"></i>';
+        }
+
+        function cancelEditComment() {
+            editingCommentId = null;
+            const input = document.getElementById('inputNewComment');
+            if (input) input.value = '';
+
+            const indicator = document.getElementById('editCommentIndicator');
+            if (indicator) {
+                indicator.classList.add('hidden');
+                indicator.classList.remove('flex');
+            }
+            const btn = document.getElementById('btnSendComment');
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+        }
+
+        // HAPUS KOMENTAR
+        async function deleteComment(commentId) {
+            if (!confirm("Hapus komentar ini?")) return;
+
+            const { error } = await _supabase
+                .from('jadwal_comments')
+                .delete()
+                .eq('id', commentId);
+
+            if (error) {
+                showToast("Gagal menghapus komentar!");
+            } else {
+                showToast("Komentar dihapus");
+                if (activeCommentJadwalId) fetchComments(activeCommentJadwalId);
+            }
+        }
+
+        // KIRIM / UPDATE KOMENTAR
         async function sendComment() {
             const input = document.getElementById('inputNewComment');
             const commentText = input.value.trim();
@@ -1404,23 +1473,40 @@
             if (!commentText) return;
             if (!activeCommentJadwalId) return showToast("ID Jadwal tidak ditemukan!");
 
-            input.value = '';
+            if (editingCommentId) {
+                // Proses Update Komentar
+                const { error } = await _supabase
+                    .from('jadwal_comments')
+                    .update({ comment: commentText })
+                    .eq('id', editingCommentId);
 
-            const payload = {
-                jadwal_id: String(activeCommentJadwalId),
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                comment: commentText
-            };
-
-            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
-
-            if (error) {
-                console.error("Kirim komentar error:", error);
-                showToast("Gagal kirim komentar: " + error.message);
-                input.value = commentText;
+                if (error) {
+                    showToast("Gagal memperbarui komentar!");
+                } else {
+                    showToast("Komentar diperbarui");
+                    cancelEditComment();
+                    fetchComments(activeCommentJadwalId);
+                }
             } else {
-                fetchComments(activeCommentJadwalId);
+                // Proses Tambah Komentar Baru
+                input.value = '';
+
+                const payload = {
+                    jadwal_id: String(activeCommentJadwalId),
+                    user_id: currentUser.id,
+                    user_email: currentUser.email,
+                    comment: commentText
+                };
+
+                const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+
+                if (error) {
+                    console.error("Kirim komentar error:", error);
+                    showToast("Gagal kirim komentar: " + error.message);
+                    input.value = commentText;
+                } else {
+                    fetchComments(activeCommentJadwalId);
+                }
             }
         }
 
@@ -1466,7 +1552,7 @@
             }
         }
 
-        // DELETE MODAL
+        // DELETE MODAL JADWAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
@@ -1697,7 +1783,7 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // FORM SINGLE
+        // FORM SINGLE TASK
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
