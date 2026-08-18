@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Notifikasi Badge Lonceng, dan Proteksi Status.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Reward, Notifikasi Badge Lonceng, dan Proteksi Status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -54,7 +54,7 @@
                 <i id="auth-icon" class="fa-solid fa-shield-halved"></i>
             </div>
             <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">M-Ops Schedule</h2>
-            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian</p>
+            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian & insentif</p>
             
             <div id="form-container" class="space-y-2.5">
                 <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-emerald-500 transition">
@@ -111,6 +111,10 @@
                         <i class="fa-solid fa-calendar-day text-xs"></i> Home Jadwal
                     </button>
 
+                    <button onclick="openEarningsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 transition">
+                        <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Pendapatan
+                    </button>
+
                     <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 hover:text-white transition">
                         <i class="fa-solid fa-user-group text-xs text-emerald-300"></i> Relasi Follow / Teman
                     </button>
@@ -134,6 +138,10 @@
 
                     <button onclick="openAutoGenerateModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-bolt text-xs"></i> Auto 07-17
+                    </button>
+
+                    <button id="btnSidebarBudget" onclick="openBudgetConfigModal()" class="hidden w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 border border-amber-400/30 mt-2">
+                        <i class="fa-solid fa-coins text-xs"></i> Kelola Anggaran
                     </button>
                 </nav>
             </div>
@@ -159,13 +167,12 @@
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             <div class="w-full mx-auto px-3.5 md:px-6 pt-4 pb-12 flex-grow">
                 
-                <!-- HEADER M-BANKING (HOME DI HP DINONAKTIFKAN) -->
+                <!-- HEADER M-BANKING (BERSIH DI HP) -->
                 <header class="mb-3.5 bg-gradient-to-r from-emerald-700 via-emerald-800 to-teal-800 p-3.5 md:p-4 rounded-2xl text-white shadow-md relative overflow-hidden">
                     <div class="absolute -right-10 -bottom-10 w-36 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
 
                     <div class="flex items-center justify-between relative z-10">
                         <div class="flex items-center gap-2.5">
-                            <!-- Tombol Kembali hanya tampil di Laptop/Desktop (hidden di mobile) -->
                             <a href="/" title="Kembali ke Halaman Utama" class="hidden md:flex w-8 h-8 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl items-center justify-center text-emerald-300 text-sm transition active:scale-95">
                                 <i class="fa-solid fa-arrow-left"></i>
                             </a>
@@ -174,19 +181,29 @@
                                     <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
-                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Kolaboratif Mutual Follow</p>
+                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task & Insentif Operasional</p>
                             </div>
                         </div>
 
                         <!-- TOOLBAR ATAS HEADER -->
                         <div class="flex items-center gap-1.5">
-                            <!-- Tombol Lonceng Notifikasi + Badge Merah -->
+                            <!-- Lonceng Notifikasi + Badge Merah -->
                             <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
                                 <i class="fa-solid fa-bell"></i>
                                 <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
                             </button>
 
-                            <!-- Tombol Home di kanan atas HANYA tampil di Desktop (hidden di mobile) -->
+                            <!-- Dompet Insentif -->
+                            <button onclick="openEarningsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-400 flex items-center justify-center transition active:scale-95 text-xs" title="Dompet Pendapatan">
+                                <i class="fa-solid fa-wallet"></i>
+                            </button>
+
+                            <!-- Kelola Anggaran (Super Admin) -->
+                            <button id="btnHeaderBudget" onclick="openBudgetConfigModal()" class="hidden w-7 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition active:scale-95 text-xs font-bold" title="Pengaturan Anggaran">
+                                <i class="fa-solid fa-coins"></i>
+                            </button>
+
+                            <!-- Home hanya di Desktop -->
                             <a href="/" title="Halaman Utama" class="hidden md:flex w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 items-center justify-center transition active:scale-95 text-xs">
                                 <i class="fa-solid fa-house"></i>
                             </a>
@@ -238,8 +255,8 @@
                     </div>
                 </header>
 
-                <!-- KARTU STATISTIK -->
-                <section class="grid grid-cols-3 gap-2 mb-4">
+                <!-- KARTU STATISTIK & ESTIMASI PENDAPATAN -->
+                <section class="grid grid-cols-4 gap-2 mb-4">
                     <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2">
                         <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
                             <i class="fa-solid fa-list-check"></i>
@@ -267,6 +284,16 @@
                         <div class="min-w-0">
                             <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
                             <p id="completedCount" class="text-sm font-extrabold text-teal-600 dark:text-teal-400 leading-tight">0</p>
+                        </div>
+                    </div>
+
+                    <div onclick="openEarningsModal()" class="bg-gradient-to-tr from-amber-500/10 to-amber-600/20 dark:from-amber-950/40 dark:to-amber-900/20 rounded-xl p-2.5 border border-amber-300 dark:border-amber-700/60 shadow-sm flex items-center gap-2 cursor-pointer active:scale-95 transition">
+                        <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-sm shadow-amber-500/30">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[8.5px] text-amber-700 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Pendapatan</p>
+                            <p id="myEarningsBadge" class="text-xs font-extrabold text-amber-800 dark:text-amber-300 leading-tight">Rp 0</p>
                         </div>
                     </div>
                 </section>
@@ -302,6 +329,101 @@
                 <div>Created for Mobile Banking Vibe Experience &bull; M-Ops Workspace</div>
             </footer>
         </main>
+    </div>
+
+    <!-- MODAL DOMPET PENDAPATAN & ESTIMASI REWARD -->
+    <div id="earningsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Dompet Insentif Selesai</h3>
+                        <p class="text-[9px] text-slate-400">Reward tugas selesai (Senin - Jumat, maks. 5/hari)</p>
+                    </div>
+                </div>
+                <button onclick="closeEarningsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
+                <!-- Banner Saldo Saya Bulan Ini -->
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Pendapatan Saya (Bulan Ini)</p>
+                    <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold mt-1">Rp 0</h2>
+                    <div class="flex items-center justify-between text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
+                        <span id="modalMyEligibleTasks">0 Tugas Dihitung (Maks. 5/hari)</span>
+                        <span id="modalCurrentRate">Tarif: Rp 10 / tugas</span>
+                    </div>
+                </div>
+
+                <!-- Info Anggaran Tim -->
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-slate-600 dark:text-slate-300 mb-1">
+                        <span>Realisasi Anggaran Tim</span>
+                        <span id="modalTeamBudgetUsage">Rp 0 / Rp 100.000</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="modalBudgetProgressBar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Rincian Pendapatan Tiap Petugas -->
+                <div>
+                    <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Petugas (Bulan Ini)</h4>
+                    <div id="teamEarningsList" class="space-y-1.5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
+                <button onclick="closeEarningsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SETTING ANGGARAN (KHUSUS SUPER ADMIN) -->
+    <div id="budgetConfigModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-coins text-amber-500"></i>
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pengaturan Anggaran</h3>
+                </div>
+                <button onclick="closeBudgetConfigModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form id="formBudgetConfig" class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Total Anggaran Bulanan (Rp)</label>
+                    <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tarif per Tugas Selesai (Rp)</label>
+                    <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Maksimal Tugas / Hari / Orang</label>
+                    <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                </div>
+
+                <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[10px] leading-snug">
+                    <i class="fa-solid fa-info-circle mr-1"></i> Hari Sabtu dan Minggu otomatis tidak dihitung insentif (Rp 0).
+                </div>
+
+                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeBudgetConfigModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL PUSAT NOTIFIKASI -->
@@ -659,7 +781,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (MOBILE - 5 MENU RAPI) -->
+    <!-- BOTTOM NAVIGATION (MOBILE) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
         <!-- 1. Home Jadwal -->
         <button onclick="goToHomeJadwal()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
@@ -678,10 +800,10 @@
             <i class="fa-solid fa-plus text-base"></i>
         </button>
 
-        <!-- 4. Import Teks WA -->
-        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-paste text-sm"></i>
-            <span class="text-[8px] font-extrabold">Import</span>
+        <!-- 4. Dompet Pendapatan Mobile -->
+        <button onclick="openEarningsModal()" class="flex flex-col items-center gap-0.5 text-amber-500">
+            <i class="fa-solid fa-wallet text-sm"></i>
+            <span class="text-[8px] font-extrabold">Dompet</span>
         </button>
 
         <!-- 5. Profil Akun -->
@@ -712,17 +834,26 @@
         let globalCommentsListener = null;
         let followsSubscription = null;
         let followNotifyListener = null;
+        let appConfigSubscription = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
         let notifiedTaskId = null;
         let audioCtx = null;
 
+        // Data Relasi Follow & Notifikasi
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
         let notificationsList = [];
         let unreadNotificationsCount = 0;
+
+        // PENGATURAN ANGGARAN & REWARD DARI SUPABASE
+        let budgetSettings = {
+            monthlyBudget: 100000,
+            ratePerTask: 10,
+            maxDailyTasks: 5
+        };
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
@@ -757,7 +888,197 @@
             return taskDate < todayStr;
         }
 
-        // FUNGSI HOME JADWAL (RESET KE HARI INI & RENDER SEMUA)
+        // LOAD BUDGET SETTINGS DARI SUPABASE CLOUD (FALLBACK KE LOCALSTORAGE JIKA OFFLINE)
+        async function loadBudgetSettings() {
+            try {
+                const { data, error } = await _supabase
+                    .from('app_config')
+                    .select('*')
+                    .eq('id', 'budget_settings')
+                    .single();
+
+                if (!error && data) {
+                    budgetSettings.monthlyBudget = Number(data.monthly_budget) || 100000;
+                    budgetSettings.ratePerTask = Number(data.rate_per_task) || 10;
+                    budgetSettings.maxDailyTasks = Number(data.max_daily_tasks) || 5;
+                    localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
+                } else {
+                    const saved = localStorage.getItem('mops_budget_settings');
+                    if (saved) budgetSettings = Object.assign(budgetSettings, JSON.parse(saved));
+                }
+            } catch (e) {
+                const saved = localStorage.getItem('mops_budget_settings');
+                if (saved) budgetSettings = Object.assign(budgetSettings, JSON.parse(saved));
+            }
+        }
+
+        function setupAppConfigRealtime() {
+            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            appConfigSubscription = _supabase.channel('public:app_config')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
+                    if (payload.new && payload.new.id === 'budget_settings') {
+                        budgetSettings.monthlyBudget = Number(payload.new.monthly_budget);
+                        budgetSettings.ratePerTask = Number(payload.new.rate_per_task);
+                        budgetSettings.maxDailyTasks = Number(payload.new.max_daily_tasks);
+                        calculateAndRenderEarnings();
+                    }
+                })
+                .subscribe();
+        }
+
+        function openBudgetConfigModal() {
+            if (!isSuperAdmin) return;
+            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
+            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
+            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+            document.getElementById('budgetConfigModal').classList.remove('hidden');
+        }
+
+        function closeBudgetConfigModal() {
+            document.getElementById('budgetConfigModal').classList.add('hidden');
+        }
+
+        // SIMPAN PENGATURAN ANGGARAN KE SUPABASE OLEH SUPER ADMIN
+        document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const monthlyBudget = parseInt(document.getElementById('inputMonthlyBudget').value) || 100000;
+            const ratePerTask = parseInt(document.getElementById('inputRatePerTask').value) || 10;
+            const maxDailyTasks = parseInt(document.getElementById('inputMaxDailyTasks').value) || 5;
+
+            const { error } = await _supabase
+                .from('app_config')
+                .upsert({
+                    id: 'budget_settings',
+                    monthly_budget: monthlyBudget,
+                    rate_per_task: ratePerTask,
+                    max_daily_tasks: maxDailyTasks,
+                    updated_at: new Date().toISOString()
+                });
+
+            if (!error) {
+                budgetSettings.monthlyBudget = monthlyBudget;
+                budgetSettings.ratePerTask = ratePerTask;
+                budgetSettings.maxDailyTasks = maxDailyTasks;
+                localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
+
+                showToast("Pengaturan anggaran berhasil disimpan ke database!");
+                closeBudgetConfigModal();
+                calculateAndRenderEarnings();
+            } else {
+                showToast("Gagal menyimpan ke cloud: " + error.message);
+            }
+        });
+
+        // PERHITUNGAN PENDAPATAN BULANAN
+        function calculateAndRenderEarnings() {
+            const currentYearMonth = todayStr.slice(0, 7);
+
+            const monthlyCompletedTasks = globalTasks.filter(t => 
+                t.status === 'Selesai' && 
+                (t.tanggal || '').startsWith(currentYearMonth)
+            );
+
+            const userEarningsMap = {};
+
+            monthlyCompletedTasks.forEach(t => {
+                const uid = t.user_id;
+                const taskDateStr = t.tanggal;
+                if (!uid || !taskDateStr) return;
+
+                const parts = taskDateStr.split('-');
+                const taskDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                const dayOfWeek = taskDateObj.getDay();
+
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    return;
+                }
+
+                if (!userEarningsMap[uid]) {
+                    userEarningsMap[uid] = {
+                        nama: t.nama || t.user_email?.split('@')[0] || 'Petugas',
+                        email: t.user_email || '',
+                        dailyCount: {},
+                        eligibleTasks: 0,
+                        totalEarning: 0
+                    };
+                }
+
+                if (!userEarningsMap[uid].dailyCount[taskDateStr]) {
+                    userEarningsMap[uid].dailyCount[taskDateStr] = 0;
+                }
+
+                if (userEarningsMap[uid].dailyCount[taskDateStr] < budgetSettings.maxDailyTasks) {
+                    userEarningsMap[uid].dailyCount[taskDateStr]++;
+                    userEarningsMap[uid].eligibleTasks++;
+                }
+            });
+
+            let totalTeamBudgetUsed = 0;
+            Object.keys(userEarningsMap).forEach(uid => {
+                userEarningsMap[uid].totalEarning = userEarningsMap[uid].eligibleTasks * budgetSettings.ratePerTask;
+                totalTeamBudgetUsed += userEarningsMap[uid].totalEarning;
+            });
+
+            const myData = userEarningsMap[currentUser?.id] || { eligibleTasks: 0, totalEarning: 0 };
+            document.getElementById('myEarningsBadge').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
+
+            return { userEarningsMap, totalTeamBudgetUsed, myData };
+        }
+
+        function openEarningsModal() {
+            const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
+
+            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
+            document.getElementById('modalMyEligibleTasks').innerText = `${myData.eligibleTasks} Tugas Dihitung (Maks. ${budgetSettings.maxDailyTasks}/hari)`;
+            document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / tugas`;
+
+            document.getElementById('modalTeamBudgetUsage').innerText = `Rp ${totalTeamBudgetUsed.toLocaleString('id-ID')} / Rp ${budgetSettings.monthlyBudget.toLocaleString('id-ID')}`;
+            
+            const usagePercent = Math.min(100, Math.round((totalTeamBudgetUsed / budgetSettings.monthlyBudget) * 100));
+            document.getElementById('modalBudgetProgressBar').style.width = `${usagePercent}%`;
+
+            const listEl = document.getElementById('teamEarningsList');
+            listEl.innerHTML = '';
+
+            const userKeys = Object.keys(userEarningsMap);
+            if (userKeys.length === 0) {
+                listEl.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-4">Belum ada tugas selesai pada hari kerja di bulan ini.</div>';
+            } else {
+                userKeys.forEach(uid => {
+                    const u = userEarningsMap[uid];
+                    const isMe = uid === currentUser?.id;
+
+                    const row = document.createElement('div');
+                    row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
+                    
+                    row.innerHTML = `
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">
+                                    ${u.nama} ${isMe ? '(Saya)' : ''}
+                                </p>
+                                <p class="text-[9px] text-slate-400">${u.eligibleTasks} tugas valid</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
+                            Rp ${u.totalEarning.toLocaleString('id-ID')}
+                        </span>
+                    `;
+                    listEl.appendChild(row);
+                });
+            }
+
+            document.getElementById('earningsModal').classList.remove('hidden');
+        }
+
+        function closeEarningsModal() {
+            document.getElementById('earningsModal').classList.add('hidden');
+        }
+
+        // HOME JADWAL
         function goToHomeJadwal() {
             document.getElementById('dateFilter').value = todayStr;
             document.getElementById('roleFilter').value = 'All';
@@ -788,9 +1109,7 @@
 
                 osc.start(now);
                 osc.stop(now + 0.35);
-            } catch (e) {
-                console.log("Audio play suppressed:", e);
-            }
+            } catch (e) {}
         }
 
         function requestNotificationPermission() {
@@ -905,6 +1224,7 @@
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
             if (followsSubscription) _supabase.removeChannel(followsSubscription);
             if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
+            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -918,18 +1238,24 @@
             document.getElementById('modal-user-name').innerText = username;
             document.getElementById('profile-email-display').innerText = currentUser.email;
 
+            await loadBudgetSettings();
+
             if (currentUser.email === SUPER_ADMIN_EMAIL) {
                 isSuperAdmin = true;
                 document.getElementById('superadmin-indicator').classList.remove('hidden');
                 document.getElementById('side-superadmin-badge').classList.remove('hidden');
                 document.getElementById('profile-superadmin-badge').classList.remove('hidden');
                 document.getElementById('userFilter').classList.remove('hidden');
+                document.getElementById('btnSidebarBudget').classList.remove('hidden');
+                document.getElementById('btnHeaderBudget').classList.remove('hidden');
             } else {
                 isSuperAdmin = false;
                 document.getElementById('superadmin-indicator').classList.add('hidden');
                 document.getElementById('side-superadmin-badge').classList.add('hidden');
                 document.getElementById('profile-superadmin-badge').classList.add('hidden');
                 document.getElementById('userFilter').classList.add('hidden');
+                document.getElementById('btnSidebarBudget').classList.add('hidden');
+                document.getElementById('btnHeaderBudget').classList.add('hidden');
             }
 
             requestNotificationPermission();
@@ -940,6 +1266,7 @@
             setupGlobalCommentNotificationListener();
             setupFollowsRealtime();
             setupFollowNotificationListener();
+            setupAppConfigRealtime();
         }
 
         // UPDATE BADGE NOTIFIKASI MERAH
@@ -962,7 +1289,6 @@
             }
         }
 
-        // PUSAT NOTIFIKASI MODAL
         function openNotificationsModal() {
             document.getElementById('notificationsModal').classList.remove('hidden');
             renderNotificationsList();
@@ -1343,7 +1669,7 @@
             }
         }
 
-        // SUPABASE REALTIME
+        // SUPABASE REALTIME JADWAL
         function setupRealtimeListener() {
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
 
@@ -1420,7 +1746,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS
+        // RENDER TASKS (FILTER MUTUAL FOLLOW)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1449,6 +1775,8 @@
             document.getElementById('totalTaskCount').innerText = filteredTasks.length;
             document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
             document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
+
+            calculateAndRenderEarnings();
 
             if (filteredTasks.length === 0) {
                 const emptyDesktopHtml = `
@@ -1483,7 +1811,7 @@
                 const tasksOfUser = groupedByUser[petugasName];
                 tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
 
-                // --- 1. RENDER KARTU MOBILE ---
+                // 1. RENDER KARTU MOBILE
                 const mobileGroupCard = document.createElement('div');
                 mobileGroupCard.className = 'bg-white dark:bg-slate-900 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2.5';
 
@@ -1593,7 +1921,7 @@
                 mobileGroupCard.innerHTML = mobileTasksHtml;
                 cardsContainerMobile.appendChild(mobileGroupCard);
 
-                // --- 2. RENDER DESKTOP (TABEL) ---
+                // 2. RENDER DESKTOP (TABEL)
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80 dark:border-emerald-800/60';
                 groupHeader.innerHTML = `
@@ -1946,7 +2274,7 @@
             }
         }
 
-        // DELETE MODAL
+        // DELETE MODAL JADWAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
