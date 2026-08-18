@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan interaksi Like & Komentar.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan auto rollover dan proteksi status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -185,7 +185,7 @@
                         <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1.5">
                             <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
 
-                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none w-full sm:w-auto">
+                            <select id="roleFilter" onchange="renderTasks()" class="bg-emerald-900/80 border border-emerald-600/50 text-[10px] font-bold rounded-lg px-2.5 py-1 text-white focus:outline-none w-full sm:w-auto">
                                 <option value="All">🔍 Semua Divisi</option>
                                 <option value="Teknisi">🛠️ Teknisi</option>
                                 <option value="Cleaning">🧹 Cleaning</option>
@@ -209,7 +209,6 @@
                             </div>
                         </div>
 
-                        <!-- Filter Khusus Super Admin -->
                         <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none w-full">
                             <option value="All">👥 Filter: Semua User</option>
                         </select>
@@ -300,7 +299,6 @@
             </div>
 
             <div id="commentList" class="flex-1 overflow-y-auto space-y-2 py-2 pr-1 min-h-[140px] max-h-[260px] text-xs">
-                <!-- List komentar terisi otomatis -->
             </div>
 
             <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
@@ -567,7 +565,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (MOBILE BAR) -->
+    <!-- BOTTOM NAVIGATION -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
         <a href="/" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600">
             <i class="fa-solid fa-house text-sm"></i>
@@ -597,7 +595,7 @@
     <!-- TOAST NOTIFIKASI -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <!-- JAVASCRIPT LOGIKA LENGKAP DENGAN RBAC, LIKES, & COMMENTS -->
+    <!-- JAVASCRIPT LOGIKA LENGKAP -->
     <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
@@ -615,7 +613,12 @@
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
 
-        const todayStr = new Date().toISOString().slice(0, 10);
+        // Tanggal lokal hari ini (YYYY-MM-DD)
+        const localNow = new Date();
+        const yearNow = localNow.getFullYear();
+        const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
+        const dayNow = String(localNow.getDate()).padStart(2, '0');
+        const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
 
         const colorPalettes = {
             emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
@@ -627,12 +630,22 @@
 
         function formatTanggalIndo(dateStr) {
             if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                return date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            return dateStr;
+        }
+
+        function isTaskExpired(taskDate) {
+            if (!taskDate) return false;
+            // Jika tanggal tugas lebih kecil dari hari ini, berarti telah melewati jam 24:00 hari tersebut
+            return taskDate < todayStr;
         }
 
         function applyTheme(themeName) {
@@ -766,7 +779,57 @@
             }
 
             await fetchTasksSupabase();
+            await handleAutoRollForwardTasks();
             setupRealtimeListener();
+        }
+
+        // AUTO ROLL-FORWARD JADWAL YANG BELUM SELESAI DARI HARI KEMARIN KE HARI INI
+        async function handleAutoRollForwardTasks() {
+            if (!currentUser) return;
+            
+            // Cari tugas milik user aktif dari tanggal sebelum hari ini yang statusnya BELUM atau PROSES
+            const pendingPastTasks = globalTasks.filter(t => 
+                t.user_id === currentUser.id && 
+                t.tanggal < todayStr && 
+                (t.status === 'Belum' || t.status === 'Proses')
+            );
+
+            if (pendingPastTasks.length === 0) return;
+
+            // Periksa apakah tugas tersebut sudah pernah di-roll ke hari ini agar tidak duplikat ganda
+            const todayTasks = globalTasks.filter(t => t.user_id === currentUser.id && t.tanggal === todayStr);
+            const tasksToMigrate = [];
+
+            pendingPastTasks.forEach(pastTask => {
+                const alreadyExistsToday = todayTasks.some(tt => 
+                    tt.tugas.trim().toLowerCase() === pastTask.tugas.trim().toLowerCase() &&
+                    tt.jam_mulai === pastTask.jam_mulai
+                );
+
+                if (!alreadyExistsToday) {
+                    tasksToMigrate.push({
+                        user_id: currentUser.id,
+                        user_email: currentUser.email,
+                        tanggal: todayStr,
+                        nama: pastTask.nama,
+                        peran: pastTask.peran,
+                        tugas: pastTask.tugas,
+                        jam_mulai: pastTask.jam_mulai,
+                        jam_selesai: pastTask.jam_selesai,
+                        status: 'Belum',
+                        likes_count: 0,
+                        liked_users: []
+                    });
+                }
+            });
+
+            if (tasksToMigrate.length > 0) {
+                const { data, error } = await _supabase.from('jadwal').insert(tasksToMigrate).select();
+                if (!error && data) {
+                    showToast(`${tasksToMigrate.length} tugas pending otomatis dilanjutkan ke hari ini!`);
+                    await fetchTasksSupabase();
+                }
+            }
         }
 
         // SUPABASE REALTIME
@@ -783,7 +846,6 @@
         function handleRealtimeChange(payload) {
             const { eventType, new: newRow, old: oldRow } = payload;
             
-            // JANGAN tampilkan data Super Admin kepada user biasa
             if (!isSuperAdmin && newRow?.user_email === SUPER_ADMIN_EMAIL) {
                 return;
             }
@@ -804,11 +866,9 @@
             renderTasks();
         }
 
-        // FETCH DATA SUPABASE: SEMUA USER BISA LIHAT TUGAS REKAN, TAPI TIDAK BISA MELIHAT SUPER ADMIN
         async function fetchTasksSupabase() {
             let query = _supabase.from('jadwal').select('*');
 
-            // Jika BUKAN Super Admin, sembunyikan tugas milik Super Admin
             if (!isSuperAdmin) {
                 query = query.neq('user_email', SUPER_ADMIN_EMAIL);
             }
@@ -849,7 +909,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS DENGAN HAK AKSES LIKE & COMMENT
+        // RENDER TASKS (PROTEKSI LOCKING STATUS & EXPIRED 24:00)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -932,33 +992,49 @@
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
                     const isLiked = likedUsers.includes(currentUser.id);
                     const likesCount = item.likes_count || 0;
+                    
+                    const isCompleted = item.status === 'Selesai';
+                    const isPastDay = isTaskExpired(item.tanggal); // Melewati jam 24:00 hari kerja
 
-                    let statusColor = item.status === 'Selesai' ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' : (item.status === 'Proses' ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-700/80');
+                    let statusColor = isCompleted ? 'border-teal-500/80 bg-teal-50/20 dark:bg-teal-950/20' : (item.status === 'Proses' ? 'border-amber-500/80 bg-amber-50/20 dark:bg-amber-950/20' : 'border-slate-200 dark:border-slate-700/80');
 
-                    // Tombol Edit/Delete hanya untuk pemilik / Super Admin
-                    const actionButtons = isOwner ? `
-                        <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    ` : `
-                        <span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">View Only</span>
-                    `;
+                    // Tombol Edit/Hapus: Terkunci jika BUKAN pemilik, atau jika SUDAH SELESAI, atau MELEWATI JAM 24:00
+                    let actionButtons = '';
+                    if (!isOwner) {
+                        actionButtons = `<span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">View Only</span>`;
+                    } else if (isCompleted) {
+                        actionButtons = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci</span>`;
+                    } else if (isPastDay) {
+                        actionButtons = `<span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Expired</span>`;
+                    } else {
+                        actionButtons = `
+                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-500 text-xs p-1" title="Edit">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1" title="Hapus">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        `;
+                    }
 
-                    // Pilihan Ubah Status
-                    const statusControl = isOwner ? `
-                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
-                            <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
-                            <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
-                            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                        </select>
-                    ` : `
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
-                            ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
-                        </span>
-                    `;
+                    // Kontrol Status: Terkunci jika bukan owner, jika sudah selesai, atau jika tanggal sudah lewat jam 24:00
+                    let statusControl = '';
+                    if (isOwner && !isCompleted && !isPastDay) {
+                        statusControl = `
+                            <select onchange="updateStatus('${item.id}', this.value)" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
+                                <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                                <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                            </select>
+                        `;
+                    } else {
+                        statusControl = `
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg flex items-center gap-1 ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
+                                ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                                ${isPastDay || isCompleted ? '<i class="fa-solid fa-lock text-[8px] opacity-60"></i>' : ''}
+                            </span>
+                        `;
+                    }
 
                     mobileTasksHtml += `
                         <div class="p-2.5 rounded-xl border ${statusColor} bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-1.5 transition">
@@ -966,7 +1042,7 @@
                                 <span class="text-[10px] font-mono font-extrabold text-emerald-600 dark:text-emerald-400">
                                     <i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}
                                 </span>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-1">
                                     ${actionButtons}
                                 </div>
                             </div>
@@ -975,7 +1051,6 @@
                                 ${item.tugas}
                             </p>
 
-                            <!-- Social Bar: Like & Komentar -->
                             <div class="flex items-center justify-between pt-1.5 mt-0.5 border-t border-slate-200/50 dark:border-slate-700/50">
                                 <div class="flex items-center gap-3">
                                     <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[10px] font-bold transition active:scale-125 ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
@@ -1019,6 +1094,9 @@
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
                     const isLiked = likedUsers.includes(currentUser.id);
                     const likesCount = item.likes_count || 0;
+                    
+                    const isCompleted = item.status === 'Selesai';
+                    const isPastDay = isTaskExpired(item.tanggal);
 
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-100 dark:border-slate-800/60';
@@ -1032,26 +1110,39 @@
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                     }
 
-                    const statusCell = isOwner ? `
-                        <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
-                            <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
-                            <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
-                            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
-                        </select>
-                    ` : `
-                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
-                            ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
-                        </span>
-                    `;
+                    let statusCell = '';
+                    if (isOwner && !isCompleted && !isPastDay) {
+                        statusCell = `
+                            <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
+                                <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
+                                <option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option>
+                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option>
+                            </select>
+                        `;
+                    } else {
+                        statusCell = `
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-lg flex items-center justify-center gap-1 ${item.status === 'Selesai' ? 'text-teal-600 bg-teal-50 dark:bg-teal-950/60' : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/60' : 'text-slate-500 bg-slate-100 dark:bg-slate-800')}">
+                                ${item.status === 'Selesai' ? '✅ Selesai' : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
+                                ${isPastDay || isCompleted ? '<i class="fa-solid fa-lock text-[8px] opacity-60"></i>' : ''}
+                            </span>
+                        `;
+                    }
 
-                    const actionCell = isOwner ? `
-                        <div class="flex items-center justify-center gap-1.5">
-                            <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
-                    ` : `
-                        <span class="text-[10px] text-slate-400 font-medium">Read Only</span>
-                    `;
+                    let actionCell = '';
+                    if (!isOwner) {
+                        actionCell = `<span class="text-[10px] text-slate-400 font-medium">Read Only</span>`;
+                    } else if (isCompleted) {
+                        actionCell = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Selesai (Locked)</span>`;
+                    } else if (isPastDay) {
+                        actionCell = `<span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-clock-rotate-left text-[8px]"></i> Expired (>24:00)</span>`;
+                    } else {
+                        actionCell = `
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        `;
+                    }
 
                     row.innerHTML = `
                         <td class="p-3 font-mono font-bold text-[10px] text-slate-500 whitespace-nowrap">${item.tanggal || '-'}</td>
@@ -1059,7 +1150,7 @@
                         <td class="p-3 font-bold text-[11px]">${item.nama}</td>
                         <td class="p-3">${roleBadge}</td>
                         <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
-                        <td class="p-3">${statusCell}</td>
+                        <td class="p-3 text-center">${statusCell}</td>
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-2.5">
                                 <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-400'}">
@@ -1078,7 +1169,7 @@
             });
         }
 
-        // FITUR LIKE & UNLIKE JADWAL
+        // LIKE & UNLIKE JADWAL
         async function toggleLikeTask(taskId) {
             const task = globalTasks.find(t => t.id == taskId);
             if (!task) return;
@@ -1108,7 +1199,7 @@
             }
         }
 
-        // FITUR KOMENTAR REALTIME
+        // KOMENTAR REALTIME
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = taskId;
             document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
@@ -1199,21 +1290,46 @@
                 .subscribe();
         }
 
-        // UPDATE STATUS
+        // UPDATE STATUS DENGAN VALIDASI WAKTU 24:00
         async function updateStatus(id, newStatus) {
+            const target = globalTasks.find(t => t.id == id);
+            if (!target) return;
+
+            if (target.status === 'Selesai' && !isSuperAdmin) {
+                showToast("Tugas sudah Selesai dan terkunci!");
+                renderTasks();
+                return;
+            }
+
+            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
+                showToast("Sudah melewati jam 24:00. Status tidak dapat diubah!");
+                renderTasks();
+                return;
+            }
+
             const { error } = await _supabase.from('jadwal').update({ status: newStatus }).eq('id', id);
             if (error) {
                 showToast("Gagal memperbarui status!");
             } else {
-                const target = globalTasks.find(t => t.id == id);
-                if (target) target.status = newStatus;
+                target.status = newStatus;
                 renderTasks();
-                showToast("Status diperbarui");
+                showToast(newStatus === 'Selesai' ? "Tugas Selesai dan otomatis dikunci!" : "Status diperbarui");
             }
         }
 
-        // MODAL CUSTOM DELETE
+        // DELETE MODAL VALIDASI
         function askDeleteTask(id) {
+            const item = globalTasks.find(t => t.id == id);
+            if (!item) return;
+
+            if (item.status === 'Selesai' && !isSuperAdmin) {
+                return showToast("Tugas yang sudah selesai tidak dapat dihapus!");
+            }
+
+            if (isTaskExpired(item.tanggal) && !isSuperAdmin) {
+                return showToast("Tugas hari kemarin telah terkunci (>24:00)!");
+            }
+
             deleteTargetId = id;
             document.getElementById('confirmModal').classList.remove('hidden');
         }
@@ -1450,6 +1566,14 @@
         function editTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
+
+            if (item.status === 'Selesai' && !isSuperAdmin) {
+                return showToast("Tugas yang sudah selesai tidak dapat diedit!");
+            }
+
+            if (isTaskExpired(item.tanggal) && !isSuperAdmin) {
+                return showToast("Tugas hari kemarin telah terkunci (>24:00)!");
+            }
 
             editingTaskId = item.id;
             document.getElementById('input-date').value = item.tanggal || todayStr;
