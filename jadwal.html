@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Operasional - Unit BSN Surabaya</title>
+    <title>Jadwal Operasional - Personal Super App</title>
     
     <meta name="description" content="Sistem manajemen jadwal harian operasional untuk Teknisi, Cleaning Service, dan Admin Teknik terintegrasi Supabase.">
     <meta name="keywords" content="jadwal kerja, teknisi, cleaning service, admin teknik, superapp, supabase">
@@ -154,7 +154,7 @@
                             </div>
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">OPS. UNIT BSN SURABAYA</h1>
+                                    <h1 class="text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
                                 <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Operasional</p>
@@ -185,12 +185,12 @@
                                 <option value="Admin Teknik">📋 Admin Teknik</option>
                             </select>
 
-                            <!-- Filter Pengguna Khusus Super Admin -->
+                            <!-- Filter Pengguna Khusus Super Admin (Menampilkan Email) -->
                             <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[10px] font-extrabold rounded-lg px-2 py-1 focus:outline-none">
                                 <option value="All">👥 Filter: Semua User</option>
                             </select>
 
-                            <!-- Tombol Trigger Modal Export Baru -->
+                            <!-- Tombol Trigger Modal Export -->
                             <button onclick="openExportModal('csv')" class="bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition border border-white/10 flex items-center gap-1">
                                 <i class="fa-solid fa-file-csv text-emerald-300"></i> CSV
                             </button>
@@ -210,7 +210,7 @@
                     </div>
                 </header>
 
-                <!-- KARTU RINGKASAN STATISTIK (M-BANKING CARD STYLE) -->
+                <!-- KARTU RINGKASAN STATISTIK -->
                 <section class="grid grid-cols-3 gap-2 mb-4">
                     <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-2.5">
                         <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
@@ -278,7 +278,7 @@
         </main>
     </div>
 
-    <!-- MODAL EXPORT PERIODE (HARIAN, MINGGUAN, BULANAN, TAHUNAN, CUSTOM) -->
+    <!-- MODAL EXPORT PERIODE -->
     <div id="exportModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -302,7 +302,7 @@
                     </select>
                 </div>
 
-                <!-- Input Rentang Tanggal Kustom (Tersembunyi secara Default) -->
+                <!-- Input Rentang Tanggal Kustom -->
                 <div id="customDateRangeContainer" class="hidden space-y-2 pt-1">
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Dari Tanggal</label>
@@ -571,7 +571,7 @@
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
 
-        // Helper Format Tanggal Indonesia (Contoh: 18 Agustus 2026)
+        // Format Tanggal Indonesia (Contoh: 18 Agustus 2026)
         function formatTanggalIndo(dateStr) {
             if (!dateStr) return '-';
             const date = new Date(dateStr);
@@ -737,14 +737,25 @@
             }
         }
 
+        // TAMPILKAN EMAIL PADA DROPDOWN FILTER SUPER ADMIN
         function populateUserFilterDropdown() {
             const userFilterSelect = document.getElementById('userFilter');
-            const uniqueUsers = [...new Set(globalTasks.map(item => item.user_id))];
-            
+            const userMap = {};
+
+            globalTasks.forEach(item => {
+                const uid = item.user_id;
+                // Mengambil user_email yang tersimpan di record data
+                const email = item.user_email || `User (${uid ? uid.slice(-5) : 'unknown'})`;
+                
+                if (!userMap[uid]) {
+                    userMap[uid] = { email: email, count: 0 };
+                }
+                userMap[uid].count++;
+            });
+
             let optionsHtml = `<option value="All">👥 Semua User (${globalTasks.length})</option>`;
-            uniqueUsers.forEach((uid) => {
-                const count = globalTasks.filter(t => t.user_id === uid).length;
-                optionsHtml += `<option value="${uid}">👤 User ID: ...${uid.slice(-5)} (${count})</option>`;
+            Object.keys(userMap).forEach(uid => {
+                optionsHtml += `<option value="${uid}">👤 ${userMap[uid].email} (${userMap[uid].count})</option>`;
             });
 
             userFilterSelect.innerHTML = optionsHtml;
@@ -946,7 +957,7 @@
             const activeDate = document.getElementById('dateFilter').value || todayStr;
             const tanggalFormatted = formatTanggalIndo(activeDate);
 
-            // Ambil nama petugas jika difilter 1 orang, atau gunakan akun login
+            // Ambil nama petugas atau email pengguna yang sedang login
             const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua_Petugas');
 
@@ -988,7 +999,6 @@
             const activeDate = document.getElementById('dateFilter').value || todayStr;
             const tanggalFormatted = formatTanggalIndo(activeDate);
             
-            // Tentukan label nama
             const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua Petugas');
 
@@ -1114,7 +1124,9 @@
                 else { alert("Gagal memperbarui data: " + (error.message || "")); }
             } else {
                 const { error } = await _supabase.from('jadwal').insert([{
-                    user_id: currentUser.id, tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
+                    user_id: currentUser.id,
+                    user_email: currentUser.email, // Simpan email user
+                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum'
                 }]);
 
                 if (!error) { showToast("Tugas ditambahkan!"); fetchTasksSupabase(); toggleModal(false); } 
@@ -1151,6 +1163,7 @@
                     if (taskName) {
                         bulkPayload.push({
                             user_id: currentUser.id,
+                            user_email: currentUser.email, // Simpan email user
                             tanggal: tanggal,
                             nama: name,
                             peran: role,
@@ -1205,6 +1218,7 @@
 
             const bulkPayload = templateTasks.map(t => ({
                 user_id: currentUser.id,
+                user_email: currentUser.email, // Simpan email user
                 tanggal: tanggal,
                 nama: name,
                 peran: role,
