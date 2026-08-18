@@ -346,7 +346,6 @@
             </div>
 
             <div class="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
-                <!-- Banner Saldo Saya Bulan Ini -->
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
                     <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya (Bulan Ini)</p>
                     <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold mt-1">Rp 0</h2>
@@ -356,7 +355,6 @@
                     </div>
                 </div>
 
-                <!-- Aturan Skema Poin -->
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                     <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1">
                         <i class="fa-solid fa-circle-info text-emerald-500"></i> Ketentuan Skema Poin & Waktu
@@ -371,7 +369,6 @@
                     </ul>
                 </div>
 
-                <!-- Info Anggaran Tim (KHUSUS SUPER ADMIN) -->
                 <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
                     <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
                         <span>Total Realisasi Tim (Admin)</span>
@@ -382,7 +379,6 @@
                     </div>
                 </div>
 
-                <!-- Rincian Petugas Lain (KHUSUS SUPER ADMIN) -->
                 <div id="adminTeamListContainer" class="hidden">
                     <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
                     <div id="teamEarningsList" class="space-y-1.5"></div>
@@ -462,7 +458,7 @@
         </div>
     </div>
 
-    <!-- MODAL RELASI FOLLOW / MUTUAL FRIENDS -->
+    <!-- MODAL RELASI FOLLOW / MUTUAL FRIENDS DENGAN STATUS ONLINE/OFFLINE -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -732,7 +728,7 @@
                     <ul class="list-disc list-inside space-y-0.5 opacity-90">
                         <li>07:00 - 09:00 (Persiapan & Cek Rutin Area)</li>
                         <li>09:00 - 12:00 (Pekerjaan Utama Lapangan)</li>
-                        <li>12:00 - 13:00 (Istirahat & Standby)</li>
+                        <li>12:00 - 13:00 (Istirahat & Standby Gedung)</li>
                         <li>13:00 - 15:30 (Lanjutan Maintenance)</li>
                         <li>15:30 - 17:00 (Evaluasi & Kontrol)</li>
                     </ul>
@@ -788,31 +784,59 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
-        <button onclick="goToHomeJadwal()" class="flex flex-col items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
-            <i class="fa-solid fa-calendar-day text-sm"></i>
-            <span class="text-[8px] font-extrabold whitespace-nowrap">Home</span>
-        </button>
+    <!-- BOTTOM NAVIGATION STYLE M-BANKING CURVED DOCK -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 select-none filter drop-shadow-[0_-6px_16px_rgba(0,0,0,0.08)]">
+        <div class="relative w-full h-[66px]">
+            <!-- SVG Mask Lengkung Adaptif -->
+            <svg class="w-full h-full text-white dark:text-slate-900 transition-colors duration-300 fill-current" viewBox="0 0 375 66" preserveAspectRatio="none">
+                <path d="M0,14 C0,6.268 6.268,0 14,0 L135.5,0 C146,0 152,8 155.5,14.5 C162.5,27.5 174,36 187.5,36 C201,36 212.5,27.5 219.5,14.5 C223,8 229,0 239.5,0 L361,0 C368.732,0 375,6.268 375,14 L375,66 L0,66 Z" />
+            </svg>
 
-        <button onclick="openFollowsModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-user-group text-sm"></i>
-            <span class="text-[8px] font-extrabold">Teman</span>
-        </button>
+            <!-- Tombol Tambah Tengah Melayang -->
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <div class="p-1 rounded-full bg-slate-100/60 dark:bg-slate-950/60 backdrop-blur-xs">
+                    <button onclick="openTaskModal()" 
+                            aria-label="Tambah Jadwal Baru" 
+                            class="w-[54px] h-[54px] rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-500 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/40 border-[3px] border-white dark:border-slate-900 active:scale-90 transition-all duration-200 focus:outline-none">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
 
-        <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
-            <i class="fa-solid fa-plus text-base"></i>
-        </button>
+            <!-- Menu Bar Navigasi -->
+            <div class="absolute inset-0 flex justify-between items-center px-4 pt-1">
+                <button onclick="goToHomeJadwal()" class="flex-1 flex flex-col items-center justify-center gap-0.5 text-emerald-600 dark:text-emerald-400 group active:scale-95 transition">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="fa-solid fa-house text-[17px] group-hover:-translate-y-0.5 transition-transform"></i>
+                    </div>
+                    <span class="text-[10px] font-extrabold tracking-tight">Beranda</span>
+                </button>
 
-        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-paste text-sm"></i>
-            <span class="text-[8px] font-extrabold">Import</span>
-        </button>
+                <button onclick="openFollowsModal()" class="flex-1 flex flex-col items-center justify-center gap-0.5 text-slate-400 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 group active:scale-95 transition">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="fa-solid fa-user-group text-[16px] group-hover:-translate-y-0.5 transition-transform"></i>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-tight">Teman</span>
+                </button>
 
-        <button onclick="openProfileModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-user text-sm"></i>
-            <span class="text-[8px] font-extrabold">Profil</span>
-        </button>
+                <!-- Spacer Center Floating Button -->
+                <div class="w-16 pointer-events-none"></div>
+
+                <button onclick="openBulkTextModal()" class="flex-1 flex flex-col items-center justify-center gap-0.5 text-slate-400 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 group active:scale-95 transition">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="fa-solid fa-paste text-[16px] group-hover:-translate-y-0.5 transition-transform"></i>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-tight">Import</span>
+                </button>
+
+                <button onclick="openProfileModal()" class="flex-1 flex flex-col items-center justify-center gap-0.5 text-slate-400 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 group active:scale-95 transition">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i class="fa-solid fa-user text-[16px] group-hover:-translate-y-0.5 transition-transform"></i>
+                    </div>
+                    <span class="text-[10px] font-bold tracking-tight">Profil</span>
+                </button>
+            </div>
+        </div>
     </nav>
 
     <!-- TOAST NOTIFIKASI STANDARD -->
@@ -843,7 +867,7 @@
         let notifiedTaskId = null;
         let audioCtx = null;
 
-        // Data Relasi Follow & Notifikasi & Online Presence
+        // Data Relasi Follow, Notifikasi & Online Presence
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -1010,7 +1034,7 @@
 
                 if (!taskDateStr.startsWith(currentYearMonth)) return;
 
-                // Senin s.d Jumat saja (1-5)
+                // Hari kerja Senin-Jumat
                 const parts = taskDateStr.split('-');
                 const taskDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
                 const dayOfWeek = taskDateObj.getDay();
@@ -1040,27 +1064,23 @@
 
                     const isExpired = isTaskExpired(taskDateStr);
 
-                    // 1. POIN PEMBUATAN JADWAL (SEBELUM JAM 06:00 PAGI = +100 POIN)
+                    // Poin pembuatan < 06:00
                     if (isCreatedBefore6AM(t)) {
                         userEarningsMap[uid].points += 100;
                         userEarningsMap[uid].earlyBirdBonus += 100;
                     }
 
-                    // 2. POIN PENGERJAAN TUGAS SESUAI WAKTU
+                    // Poin pengerjaan tugas
                     if (t.status === 'Selesai') {
-                        if (isCompletedLate(t)) {
-                            // Melebihi jam selesai / terlambat = 0 Poin
-                            userEarningsMap[uid].points += 0;
-                        } else {
-                            // Selesai tepat waktu = +100 Poin
+                        if (!isCompletedLate(t)) {
                             userEarningsMap[uid].points += 100;
                         }
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Proses') {
-                        userEarningsMap[uid].points += 50; // Status proses = +50 Poin
+                        userEarningsMap[uid].points += 50;
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isExpired) {
-                        userEarningsMap[uid].points -= 50; // Belum dikerjakan (lewat hari) = -50 Poin
+                        userEarningsMap[uid].points -= 50;
                     }
                 }
             });
@@ -1070,7 +1090,6 @@
             Object.keys(userEarningsMap).forEach(uid => {
                 const u = userEarningsMap[uid];
 
-                // 3. BONUS STREAK 5 HARI KERJA (+200 POIN)
                 if (u.activeDates.size >= 5) {
                     const streakCount = Math.floor(u.activeDates.size / 5);
                     u.streakBonus = streakCount * 200;
@@ -1078,8 +1097,6 @@
 
                 const totalPoints = Math.max(0, u.points + u.streakBonus);
                 u.totalPoints = totalPoints;
-                
-                // Konversi nominal rupiah: (Total Poin / 100) * ratePerTask
                 u.totalEarning = Math.round((totalPoints / 100) * budgetSettings.ratePerTask);
                 totalTeamBudgetUsed += u.totalEarning;
             });
@@ -1097,7 +1114,6 @@
             document.getElementById('modalMyPointsDetail').innerText = `${myData.totalPoints || 0} Poin (Kerja: ${myData.points || 0}, Early <06:00: +${myData.earlyBirdBonus || 0}, Streak: +${myData.streakBonus || 0})`;
             document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
 
-            // Proteksi Admin: Info anggaran & seluruh tim hanya untuk super admin
             const adminBudgetCard = document.getElementById('adminTeamBudgetCard');
             const adminListContainer = document.getElementById('adminTeamListContainer');
 
@@ -1606,7 +1622,6 @@
                             <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
                                 <i class="fa-solid fa-user"></i>
                             </div>
-                            <!-- Indikator Online (Hijau) / Offline (Merah) -->
                             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
                         </div>
                         <div class="min-w-0">
@@ -2042,7 +2057,7 @@
                     } else if (item.peran === 'Cleaning') {
                         roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800">🧹 Cleaning</span>`;
                     } else {
-                        roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
+                        roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 dark:purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800">📋 Admin</span>`;
                     }
 
                     let statusCell = '';
