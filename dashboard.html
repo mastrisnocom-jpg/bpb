@@ -111,6 +111,12 @@
                     <button id="side-nav-anggaran" onclick="switchView('anggaran')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition">
                         <i class="fa-solid fa-wallet text-base"></i> Anggaran
                     </button>
+                    <a href="/jadwal" class="w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm text-slate-400 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-theme-500 transition group">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-calendar-days text-base"></i> Jadwal
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-0 group-hover:opacity-100 transition"></i>
+                    </a>
                     
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 my-4"></div>
                     
@@ -389,6 +395,9 @@
                                 <button onclick="switchView('laporan')" class="w-full bg-slate-50 dark:bg-slate-700/40 hover:bg-slate-100 text-slate-600 dark:text-slate-300 font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center gap-2">
                                     <i class="fa-solid fa-chart-pie text-sm text-blue-500"></i> Analisis Laporan Lengkap
                                 </button>
+                                <a href="/jadwal" class="w-full bg-slate-50 dark:bg-slate-700/40 hover:bg-slate-100 text-slate-600 dark:text-slate-300 font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center gap-2">
+                                    <i class="fa-solid fa-calendar-days text-sm text-emerald-500"></i> Buka Halaman Jadwal
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -477,7 +486,7 @@
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-[32px] w-full max-w-md p-6 shadow-2xl animate-slide-down max-h-[92vh] overflow-y-auto border border-slate-100 dark:border-slate-700/80">
             
-            <!-- HEADER PROFIL DENGAN AVATAR DISAJIKAN ANGGUN -->
+            <!-- HEADER PROFIL -->
             <div class="text-center relative pb-4 border-b border-slate-100 dark:border-slate-700/80 mb-5">
                 <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="absolute top-0 right-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
                     <i class="fa-solid fa-xmark"></i>
@@ -491,6 +500,22 @@
                 <p class="text-xs font-bold text-theme-600 dark:text-theme-400 mb-2" id="profile-email-display">email@domain.com</p>
 
                 <span id="badge-premium" class="inline-block text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border">STATUS</span>
+            </div>
+
+            <!-- TAUTAN MENU JADWAL -->
+            <div class="mb-4">
+                <a href="/jadwal" class="w-full bg-gradient-to-r from-theme-500 to-theme-600 hover:from-theme-600 hover:to-theme-700 text-white font-bold py-3 px-4 rounded-2xl text-xs shadow-md transition flex items-center justify-between group active:scale-[0.98]">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center text-white text-sm">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+                        <span>Lihat & Atur Jadwal</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[10px] text-theme-100 font-semibold">
+                        <span>/jadwal</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs transition group-hover:translate-x-0.5"></i>
+                    </div>
+                </a>
             </div>
             
             <button id="btn-beli-premium" onclick="beliPremium()" class="w-full mb-5 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-extrabold py-3 rounded-2xl text-xs shadow-md flex items-center justify-center gap-2 transition hover:scale-[0.98] hidden">
@@ -664,6 +689,10 @@
             const params = new URLSearchParams(window.location.search);
             const goPath = params.get('go');
             if (goPath) {
+                if (goPath.toLowerCase() === 'jadwal') {
+                    window.location.href = '/jadwal';
+                    return;
+                }
                 const { data } = await _supabase.from('tautan').select('target').eq('path', goPath.toLowerCase()).single();
                 if (data && data.target) {
                     let targetUrl = data.target;
