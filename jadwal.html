@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan fitur Like, Komentar Edit & Hapus, dan Proteksi Status.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan sistem Mutual Following dan Interaksi Sosial.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -110,6 +110,10 @@
                     <button onclick="resetFilters()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/60 text-white transition">
                         <i class="fa-solid fa-layer-group text-xs"></i> Semua Tugas
                     </button>
+
+                    <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 hover:text-white transition">
+                        <i class="fa-solid fa-user-group text-xs text-emerald-300"></i> Relasi Follow / Teman
+                    </button>
                     
                     <div class="pt-3 border-t border-emerald-800/50 my-3"></div>
                     
@@ -162,15 +166,15 @@
                                     <h1 class="text-xs md:text-sm font-extrabold tracking-tight leading-tight">M-Ops Daily Board</h1>
                                     <span id="superadmin-indicator" class="hidden bg-amber-400 text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">Super Admin</span>
                                 </div>
-                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Kolaboratif</p>
+                                <p class="text-[9px] font-semibold text-emerald-200">Manajemen Task Kolaboratif Mutual Follow</p>
                             </div>
                         </div>
 
                         <!-- TOOLBAR ATAS -->
                         <div class="flex items-center gap-1.5">
-                            <a href="/" title="Halaman Utama" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
-                                <i class="fa-solid fa-house"></i>
-                            </a>
+                            <button onclick="openFollowsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Kelola Teman / Follow">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </button>
                             <button onclick="toggleTheme()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs">
                                 <i id="theme-icon" class="fa-solid fa-moon"></i>
                             </button>
@@ -250,7 +254,6 @@
 
                 <!-- CONTAINER JADWAL -->
                 <section>
-                    <!-- Desktop Table -->
                     <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -271,7 +274,6 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Cards -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-3"></div>
                 </section>
 
@@ -281,6 +283,31 @@
                 <div>Created for Mobile Banking Vibe Experience &bull; M-Ops Workspace</div>
             </footer>
         </main>
+    </div>
+
+    <!-- MODAL RELASI FOLLOW / MUTUAL FRIENDS -->
+    <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-group text-emerald-500"></i> Relasi Petugas (Mutual Follow)
+                    </h3>
+                    <p class="text-[9px] text-slate-400">Hanya jadwal rekan saling follow yang akan muncul</p>
+                </div>
+                <button onclick="closeFollowsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div id="usersFollowList" class="flex-1 overflow-y-auto space-y-2 py-1 pr-1 min-h-[160px] max-h-[300px] text-xs">
+                <!-- Daftar user dan tombol follow terisi otomatis -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
+                <button onclick="closeFollowsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
+            </div>
+        </div>
     </div>
 
     <!-- POP-UP NOTIFIKASI KOMENTAR REALTIME -->
@@ -300,7 +327,7 @@
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR (DENGAN FITUR EDIT & HAPUS) -->
+    <!-- MODAL KOMENTAR -->
     <div id="commentModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
@@ -318,7 +345,6 @@
             <div id="commentList" class="flex-1 overflow-y-auto space-y-2 py-2 pr-1 min-h-[140px] max-h-[260px] text-xs">
             </div>
 
-            <!-- Box Indikator Mode Edit -->
             <div id="editCommentIndicator" class="hidden items-center justify-between bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2.5 py-1 rounded-lg text-[10px] text-amber-800 dark:text-amber-300 mb-1.5">
                 <span class="font-bold"><i class="fa-solid fa-pen mr-1"></i> Edit Komentar</span>
                 <button onclick="cancelEditComment()" class="text-amber-600 hover:text-rose-500 font-extrabold">Batal</button>
@@ -333,7 +359,7 @@
         </div>
     </div>
 
-    <!-- MODAL CUSTOM KONFIRMASI HAPUS JADWAL -->
+    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
     <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down text-center">
             <div class="w-10 h-10 bg-rose-100 dark:bg-rose-950/50 text-rose-500 rounded-xl flex items-center justify-center text-lg mx-auto mb-2.5">
@@ -604,9 +630,9 @@
             <i class="fa-solid fa-plus text-base"></i>
         </button>
 
-        <button onclick="openBulkTextModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
-            <i class="fa-solid fa-paste text-sm"></i>
-            <span class="text-[8px] font-extrabold">Import</span>
+        <button onclick="openFollowsModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
+            <i class="fa-solid fa-user-group text-sm"></i>
+            <span class="text-[8px] font-extrabold">Teman</span>
         </button>
 
         <button onclick="openProfileModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
@@ -634,11 +660,17 @@
         let realtimeSubscription = null;
         let commentsSubscription = null;
         let globalCommentsListener = null;
+        let followsSubscription = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
         let notifiedTaskId = null;
         let audioCtx = null;
+
+        // Data Relasi Follow
+        let myFollowings = []; // ID user yang saya follow
+        let myFollowers = [];  // ID user yang follow saya
+        let mutualFriends = []; // ID user yang saling follow
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
@@ -683,8 +715,8 @@
                 const gain = audioCtx.createGain();
 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, now); // D5
-                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+                osc.frequency.setValueAtTime(587.33, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
 
                 gain.gain.setValueAtTime(0.3, now);
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
@@ -809,6 +841,7 @@
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
             if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
+            if (followsSubscription) _supabase.removeChannel(followsSubscription);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -837,10 +870,150 @@
             }
 
             requestNotificationPermission();
+            await fetchFollowRelations();
             await fetchTasksSupabase();
             await handleAutoRollForwardTasks();
             setupRealtimeListener();
             setupGlobalCommentNotificationListener();
+            setupFollowsRealtime();
+        }
+
+        // SISTEM MUTUAL FOLLOWING
+        async function fetchFollowRelations() {
+            if (!currentUser) return;
+            const { data, error } = await _supabase.from('user_follows').select('*');
+            if (error || !data) return;
+
+            myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
+            myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
+            
+            // Mutual: Saya follow dia DAN dia follow saya
+            mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
+        }
+
+        function setupFollowsRealtime() {
+            if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            followsSubscription = _supabase.channel('public:user_follows')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'user_follows' }, async () => {
+                    await fetchFollowRelations();
+                    renderTasks();
+                    if (!document.getElementById('followsModal').classList.contains('hidden')) {
+                        renderUsersFollowModal();
+                    }
+                })
+                .subscribe();
+        }
+
+        async function openFollowsModal() {
+            document.getElementById('followsModal').classList.remove('hidden');
+            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat daftar petugas...</div>';
+            await fetchFollowRelations();
+            renderUsersFollowModal();
+        }
+
+        function closeFollowsModal() {
+            document.getElementById('followsModal').classList.add('hidden');
+        }
+
+        function renderUsersFollowModal() {
+            const listEl = document.getElementById('usersFollowList');
+            listEl.innerHTML = '';
+
+            // Ekstrak daftar seluruh user dari globalTasks (kecuali diri sendiri dan Super Admin)
+            const userMap = {};
+            globalTasks.forEach(item => {
+                if (item.user_id && item.user_id !== currentUser.id && item.user_email !== SUPER_ADMIN_EMAIL) {
+                    if (!userMap[item.user_id]) {
+                        userMap[item.user_id] = {
+                            id: item.user_id,
+                            email: item.user_email || 'Petugas',
+                            nama: item.nama || item.user_email.split('@')[0],
+                            peran: item.peran || 'Operasional'
+                        };
+                    }
+                }
+            });
+
+            const users = Object.values(userMap);
+
+            if (users.length === 0) {
+                listEl.innerHTML = '<div class="text-center text-slate-400 text-xs py-4">Belum ada user lain terdaftar.</div>';
+                return;
+            }
+
+            users.forEach(u => {
+                const isFollowing = myFollowings.includes(u.id);
+                const isFollower = myFollowers.includes(u.id);
+                const isMutual = isFollowing && isFollower;
+
+                let statusBadge = '';
+                if (isMutual) {
+                    statusBadge = `<span class="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">Teman Saling Follow</span>`;
+                } else if (isFollower) {
+                    statusBadge = `<span class="bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[8px] font-bold px-1.5 py-0.5 rounded-full">Mengikuti Anda</span>`;
+                }
+
+                const userRow = document.createElement('div');
+                userRow.className = 'flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40';
+                
+                userRow.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${u.nama}</p>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                <span class="text-[9px] text-slate-400 truncate">${u.email}</span>
+                                ${statusBadge}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="toggleFollowUser('${u.id}', '${u.email.replace(/'/g, "\\'")}', ${isFollowing})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition flex items-center gap-1 flex-shrink-0 ${
+                        isFollowing 
+                        ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-rose-50 hover:text-rose-600' 
+                        : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
+                    }">
+                        ${isFollowing ? '<i class="fa-solid fa-check text-[9px]"></i> Mengikuti' : '<i class="fa-solid fa-user-plus text-[9px]"></i> Follow'}
+                    </button>
+                `;
+                listEl.appendChild(userRow);
+            });
+        }
+
+        async function toggleFollowUser(targetUserId, targetUserEmail, isCurrentlyFollowing) {
+            if (isCurrentlyFollowing) {
+                // Unfollow
+                const { error } = await _supabase.from('user_follows')
+                    .delete()
+                    .eq('follower_id', currentUser.id)
+                    .eq('following_id', targetUserId);
+
+                if (!error) {
+                    showToast("Batal mengikuti");
+                    await fetchFollowRelations();
+                    renderUsersFollowModal();
+                    renderTasks();
+                }
+            } else {
+                // Follow
+                const { error } = await _supabase.from('user_follows').insert([{
+                    follower_id: currentUser.id,
+                    following_id: targetUserId,
+                    follower_email: currentUser.email,
+                    following_email: targetUserEmail
+                }]);
+
+                if (!error) {
+                    showToast("Berhasil follow!");
+                    await fetchFollowRelations();
+                    renderUsersFollowModal();
+                    renderTasks();
+                } else {
+                    showToast("Gagal follow: " + error.message);
+                }
+            }
         }
 
         // LISTENER NOTIFIKASI GLOBAL
@@ -850,11 +1023,9 @@
             globalCommentsListener = _supabase.channel('public:jadwal_comments_global')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments' }, payload => {
                     const newComment = payload.new;
-                    
                     if (newComment.user_id === currentUser.id) return;
 
                     const targetTask = globalTasks.find(t => String(t.id) === String(newComment.jadwal_id));
-                    
                     if (targetTask) {
                         targetTask.comments_count = (targetTask.comments_count || 0) + 1;
                         renderTasks();
@@ -1027,7 +1198,7 @@
             userFilterSelect.value = currentSelected || 'All';
         }
 
-        // RENDER TASKS
+        // RENDER TASKS (FILTER MUTUAL FOLLOW)
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -1045,7 +1216,13 @@
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
                 const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
-                return matchDate && matchRole && matchStatus && matchUser;
+                
+                // Syarat Tampil: Milik sendiri, Super Admin, ATAU Rekan Saling Follow (Mutual)
+                const isMine = item.user_id === currentUser?.id;
+                const isMutualFriend = mutualFriends.includes(item.user_id);
+                const canView = isSuperAdmin || isMine || isMutualFriend;
+
+                return matchDate && matchRole && matchStatus && matchUser && canView;
             });
 
             document.getElementById('totalTaskCount').innerText = filteredTasks.length;
@@ -1056,15 +1233,17 @@
                 const emptyDesktopHtml = `
                     <tr>
                         <td colspan="8" class="p-8 text-center text-slate-400">
-                            <i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i>
-                            <p class="text-xs font-semibold">Tidak ada jadwal yang cocok dengan filter.</p>
+                            <i class="fa-solid fa-user-group text-3xl mb-2 opacity-40"></i>
+                            <p class="text-xs font-semibold">Tidak ada jadwal.</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Pastikan Anda dan rekan kerja sudah <b>saling follow (Mutual)</b> untuk melihat jadwal mereka.</p>
                         </td>
                     </tr>
                 `;
                 const emptyMobileHtml = `
                     <div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-                        <i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i>
-                        <p class="text-xs font-semibold">Tidak ada jadwal pada filter ini.</p>
+                        <i class="fa-solid fa-user-group text-3xl mb-2 opacity-40"></i>
+                        <p class="text-xs font-semibold">Tidak ada jadwal.</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Jadwal rekan hanya muncul jika sudah <b>saling follow</b>.</p>
                     </div>
                 `;
                 tableBodyDesktop.innerHTML = emptyDesktopHtml;
@@ -1119,7 +1298,7 @@
 
                     let actionButtons = '';
                     if (!isOwner) {
-                        actionButtons = `<span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">View Only</span>`;
+                        actionButtons = `<span class="text-[9px] text-slate-400 font-medium px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Mutual Friend</span>`;
                     } else if (isCompleted) {
                         actionButtons = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci</span>`;
                     } else if (isPastDay) {
@@ -1248,7 +1427,7 @@
 
                     let actionCell = '';
                     if (!isOwner) {
-                        actionCell = `<span class="text-[10px] text-slate-400 font-medium">Read Only</span>`;
+                        actionCell = `<span class="text-[10px] text-slate-400 font-medium">Mutual Friend</span>`;
                     } else if (isCompleted) {
                         actionCell = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Selesai (Locked)</span>`;
                     } else if (isPastDay) {
@@ -1368,7 +1547,7 @@
             renderCommentList(data);
         }
 
-        // RENDER KOMENTAR DENGAN TOMBOL EDIT & HAPUS
+        // RENDER KOMENTAR
         function renderCommentList(comments) {
             const commentList = document.getElementById('commentList');
             commentList.innerHTML = '';
@@ -1422,7 +1601,6 @@
             commentList.scrollTop = commentList.scrollHeight;
         }
 
-        // EDIT KOMENTAR
         function startEditComment(commentId, commentText) {
             editingCommentId = commentId;
             const input = document.getElementById('inputNewComment');
@@ -1448,7 +1626,6 @@
             if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
         }
 
-        // HAPUS KOMENTAR
         async function deleteComment(commentId) {
             if (!confirm("Hapus komentar ini?")) return;
 
@@ -1465,7 +1642,6 @@
             }
         }
 
-        // KIRIM / UPDATE KOMENTAR
         async function sendComment() {
             const input = document.getElementById('inputNewComment');
             const commentText = input.value.trim();
@@ -1474,7 +1650,6 @@
             if (!activeCommentJadwalId) return showToast("ID Jadwal tidak ditemukan!");
 
             if (editingCommentId) {
-                // Proses Update Komentar
                 const { error } = await _supabase
                     .from('jadwal_comments')
                     .update({ comment: commentText })
@@ -1488,7 +1663,6 @@
                     fetchComments(activeCommentJadwalId);
                 }
             } else {
-                // Proses Tambah Komentar Baru
                 input.value = '';
 
                 const payload = {
@@ -1552,7 +1726,7 @@
             }
         }
 
-        // DELETE MODAL JADWAL
+        // DELETE MODAL
         function askDeleteTask(id) {
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
@@ -1654,7 +1828,12 @@
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
                 const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
-                return matchDateRange && matchRole && matchStatus && matchUser;
+                
+                const isMine = item.user_id === currentUser?.id;
+                const isMutualFriend = mutualFriends.includes(item.user_id);
+                const canView = isSuperAdmin || isMine || isMutualFriend;
+
+                return matchDateRange && matchRole && matchStatus && matchUser && canView;
             });
 
             if (tasksToExport.length === 0) {
@@ -1783,7 +1962,7 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // FORM SINGLE TASK
+        // FORM SINGLE
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
