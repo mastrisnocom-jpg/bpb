@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan sistem Mutual Following dan Interaksi Sosial.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Notifikasi Badge Lonceng, dan Proteksi Status.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -114,6 +114,13 @@
                     <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 hover:text-white transition">
                         <i class="fa-solid fa-user-group text-xs text-emerald-300"></i> Relasi Follow / Teman
                     </button>
+
+                    <button onclick="openNotificationsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-emerald-800/40 hover:bg-emerald-800/80 text-emerald-100 hover:text-white transition">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-bell text-xs text-amber-300"></i> Notifikasi
+                        </div>
+                        <span id="sideNotifBadge" class="hidden bg-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                    </button>
                     
                     <div class="pt-3 border-t border-emerald-800/50 my-3"></div>
                     
@@ -170,8 +177,15 @@
                             </div>
                         </div>
 
-                        <!-- TOOLBAR ATAS -->
+                        <!-- TOOLBAR ATAS DENGAN IKON LONCENG BADGE MERAH -->
                         <div class="flex items-center gap-1.5">
+                            <!-- Tombol Lonceng Notifikasi -->
+                            <button onclick="openNotificationsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 flex items-center justify-center transition active:scale-95 text-xs relative" title="Pusat Notifikasi">
+                                <i class="fa-solid fa-bell"></i>
+                                <!-- Badge Angka Merah -->
+                                <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 border border-white dark:border-slate-900 text-white text-[8px] font-extrabold px-1 min-w-[14px] h-[14px] rounded-full flex items-center justify-center shadow-md animate-pulse">0</span>
+                            </button>
+
                             <button onclick="openFollowsModal()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-200 flex items-center justify-center transition active:scale-95 text-xs" title="Kelola Teman / Follow">
                                 <i class="fa-solid fa-user-plus"></i>
                             </button>
@@ -285,6 +299,34 @@
         </main>
     </div>
 
+    <!-- MODAL PUSAT NOTIFIKASI (NOTIFICATION CENTER) -->
+    <div id="notificationsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pusat Notifikasi</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="clearAllNotifications()" class="text-[10px] text-rose-500 hover:underline font-bold">Bersihkan</button>
+                    <button onclick="closeNotificationsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="notificationsList" class="flex-1 overflow-y-auto space-y-2 py-1 pr-1 min-h-[160px] max-h-[320px] text-xs">
+                <!-- List Notifikasi terisi otomatis -->
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
+                <button onclick="closeNotificationsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL RELASI FOLLOW / MUTUAL FRIENDS -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
@@ -301,7 +343,6 @@
             </div>
 
             <div id="usersFollowList" class="flex-1 overflow-y-auto space-y-2 py-1 pr-1 min-h-[160px] max-h-[300px] text-xs">
-                <!-- Daftar user dan tombol follow terisi otomatis -->
             </div>
 
             <div class="pt-3 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
@@ -310,15 +351,15 @@
         </div>
     </div>
 
-    <!-- POP-UP NOTIFIKASI KOMENTAR REALTIME -->
+    <!-- POP-UP NOTIFIKASI TOAST -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
-                <i class="fa-solid fa-bell"></i>
+            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
+                <i id="notifIcon" class="fa-solid fa-bell"></i>
             </div>
             <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
-                    <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Komentar Baru</p>
+                    <p id="notifTitle" class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Notifikasi</p>
                     <span class="text-[8px] text-slate-400">Baru saja</span>
                 </div>
                 <p id="notifSender" class="text-xs font-bold truncate">User</p>
@@ -359,7 +400,7 @@
         </div>
     </div>
 
-    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
+    <!-- MODAL CUSTOM KONFIRMASI HAPUS JADWAL -->
     <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down text-center">
             <div class="w-10 h-10 bg-rose-100 dark:bg-rose-950/50 text-rose-500 rounded-xl flex items-center justify-center text-lg mx-auto mb-2.5">
@@ -614,7 +655,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION (MOBILE) -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 z-40 flex justify-between items-center shadow-lg">
         <a href="/" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-600">
             <i class="fa-solid fa-house text-sm"></i>
@@ -628,6 +669,13 @@
 
         <button onclick="openTaskModal()" aria-label="Tambah Jadwal Baru" class="-mt-5 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white p-3 rounded-full shadow-md shadow-emerald-600/30 border-2 border-white dark:border-slate-900 transition active:scale-95">
             <i class="fa-solid fa-plus text-base"></i>
+        </button>
+
+        <!-- Tombol Lonceng Notifikasi Mobile -->
+        <button onclick="openNotificationsModal()" class="flex flex-col items-center gap-0.5 text-amber-500 relative">
+            <i class="fa-solid fa-bell text-sm"></i>
+            <span id="bottomNotifBadge" class="hidden absolute -top-1 right-2 bg-rose-600 text-white text-[7px] font-extrabold px-1 rounded-full">0</span>
+            <span class="text-[8px] font-extrabold">Notif</span>
         </button>
 
         <button onclick="openFollowsModal()" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-emerald-500">
@@ -661,16 +709,19 @@
         let commentsSubscription = null;
         let globalCommentsListener = null;
         let followsSubscription = null;
+        let followNotifyListener = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
         let notifiedTaskId = null;
         let audioCtx = null;
 
-        // Data Relasi Follow
-        let myFollowings = []; // ID user yang saya follow
-        let myFollowers = [];  // ID user yang follow saya
-        let mutualFriends = []; // ID user yang saling follow
+        // Data Relasi Follow & Notifikasi
+        let myFollowings = [];
+        let myFollowers = [];
+        let mutualFriends = [];
+        let notificationsList = [];
+        let unreadNotificationsCount = 0;
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
@@ -842,6 +893,7 @@
             if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
             if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
             await _supabase.auth.signOut(); 
             location.reload();
         }
@@ -876,6 +928,101 @@
             setupRealtimeListener();
             setupGlobalCommentNotificationListener();
             setupFollowsRealtime();
+            setupFollowNotificationListener();
+        }
+
+        // UPDATE BADGE NOTIFIKASI MERAH
+        function updateNotificationBadge() {
+            const headerBadge = document.getElementById('headerNotifBadge');
+            const sideBadge = document.getElementById('sideNotifBadge');
+            const bottomBadge = document.getElementById('bottomNotifBadge');
+
+            if (unreadNotificationsCount > 0) {
+                const countText = unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount;
+                
+                headerBadge.innerText = countText;
+                headerBadge.classList.remove('hidden');
+
+                if (sideBadge) {
+                    sideBadge.innerText = countText;
+                    sideBadge.classList.remove('hidden');
+                }
+                if (bottomBadge) {
+                    bottomBadge.innerText = countText;
+                    bottomBadge.classList.remove('hidden');
+                }
+            } else {
+                headerBadge.classList.add('hidden');
+                if (sideBadge) sideBadge.classList.add('hidden');
+                if (bottomBadge) bottomBadge.classList.add('hidden');
+            }
+        }
+
+        // PUSAT NOTIFIKASI MODAL
+        function openNotificationsModal() {
+            document.getElementById('notificationsModal').classList.remove('hidden');
+            renderNotificationsList();
+            unreadNotificationsCount = 0;
+            updateNotificationBadge();
+        }
+
+        function closeNotificationsModal() {
+            document.getElementById('notificationsModal').classList.add('hidden');
+        }
+
+        function clearAllNotifications() {
+            notificationsList = [];
+            unreadNotificationsCount = 0;
+            updateNotificationBadge();
+            renderNotificationsList();
+            showToast("Notifikasi dibersihkan");
+        }
+
+        function renderNotificationsList() {
+            const listEl = document.getElementById('notificationsList');
+            listEl.innerHTML = '';
+
+            if (notificationsList.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center text-slate-400 py-8">
+                        <i class="fa-solid fa-bell-slash text-2xl mb-1.5 opacity-40"></i>
+                        <p class="text-[11px] font-semibold">Belum ada notifikasi baru.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            notificationsList.forEach((n, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition`;
+                
+                let iconHtml = n.type === 'comment' 
+                    ? `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] flex-shrink-0"><i class="fa-solid fa-comment"></i></div>`
+                    : `<div class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] flex-shrink-0"><i class="fa-solid fa-user-plus"></i></div>`;
+
+                item.innerHTML = `
+                    ${iconHtml}
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[10px] font-extrabold text-slate-800 dark:text-slate-100 truncate">${n.title}</p>
+                            <span class="text-[8px] text-slate-400">${n.time}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug mt-0.5 line-clamp-2">${n.message}</p>
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    closeNotificationsModal();
+                    if (n.type === 'comment' && n.taskId) {
+                        const task = globalTasks.find(t => t.id == n.taskId);
+                        if (task) openCommentModal(task.id, task.tugas);
+                    } else if (n.type === 'follow') {
+                        openFollowsModal();
+                    }
+                };
+
+                listEl.appendChild(item);
+            });
         }
 
         // SISTEM MUTUAL FOLLOWING
@@ -887,7 +1034,6 @@
             myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
             myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
             
-            // Mutual: Saya follow dia DAN dia follow saya
             mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
         }
 
@@ -902,6 +1048,66 @@
                     }
                 })
                 .subscribe();
+        }
+
+        // LISTENER NOTIFIKASI FOLLOWER BARU
+        function setupFollowNotificationListener() {
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
+
+            followNotifyListener = _supabase.channel('public:user_follows_notify')
+                .on('postgres_changes', { 
+                    event: 'INSERT', 
+                    schema: 'public', 
+                    table: 'user_follows' 
+                }, payload => {
+                    const newFollow = payload.new;
+
+                    if (newFollow.following_id === currentUser.id) {
+                        showFollowNotification(newFollow);
+                    }
+                })
+                .subscribe();
+        }
+
+        function showFollowNotification(followData) {
+            playNotificationChime();
+
+            const senderName = followData.follower_email ? followData.follower_email.split('@')[0] : 'Seseorang';
+            const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            // Simpan ke daftar notifikasi & update badge
+            notificationsList.unshift({
+                type: 'follow',
+                title: 'Pengikut Baru! 🎉',
+                message: `${senderName} mulai mengikuti Anda. Follow balik untuk saling melihat jadwal!`,
+                time: currentTime,
+                sender: senderName
+            });
+            unreadNotificationsCount++;
+            updateNotificationBadge();
+
+            // Toast Pop-up
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-user-plus';
+            document.getElementById('notifTitle').innerText = 'Pengikut Baru! 🎉';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = `${senderName} mulai mengikuti Anda`;
+            document.getElementById('notifMessage').innerText = `Follow balik agar jadwal kerja operasional saling terlihat!`;
+            notifiedTaskId = null;
+
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("Pengikut Baru! 🎉", {
+                    body: `${senderName} mulai mengikuti Anda. Klik untuk follow balik!`,
+                    icon: '/icon-192.png'
+                });
+            }
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 6000);
         }
 
         async function openFollowsModal() {
@@ -919,7 +1125,6 @@
             const listEl = document.getElementById('usersFollowList');
             listEl.innerHTML = '';
 
-            // Ekstrak daftar seluruh user dari globalTasks (kecuali diri sendiri dan Super Admin)
             const userMap = {};
             globalTasks.forEach(item => {
                 if (item.user_id && item.user_id !== currentUser.id && item.user_email !== SUPER_ADMIN_EMAIL) {
@@ -984,7 +1189,6 @@
 
         async function toggleFollowUser(targetUserId, targetUserEmail, isCurrentlyFollowing) {
             if (isCurrentlyFollowing) {
-                // Unfollow
                 const { error } = await _supabase.from('user_follows')
                     .delete()
                     .eq('follower_id', currentUser.id)
@@ -997,7 +1201,6 @@
                     renderTasks();
                 }
             } else {
-                // Follow
                 const { error } = await _supabase.from('user_follows').insert([{
                     follower_id: currentUser.id,
                     following_id: targetUserId,
@@ -1016,7 +1219,7 @@
             }
         }
 
-        // LISTENER NOTIFIKASI GLOBAL
+        // LISTENER NOTIFIKASI GLOBAL KOMENTAR
         function setupGlobalCommentNotificationListener() {
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
 
@@ -1041,10 +1244,27 @@
         function showCommentNotification(comment, task) {
             playNotificationChime();
 
-            const toast = document.getElementById('commentNotificationToast');
             const senderName = comment.user_email ? comment.user_email.split('@')[0] : 'Rekan Kerja';
-            
-            document.getElementById('notifSender').innerText = `${senderName} mengomentari tugas: "${task.tugas}"`;
+            const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            // Simpan ke daftar notifikasi & update badge
+            notificationsList.unshift({
+                type: 'comment',
+                title: `Komentar Baru dari ${senderName}`,
+                message: `Pada tugas "${task.tugas}": "${comment.comment}"`,
+                time: currentTime,
+                taskId: task.id
+            });
+            unreadNotificationsCount++;
+            updateNotificationBadge();
+
+            // Toast Pop-up
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-comments';
+            document.getElementById('notifTitle').innerText = 'Komentar Baru';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = `${senderName} mengomentari: "${task.tugas}"`;
             document.getElementById('notifMessage').innerText = `"${comment.comment}"`;
             notifiedTaskId = task.id;
 
@@ -1070,6 +1290,8 @@
                 if (task) {
                     openCommentModal(task.id, task.tugas);
                 }
+            } else {
+                openNotificationsModal();
             }
         }
 
@@ -1217,7 +1439,6 @@
                 const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
                 const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
                 
-                // Syarat Tampil: Milik sendiri, Super Admin, ATAU Rekan Saling Follow (Mutual)
                 const isMine = item.user_id === currentUser?.id;
                 const isMutualFriend = mutualFriends.includes(item.user_id);
                 const canView = isSuperAdmin || isMine || isMutualFriend;
@@ -1497,7 +1718,7 @@
             }
         }
 
-        // KOMENTAR: BUKA MODAL
+        // KOMENTAR
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId); 
             cancelEditComment();
@@ -1547,7 +1768,6 @@
             renderCommentList(data);
         }
 
-        // RENDER KOMENTAR
         function renderCommentList(comments) {
             const commentList = document.getElementById('commentList');
             commentList.innerHTML = '';
@@ -1962,7 +2182,7 @@
             showToast("Berhasil mengekspor PDF!");
         }
 
-        // FORM SINGLE
+        // FORM SINGLE TASK
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
             if (show) { modal.classList.remove('hidden'); } 
