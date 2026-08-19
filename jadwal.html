@@ -326,7 +326,6 @@
             </footer>
         </main>
     </div>
-
     <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down max-h-[90vh] overflow-y-auto">
@@ -723,7 +722,6 @@
             </div>
         </div>
     </div>
-
     <!-- MODAL RELASI FOLLOW -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
@@ -1121,7 +1119,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <SCRIPT LOGIKA JAVASCRIPT MULAI DI     <script>
+    <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1557,7 +1555,7 @@
                 const parts = taskDateStr.split('-');
                 const taskDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
                 const dayOfWeek = taskDateObj.getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) return;
+                if (dayOfWeek === 0 || dayOfWeek === 6) return; // Skip weekend
 
                 const effectiveName = getUserDisplayName(uid, t.user_email, t.nama);
 
@@ -3990,4 +3988,3 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
     </script>
 </body>
 </html>
-
