@@ -389,6 +389,38 @@
         </div>
     </div>
 
+    <!-- MODAL EDIT NAMA USER (SUPER ADMIN) -->
+    <div id="editUserNameModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-pen text-amber-500"></i> Edit Nama Petugas
+                </h3>
+                <button onclick="closeEditUserNameModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <form id="formEditUserName" class="space-y-3 text-xs">
+                <input type="hidden" id="edit-user-target-id">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Email User</label>
+                    <input type="text" id="edit-user-email-display" disabled class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan Petugas</label>
+                    <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Setelah disimpan, nama ini akan otomatis terisi saat user menambahkan tugas baru.
+                </div>
+                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan Nama</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL SETTING ANGGARAN & SKEMA POIN (KHUSUS SUPER ADMIN) -->
     <div id="budgetConfigModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down flex flex-col max-h-[90vh]">
@@ -419,7 +451,6 @@
                     </div>
                 </div>
 
-                <!-- EDIT SKEMA NILAI POIN -->
                 <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
                     <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Penyesuaian Nilai Poin</label>
                     <div class="grid grid-cols-2 gap-2.5">
@@ -895,7 +926,7 @@
         let notifiedTaskId = null;
         let audioCtx = null;
 
-        // Data Relasi Follow, Notifikasi & Online Presence
+        // Data Relasi Follow, Notifikasi, Online Presence & Mapping Nama User
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -903,6 +934,7 @@
         let unreadNotificationsCount = 0;
         let onlineUsersState = {};
         let presenceChannel = null;
+        let userProfilesMap = {}; // mapping user_id -> custom_name
 
         // PENGATURAN ANGGARAN & REWARD DEFAULT
         let budgetSettings = {
@@ -976,6 +1008,13 @@
             return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
         }
 
+        function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
+            if (userProfilesMap[userId]) return userProfilesMap[userId];
+            if (fallbackName) return fallbackName;
+            if (fallbackEmail) return fallbackEmail.split('@')[0];
+            return 'Petugas';
+        }
+
         function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9") {
             if (avatarUrl) {
                 return `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
@@ -1012,26 +1051,37 @@
             try {
                 const { data, error } = await _supabase
                     .from('app_config')
-                    .select('*')
-                    .eq('id', 'budget_settings')
-                    .single();
+                    .select('*');
 
                 if (!error && data) {
-                    if (data.config_data && typeof data.config_data === 'object') {
-                        budgetSettings = Object.assign(budgetSettings, data.config_data);
-                    } else {
-                        budgetSettings.monthlyBudget = Number(data.monthly_budget) || budgetSettings.monthlyBudget;
-                        budgetSettings.ratePerTask = Number(data.rate_per_task) || budgetSettings.ratePerTask;
-                        budgetSettings.maxDailyTasks = Number(data.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                    const budgetRow = data.find(r => r.id === 'budget_settings');
+                    if (budgetRow) {
+                        if (budgetRow.config_data && typeof budgetRow.config_data === 'object') {
+                            budgetSettings = Object.assign(budgetSettings, budgetRow.config_data);
+                        } else {
+                            budgetSettings.monthlyBudget = Number(budgetRow.monthly_budget) || budgetSettings.monthlyBudget;
+                            budgetSettings.ratePerTask = Number(budgetRow.rate_per_task) || budgetSettings.ratePerTask;
+                            budgetSettings.maxDailyTasks = Number(budgetRow.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                        }
+                        localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
                     }
-                    localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
+
+                    const profileRow = data.find(r => r.id === 'user_profiles');
+                    if (profileRow && profileRow.config_data) {
+                        userProfilesMap = profileRow.config_data;
+                        localStorage.setItem('mops_user_profiles', JSON.stringify(userProfilesMap));
+                    }
                 } else {
                     const saved = localStorage.getItem('mops_budget_settings');
                     if (saved) budgetSettings = Object.assign(budgetSettings, JSON.parse(saved));
+                    const savedProf = localStorage.getItem('mops_user_profiles');
+                    if (savedProf) userProfilesMap = JSON.parse(savedProf);
                 }
             } catch (e) {
                 const saved = localStorage.getItem('mops_budget_settings');
                 if (saved) budgetSettings = Object.assign(budgetSettings, JSON.parse(saved));
+                const savedProf = localStorage.getItem('mops_user_profiles');
+                if (savedProf) userProfilesMap = JSON.parse(savedProf);
             }
             renderPointSchemeList();
         }
@@ -1040,16 +1090,25 @@
             if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
             appConfigSubscription = _supabase.channel('public:app_config')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
-                    if (payload.new && payload.new.id === 'budget_settings') {
-                        if (payload.new.config_data && typeof payload.new.config_data === 'object') {
-                            budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
-                        } else {
-                            budgetSettings.monthlyBudget = Number(payload.new.monthly_budget) || budgetSettings.monthlyBudget;
-                            budgetSettings.ratePerTask = Number(payload.new.rate_per_task) || budgetSettings.ratePerTask;
-                            budgetSettings.maxDailyTasks = Number(payload.new.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                    if (payload.new) {
+                        if (payload.new.id === 'budget_settings') {
+                            if (payload.new.config_data && typeof payload.new.config_data === 'object') {
+                                budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
+                            } else {
+                                budgetSettings.monthlyBudget = Number(payload.new.monthly_budget) || budgetSettings.monthlyBudget;
+                                budgetSettings.ratePerTask = Number(payload.new.rate_per_task) || budgetSettings.ratePerTask;
+                                budgetSettings.maxDailyTasks = Number(payload.new.max_daily_tasks) || budgetSettings.maxDailyTasks;
+                            }
+                            renderPointSchemeList();
+                            calculateAndRenderEarnings();
+                        } else if (payload.new.id === 'user_profiles') {
+                            userProfilesMap = payload.new.config_data || {};
+                            localStorage.setItem('mops_user_profiles', JSON.stringify(userProfilesMap));
+                            renderTasks();
+                            if (!document.getElementById('earningsModal').classList.contains('hidden')) {
+                                openEarningsModal();
+                            }
                         }
-                        renderPointSchemeList();
-                        calculateAndRenderEarnings();
                     }
                 })
                 .subscribe();
@@ -1074,6 +1133,55 @@
         function closeBudgetConfigModal() {
             document.getElementById('budgetConfigModal').classList.add('hidden');
         }
+
+        // MODAL EDIT NAMA USER (SUPER ADMIN)
+        function openEditUserNameModal(targetUserId, targetEmail, currentName) {
+            if (!isSuperAdmin) return;
+            document.getElementById('edit-user-target-id').value = targetUserId;
+            document.getElementById('edit-user-email-display').value = targetEmail || '-';
+            document.getElementById('edit-user-new-name').value = currentName || '';
+            document.getElementById('editUserNameModal').classList.remove('hidden');
+        }
+
+        function closeEditUserNameModal() {
+            document.getElementById('editUserNameModal').classList.add('hidden');
+        }
+
+        document.getElementById('formEditUserName').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const targetUserId = document.getElementById('edit-user-target-id').value;
+            const newName = document.getElementById('edit-user-new-name').value.trim();
+
+            if (!targetUserId || !newName) return;
+
+            userProfilesMap[targetUserId] = newName;
+            localStorage.setItem('mops_user_profiles', JSON.stringify(userProfilesMap));
+
+            // Simpan ke app_config
+            const { error: confError } = await _supabase
+                .from('app_config')
+                .upsert({
+                    id: 'user_profiles',
+                    config_data: userProfilesMap,
+                    updated_at: new Date().toISOString()
+                });
+
+            // Update nama di jadwal user tersebut di database Supabase
+            await _supabase
+                .from('jadwal')
+                .update({ nama: newName })
+                .eq('user_id', targetUserId);
+
+            // Update local memory globalTasks
+            globalTasks.forEach(t => {
+                if (t.user_id === targetUserId) t.nama = newName;
+            });
+
+            closeEditUserNameModal();
+            showToast("Nama user berhasil diperbarui!");
+            renderTasks();
+            openEarningsModal(); // Refresh modal view
+        });
 
         // SIMPAN PENGATURAN ANGGARAN & SKEMA POIN
         document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
@@ -1132,9 +1240,12 @@
                 const dayOfWeek = taskDateObj.getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) return;
 
+                const effectiveName = getUserDisplayName(uid, t.user_email, t.nama);
+
                 if (!userEarningsMap[uid]) {
                     userEarningsMap[uid] = {
-                        nama: t.nama || t.user_email?.split('@')[0] || 'Petugas',
+                        userId: uid,
+                        nama: effectiveName,
                         email: t.user_email || '',
                         dailyCount: {},
                         activeDates: new Set(),
@@ -1238,9 +1349,16 @@
                                     <i class="fa-solid fa-user"></i>
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">
-                                        ${u.nama} ${isMe ? '(Saya)' : ''}
-                                    </p>
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">
+                                            ${u.nama} ${isMe ? '(Saya)' : ''}
+                                        </p>
+                                        ${isSuperAdmin ? `
+                                            <button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        ` : ''}
+                                    </div>
                                     <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin &bull; ${u.eligibleTasks} tugas valid</p>
                                 </div>
                             </div>
@@ -1418,10 +1536,12 @@
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-dashboard').classList.remove('hidden');
             
-            const username = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email.split('@')[0];
+            await loadBudgetSettings();
+
+            const username = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name || currentUser.user_metadata?.name);
             const avatarUrl = getAvatarUrl(currentUser);
 
-            document.getElementById('user-display-side').innerText = currentUser.email;
+            document.getElementById('user-display-side').innerText = username;
             document.getElementById('modal-user-name').innerText = username;
             document.getElementById('profile-email-display').innerText = currentUser.email;
 
@@ -1429,8 +1549,6 @@
                 document.getElementById('user-avatar-placeholder').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
                 document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
             }
-
-            await loadBudgetSettings();
 
             if (currentUser.email === SUPER_ADMIN_EMAIL) {
                 isSuperAdmin = true;
@@ -1490,7 +1608,7 @@
                             user_id: currentUser.id,
                             email: currentUser.email,
                             avatar_url: getAvatarUrl(currentUser),
-                            name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email.split('@')[0],
+                            name: getUserDisplayName(currentUser.id, currentUser.email),
                             online_at: new Date().toISOString(),
                         });
                     }
@@ -1627,7 +1745,7 @@
         function showFollowNotification(followData) {
             playNotificationChime();
 
-            const senderName = followData.follower_email ? followData.follower_email.split('@')[0] : 'Seseorang';
+            const senderName = getUserDisplayName(followData.follower_id, followData.follower_email);
             const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
             notificationsList.unshift({
@@ -1685,7 +1803,7 @@
                         userMap[item.user_id] = {
                             id: item.user_id,
                             email: item.user_email || 'Petugas',
-                            nama: item.nama || item.user_email.split('@')[0],
+                            nama: getUserDisplayName(item.user_id, item.user_email, item.nama),
                             peran: item.peran || 'Operasional',
                             avatar_url: item.user_avatar || null
                         };
@@ -1802,7 +1920,7 @@
         function showCommentNotification(comment, task) {
             playNotificationChime();
 
-            const senderName = comment.user_email ? comment.user_email.split('@')[0] : 'Rekan Kerja';
+            const senderName = getUserDisplayName(comment.user_id, comment.user_email);
             const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
             notificationsList.unshift({
@@ -1911,16 +2029,17 @@
             globalTasks.forEach(item => {
                 const uid = item.user_id;
                 const email = item.user_email || `User (${uid ? uid.slice(-5) : 'unknown'})`;
+                const displayName = getUserDisplayName(uid, email, item.nama);
                 
                 if (!userMap[uid]) {
-                    userMap[uid] = { email: email, count: 0 };
+                    userMap[uid] = { name: displayName, count: 0 };
                 }
                 userMap[uid].count++;
             });
 
             let optionsHtml = `<option value="All">👥 Filter: Semua User (${globalTasks.length})</option>`;
             Object.keys(userMap).forEach(uid => {
-                optionsHtml += `<option value="${uid}">👤 ${userMap[uid].email} (${userMap[uid].count})</option>`;
+                optionsHtml += `<option value="${uid}">👤 ${userMap[uid].name} (${userMap[uid].count})</option>`;
             });
 
             userFilterSelect.innerHTML = optionsHtml;
@@ -1944,12 +2063,13 @@
         });
 
         function shareSpecificTask(task) {
+            const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
             const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
-            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${task.nama}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
+            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
 
             if (navigator.share) {
                 navigator.share({
-                    title: `Jadwal Kerja - ${task.nama}`,
+                    title: `Jadwal Kerja - ${taskName}`,
                     text: shareText,
                     url: window.location.href,
                 }).catch(() => {});
@@ -1959,7 +2079,7 @@
             }
         }
 
-        // RENDER TASKS (FB STYLE & TABEL DESKTOP DENGAN NILAI SKEMA DINAMIS)
+        // RENDER TASKS
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -2015,7 +2135,7 @@
 
             const groupedByUser = {};
             filteredTasks.forEach(task => {
-                const userKey = task.nama || 'Tanpa Nama';
+                const userKey = getUserDisplayName(task.user_id, task.user_email, task.nama);
                 if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
                 groupedByUser[userKey].push(task);
             });
@@ -2117,7 +2237,6 @@
                                 ${item.tugas}
                             </p>
 
-                            <!-- Bar Status + Poin + Icon Action -->
                             <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-slate-100/60 dark:border-slate-800/60">
                                 <div class="flex items-center gap-1.5">
                                     ${statusBadgeHtml}
@@ -2207,6 +2326,8 @@
                     const isLate = isCompletedLate(item);
                     const isEarly = isCreatedBefore6AM(item);
 
+                    const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
+
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800/60';
                     
@@ -2266,7 +2387,7 @@
                             ${item.jam_mulai} - ${item.jam_selesai}
                             ${isEarly ? `<span class="ml-1 bg-amber-400/20 text-amber-600 dark:text-amber-300 font-extrabold text-[8px] px-1 rounded border border-amber-400/40" title="Dibuat sebelum jam 06:00 (+${budgetSettings.pointsEarly} Poin)">🌅</span>` : ''}
                         </td>
-                        <td class="p-3 font-bold text-[11px]">${item.nama}</td>
+                        <td class="p-3 font-bold text-[11px]">${displayName}</td>
                         <td class="p-3">${roleBadge}</td>
                         <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
                         <td class="p-3 text-center">${statusCell}</td>
@@ -2378,6 +2499,7 @@
                 const isMyComment = c.user_id === currentUser.id;
                 const canDelete = isMyComment || isSuperAdmin;
                 const commentEl = document.createElement('div');
+                const senderName = getUserDisplayName(c.user_id, c.user_email);
                 
                 commentEl.className = `p-2.5 rounded-xl text-xs relative group ${
                     isMyComment 
@@ -2407,7 +2529,7 @@
                     <div class="flex items-center justify-between mb-1">
                         <div class="flex items-center gap-1.5">
                             <span class="font-extrabold ${isMyComment ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'} text-[10px]">
-                                ${isMyComment ? 'Saya' : (c.user_email ? c.user_email.split('@')[0] : 'User')}
+                                ${isMyComment ? 'Saya' : senderName}
                             </span>
                             <span class="text-[8px] text-slate-400">
                                 ${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
@@ -2677,12 +2799,12 @@
         function generateCSVFile(tasks, labelRange) {
             const activeDate = document.getElementById('dateFilter').value || todayStr;
             const tanggalFormatted = formatTanggalIndo(activeDate);
-            const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
+            const uniquePetugas = [...new Set(tasks.map(t => getUserDisplayName(t.user_id, t.user_email, t.nama)).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua_Petugas');
 
             const grouped = {};
             tasks.forEach(t => {
-                const key = t.nama || 'Tanpa Nama';
+                const key = getUserDisplayName(t.user_id, t.user_email, t.nama);
                 if (!grouped[key]) grouped[key] = [];
                 grouped[key].push(t);
             });
@@ -2716,7 +2838,7 @@
             const activeDate = document.getElementById('dateFilter').value || todayStr;
             const tanggalFormatted = formatTanggalIndo(activeDate);
             
-            const uniquePetugas = [...new Set(tasks.map(t => t.nama).filter(Boolean))];
+            const uniquePetugas = [...new Set(tasks.map(t => getUserDisplayName(t.user_id, t.user_email, t.nama)).filter(Boolean))];
             const namaLabel = uniquePetugas.length === 1 ? uniquePetugas[0] : (currentUser?.email?.split('@')[0] || 'Semua Petugas');
 
             doc.setFont("Helvetica", "bold");
@@ -2733,7 +2855,7 @@
 
             const grouped = {};
             tasks.forEach(t => {
-                const key = t.nama || 'Tanpa Nama';
+                const key = getUserDisplayName(t.user_id, t.user_email, t.nama);
                 if (!grouped[key]) grouped[key] = [];
                 grouped[key].push(t);
             });
@@ -2758,7 +2880,7 @@
                         globalNo++,
                         formatTanggalIndo(item.tanggal || todayStr),
                         `${item.jam_mulai} - ${item.jam_selesai}`,
-                        item.nama,
+                        getUserDisplayName(item.user_id, item.user_email, item.nama),
                         item.peran,
                         item.tugas,
                         item.status
@@ -2796,6 +2918,11 @@
         function openTaskModal() {
             editingTaskId = null;
             document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
+            
+            // AUTO-FILL NAMA DARI USER YANG SEDANG LOGIN
+            const myDefaultName = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            document.getElementById('input-name').value = myDefaultName;
+
             document.getElementById('modalTitle').innerText = "Tambah Tugas Baru";
             document.getElementById('btn-save-task').innerText = "Simpan";
             toggleModal(true);
@@ -2815,7 +2942,7 @@
 
             editingTaskId = item.id;
             document.getElementById('input-date').value = item.tanggal || todayStr;
-            document.getElementById('input-name').value = item.nama;
+            document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
             document.getElementById('input-role').value = item.peran;
             document.getElementById('input-task').value = item.tugas;
             document.getElementById('input-start-time').value = item.jam_mulai;
@@ -2875,13 +3002,15 @@
 
         function openBulkTextModal() { 
             document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr;
+            // AUTO FILL NAMA DI MODAL IMPORT TEKS
+            document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('bulkTextModal').classList.remove('hidden'); 
         }
         function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
 
         async function processBulkTextImport() {
             const tanggal = document.getElementById('bulk-date').value || todayStr;
-            const name = document.getElementById('bulk-name').value || 'Petugas';
+            const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
             const role = document.getElementById('bulk-role').value;
             const rawText = document.getElementById('bulk-text-area').value;
 
@@ -2939,13 +3068,15 @@
 
         function openAutoGenerateModal() { 
             document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr;
+            // AUTO FILL NAMA DI MODAL AUTO GENERATE
+            document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('autoGenerateModal').classList.remove('hidden'); 
         }
         function closeAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.add('hidden'); }
 
         async function processAutoGenerate() {
             const tanggal = document.getElementById('gen-date').value || todayStr;
-            const name = document.getElementById('gen-name').value;
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
             const role = document.getElementById('gen-role').value;
 
             if (!name) return alert("Silakan isi nama petugas terlebih dahulu!");
