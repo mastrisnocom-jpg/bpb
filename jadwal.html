@@ -741,7 +741,7 @@
 
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal Chat</label>
-                    <textarea id="bulk-text-area" rows="5" placeholder="09.30-10.00 : pengisian tandon&#10;10.30-11.30 : perbaikan monitor sound" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
+                    <textarea id="bulk-text-area" rows="5" placeholder="19.08.2026:&#10;05.30-07-00:Daily All area dusting&#10;08.00-11-00:pemasangan tissu&#10;12.00.14.00- Buang sampah" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
             </div>
 
@@ -1158,7 +1158,7 @@
             localStorage.setItem('mops_user_profiles', JSON.stringify(userProfilesMap));
 
             // Simpan ke app_config
-            const { error: confError } = await _supabase
+            await _supabase
                 .from('app_config')
                 .upsert({
                     id: 'user_profiles',
@@ -3008,8 +3008,9 @@
         }
         function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
 
+        // PROSES IMPORT TEKS WA DENGAN SMART PARSER (MENDUKUNG FORMAT ACAR / TYPO)
         async function processBulkTextImport() {
-            const tanggal = document.getElementById('bulk-date').value || todayStr;
+            let rawDate = document.getElementById('bulk-date').value || todayStr;
             const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
             const role = document.getElementById('bulk-role').value;
             const rawText = document.getElementById('bulk-text-area').value;
@@ -3022,18 +3023,43 @@
             const nowIso = new Date().toISOString();
             const avatarUrl = getAvatarUrl(currentUser);
 
+            // 1. Deteksi tanggal di awal/baris manapun (misal: "19.08.2026:" atau "19-08-2026")
+            for (let line of lines) {
+                const trimmed = line.trim();
+                const dateMatch = trimmed.match(/^(\d{1,2})[./\-](\d{1,2})[./\-](\d{4})/);
+                if (dateMatch) {
+                    const d = dateMatch[1].padStart(2, '0');
+                    const m = dateMatch[2].padStart(2, '0');
+                    const y = dateMatch[3];
+                    rawDate = `${y}-${m}-${d}`;
+                    document.getElementById('bulk-date').value = rawDate;
+                    break;
+                }
+            }
+
+            // 2. Parse tiap baris jadwal dengan Regex Fleksibel
             lines.forEach(line => {
-                const match = line.match(/(\d{1,2}[.:]\d{2})\s*[-–]\s*(\d{1,2}[.:]\d{2})\s*[:\s-]*\s*(.+)/);
+                const cleanLine = line.trim();
+                if (!cleanLine) return;
+
+                // Mendukung pemisah titik, strip, spasi: "05.30-07-00:tugas", "12.00.14.00- tugas", "15:00-17:00 : tugas"
+                const match = cleanLine.match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
+                
                 if (match) {
-                    const startTime = match[1].replace('.', ':');
-                    const endTime = match[2].replace('.', ':');
-                    const taskName = match[3].trim();
+                    const startH = match[1].padStart(2, '0');
+                    const startM = match[2];
+                    const endH = match[3].padStart(2, '0');
+                    const endM = match[4];
+                    const taskName = match[5].trim();
+
+                    const startTime = `${startH}:${startM}`;
+                    const endTime = `${endH}:${endM}`;
 
                     if (taskName) {
                         const itemObj = {
                             user_id: currentUser.id,
                             user_email: currentUser.email,
-                            tanggal: tanggal,
+                            tanggal: rawDate,
                             nama: name,
                             peran: role,
                             tugas: taskName,
@@ -3054,14 +3080,14 @@
             if (bulkPayload.length > 0) {
                 const { error } = await _supabase.from('jadwal').insert(bulkPayload);
                 if (!error) {
-                    showToast(`${bulkPayload.length} tugas berhasil diimport!`);
+                    showToast(`${bulkPayload.length} tugas tanggal ${formatTanggalIndo(rawDate)} berhasil diimport!`);
                     closeBulkTextModal();
                     document.getElementById('bulk-text-area').value = '';
                 } else {
                     alert("Gagal mengimport data: " + (error.message || ""));
                 }
             } else {
-                alert("Format teks tidak terdeteksi! Format contoh:\n09.30-10.00 : Pengisian tandon");
+                alert("Format teks tidak terdeteksi!\nPastikan terdapat format jam seperti: 08.00-11.00 : Detail tugas");
             }
             document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
         }
