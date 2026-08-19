@@ -1180,7 +1180,7 @@
             closeEditUserNameModal();
             showToast("Nama user berhasil diperbarui!");
             renderTasks();
-            openEarningsModal(); // Refresh modal view
+            openEarningsModal();
         });
 
         // SIMPAN PENGATURAN ANGGARAN & SKEMA POIN
@@ -2079,7 +2079,7 @@
             }
         }
 
-        // RENDER TASKS
+        // RENDER TASKS DENGAN FIX HAK SUPER ADMIN
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -2155,15 +2155,19 @@
 
                 let tasksListHtml = '';
                 tasksOfUser.forEach((item, index) => {
-                    const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
+                    const isOwner = (item.user_id === currentUser?.id);
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
-                    const isLiked = likedUsers.includes(currentUser.id);
+                    const isLiked = likedUsers.includes(currentUser?.id);
                     const likesCount = item.likes_count || 0;
                     const commentsCount = item.comments_count || 0;
 
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
-                    const isLocked = isCompleted || isPastDay;
+                    
+                    // Super Admin Bypass
+                    const isLocked = (isCompleted || isPastDay) && !isSuperAdmin;
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
+
                     const isLate = isCompletedLate(item);
                     const isEarly = isCreatedBefore6AM(item);
 
@@ -2190,9 +2194,12 @@
                     }
 
                     let taskMenuDropdown = '';
-                    if (isOwner && !isLocked) {
+                    if (canManage) {
                         taskMenuDropdown = `
                             <div id="task-menu-${item.id}" class="hidden absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
+                                <button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
+                                    <i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum
+                                </button>
                                 <button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2">
                                     <i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses
                                 </button>
@@ -2220,16 +2227,16 @@
                                 </div>
                                 
                                 <div class="relative flex items-center gap-1">
-                                    ${isOwner && !isLocked ? `
+                                    ${canManage ? `
                                         <button onclick="toggleTaskMenu('${item.id}')" class="w-6 h-6 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 flex items-center justify-center text-xs transition">
                                             <i class="fa-solid fa-ellipsis"></i>
                                         </button>
                                         ${taskMenuDropdown}
-                                    ` : (isLocked ? `
+                                    ` : `
                                         <span class="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-[9px]" title="Terkunci">
                                             <i class="fa-solid fa-lock"></i>
                                         </span>
-                                    ` : '')}
+                                    `}
                                 </div>
                             </div>
 
@@ -2314,15 +2321,17 @@
                 tableBodyDesktop.appendChild(groupHeader);
 
                 tasksOfUser.forEach(item => {
-                    const isOwner = (item.user_id === currentUser.id) || isSuperAdmin;
+                    const isOwner = (item.user_id === currentUser?.id);
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
-                    const isLiked = likedUsers.includes(currentUser.id);
+                    const isLiked = likedUsers.includes(currentUser?.id);
                     const likesCount = item.likes_count || 0;
                     const commentsCount = item.comments_count || 0;
                     
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
-                    const isLocked = isCompleted || isPastDay;
+                    const isLocked = (isCompleted || isPastDay) && !isSuperAdmin;
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
+
                     const isLate = isCompletedLate(item);
                     const isEarly = isCreatedBefore6AM(item);
 
@@ -2341,7 +2350,7 @@
                     }
 
                     let statusCell = '';
-                    if (isOwner && !isLocked) {
+                    if (canManage) {
                         statusCell = `
                             <select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer">
                                 <option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option>
@@ -2359,19 +2368,13 @@
                                     : 'text-rose-500 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800')
                             }">
                                 ${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai (Lewat Jam)' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}
-                                ${isLocked ? '<i class="fa-solid fa-lock text-[8px] opacity-80"></i>' : ''}
+                                <i class="fa-solid fa-lock text-[8px] opacity-80"></i>
                             </span>
                         `;
                     }
 
                     let actionCell = '';
-                    if (!isOwner) {
-                        actionCell = `<span class="text-[10px] text-slate-400 font-medium">Mutual Friend</span>`;
-                    } else if (isPastDay && !isSuperAdmin) {
-                        actionCell = `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`;
-                    } else if (isCompleted && !isSuperAdmin) {
-                        actionCell = `<span class="text-[9px] font-bold text-teal-600 bg-teal-50 dark:bg-teal-950/60 px-2 py-0.5 rounded-md flex items-center justify-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Terkunci</span>`;
-                    } else {
+                    if (canManage) {
                         actionCell = `
                             <div class="flex items-center justify-center gap-1.5">
                                 <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1" title="Bagikan Jadwal"><i class="fa-solid fa-share"></i></button>
@@ -2379,6 +2382,10 @@
                                 <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         `;
+                    } else if (!isOwner && !isSuperAdmin) {
+                        actionCell = `<span class="text-[10px] text-slate-400 font-medium">Mutual Friend</span>`;
+                    } else {
+                        actionCell = `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md flex items-center justify-center gap-1 border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`;
                     }
 
                     row.innerHTML = `
@@ -2662,6 +2669,8 @@
             const updatePayload = { status: newStatus };
             if (newStatus === 'Selesai') {
                 updatePayload.completed_at = new Date().toISOString();
+            } else {
+                updatePayload.completed_at = null;
             }
 
             const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', id);
@@ -2669,9 +2678,9 @@
                 showToast("Gagal memperbarui status!");
             } else {
                 target.status = newStatus;
-                if (newStatus === 'Selesai') target.completed_at = updatePayload.completed_at;
+                target.completed_at = updatePayload.completed_at;
                 renderTasks();
-                showToast(newStatus === 'Selesai' ? "Tugas Selesai dan otomatis dikunci!" : "Status diperbarui");
+                showToast(newStatus === 'Selesai' ? "Tugas Selesai!" : "Status diperbarui");
             }
         }
 
@@ -2919,7 +2928,7 @@
             editingTaskId = null;
             document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
             
-            // AUTO-FILL NAMA DARI USER YANG SEDANG LOGIN
+            // AUTO-FILL NAMA
             const myDefaultName = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('input-name').value = myDefaultName;
 
@@ -3002,13 +3011,11 @@
 
         function openBulkTextModal() { 
             document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr;
-            // AUTO FILL NAMA DI MODAL IMPORT TEKS
             document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('bulkTextModal').classList.remove('hidden'); 
         }
         function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
 
-        // PROSES IMPORT TEKS WA DENGAN SMART PARSER (MENDUKUNG FORMAT ACAR / TYPO)
         async function processBulkTextImport() {
             let rawDate = document.getElementById('bulk-date').value || todayStr;
             const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
@@ -3023,7 +3030,6 @@
             const nowIso = new Date().toISOString();
             const avatarUrl = getAvatarUrl(currentUser);
 
-            // 1. Deteksi tanggal di awal/baris manapun (misal: "19.08.2026:" atau "19-08-2026")
             for (let line of lines) {
                 const trimmed = line.trim();
                 const dateMatch = trimmed.match(/^(\d{1,2})[./\-](\d{1,2})[./\-](\d{4})/);
@@ -3037,12 +3043,10 @@
                 }
             }
 
-            // 2. Parse tiap baris jadwal dengan Regex Fleksibel
             lines.forEach(line => {
                 const cleanLine = line.trim();
                 if (!cleanLine) return;
 
-                // Mendukung pemisah titik, strip, spasi: "05.30-07-00:tugas", "12.00.14.00- tugas", "15:00-17:00 : tugas"
                 const match = cleanLine.match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
                 
                 if (match) {
@@ -3094,7 +3098,6 @@
 
         function openAutoGenerateModal() { 
             document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr;
-            // AUTO FILL NAMA DI MODAL AUTO GENERATE
             document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('autoGenerateModal').classList.remove('hidden'); 
         }
