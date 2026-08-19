@@ -304,7 +304,7 @@
                                         <th class="p-3">Waktu</th>
                                         <th class="p-3">Petugas</th>
                                         <th class="p-3">Divisi</th>
-                                        <th class="p-3">Detail Tugas / Keterangan</th>
+                                        <th class="p-3">Detail Tugas & Foto</th>
                                         <th class="p-3">Status</th>
                                         <th class="p-3 text-center">Interaksi</th>
                                         <th class="p-3 text-center">Aksi</th>
@@ -327,9 +327,9 @@
         </main>
     </div>
 
-    <!-- MODAL FORM KETERANGAN SELESAI -->
+    <!-- MODAL FORM KETERANGAN & FOTO SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-check text-emerald-500"></i> Keterangan Pekerjaan Selesai
@@ -346,10 +346,22 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil / Catatan Tambahan</label>
-                    <textarea id="complete-task-note" rows="3" placeholder="Contoh: Unit sudah dibersihkan, filter diganti, running test normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
+                    <textarea id="complete-task-note" rows="2" placeholder="Contoh: Unit sudah dibersihkan, filter diganti, running test normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
+
+                <!-- UPLOAD FOTO DOKUMENTASI SELESAI (AFTER) -->
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                    <label class="block text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase">
+                        <i class="fa-solid fa-camera mr-1"></i> Foto Dokumentasi Sesudah (After)
+                    </label>
+                    <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                    <div id="complete-after-preview-container" class="hidden pt-1">
+                        <img id="complete-after-preview" class="w-full h-28 object-cover rounded-lg border border-slate-200 dark:border-slate-700">
+                    </div>
+                </div>
+
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
-                    <i class="fa-solid fa-circle-info mr-1"></i> Keterangan ini akan langsung terlihat pada kartu postingan jadwal.
+                    <i class="fa-solid fa-circle-info mr-1"></i> Foto akan di-kompres otomatis $\le$ 200KB dan di-watermark nama petugas & BPB Unit BSN KC Surabaya.
                 </div>
                 <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
@@ -462,7 +474,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM PENARIKAN (E-WALLET / REKENING) -->
+    <!-- MODAL FORM PENARIKAN -->
     <div id="withdrawModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[92] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -714,7 +726,7 @@
         </div>
     </div>
 
-    <!-- TOAST KOMENTAR / NOTIFIKASI -->
+    <!-- TOAST NOTIFIKASI INTERAKTIF -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-emerald-500 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
             <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -822,9 +834,9 @@
         </div>
     </div>
 
-    <!-- MODAL: FORM SINGLE TASK -->
+    <!-- MODAL: FORM SINGLE TASK (DENGAN INPUT FOTO SEBELUM & SESUDAH) -->
     <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800">
+        <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 id="modalTitle" class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tambah Tugas Baru
@@ -871,9 +883,32 @@
                     </div>
                 </div>
 
+                <!-- DOKUMENTASI SEBELUM & SESUDAH DI MODAL TASK -->
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                    <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase">
+                        <i class="fa-solid fa-camera mr-1"></i> Dokumentasi Foto Kerja
+                    </p>
+
+                    <div class="space-y-1">
+                        <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block">Foto Sebelum Dikerjakan (Before)</span>
+                        <input type="file" id="input-file-before" accept="image/*" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[9.5px] file:font-bold file:bg-slate-200 dark:file:bg-slate-700 file:text-slate-800 dark:file:text-slate-200 cursor-pointer">
+                        <div id="preview-before-container" class="hidden pt-1">
+                            <img id="preview-before" class="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block">Foto Sesudah Dikerjakan (After)</span>
+                        <input type="file" id="input-file-after" accept="image/*" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[9.5px] file:font-bold file:bg-slate-200 dark:file:bg-slate-700 file:text-slate-800 dark:file:text-slate-200 cursor-pointer">
+                        <div id="preview-after-container" class="hidden pt-1">
+                            <img id="preview-after" class="w-full h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" id="btn-save-task" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan</button>
+                    <button type="submit" id="btn-save-task" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">Simpan</button>
                 </div>
             </form>
         </div>
@@ -971,6 +1006,21 @@
             <div class="flex gap-2 mt-4">
                 <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
                 <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs">Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PREVIEW FOTO BESAR -->
+    <div id="imagePreviewModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[130] hidden flex flex-col items-center justify-center p-4" onclick="this.classList.add('hidden')">
+        <div class="relative max-w-lg w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                <h4 id="previewImageTitle" class="text-xs font-bold text-white">Dokumentasi Kerja</h4>
+                <button onclick="document.getElementById('imagePreviewModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+            <div class="p-2 flex items-center justify-center bg-black/50 min-h-[220px]">
+                <img id="previewImageLarge" src="" class="max-h-[70vh] w-auto object-contain rounded-lg">
             </div>
         </div>
     </div>
@@ -1081,6 +1131,7 @@
 
         const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
         const ADMIN_WA_PHONE = '6282146511484';
+        const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
 
         let currentUser = null;
         let globalTasks = [];
@@ -1111,6 +1162,10 @@
         let onlineUsersState = {};
         let presenceChannel = null;
         let userProfilesMap = {};
+
+        // Variabel untuk menampung file / URL foto
+        let tempFotoSebelumUrl = null;
+        let tempFotoSesudahUrl = null;
 
         // PENGATURAN ANGGARAN, POIN & ATURAN PENARIKAN DEFAULT
         let budgetSettings = {
@@ -1200,6 +1255,154 @@
             const initial = (name || 'U').charAt(0).toUpperCase();
             return `<div class="${sizeClass} rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">${initial}</div>`;
         }
+
+        // =========================================================================
+        // UTILITY FUNGSI KOMPRESI (<=200KB) & WATERMARK
+        // =========================================================================
+        async function processAndWatermarkImage(file, userName) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = async () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Batasi resolusi maksimal agar ukuran file efisien
+                        const MAX_DIMENSION = 1280;
+                        if (width > height && width > MAX_DIMENSION) {
+                            height = Math.round((height * MAX_DIMENSION) / width);
+                            width = MAX_DIMENSION;
+                        } else if (height > MAX_DIMENSION) {
+                            width = Math.round((width * MAX_DIMENSION) / height);
+                            height = MAX_DIMENSION;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Gambar Watermark Banner di Bagian Bawah
+                        const now = new Date();
+                        const timeStr = now.toLocaleDateString('id-ID', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                        }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                        const bannerHeight = Math.max(48, Math.round(height * 0.08));
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+                        ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
+
+                        // Garis batas aksen hijau
+                        ctx.fillStyle = '#10b981';
+                        ctx.fillRect(0, height - bannerHeight, width, 3);
+
+                        // Teks Watermark
+                        ctx.fillStyle = '#ffffff';
+                        const fontSize = Math.max(12, Math.round(bannerHeight * 0.3));
+                        ctx.font = `bold ${fontSize}px sans-serif`;
+
+                        const line1 = `👤 Petugas: ${userName} | 🏢 ${UNIT_NAME}`;
+                        const line2 = `🕒 Waktu: ${timeStr}`;
+
+                        ctx.fillText(line1, 14, height - (bannerHeight * 0.55));
+                        ctx.font = `normal ${Math.round(fontSize * 0.85)}px sans-serif`;
+                        ctx.fillStyle = '#e2e8f0';
+                        ctx.fillText(line2, 14, height - (bannerHeight * 0.18));
+
+                        // Kompresi loop agar ukuran tepat <= 200 KB (204,800 bytes)
+                        let quality = 0.82;
+                        let blob = null;
+                        const targetMaxBytes = 200 * 1024; // 200 KB
+
+                        const getBlob = (q) => {
+                            return new Promise((res) => canvas.toBlob((b) => res(b), 'image/jpeg', q));
+                        };
+
+                        blob = await getBlob(quality);
+                        while (blob && blob.size > targetMaxBytes && quality > 0.2) {
+                            quality -= 0.1;
+                            blob = await getBlob(quality);
+                        }
+
+                        resolve(blob);
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+                reader.onerror = (e) => reject(e);
+            });
+        }
+
+        async function uploadEvidenceImage(blob, prefix = 'evidence') {
+            if (!blob) return null;
+            const fileName = `${prefix}_${currentUser.id}_${Date.now()}.jpg`;
+            const filePath = `evidences/${fileName}`;
+
+            const { data, error } = await _supabase.storage
+                .from('task-evidences')
+                .upload(filePath, blob, {
+                    contentType: 'image/jpeg',
+                    upsert: true
+                });
+
+            if (error) {
+                console.error("Upload error:", error);
+                throw error;
+            }
+
+            const { data: publicUrlData } = _supabase.storage
+                .from('task-evidences')
+                .getPublicUrl(filePath);
+
+            return publicUrlData?.publicUrl || null;
+        }
+
+        function showLargeImage(url, title = "Dokumentasi Kerja") {
+            if (!url) return;
+            document.getElementById('previewImageTitle').innerText = title;
+            document.getElementById('previewImageLarge').src = url;
+            document.getElementById('imagePreviewModal').classList.remove('hidden');
+        }
+
+        // Event listener preview file foto di Modal Form Single Task
+        document.getElementById('input-file-before')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('preview-before-container');
+            const preview = document.getElementById('preview-before');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('input-file-after')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('preview-after-container');
+            const preview = document.getElementById('preview-after');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('complete-file-after')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('complete-after-preview-container');
+            const preview = document.getElementById('complete-after-preview');
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
 
         function renderPointSchemeList() {
             const list = document.getElementById('pointSchemeList');
@@ -2449,7 +2652,7 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
             const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
             const ketText = task.keterangan ? `\n📌 Keterangan: ${task.keterangan}` : '';
-            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
+            const shareText = `📋 *Jadwal Kerja Operasional*\n🏢 Unit: ${UNIT_NAME}\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
 
             if (navigator.share) {
                 navigator.share({
@@ -2600,6 +2803,32 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                         `;
                     }
 
+                    // Galeri Dokumentasi Foto Sebelum & Sesudah
+                    let photoEvidenceHtml = '';
+                    if (item.foto_sebelum || item.foto_sesudah) {
+                        photoEvidenceHtml = `
+                            <div class="grid grid-cols-2 gap-2 my-2">
+                                ${item.foto_sebelum ? `
+                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum - ${item.tugas.replace(/'/g, "\\'")}')" class="cursor-pointer group relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+                                        <img src="${item.foto_sebelum}" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200" alt="Sebelum">
+                                        <span class="absolute bottom-1 left-1 bg-black/70 backdrop-blur-xs text-white text-[8px] font-bold px-1.5 py-0.5 rounded">
+                                            📷 Sebelum
+                                        </span>
+                                    </div>
+                                ` : '<div class="h-24 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-[9px] text-slate-400 italic">Tanpa Foto Sebelum</div>'}
+
+                                ${item.foto_sesudah ? `
+                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah - ${item.tugas.replace(/'/g, "\\'")}')" class="cursor-pointer group relative rounded-xl overflow-hidden border border-emerald-300 dark:border-emerald-800 bg-slate-100 dark:bg-slate-800">
+                                        <img src="${item.foto_sesudah}" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200" alt="Sesudah">
+                                        <span class="absolute bottom-1 left-1 bg-emerald-700/80 backdrop-blur-xs text-white text-[8px] font-bold px-1.5 py-0.5 rounded">
+                                            ✅ Sesudah
+                                        </span>
+                                    </div>
+                                ` : '<div class="h-24 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 flex items-center justify-center text-[9px] text-slate-400 italic">Tanpa Foto Sesudah</div>'}
+                            </div>
+                        `;
+                    }
+
                     tasksListHtml += `
                         <div class="py-2.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
                             <div class="flex items-center justify-between gap-2 mb-1">
@@ -2627,6 +2856,8 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                             <p class="text-[13px] font-normal text-slate-900 dark:text-slate-100 leading-snug break-words mb-1">
                                 ${item.tugas}
                             </p>
+
+                            ${photoEvidenceHtml}
 
                             ${item.keterangan ? `
                                 <div class="p-2 bg-emerald-50/70 dark:bg-emerald-950/30 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200 text-[11px] font-medium mb-2 flex items-start gap-1.5">
@@ -2795,6 +3026,12 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                         <td class="p-3 font-semibold text-[11px]">
                             <p>${item.tugas}</p>
                             ${item.keterangan ? `<p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
+                            ${(item.foto_sebelum || item.foto_sesudah) ? `
+                                <div class="flex items-center gap-2 mt-1.5">
+                                    ${item.foto_sebelum ? `<button onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="text-[9.5px] text-slate-500 hover:text-emerald-600 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-image"></i> Foto Sebelum</button>` : ''}
+                                    ${item.foto_sesudah ? `<button onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="text-[9.5px] text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-circle-check"></i> Foto Sesudah</button>` : ''}
+                                </div>
+                            ` : ''}
                         </td>
                         <td class="p-3 text-center">${statusCell}</td>
                         <td class="p-3 text-center">
@@ -3050,6 +3287,14 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             document.getElementById('complete-task-id').value = task.id;
             document.getElementById('complete-task-title').innerText = task.tugas || '-';
             document.getElementById('complete-task-note').value = task.keterangan || '';
+            document.getElementById('complete-file-after').value = '';
+            document.getElementById('complete-after-preview-container').classList.add('hidden');
+            
+            if (task.foto_sesudah) {
+                document.getElementById('complete-after-preview').src = task.foto_sesudah;
+                document.getElementById('complete-after-preview-container').classList.remove('hidden');
+            }
+
             document.getElementById('completionNoteModal').classList.remove('hidden');
             setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
         }
@@ -3063,32 +3308,50 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             e.preventDefault();
             const taskId = document.getElementById('complete-task-id').value;
             const noteText = document.getElementById('complete-task-note').value.trim();
+            const afterFileInput = document.getElementById('complete-file-after');
             const btn = document.getElementById('btn-submit-completion');
 
-            btn.innerText = "Menyimpan...";
+            btn.innerText = "Mengompres & Menyimpan...";
+            btn.disabled = true;
 
-            const target = globalTasks.find(t => t.id == taskId);
-            const updatePayload = {
-                status: 'Selesai',
-                completed_at: new Date().toISOString(),
-                keterangan: noteText
-            };
+            try {
+                const target = globalTasks.find(t => t.id == taskId);
+                let afterPhotoUrl = target?.foto_sesudah || null;
 
-            const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
-
-            if (error) {
-                showToast("Gagal menyelesaikan tugas: " + error.message);
-            } else {
-                if (target) {
-                    target.status = 'Selesai';
-                    target.completed_at = updatePayload.completed_at;
-                    target.keterangan = noteText;
+                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) {
+                    const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email);
+                    const compressedBlob = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName);
+                    afterPhotoUrl = await uploadEvidenceImage(compressedBlob, 'after');
                 }
-                closeCompletionNoteModal();
-                showToast("Tugas Selesai dan keterangan disimpan!");
-                renderTasks();
+
+                const updatePayload = {
+                    status: 'Selesai',
+                    completed_at: new Date().toISOString(),
+                    keterangan: noteText,
+                    foto_sesudah: afterPhotoUrl
+                };
+
+                const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
+
+                if (error) {
+                    showToast("Gagal menyelesaikan tugas: " + error.message);
+                } else {
+                    if (target) {
+                        target.status = 'Selesai';
+                        target.completed_at = updatePayload.completed_at;
+                        target.keterangan = noteText;
+                        target.foto_sesudah = afterPhotoUrl;
+                    }
+                    closeCompletionNoteModal();
+                    showToast("Tugas Selesai dan dokumentasi disimpan!");
+                    renderTasks();
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan saat memproses gambar: " + err.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai';
+                btn.disabled = false;
             }
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai';
         });
 
         async function updateStatus(id, newStatus) {
@@ -3264,14 +3527,14 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             });
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()})\n`;
-            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
+            csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()}) - ${UNIT_NAME}\n`;
+            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,KETERANGAN,STATUS,FOTO SEBELUM,FOTO SESUDAH,LIKES,KOMENTAR\n";
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.foto_sebelum || ''}","${t.foto_sesudah || ''}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
                 });
             });
 
@@ -3299,7 +3562,7 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             doc.setFontSize(13);
             doc.text(`LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()}`, 14, 16);
             doc.setFontSize(10);
-            doc.text(`TANGGAL: ${tanggalFormatted.toUpperCase()}`, 14, 22);
+            doc.text(`UNIT: ${UNIT_NAME} | TANGGAL: ${tanggalFormatted.toUpperCase()}`, 14, 22);
 
             doc.setFont("Helvetica", "normal");
             doc.setFontSize(8.5);
@@ -3330,7 +3593,12 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                 ]);
 
                 list.forEach((item) => {
-                    const taskDetail = item.keterangan ? `${item.tugas}\n(Ket: ${item.keterangan})` : item.tugas;
+                    let taskDetail = item.tugas;
+                    if (item.keterangan) taskDetail += `\n(Ket: ${item.keterangan})`;
+                    if (item.foto_sebelum || item.foto_sesudah) {
+                        taskDetail += `\n[Dokumentasi: ${item.foto_sebelum ? 'Ada Before' : ''} ${item.foto_sesudah ? 'Ada After' : ''}]`;
+                    }
+
                     tableRows.push([
                         globalNo++,
                         formatTanggalIndo(item.tanggal || todayStr),
@@ -3372,6 +3640,11 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                 modal.classList.add('hidden'); 
                 document.getElementById('scheduleForm').reset(); 
                 editingTaskId = null; 
+                tempFotoSebelumUrl = null;
+                tempFotoSesudahUrl = null;
+
+                document.getElementById('preview-before-container').classList.add('hidden');
+                document.getElementById('preview-after-container').classList.add('hidden');
 
                 // Reset status disabled form saat ditutup
                 document.getElementById('input-date').disabled = false;
@@ -3390,7 +3663,12 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             const myDefaultName = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('input-name').value = myDefaultName;
 
-            // Saat tambah tugas baru: tanggal & jam bisa diedit oleh siapa saja
+            // Reset preview foto
+            document.getElementById('input-file-before').value = '';
+            document.getElementById('input-file-after').value = '';
+            document.getElementById('preview-before-container').classList.add('hidden');
+            document.getElementById('preview-after-container').classList.add('hidden');
+
             document.getElementById('input-date').disabled = false;
             document.getElementById('input-start-time').disabled = false;
             document.getElementById('input-end-time').disabled = false;
@@ -3416,12 +3694,30 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             }
 
             editingTaskId = item.id;
+            tempFotoSebelumUrl = item.foto_sebelum || null;
+            tempFotoSesudahUrl = item.foto_sesudah || null;
+
             document.getElementById('input-date').value = item.tanggal || todayStr;
             document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
             document.getElementById('input-role').value = item.peran;
             document.getElementById('input-task').value = item.tugas;
             document.getElementById('input-start-time').value = item.jam_mulai;
             document.getElementById('input-end-time').value = item.jam_selesai;
+
+            // Tampilkan preview jika sebelumnya sudah ada foto
+            if (item.foto_sebelum) {
+                document.getElementById('preview-before').src = item.foto_sebelum;
+                document.getElementById('preview-before-container').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-before-container').classList.add('hidden');
+            }
+
+            if (item.foto_sesudah) {
+                document.getElementById('preview-after').src = item.foto_sesudah;
+                document.getElementById('preview-after-container').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-after-container').classList.add('hidden');
+            }
 
             // Kunci tanggal dan jam bagi user biasa saat proses edit tugas
             const lockInputs = !isSuperAdmin;
@@ -3453,50 +3749,78 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             let jam_mulai = document.getElementById('input-start-time').value;
             let jam_selesai = document.getElementById('input-end-time').value;
 
-            document.getElementById('btn-save-task').innerText = "Menyimpan...";
+            const fileBeforeInput = document.getElementById('input-file-before');
+            const fileAfterInput = document.getElementById('input-file-after');
+            const btnSave = document.getElementById('btn-save-task');
 
-            if (editingTaskId) {
-                const existingTask = globalTasks.find(t => t.id == editingTaskId);
-                
-                // Proteksi: Non-superadmin tidak bisa memanipulasi jam dan tanggal saat update
-                if (!isSuperAdmin && existingTask) {
-                    tanggal = existingTask.tanggal;
-                    jam_mulai = existingTask.jam_mulai;
-                    jam_selesai = existingTask.jam_selesai;
+            btnSave.innerText = "Mengompres & Menyimpan...";
+            btnSave.disabled = true;
+
+            try {
+                let fotoSebelumUrl = tempFotoSebelumUrl;
+                let fotoSesudahUrl = tempFotoSesudahUrl;
+                const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email, nama);
+
+                if (fileBeforeInput && fileBeforeInput.files && fileBeforeInput.files[0]) {
+                    const compressedBlob = await processAndWatermarkImage(fileBeforeInput.files[0], effectiveUserName);
+                    fotoSebelumUrl = await uploadEvidenceImage(compressedBlob, 'before');
                 }
 
-                const { error } = await _supabase.from('jadwal').update({
-                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai
-                }).eq('id', editingTaskId);
-
-                if (!error) { 
-                    showToast("Tugas diperbarui!"); 
-                    toggleModal(false); 
-                } else { 
-                    alert("Gagal memperbarui data: " + (error.message || "")); 
+                if (fileAfterInput && fileAfterInput.files && fileAfterInput.files[0]) {
+                    const compressedBlob = await processAndWatermarkImage(fileAfterInput.files[0], effectiveUserName);
+                    fotoSesudahUrl = await uploadEvidenceImage(compressedBlob, 'after');
                 }
-            } else {
-                const insertPayload = {
-                    user_id: currentUser.id,
-                    user_email: currentUser.email,
-                    tanggal, nama, peran, tugas, jam_mulai, jam_selesai, 
-                    status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0,
-                    created_at: new Date().toISOString()
-                };
 
-                const avatarUrl = getAvatarUrl(currentUser);
-                if (avatarUrl) insertPayload.user_avatar = avatarUrl;
+                if (editingTaskId) {
+                    const existingTask = globalTasks.find(t => t.id == editingTaskId);
+                    
+                    if (!isSuperAdmin && existingTask) {
+                        tanggal = existingTask.tanggal;
+                        jam_mulai = existingTask.jam_mulai;
+                        jam_selesai = existingTask.jam_selesai;
+                    }
 
-                const { error } = await _supabase.from('jadwal').insert([insertPayload]);
+                    const { error } = await _supabase.from('jadwal').update({
+                        tanggal, nama, peran, tugas, jam_mulai, jam_selesai,
+                        foto_sebelum: fotoSebelumUrl,
+                        foto_sesudah: fotoSesudahUrl
+                    }).eq('id', editingTaskId);
 
-                if (!error) { 
-                    showToast("Tugas ditambahkan!"); 
-                    toggleModal(false); 
-                } else { 
-                    alert("Gagal menyimpan: " + (error.message || "")); 
+                    if (!error) { 
+                        showToast("Tugas diperbarui!"); 
+                        toggleModal(false); 
+                    } else { 
+                        alert("Gagal memperbarui data: " + (error.message || "")); 
+                    }
+                } else {
+                    const insertPayload = {
+                        user_id: currentUser.id,
+                        user_email: currentUser.email,
+                        tanggal, nama, peran, tugas, jam_mulai, jam_selesai, 
+                        status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0,
+                        foto_sebelum: fotoSebelumUrl,
+                        foto_sesudah: fotoSesudahUrl,
+                        created_at: new Date().toISOString()
+                    };
+
+                    const avatarUrl = getAvatarUrl(currentUser);
+                    if (avatarUrl) insertPayload.user_avatar = avatarUrl;
+
+                    const { error } = await _supabase.from('jadwal').insert([insertPayload]);
+
+                    if (!error) { 
+                        showToast("Tugas ditambahkan!"); 
+                        toggleModal(false); 
+                    } else { 
+                        alert("Gagal menyimpan: " + (error.message || "")); 
+                    }
                 }
+            } catch (err) {
+                alert("Kesalahan pemrosesan foto: " + err.message);
+            } finally {
+                btnSave.innerText = "Simpan";
+                btnSave.disabled = false;
             }
-            document.getElementById('btn-save-task').innerText = "Simpan";
         });
 
         function openBulkTextModal() { 
