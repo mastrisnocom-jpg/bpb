@@ -304,7 +304,7 @@
                                         <th class="p-3">Waktu</th>
                                         <th class="p-3">Petugas</th>
                                         <th class="p-3">Divisi</th>
-                                        <th class="p-3">Detail Tugas / Area</th>
+                                        <th class="p-3">Detail Tugas / Keterangan</th>
                                         <th class="p-3">Status</th>
                                         <th class="p-3 text-center">Interaksi</th>
                                         <th class="p-3 text-center">Aksi</th>
@@ -325,6 +325,40 @@
                 <div>Operational Management System &bull; M-Ops Workspace</div>
             </footer>
         </main>
+    </div>
+
+    <!-- MODAL FORM KETERANGAN SELESAI -->
+    <div id="completionNoteModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
+            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-emerald-500"></i> Keterangan Pekerjaan Selesai
+                </h3>
+                <button onclick="closeCompletionNoteModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <form id="formCompletionNote" class="space-y-3 text-xs">
+                <input type="hidden" id="complete-task-id">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tugas</label>
+                    <p id="complete-task-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2 rounded-xl border border-slate-200/60 dark:border-slate-700 leading-snug">-</p>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil / Catatan Tambahan</label>
+                    <textarea id="complete-task-note" rows="3" placeholder="Contoh: Unit sudah dibersihkan, filter diganti, running test normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
+                </div>
+                <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Keterangan ini akan langsung terlihat pada kartu postingan jadwal.
+                </div>
+                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
+                    <button type="submit" id="btn-submit-completion" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-check"></i> Simpan Selesai
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
@@ -1157,7 +1191,6 @@
             userProfilesMap[targetUserId] = newName;
             localStorage.setItem('mops_user_profiles', JSON.stringify(userProfilesMap));
 
-            // Simpan ke app_config
             await _supabase
                 .from('app_config')
                 .upsert({
@@ -1166,13 +1199,11 @@
                     updated_at: new Date().toISOString()
                 });
 
-            // Update nama di jadwal user tersebut di database Supabase
             await _supabase
                 .from('jadwal')
                 .update({ nama: newName })
                 .eq('user_id', targetUserId);
 
-            // Update local memory globalTasks
             globalTasks.forEach(t => {
                 if (t.user_id === targetUserId) t.nama = newName;
             });
@@ -2065,7 +2096,8 @@
         function shareSpecificTask(task) {
             const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
             const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
-            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}\n⚡ Status: ${statusText}`;
+            const ketText = task.keterangan ? `\n📌 Keterangan: ${task.keterangan}` : '';
+            const shareText = `📋 *Jadwal Kerja Operasional*\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
 
             if (navigator.share) {
                 navigator.share({
@@ -2079,7 +2111,7 @@
             }
         }
 
-        // RENDER TASKS DENGAN FIX HAK SUPER ADMIN
+        // RENDER TASKS
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop');
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -2163,8 +2195,6 @@
 
                     const isCompleted = item.status === 'Selesai';
                     const isPastDay = isTaskExpired(item.tanggal);
-                    
-                    // Super Admin Bypass
                     const isLocked = (isCompleted || isPastDay) && !isSuperAdmin;
                     const canManage = isSuperAdmin || (isOwner && !isLocked);
 
@@ -2240,9 +2270,19 @@
                                 </div>
                             </div>
 
-                            <p class="text-[13px] font-normal text-slate-900 dark:text-slate-100 leading-snug break-words mb-2">
+                            <p class="text-[13px] font-normal text-slate-900 dark:text-slate-100 leading-snug break-words mb-1">
                                 ${item.tugas}
                             </p>
+
+                            ${item.keterangan ? `
+                                <div class="p-2 bg-emerald-50/70 dark:bg-emerald-950/30 rounded-xl border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200 text-[11px] font-medium mb-2 flex items-start gap-1.5">
+                                    <i class="fa-solid fa-clipboard-check text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0 text-xs"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <span class="font-extrabold block text-[9.5px] text-emerald-700 dark:text-emerald-300 uppercase">Keterangan Selesai:</span>
+                                        <p class="leading-tight break-words">${item.keterangan}</p>
+                                    </div>
+                                </div>
+                            ` : ''}
 
                             <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-slate-100/60 dark:border-slate-800/60">
                                 <div class="flex items-center gap-1.5">
@@ -2396,7 +2436,10 @@
                         </td>
                         <td class="p-3 font-bold text-[11px]">${displayName}</td>
                         <td class="p-3">${roleBadge}</td>
-                        <td class="p-3 font-semibold text-[11px]">${item.tugas}</td>
+                        <td class="p-3 font-semibold text-[11px]">
+                            <p>${item.tugas}</p>
+                            ${item.keterangan ? `<p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
+                        </td>
                         <td class="p-3 text-center">${statusCell}</td>
                         <td class="p-3 text-center">
                             <div class="flex items-center justify-center gap-2.5">
@@ -2650,11 +2693,57 @@
                 .subscribe();
         }
 
+        // FUNGSI UPDATE STATUS & POPUP KETERANGAN SELESAI
+        function openCompletionNoteModal(task) {
+            document.getElementById('complete-task-id').value = task.id;
+            document.getElementById('complete-task-title').innerText = task.tugas || '-';
+            document.getElementById('complete-task-note').value = task.keterangan || '';
+            document.getElementById('completionNoteModal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
+        }
+
+        function closeCompletionNoteModal() {
+            document.getElementById('completionNoteModal').classList.add('hidden');
+            renderTasks();
+        }
+
+        document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const taskId = document.getElementById('complete-task-id').value;
+            const noteText = document.getElementById('complete-task-note').value.trim();
+            const btn = document.getElementById('btn-submit-completion');
+
+            btn.innerText = "Menyimpan...";
+
+            const target = globalTasks.find(t => t.id == taskId);
+            const updatePayload = {
+                status: 'Selesai',
+                completed_at: new Date().toISOString(),
+                keterangan: noteText
+            };
+
+            const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
+
+            if (error) {
+                showToast("Gagal menyelesaikan tugas: " + error.message);
+            } else {
+                if (target) {
+                    target.status = 'Selesai';
+                    target.completed_at = updatePayload.completed_at;
+                    target.keterangan = noteText;
+                }
+                closeCompletionNoteModal();
+                showToast("Tugas Selesai dan keterangan disimpan!");
+                renderTasks();
+            }
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai';
+        });
+
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id);
             if (!target) return;
 
-            if (target.status === 'Selesai' && !isSuperAdmin) {
+            if (target.status === 'Selesai' && !isSuperAdmin && newStatus !== 'Selesai') {
                 showToast("Tugas sudah Selesai dan terkunci!");
                 renderTasks();
                 return;
@@ -2666,21 +2755,24 @@
                 return;
             }
 
-            const updatePayload = { status: newStatus };
             if (newStatus === 'Selesai') {
-                updatePayload.completed_at = new Date().toISOString();
-            } else {
-                updatePayload.completed_at = null;
+                openCompletionNoteModal(target);
+                return;
             }
+
+            const updatePayload = { 
+                status: newStatus,
+                completed_at: null 
+            };
 
             const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', id);
             if (error) {
                 showToast("Gagal memperbarui status!");
             } else {
                 target.status = newStatus;
-                target.completed_at = updatePayload.completed_at;
+                target.completed_at = null;
                 renderTasks();
-                showToast(newStatus === 'Selesai' ? "Tugas Selesai!" : "Status diperbarui");
+                showToast("Status diperbarui");
             }
         }
 
@@ -2820,13 +2912,13 @@
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `LAPORAN JADWAL OPERASIONAL - ${namaLabel.toUpperCase()} - ${tanggalFormatted.toUpperCase()} (${labelRange.toUpperCase()})\n`;
-            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,STATUS,LIKES,KOMENTAR\n";
+            csvContent += "PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas];
                 list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
                 list.forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
                 });
             });
 
@@ -2885,13 +2977,14 @@
                 ]);
 
                 list.forEach((item) => {
+                    const taskDetail = item.keterangan ? `${item.tugas}\n(Ket: ${item.keterangan})` : item.tugas;
                     tableRows.push([
                         globalNo++,
                         formatTanggalIndo(item.tanggal || todayStr),
                         `${item.jam_mulai} - ${item.jam_selesai}`,
                         getUserDisplayName(item.user_id, item.user_email, item.nama),
                         item.peran,
-                        item.tugas,
+                        taskDetail,
                         item.status
                     ]);
                 });
@@ -2899,7 +2992,7 @@
 
             doc.autoTable({
                 startY: 43,
-                head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Divisi', 'Detail Tugas / Area', 'Status']],
+                head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Divisi', 'Detail Tugas & Keterangan', 'Status']],
                 body: tableRows,
                 headStyles: { fillColor: [5, 150, 105], fontStyle: 'bold', textColor: [255, 255, 255] },
                 styles: { font: 'Helvetica', fontSize: 8, cellPadding: 2.5 },
@@ -2928,7 +3021,6 @@
             editingTaskId = null;
             document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
             
-            // AUTO-FILL NAMA
             const myDefaultName = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('input-name').value = myDefaultName;
 
