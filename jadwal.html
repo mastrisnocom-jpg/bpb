@@ -361,7 +361,7 @@
         </div>
     </div>
 
-    <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD (DENGAN PENARIKAN & HISTORI) -->
+    <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
     <div id="earningsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
@@ -1427,7 +1427,7 @@
             return { userEarningsMap, totalTeamBudgetUsed, myData };
         }
 
-        // ====== FITUR PENARIKAN SALDO INSENTIF & HISTORI ======
+        // FITUR PENARIKAN SALDO INSENTIF & HISTORI
         async function fetchWithdrawalsSupabase() {
             let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
             const { data, error } = await query;
@@ -1454,7 +1454,6 @@
             const myWithdrawals = globalWithdrawals.filter(w => w.user_id === currentUser?.id);
             if (myBadge) myBadge.innerText = `${myWithdrawals.length} Data`;
 
-            // 1. Render Riwayat Pengguna
             if (myListContainer) {
                 myListContainer.innerHTML = '';
                 if (myWithdrawals.length === 0) {
@@ -1491,7 +1490,6 @@
                 }
             }
 
-            // 2. Render Riwayat untuk Admin Verifikasi
             if (isSuperAdmin && adminListContainer) {
                 adminListContainer.innerHTML = '';
                 if (globalWithdrawals.length === 0) {
@@ -1575,7 +1573,6 @@
             const amount = parseInt(document.getElementById('wd-amount').value) || 0;
             let fee = 0;
 
-            // Bank BTN Bebas Biaya Admin (Rp 0)
             if (method !== 'BANK_BTN') {
                 fee = budgetSettings.adminFeeNonBtn || 2500;
             }
@@ -1634,14 +1631,12 @@
                 created_at: new Date().toISOString()
             };
 
-            // Simpan ke Supabase
             const { error } = await _supabase.from('penarikan_insentif').insert([payload]);
 
             if (error) {
                 console.error("Gagal simpan penarikan:", error);
             }
 
-            // Buka WhatsApp Admin
             const tanggalKlaim = new Date().toLocaleDateString('id-ID', { 
                 weekday: 'long', 
                 day: 'numeric', 
@@ -2596,9 +2591,11 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                                 <button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700">
                                     <i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas
                                 </button>
+                                ${isSuperAdmin ? `
                                 <button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2">
                                     <i class="fa-solid fa-trash text-xs"></i> Hapus Tugas
                                 </button>
+                                ` : ''}
                             </div>
                         `;
                     }
@@ -2776,7 +2773,9 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                             <div class="flex items-center justify-center gap-1.5">
                                 <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1" title="Bagikan Jadwal"><i class="fa-solid fa-share"></i></button>
                                 <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                                ${isSuperAdmin ? `
+                                    <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                                ` : ''}
                             </div>
                         `;
                     } else if (!isOwner && !isSuperAdmin) {
@@ -3130,16 +3129,12 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
         }
 
         function askDeleteTask(id) {
+            if (!isSuperAdmin) {
+                return showToast("Hanya Super Admin yang berhak menghapus jadwal!");
+            }
+
             const item = globalTasks.find(t => t.id == id);
             if (!item) return;
-
-            if (item.status === 'Selesai' && !isSuperAdmin) {
-                return showToast("Tugas yang sudah selesai tidak dapat dihapus!");
-            }
-
-            if (isTaskExpired(item.tanggal) && !isSuperAdmin) {
-                return showToast("Tugas hari kemarin telah otomatis terkunci!");
-            }
 
             deleteTargetId = id;
             document.getElementById('confirmModal').classList.remove('hidden');
@@ -3151,6 +3146,11 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
         }
 
         document.getElementById('btn-confirm-delete').onclick = async () => {
+            if (!isSuperAdmin) {
+                closeConfirmModal();
+                return showToast("Akses ditolak: Hanya Super Admin yang dapat menghapus!");
+            }
+
             if (!deleteTargetId) return;
             const { error } = await _supabase.from('jadwal').delete().eq('id', deleteTargetId);
             if (!error) {
@@ -3366,8 +3366,21 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
 
         function toggleModal(show) {
             const modal = document.getElementById('scheduleModal');
-            if (show) { modal.classList.remove('hidden'); } 
-            else { modal.classList.add('hidden'); document.getElementById('scheduleForm').reset(); editingTaskId = null; }
+            if (show) { 
+                modal.classList.remove('hidden'); 
+            } else { 
+                modal.classList.add('hidden'); 
+                document.getElementById('scheduleForm').reset(); 
+                editingTaskId = null; 
+
+                // Reset status disabled form saat ditutup
+                document.getElementById('input-date').disabled = false;
+                document.getElementById('input-start-time').disabled = false;
+                document.getElementById('input-end-time').disabled = false;
+                ['input-date', 'input-start-time', 'input-end-time'].forEach(fieldId => {
+                    document.getElementById(fieldId).classList.remove('opacity-60', 'cursor-not-allowed');
+                });
+            }
         }
 
         function openTaskModal() {
@@ -3376,6 +3389,14 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             
             const myDefaultName = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
             document.getElementById('input-name').value = myDefaultName;
+
+            // Saat tambah tugas baru: tanggal & jam bisa diedit oleh siapa saja
+            document.getElementById('input-date').disabled = false;
+            document.getElementById('input-start-time').disabled = false;
+            document.getElementById('input-end-time').disabled = false;
+            ['input-date', 'input-start-time', 'input-end-time'].forEach(fieldId => {
+                document.getElementById(fieldId).classList.remove('opacity-60', 'cursor-not-allowed');
+            });
 
             document.getElementById('modalTitle').innerText = "Tambah Tugas Baru";
             document.getElementById('btn-save-task').innerText = "Simpan";
@@ -3402,6 +3423,21 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             document.getElementById('input-start-time').value = item.jam_mulai;
             document.getElementById('input-end-time').value = item.jam_selesai;
 
+            // Kunci tanggal dan jam bagi user biasa saat proses edit tugas
+            const lockInputs = !isSuperAdmin;
+            document.getElementById('input-date').disabled = lockInputs;
+            document.getElementById('input-start-time').disabled = lockInputs;
+            document.getElementById('input-end-time').disabled = lockInputs;
+
+            ['input-date', 'input-start-time', 'input-end-time'].forEach(fieldId => {
+                const el = document.getElementById(fieldId);
+                if (lockInputs) {
+                    el.classList.add('opacity-60', 'cursor-not-allowed');
+                } else {
+                    el.classList.remove('opacity-60', 'cursor-not-allowed');
+                }
+            });
+
             document.getElementById('modalTitle').innerText = "Edit Tugas";
             document.getElementById('btn-save-task').innerText = "Update";
             toggleModal(true);
@@ -3410,16 +3446,25 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
         document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const tanggal = document.getElementById('input-date').value;
+            let tanggal = document.getElementById('input-date').value;
             const nama = document.getElementById('input-name').value;
             const peran = document.getElementById('input-role').value;
             const tugas = document.getElementById('input-task').value;
-            const jam_mulai = document.getElementById('input-start-time').value;
-            const jam_selesai = document.getElementById('input-end-time').value;
+            let jam_mulai = document.getElementById('input-start-time').value;
+            let jam_selesai = document.getElementById('input-end-time').value;
 
             document.getElementById('btn-save-task').innerText = "Menyimpan...";
 
             if (editingTaskId) {
+                const existingTask = globalTasks.find(t => t.id == editingTaskId);
+                
+                // Proteksi: Non-superadmin tidak bisa memanipulasi jam dan tanggal saat update
+                if (!isSuperAdmin && existingTask) {
+                    tanggal = existingTask.tanggal;
+                    jam_mulai = existingTask.jam_mulai;
+                    jam_selesai = existingTask.jam_selesai;
+                }
+
                 const { error } = await _supabase.from('jadwal').update({
                     tanggal, nama, peran, tugas, jam_mulai, jam_selesai
                 }).eq('id', editingTaskId);
