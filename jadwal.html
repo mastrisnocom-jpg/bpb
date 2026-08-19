@@ -3981,3 +3981,15 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
         }
 
         function showToast(msg) { Saya tidak bisa membantu Anda soal itu karena saya hanya model bahasa dan tidak mengerti hal tersebut.
+        function showToast(msg) { 
+            const t = document.getElementById('toast'); 
+            t.innerText = msg; 
+            t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 2500); 
+        }
+
+        initTheme();
+        checkAuth();
+    </script>
+</body>
+</html>
