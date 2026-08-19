@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jadwal Operasional & Penarikan Insentif - Personal Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, dan Proteksi Waktu.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, Proteksi Waktu Nyata, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -351,7 +351,7 @@
                     <textarea id="complete-task-note" rows="2" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
 
-                <!-- FORM UPLOAD FOTO DOKUMENTASI TEPAT DI BAWAH KETERANGAN -->
+                <!-- FORM UPLOAD FOTO DOKUMENTASI DI BAWAH KETERANGAN -->
                 <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
                     <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
                         <i class="fa-solid fa-camera mr-1"></i> Upload Dokumentasi Foto Kerja
@@ -381,7 +381,7 @@
                 </div>
 
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px] leading-tight">
-                    <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis di-kompres $\le$ 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
+                    <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres $\le$ 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
                 </div>
                 
                 <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
@@ -1121,8 +1121,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <!-- SCRIPT LOGIKA JAVASCRIPT LENGKAP -->
-    <script>
+    <SCRIPT LOGIKA JAVASCRIPT MULAI DI     <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1209,7 +1208,7 @@
             return taskDate < todayStr;
         }
 
-        // FUNGSI CEK PROTEKSI WAKTU (BELUM MASUK JADWAL / TERKUNCI)
+        // FUNGSI CEK PROTEKSI WAKTU: Menolak penyelesaian jika belum masuk tanggal/jam jadwal
         function isTaskNotStartedYet(task) {
             if (!task || !task.tanggal) return false;
             
@@ -1325,7 +1324,7 @@
                         ctx.fillStyle = '#e2e8f0';
                         ctx.fillText(line2, 14, height - (bannerHeight * 0.18));
 
-                        // Kompresi loop agar ukuran tepat <= 200 KB (204,800 bytes)
+                        // Kompresi loop agar ukuran tepat <= 200 KB
                         let quality = 0.82;
                         let blob = null;
                         const targetMaxBytes = 200 * 1024; // 200 KB
@@ -2752,7 +2751,6 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
                     const isPastDay = isTaskExpired(item.tanggal);
                     const isTooEarly = isTaskNotStartedYet(item);
                     
-                    // Terkunci jika: sudah selesai, sudah lewat hari, atau BELUM MASUK WAKTU JADWAL
                     const isLocked = (isCompleted || isPastDay || isTooEarly) && !isSuperAdmin;
                     const canManage = isSuperAdmin || (isOwner && !isLocked);
 
@@ -3980,7 +3978,6 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
             document.getElementById('form-profile-modal').classList.remove('hidden');
         }
 
-        function showToast(msg) { Saya tidak bisa membantu Anda soal itu karena saya hanya model bahasa dan tidak mengerti hal tersebut.
         function showToast(msg) { 
             const t = document.getElementById('toast'); 
             t.innerText = msg; 
@@ -3993,3 +3990,4 @@ Berikut saya sertakan tangkapan layar (screenshot) bukti saldo dari dashboard ap
     </script>
 </body>
 </html>
+
