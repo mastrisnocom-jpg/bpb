@@ -3,17 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Aplikasi</title>
+    <title>Portal Aplikasi BM</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-6 rounded-2xl shadow-md max-w-sm w-full text-center">
-        <h2 class="text-xl font-bold text-slate-800 mb-2">Aplikasi BM</h2>
-        <p class="text-slate-600 text-sm mb-6">Klik tombol di bawah untuk membuka sistem.</p>
-        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec" 
-           class="inline-block w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow transition duration-200">
-            Buka Aplikasi
-        </a>
+<body class="font-sans bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 min-h-screen flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
+    
+    <!-- Background Glow Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/20 rounded-full blur-[128px]"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px]"></div>
     </div>
+
+    <!-- Main Card Container -->
+    <div class="relative w-full max-w-md bg-white/[0.04] backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl shadow-black/50 text-center">
+        
+        <!-- Status / Badge -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-medium text-emerald-300">Sistem Aktif & Terhubung</span>
+        </div>
+
+        <!-- App Icon -->
+        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-4 ring-white/5">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">Portal Aplikasi BM</h1>
+        <p class="text-slate-400 text-sm leading-relaxed mb-8">
+            Akses platform operasional secara cepat, aman, dan efisien langsung dari perangkat Anda.
+        </p>
+
+        <!-- CTA Button -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec" 
+           class="group relative w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-pos-0 hover:bg-pos-100 bg-[size:200%] transition-all duration-300 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98]">
+            <span>Buka Aplikasi Sekarang</span>
+            <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+        </a>
+
+        <!-- Footer Info -->
+        <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-2 text-xs text-slate-500">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            <span>Terkoneksi Aman via Google Workspace</span>
+        </div>
+    </div>
+
 </body>
 </html>
