@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Aplikasi BM</title>
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,58 +15,61 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="font-sans bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 min-h-screen flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
+<body class="font-sans bg-gradient-to-br from-emerald-950 via-slate-950 to-teal-950 min-h-screen flex items-center justify-center p-4 selection:bg-emerald-500 selection:text-white">
     
-    <!-- Background Glow Elements -->
+    <!-- Background Glow Elements (Emerald Theme) -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/20 rounded-full blur-[128px]"></div>
-        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px]"></div>
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-600/20 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-500/15 rounded-full blur-[140px]"></div>
     </div>
 
     <!-- Main Card Container -->
-    <div class="relative w-full max-w-md bg-white/[0.04] backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl shadow-black/50 text-center">
+    <div class="relative w-full max-w-md bg-slate-900/60 backdrop-blur-2xl border border-emerald-500/20 p-8 rounded-3xl shadow-2xl shadow-emerald-950/50 text-center">
         
         <!-- Status / Badge -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-xs font-medium text-emerald-300">Sistem Aktif & Terhubung</span>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-6">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-semibold text-emerald-300 tracking-wide">PORTAL OPERASIONAL BM</span>
         </div>
 
-        <!-- App Icon -->
-        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30 ring-4 ring-white/5">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
+        <!-- Corporate Logo Container -->
+        <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center p-3 rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.02] border border-white/10 shadow-lg shadow-emerald-950/40">
+            <img src="https://www.belfis.bpb.co.id/assets/img/logo-8-t.png" 
+                 alt="Logo Bpis" 
+                 class="w-full h-full object-contain filter drop-shadow-md">
         </div>
 
         <!-- Title & Subtitle -->
-        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">Portal Aplikasi BM</h1>
-        <p class="text-slate-400 text-sm leading-relaxed mb-8">
-            Akses platform operasional secara cepat, aman, dan efisien langsung dari perangkat Anda.
+        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">Aplikasi Building Management</h1>
+        <p class="text-slate-300/80 text-sm leading-relaxed mb-8">
+            Platform terpadu untuk monitoring, pelaporan, dan pengelolaan operasional unit gedung.
         </p>
 
-        <!-- CTA Button -->
+        <!-- CTA Button (Emerald Corporate Style) -->
         <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec" 
-           class="group relative w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-pos-0 hover:bg-pos-100 bg-[size:200%] transition-all duration-300 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98]">
-            <span>Buka Aplikasi Sekarang</span>
+           class="group relative w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 transition-all duration-300 shadow-lg shadow-emerald-700/30 hover:shadow-emerald-600/50 hover:scale-[1.02] active:scale-[0.98]">
+            <span>Masuk ke Sistem</span>
             <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
         </a>
 
-        <!-- Footer Info -->
-        <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-2 text-xs text-slate-500">
-            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        <!-- Footer Security Info -->
+        <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-center gap-2 text-xs text-slate-400">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
-            <span>Terkoneksi Aman via Google Workspace</span>
+            <span>Terkoneksi Aman Cloud Database</span>
         </div>
     </div>
 
