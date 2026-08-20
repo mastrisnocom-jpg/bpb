@@ -3,58 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Enterprise Facility Portal & Building Management</title>
+    <meta name="theme-color" content="#00529C">
+    <meta name="description" content="Portal Enterprise Banking & Facility Management System">
+    <title>Portal Sistem Terpadu - Mobile Banking & Facility Management</title>
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
            1. DESIGN SYSTEM & CSS VARIABLES
            ========================================================================== */
         :root {
-            --primary: #00880C;
-            --primary-dark: #006609;
-            --primary-light: #e6f7e8;
-            --primary-glow: rgba(0, 136, 12, 0.28);
-            --accent-green: #00AA13;
-            --accent-yellow: #FDB813;
-            --accent-blue: #0081A7;
-            --accent-red: #EE2737;
-
-            --bg-body: #F4F6F9;
-            --bg-card: rgba(255, 255, 255, 0.95);
-            --bg-header: rgba(255, 255, 255, 0.88);
+            --primary: #00529C;
+            --primary-dark: #003B73;
+            --primary-light: #E6F0FA;
+            --primary-glow: rgba(0, 82, 156, 0.25);
+            
+            --btn-transfer: #3B82F6;
+            --btn-bayar: #8B5CF6;
+            --btn-beli: #10B981;
+            --btn-properti: #EC4899;
+            --btn-poin: #F43F5E;
+            --btn-cardless: #14B8A6;
+            --btn-lifestyle: #8B5CF6;
+            --btn-semua: #3B82F6;
+            
+            --bg-body: #F4F7FC;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
             --bg-sidebar: #FFFFFF;
-            --bg-hover: #F1F5F9;
+            --bg-hover: #F8FAFC;
             --border-color: #E2E8F0;
             --border-light: rgba(255, 255, 255, 0.8);
 
-            --text-main: #111827;
+            --text-main: #0F172A;
             --text-muted: #64748B;
             --text-light: #94A3B8;
 
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.1);
-            --shadow-bottom-nav: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+            --shadow-bottom-nav: 0 -4px 25px rgba(0, 0, 0, 0.06);
 
-            --sidebar-width: 280px;
-            --sidebar-width-collapsed: 82px;
-            --header-height: 72px;
-            --bottom-nav-height: 72px;
-            --radius-md: 16px;
+            --sidebar-width: 260px;
+            --sidebar-width-collapsed: 80px;
+            --header-height: 70px;
+            --bottom-nav-height: 74px;
+            --radius-sm: 12px;
+            --radius-md: 18px;
             --radius-lg: 24px;
             --radius-pill: 9999px;
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="dark"] {
-            --bg-body: #0B0F17;
-            --bg-card: rgba(22, 30, 46, 0.9);
-            --bg-header: rgba(15, 23, 42, 0.88);
-            --bg-sidebar: #0F172A;
+            --bg-body: #090D16;
+            --bg-card: #131B2E;
+            --bg-header: rgba(19, 27, 46, 0.92);
+            --bg-sidebar: #101726;
             --bg-hover: #1E293B;
             --border-color: #1E293B;
             --border-light: rgba(255, 255, 255, 0.05);
@@ -63,11 +71,11 @@
             --text-muted: #94A3B8;
             --text-light: #64748B;
 
-            --primary-light: rgba(0, 170, 19, 0.15);
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
-            --shadow-bottom-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            --primary-light: rgba(0, 82, 156, 0.2);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.5);
+            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.7);
+            --shadow-bottom-nav: 0 -4px 25px rgba(0,0,0,0.6);
         }
 
         /* ==========================================================================
@@ -104,24 +112,8 @@
             font-family: inherit;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-light);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-
         /* ==========================================================================
-           3. APP SHELL LAYOUT (HEADER, SIDEBAR, FOOTER)
+           3. APP HEADER
            ========================================================================== */
         .app-header {
             position: fixed;
@@ -147,71 +139,56 @@
             gap: 1rem;
         }
 
-        .brand {
+        .brand-logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.6rem;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: var(--primary);
             cursor: pointer;
         }
 
-        .brand-logo-wrap {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-green), var(--primary-dark));
+        .brand-badge {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px var(--primary-glow);
-            color: #fff;
+            font-size: 1rem;
             font-weight: 800;
-            font-size: 1.2rem;
-        }
-
-        .brand-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand-title span.sub {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--accent-green);
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .header-search {
             position: relative;
-            margin-left: 2rem;
+            margin-left: 1.5rem;
             display: none;
         }
 
         .header-search input {
             background: var(--bg-hover);
             border: 1px solid var(--border-color);
-            padding: 0.6rem 1rem 0.6rem 2.6rem;
+            padding: 0.55rem 1rem 0.55rem 2.4rem;
             border-radius: var(--radius-pill);
             color: var(--text-main);
-            font-size: 0.875rem;
-            width: 260px;
+            font-size: 0.85rem;
+            width: 240px;
             transition: var(--transition-smooth);
         }
 
         .header-search input:focus {
-            width: 320px;
+            width: 300px;
             background: var(--bg-card);
-            border-color: var(--accent-green);
+            border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-glow);
-            outline: none;
         }
 
         .header-search svg {
             position: absolute;
-            left: 14px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             width: 16px;
@@ -227,17 +204,16 @@
         }
 
         .live-clock {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 800;
             letter-spacing: 0.5px;
-            color: var(--accent-green);
+            color: var(--primary);
         }
 
         .live-date {
             font-size: 0.72rem;
             font-weight: 600;
             color: var(--text-muted);
-            text-transform: capitalize;
         }
 
         .header-right {
@@ -247,8 +223,8 @@
         }
 
         .icon-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -261,57 +237,53 @@
 
         .icon-btn:hover {
             background: var(--primary-light);
-            color: var(--accent-green);
+            color: var(--primary);
             transform: translateY(-2px);
         }
 
-        .icon-btn .badge-counter {
+        .badge-dot {
             position: absolute;
-            top: 4px;
-            right: 4px;
-            background: var(--accent-red);
-            color: #fff;
-            font-size: 0.6rem;
-            font-weight: 700;
-            border-radius: 9999px;
-            padding: 2px 5px;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
             border: 2px solid var(--bg-card);
         }
 
-        .profile-btn {
+        .user-dropdown-btn {
             display: flex;
             align-items: center;
             gap: 0.6rem;
-            padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+            padding: 0.3rem 0.6rem 0.3rem 0.3rem;
             border-radius: var(--radius-pill);
             background: var(--bg-hover);
             cursor: pointer;
-            position: relative;
         }
 
-        .profile-avatar {
+        .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            object-fit: cover;
-            background: #ccc;
-        }
-
-        .profile-name {
-            font-size: 0.8rem;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
-            display: none;
+            font-size: 0.8rem;
         }
 
-        /* App Main Shell */
+        /* ==========================================================================
+           4. APP LAYOUT (SIDEBAR & MAIN CONTENT)
+           ========================================================================== */
         .app-shell {
             display: flex;
             margin-top: var(--header-height);
             min-height: calc(100vh - var(--header-height));
-            position: relative;
         }
 
-        /* Sidebar Desktop */
         .app-sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -329,46 +301,11 @@
             overflow-y: auto;
         }
 
-        .sidebar-user-card {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem;
-            background: var(--bg-hover);
-            border-radius: var(--radius-md);
-            margin-bottom: 1.25rem;
-        }
-
-        .sidebar-user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            object-fit: cover;
-        }
-
-        .sidebar-user-info {
-            overflow: hidden;
-        }
-
-        .sidebar-user-info h4 {
-            font-size: 0.875rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .sidebar-user-info p {
-            font-size: 0.72rem;
-            color: var(--accent-green);
-            font-weight: 600;
-        }
-
         .sidebar-menu-title {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             color: var(--text-light);
             padding: 0.5rem 0.75rem;
         }
@@ -384,11 +321,11 @@
             display: flex;
             align-items: center;
             gap: 0.85rem;
-            padding: 0.75rem 0.85rem;
+            padding: 0.7rem 0.85rem;
             border-radius: 12px;
             color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             transition: var(--transition-smooth);
         }
 
@@ -400,30 +337,10 @@
 
         .nav-item.active a, .nav-item a:hover {
             background: var(--primary-light);
-            color: var(--accent-green);
+            color: var(--primary);
             font-weight: 700;
         }
 
-        .nav-item.active a svg {
-            color: var(--accent-green);
-        }
-
-        .sidebar-collapsed .app-sidebar {
-            width: var(--sidebar-width-collapsed);
-        }
-
-        .sidebar-collapsed .brand-title,
-        .sidebar-collapsed .sidebar-user-info,
-        .sidebar-collapsed .sidebar-menu-title,
-        .sidebar-collapsed .nav-item span {
-            display: none;
-        }
-
-        .sidebar-collapsed .app-main-content {
-            margin-left: var(--sidebar-width-collapsed);
-        }
-
-        /* Main Content Workspace */
         .app-main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -434,330 +351,243 @@
         }
 
         /* ==========================================================================
-           4. GOJEK-STYLE MODERN MOBILE PORTAL & DASHBOARD CARDS
+           5. EXACT MOBILE BANKING UI (SESUAI GAMBAR)
            ========================================================================== */
-        /* Top Promo/Status Bar Banner */
-        .go-banner {
-            background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
-            border-radius: var(--radius-md);
-            padding: 1rem 1.25rem;
+        .portal-mobile-container {
+            max-width: 540px;
+            margin: 0 auto;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* 8 Icon Grid Card */
+        .grid-icon-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 1rem 1.25rem;
             box-shadow: var(--shadow-sm);
-            color: #064e3b;
+            border: 1px solid var(--border-color);
         }
 
-        .go-banner-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .go-banner-desc {
-            font-size: 0.78rem;
-            font-weight: 600;
-            opacity: 0.9;
-        }
-
-        /* Circular Grid Style Menus (Gojek Icon Grid) */
-        .portal-section-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .portal-grid {
+        .grid-icon-layout {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.2rem 0.5rem;
-            margin-bottom: 2rem;
-            background: var(--bg-card);
-            padding: 1.5rem 1rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
+            gap: 1.25rem 0.5rem;
         }
 
-        .portal-icon-card {
+        .menu-item-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            text-decoration: none;
-            color: var(--text-main);
-            position: relative;
             cursor: pointer;
             transition: var(--transition-smooth);
+            user-select: none;
         }
 
-        .portal-icon-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .icon-bubble-wrap {
-            position: relative;
-            width: 58px;
-            height: 58px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-hover);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
-            margin-bottom: 0.5rem;
-            transition: var(--transition-smooth);
-        }
-
-        .portal-icon-card:hover .icon-bubble-wrap {
-            box-shadow: 0 10px 20px var(--primary-glow);
-            transform: scale(1.05);
-        }
-
-        .icon-bubble-wrap svg {
-            width: 28px;
-            height: 28px;
-        }
-
-        .badge-tag {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #111827;
-            color: #fff;
-            font-size: 0.6rem;
-            font-weight: 800;
-            padding: 2px 6px;
-            border-radius: 8px;
-            border: 2px solid var(--bg-card);
-            text-transform: uppercase;
-        }
-
-        .badge-tag.hot {
-            background: var(--accent-red);
-        }
-
-        .badge-tag.eco {
-            background: var(--accent-green);
-        }
-
-        .badge-tag.warn {
-            background: var(--accent-yellow);
-            color: #000;
-        }
-
-        .portal-icon-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            max-width: 80px;
-            line-height: 1.25;
-            color: var(--text-main);
-        }
-
-        /* Horizontal Carousel Section (Pilihan Anda/Shortcuts) */
-        .carousel-container {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-            scroll-snap-type: x mandatory;
-        }
-
-        .carousel-card {
-            flex: 0 0 280px;
-            scroll-snap-align: start;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 1.25rem;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-smooth);
-        }
-
-        .carousel-card:hover {
-            box-shadow: var(--shadow-md);
+        .menu-item-btn:hover {
             transform: translateY(-3px);
         }
 
-        .carousel-badge {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--accent-green);
-            text-transform: uppercase;
-            margin-bottom: 0.4rem;
-        }
-
-        .carousel-card h4 {
-            font-size: 0.95rem;
-            font-weight: 700;
+        .circle-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
             margin-bottom: 0.5rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            transition: var(--transition-smooth);
         }
 
-        .carousel-card p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+        .circle-icon svg {
+            width: 26px;
+            height: 26px;
         }
 
-        /* Stats Grid Modern */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .menu-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.25;
         }
 
-        .stat-card {
+        /* DompetKu Section */
+        .wallet-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header-flex {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
         }
 
-        .stat-card .val {
-            font-size: 1.6rem;
+        .card-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
             font-weight: 800;
-            margin-top: 0.2rem;
+            color: var(--text-main);
         }
 
-        .stat-card .lbl {
-            font-size: 0.75rem;
+        .link-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .link-action-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+        }
+
+        .dana-box {
+            background: #EBF3FF;
+            border-radius: var(--radius-md);
+            padding: 1.1rem 0.85rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            border: 1px solid rgba(0, 82, 156, 0.08);
+        }
+
+        .dana-btn {
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.45rem 1.4rem;
+            border-radius: var(--radius-pill);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 10px var(--primary-glow);
+        }
+
+        .promo-box {
+            background: linear-gradient(135deg, #4F86F7 0%, #2563EB 100%);
+            border-radius: var(--radius-md);
+            padding: 0.85rem;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-box h4 {
+            font-size: 0.8rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .promo-badge {
+            background: #fff;
+            color: #2563EB;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            display: inline-block;
+            margin-top: 0.4rem;
+            width: fit-content;
+        }
+
+        /* Transfer Terakhir Section */
+        .history-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .history-left {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .history-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .history-info h5 {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.15rem;
+        }
+
+        .history-info p {
+            font-size: 0.72rem;
             color: var(--text-muted);
             font-weight: 600;
         }
 
-        /* Modern Data Table */
-        .table-container {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-color);
-            padding: 1.25rem;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 2rem;
-        }
-
-        .table-header-tools {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.1rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 12px;
-            transition: var(--transition-smooth);
-            cursor: pointer;
-        }
-
-        .btn-primary { background: var(--accent-green); color: #fff; box-shadow: 0 4px 12px var(--primary-glow); }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-outline { border: 1px solid var(--border-color); color: var(--text-main); background: var(--bg-card); }
-        .btn-outline:hover { background: var(--bg-hover); }
-
-        .custom-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        .custom-table th, .custom-table td {
-            padding: 0.9rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
-        }
-
-        .custom-table th {
-            color: var(--text-muted);
-            font-weight: 700;
-            background: var(--bg-hover);
-            text-transform: uppercase;
-            font-size: 0.72rem;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-status {
-            padding: 0.25rem 0.65rem;
-            border-radius: 9999px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            display: inline-block;
-        }
-
-        .status-success { background: #dcfce7; color: #15803d; }
-        .status-warning { background: #fef9c3; color: #a16207; }
-        .status-danger { background: #fee2e2; color: #b91c1c; }
-
-        /* Mobile Card View for Table */
-        @media (max-width: 768px) {
-            .custom-table thead { display: none; }
-            .custom-table, .custom-table tbody, .custom-table tr, .custom-table td {
-                display: block;
-                width: 100%;
-            }
-            .custom-table tr {
-                margin-bottom: 1rem;
-                background: var(--bg-hover);
-                border-radius: var(--radius-md);
-                padding: 0.75rem;
-                border: 1px solid var(--border-color);
-            }
-            .custom-table td {
-                display: flex;
-                justify-content: space-between;
-                padding: 0.5rem 0;
-                border-bottom: 1px solid rgba(0,0,0,0.04);
-            }
-            .custom-table td::before {
-                content: attr(data-label);
-                font-weight: 700;
-                color: var(--text-muted);
-            }
-        }
-
-        /* Iframe View Wrapper (Untuk Halaman Eksternal) */
-        .portal-iframe-container {
-            width: 100%;
-            height: calc(100vh - var(--header-height) - 100px);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .portal-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .history-amount {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-align: right;
         }
 
         /* ==========================================================================
-           5. GOJEK-STYLE BOTTOM NAVIGATION (MOBILE)
+           6. BOTTOM NAVIGATION (EXACT SESUAI GAMBAR DENGAN TOMBOL QRIS TENGAH)
            ========================================================================== */
         .bottom-nav {
             position: fixed;
@@ -782,48 +612,84 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 4px;
             color: var(--text-muted);
-            text-decoration: none;
             font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 700;
             flex: 1;
             padding: 6px 0;
-            border-radius: 12px;
             transition: var(--transition-smooth);
-            position: relative;
         }
 
         .bottom-nav-item svg {
-            width: 22px;
-            height: 22px;
-            transition: var(--transition-smooth);
+            width: 24px;
+            height: 24px;
         }
 
         .bottom-nav-item.active {
-            color: var(--accent-green);
-            font-weight: 800;
+            color: var(--primary);
         }
 
-        .bottom-nav-item.active svg {
-            transform: translateY(-2px);
-            color: var(--accent-green);
+        .nav-qris-wrap {
+            position: relative;
+            top: -18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
         }
 
-        .nav-badge-dot {
-            position: absolute;
-            top: 4px;
-            right: calc(50% - 14px);
-            width: 8px;
-            height: 8px;
-            background: var(--accent-red);
+        .btn-qris-center {
+            width: 62px;
+            height: 62px;
             border-radius: 50%;
-            border: 2px solid var(--bg-card);
+            background: var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            border: 4px solid var(--bg-card);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-qris-center:hover {
+            transform: scale(1.06);
+        }
+
+        .btn-qris-center svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .qris-subtext {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
 
         /* ==========================================================================
-           6. FOOTER COMPONENT
+           7. GAS IFRAME VIEW & MODAL
            ========================================================================== */
+        .portal-iframe-container {
+            width: 100%;
+            height: calc(100vh - var(--header-height) - 90px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .portal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         .app-footer {
             background: var(--bg-card);
             border-top: 1px solid var(--border-color);
@@ -838,23 +704,7 @@
             margin-top: auto;
         }
 
-        .footer-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            box-shadow: 0 0 0 2px var(--primary-glow);
-        }
-
-        /* ==========================================================================
-           7. MODAL, TOAST & UTILITIES
-           ========================================================================== */
+        /* Toast Container */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -862,20 +712,22 @@
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .toast {
             min-width: 280px;
             background: var(--bg-card);
             color: var(--text-main);
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius-md);
+            padding: 0.9rem 1.2rem;
+            border-radius: var(--radius-sm);
             box-shadow: var(--shadow-lg);
-            border-left: 4px solid var(--accent-green);
+            border-left: 4px solid var(--primary);
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             animation: slideInRight 0.3s forwards;
         }
 
@@ -884,39 +736,44 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Quick Floating Action Button (FAB) */
-        .fab {
+        /* Modal View */
+        .modal-backdrop {
             position: fixed;
-            bottom: calc(var(--bottom-nav-height) + 16px);
-            right: 20px;
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            color: #fff;
-            display: flex;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 20px var(--primary-glow);
-            z-index: 800;
-            cursor: pointer;
-            transition: var(--transition-smooth);
+            padding: 1rem;
         }
 
-        .fab:hover {
-            transform: scale(1.08) rotate(90deg);
+        .modal-card {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Responsive Breakpoints */
         @media (min-width: 992px) {
             .header-search { display: block; }
             .header-center { display: flex; }
-            .profile-name { display: block; }
         }
 
         @media (max-width: 991px) {
             .app-sidebar { width: var(--sidebar-width-collapsed); }
-            .sidebar-user-info, .sidebar-menu-title, .nav-item span { display: none; }
+            .sidebar-menu-title, .nav-item span { display: none; }
             .app-main-content { margin-left: var(--sidebar-width-collapsed); }
         }
 
@@ -924,7 +781,6 @@
             .app-sidebar { display: none; }
             .bottom-nav { display: flex; }
             .app-main-content { margin-left: 0; padding: 1rem; padding-bottom: calc(var(--bottom-nav-height) + 1.5rem); }
-            .fab { bottom: calc(var(--bottom-nav-height) + 12px); }
             .app-footer { margin-bottom: var(--bottom-nav-height); }
         }
     </style>
@@ -936,17 +792,14 @@
          ========================================================================== -->
     <header class="app-header">
         <div class="header-left">
-            <div class="brand" onclick="Router.navigate('home')">
-                <div class="brand-logo-wrap">BM</div>
-                <div class="brand-title">
-                    <span>Portal BM</span>
-                    <span class="sub">Enterprise Apps</span>
-                </div>
+            <div class="brand-logo" onclick="Router.navigate('beranda')">
+                <div class="brand-badge">B</div>
+                <span>Portal BM</span>
             </div>
 
             <div class="header-search">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                <input type="text" id="globalSearchInput" placeholder="Cari modul, tiket, checklist..." onkeyup="App.handleSearch(this.value)">
+                <input type="text" placeholder="Cari transaksi, modul BM..." onkeyup="App.handleSearch(this.value)">
             </div>
         </div>
 
@@ -959,52 +812,39 @@
             <button class="icon-btn" onclick="App.toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"></path></svg>
             </button>
-            <button class="icon-btn" onclick="App.reloadPage()" title="Refresh" aria-label="Refresh">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path></svg>
-            </button>
-            <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Dark/Light" aria-label="Theme Switch">
+            <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Tema" aria-label="Theme Switch">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
             </button>
             <button class="icon-btn" onclick="App.showToast('Tidak ada notifikasi baru', 'info')" aria-label="Notifikasi">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path></svg>
-                <span class="badge-counter">3</span>
+                <span class="badge-dot"></span>
             </button>
 
-            <div class="profile-btn" onclick="Router.navigate('profil')">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User" class="profile-avatar">
-                <span class="profile-name">Admin BM</span>
+            <div class="user-dropdown-btn" onclick="Router.navigate('profil')">
+                <div class="user-avatar">S</div>
             </div>
         </div>
     </header>
 
     <!-- ==========================================================================
-         MAIN SHELL (SIDEBAR & DYNAMIC CONTENT)
+         APP SHELL (SIDEBAR & CONTENT)
          ========================================================================== -->
     <div class="app-shell">
         
         <!-- SIDEBAR DESKTOP -->
         <aside class="app-sidebar" id="sidebar">
             <div>
-                <div class="sidebar-user-card">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="sidebar-user-avatar" alt="Avatar">
-                    <div class="sidebar-user-info">
-                        <h4>M. Firdaus</h4>
-                        <p>Facility Lead Engineer</p>
-                    </div>
-                </div>
-
-                <div class="sidebar-menu-title">Main Menu Portal</div>
+                <div class="sidebar-menu-title">Menu Utama</div>
                 <ul class="nav-list" id="sidebarNavList">
                     <!-- Populated via JavaScript Array -->
                 </ul>
             </div>
-
-            <div style="padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <div>
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')">
+                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar', 'info')">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
-                            <span>Logout</span>
+                            <span>Keluar</span>
                         </a>
                     </li>
                 </ul>
@@ -1013,37 +853,38 @@
 
         <!-- DYNAMIC MAIN CONTENT -->
         <main class="app-main-content" id="appContent">
-            <!-- Router injected templates will render here -->
+            <!-- Router injected views will render here -->
         </main>
     </div>
 
     <!-- ==========================================================================
-         FLOATING ACTION BUTTON (FAB)
-         ========================================================================== -->
-    <button class="fab" onclick="App.showToast('Fitur Quick Action Terbuka', 'success')" title="Buat Laporan Cepat" aria-label="Tambah Tiket">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
-    </button>
-
-    <!-- ==========================================================================
-         BOTTOM NAVIGATION (GOJEK STYLE FOR MOBILE)
+         BOTTOM NAVIGATION (PERSIS SEPERTI GAMBAR)
          ========================================================================== -->
     <nav class="bottom-nav" id="bottomNav">
-        <a href="#/home" class="bottom-nav-item active" data-route="home">
+        <a href="#/beranda" class="bottom-nav-item active" data-route="beranda">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
             <span>Beranda</span>
         </a>
-        <a href="#/kerusakan" class="bottom-nav-item" data-route="kerusakan">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg>
-            <span>Kerusakan</span>
-            <span class="nav-badge-dot"></span>
+        <a href="#/arus-kas" class="bottom-nav-item" data-route="arus-kas">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path></svg>
+            <span>Arus Kas</span>
         </a>
-        <a href="#/checklist-pm" class="bottom-nav-item" data-route="checklist-pm">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>Checklist</span>
-        </a>
+        
+        <!-- CENTER QRIS BUTTON -->
+        <div class="nav-qris-wrap" onclick="App.openQRISModal()">
+            <div class="btn-qris-center">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 13.5h3.75v3.75H13.5zM17.25 17.25h3.75v3.75h-3.75zM13.5 17.25h3.75v3.75H13.5z"></path></svg>
+            </div>
+            <span class="qris-subtext">QRIS</span>
+        </div>
+
         <a href="#/profil" class="bottom-nav-item" data-route="profil">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path></svg>
-            <span>Akun</span>
+            <span>Profil</span>
+        </a>
+        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')" class="bottom-nav-item">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
+            <span>Keluar</span>
         </a>
     </nav>
 
@@ -1051,66 +892,67 @@
          FOOTER
          ========================================================================== -->
     <footer class="app-footer">
-        <div>
-            &copy; <span id="footerYear">2026</span> <strong>Enterprise Building Management Portal</strong>. All Rights Reserved.
-        </div>
-        <div class="footer-status">
-            <span class="status-dot"></span>
-            <span>Cloud Google Workspace Terkoneksi (v3.2)</span>
-        </div>
+        <div>&copy; <span id="footerYear">2026</span> <strong>Portal Enterprise System</strong>. All Rights Reserved.</div>
+        <div>Status: <strong style="color:var(--btn-beli)">● Terhubung Cloud</strong></div>
     </footer>
 
     <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- MODAL POPUP (SEMUA MENU & QRIS) -->
+    <div class="modal-backdrop" id="appModal" onclick="App.closeModal(event)">
+        <div class="modal-card" id="modalCard">
+            <!-- Injected dynamically -->
+        </div>
+    </div>
+
     <!-- ==========================================================================
-         CORE JAVASCRIPT ARCHITECTURE
+         MODULAR JAVASCRIPT ES6+
          ========================================================================== -->
     <script>
         /**
          * 1. GOOGLE APPS SCRIPT URL MAP & MENU REGISTRY
-         * Mengintegrasikan 14 link modul utama yang Anda berikan
          */
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
-        const PORTAL_MENUS = [
-            { id: 'index', title: 'Portal Index', icon: '🏠', color: '#E8F5E9', iconColor: '#2E7D32', badge: '', url: `${BASE_GAS_URL}?page=index` },
-            { id: 'dashboard', title: 'Main Dashboard', icon: '📊', color: '#E3F2FD', iconColor: '#1565C0', badge: 'Utama', url: `${BASE_GAS_URL}?page=dashboard` },
-            { id: 'kerusakan', title: 'Lapor Kerusakan', icon: '⚠️', color: '#FFEBEE', iconColor: '#C62828', badge: 'Hot', url: `${BASE_GAS_URL}?page=kerusakan` },
-            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', icon: '📅', color: '#FFF3E0', iconColor: '#EF6C00', badge: '', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
-            { id: 'plts-dashboard', title: 'PLTS Solar Panel', icon: '☀️', color: '#FFFDE7', iconColor: '#F9A825', badge: 'Eco', url: `${BASE_GAS_URL}?page=plts-dashboard` },
-            { id: 'energi-dashboard', title: 'Energi Listrik', icon: '⚡', color: '#EDE7F6', iconColor: '#6A1B9A', badge: '', url: `${BASE_GAS_URL}?page=energi-dashboard` },
-            { id: 'bast', title: 'Input BAST', icon: '📝', color: '#E0F2F1', iconColor: '#00695C', badge: '', url: `${BASE_GAS_URL}?page=bast` },
-            { id: 'dashboard-bast', title: 'Dashboard BAST', icon: '📁', color: '#F3E5F5', iconColor: '#8E24AA', badge: '', url: `${BASE_GAS_URL}?page=dashboard-bast` },
-            { id: 'dashboard-atm', title: 'Monitoring ATM', icon: '🏧', color: '#E1F5FE', iconColor: '#0277BD', badge: '24 Jam', url: `${BASE_GAS_URL}?page=dashboard-atm` },
-            { id: 'perencanaan-pm', title: 'Rencana PM', icon: '📋', color: '#FBE9E7', iconColor: '#D84315', badge: '', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
-            { id: 'progres-jadwal-pm', title: 'Progress PM', icon: '⏳', color: '#F1F8E9', iconColor: '#558B2F', badge: '', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
-            { id: 'dashboard-pm', title: 'Dashboard PM', icon: '📈', color: '#ECEFF1', iconColor: '#37474F', badge: '', url: `${BASE_GAS_URL}?page=dashboard-pm` },
-            { id: 'checklist-harian-pm', title: 'Checklist Harian', icon: '✅', color: '#E8F8F5', iconColor: '#117A65', badge: 'Rutin', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
-            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', icon: '📑', color: '#FEF9E7', iconColor: '#B7950B', badge: '', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
+        const GAS_MODULES = [
+            { id: 'index', title: 'Portal Index', url: `${BASE_GAS_URL}?page=index` },
+            { id: 'dashboard', title: 'Main Dashboard', url: `${BASE_GAS_URL}?page=dashboard` },
+            { id: 'kerusakan', title: 'Lapor Kerusakan', url: `${BASE_GAS_URL}?page=kerusakan` },
+            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
+            { id: 'plts-dashboard', title: 'PLTS Solar Panel', url: `${BASE_GAS_URL}?page=plts-dashboard` },
+            { id: 'energi-dashboard', title: 'Energi Listrik', url: `${BASE_GAS_URL}?page=energi-dashboard` },
+            { id: 'bast', title: 'Input BAST', url: `${BASE_GAS_URL}?page=bast` },
+            { id: 'dashboard-bast', title: 'Dashboard BAST', url: `${BASE_GAS_URL}?page=dashboard-bast` },
+            { id: 'dashboard-atm', title: 'Monitoring ATM', url: `${BASE_GAS_URL}?page=dashboard-atm` },
+            { id: 'perencanaan-pm', title: 'Rencana PM', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'progres-jadwal-pm', title: 'Progress PM', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
+            { id: 'dashboard-pm', title: 'Dashboard PM', url: `${BASE_GAS_URL}?page=dashboard-pm` },
+            { id: 'checklist-harian-pm', title: 'Checklist Harian', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
+            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
         ];
 
         /**
-         * 2. THEME & LOCAL STORAGE MANAGER
+         * 2. THEME CONTROLLER
          */
         const Theme = {
             init() {
-                const saved = localStorage.getItem('bm_theme') || 'light';
+                const saved = localStorage.getItem('app_theme') || 'light';
                 document.documentElement.setAttribute('data-theme', saved);
-                this.updateButton(saved);
+                this.updateBtn(saved);
             },
             toggle() {
                 const current = document.documentElement.getAttribute('data-theme');
                 const target = current === 'dark' ? 'light' : 'dark';
                 document.documentElement.setAttribute('data-theme', target);
-                localStorage.setItem('bm_theme', target);
-                this.updateButton(target);
-                App.showToast(`Beralih ke mode ${target === 'dark' ? 'Gelap' : 'Terang'}`, 'info');
+                localStorage.setItem('app_theme', target);
+                this.updateBtn(target);
+                App.showToast(`Beralih ke tema ${target === 'dark' ? 'Gelap' : 'Terang'}`);
             },
-            updateButton(theme) {
+            updateBtn(theme) {
                 const btn = document.getElementById('themeToggleBtn');
                 if (btn) {
-                    btn.innerHTML = theme === 'dark' 
+                    btn.innerHTML = theme === 'dark'
                         ? '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>'
                         : '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>';
                 }
@@ -1130,291 +972,323 @@
                 const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                 const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-                const dayName = days[now.getDay()];
-                const dateNum = now.getDate();
-                const monthName = months[now.getMonth()];
-                const year = now.getFullYear();
+                const day = days[now.getDay()];
+                const d = now.getDate();
+                const m = months[now.getMonth()];
+                const y = now.getFullYear();
 
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const h = String(now.getHours()).padStart(2, '0');
+                const min = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
 
-                const clockElem = document.getElementById('clock');
-                const dateElem = document.getElementById('date');
+                const clockEl = document.getElementById('clock');
+                const dateEl = document.getElementById('date');
 
-                if (clockElem) clockElem.innerText = `${hours}:${minutes}:${seconds} WIB`;
-                if (dateElem) dateElem.innerText = `${dayName}, ${dateNum} ${monthName} ${year}`;
+                if (clockEl) clockEl.innerText = `${h}:${min}:${s} WIB`;
+                if (dateEl) dateEl.innerText = `${day}, ${d} ${m} ${y}`;
             }
         };
 
         /**
-         * 4. ROUTER & DYNAMIC VIEW GENERATOR
+         * 4. SPA ROUTER & VIEWS
          */
         const Router = {
             init() {
-                window.addEventListener('hashchange', () => this.handleRouting());
-                this.handleRouting();
+                window.addEventListener('hashchange', () => this.render());
+                this.render();
             },
             navigate(route) {
                 window.location.hash = '#/' + route;
             },
-            handleRouting() {
-                const hash = window.location.hash.replace('#/', '') || 'home';
-                this.updateActiveMenu(hash);
+            render() {
+                const route = window.location.hash.replace('#/', '') || 'beranda';
+                this.updateNavActive(route);
 
-                const contentArea = document.getElementById('appContent');
-                contentArea.innerHTML = '<div style="text-align:center; padding:3rem; color:var(--text-muted);">Memuat Modul...</div>';
+                const content = document.getElementById('appContent');
+                const gasMatch = GAS_MODULES.find(m => m.id === route);
 
-                // Cari apakah modul eksternal GAS
-                const matchedMenu = PORTAL_MENUS.find(m => m.id === hash);
-
-                if (hash === 'home' || hash === '') {
-                    contentArea.innerHTML = this.renderHomeView();
-                } else if (hash === 'profil') {
-                    contentArea.innerHTML = this.renderProfileView();
-                } else if (matchedMenu) {
-                    contentArea.innerHTML = this.renderGASIframeView(matchedMenu);
+                if (route === 'beranda') {
+                    content.innerHTML = this.viewHome();
+                } else if (route === 'arus-kas') {
+                    content.innerHTML = this.viewArusKas();
+                } else if (route === 'profil') {
+                    content.innerHTML = this.viewProfile();
+                } else if (gasMatch) {
+                    content.innerHTML = this.viewGAS(gasMatch);
                 } else {
-                    contentArea.innerHTML = `<div style="text-align:center; padding:4rem;"><h2>404 - Modul Tidak Ditemukan</h2></div>`;
+                    content.innerHTML = `<div style="text-align:center; padding:3rem;"><h2>Halaman Tidak Ditemukan</h2></div>`;
                 }
 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
-            updateActiveMenu(route) {
-                // Update Sidebar Desktop
+            updateNavActive(route) {
                 document.querySelectorAll('#sidebarNavList .nav-item').forEach(li => {
                     li.classList.toggle('active', li.getAttribute('data-route') === route);
                 });
-                // Update Bottom Nav
-                document.querySelectorAll('.bottom-nav-item').forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-route') === route);
+                document.querySelectorAll('.bottom-nav-item').forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('data-route') === route);
                 });
             },
-            renderHomeView() {
+            viewHome() {
                 return `
-                    <!-- Top Notification Banner -->
-                    <div class="go-banner">
-                        <div>
-                            <div class="go-banner-title">
-                                <span>⚡ Sistem Operasional Gedung Aktif</span>
-                            </div>
-                            <div class="go-banner-desc">Seluruh checklist preventif harian dapat diakses langsung tanpa login ulang.</div>
-                        </div>
-                        <button class="btn btn-primary" onclick="Router.navigate('checklist-harian-pm')" style="font-size:0.75rem; padding:0.4rem 0.8rem;">Mulai Cek</button>
-                    </div>
-
-                    <!-- GOJEK STYLE ICON GRID (14 Modul Lengkap) -->
-                    <div class="portal-section-title">
-                        <span>Layanan Modul Portal BM</span>
-                        <span style="font-size:0.8rem; color:var(--accent-green); font-weight:700; cursor:pointer;" onclick="App.showToast('Semua modul siap digunakan', 'info')">Lihat Semua</span>
-                    </div>
-
-                    <div class="portal-grid">
-                        ${PORTAL_MENUS.map(item => `
-                            <div class="portal-icon-card" onclick="Router.navigate('${item.id}')">
-                                <div class="icon-bubble-wrap" style="background: ${item.color};">
-                                    <span style="font-size: 1.6rem;">${item.icon}</span>
-                                    ${item.badge ? `<span class="badge-tag ${item.badge === 'Hot' ? 'hot' : item.badge === 'Eco' ? 'eco' : 'warn'}">${item.badge}</span>` : ''}
+                    <div class="portal-mobile-container">
+                        
+                        <!-- CARD 1: 8 ICON MENU (PERSIS SEPERTI GAMBAR) -->
+                        <div class="grid-icon-card">
+                            <div class="grid-icon-layout">
+                                
+                                <!-- Transfer -->
+                                <div class="menu-item-btn" onclick="Router.navigate('kerusakan')">
+                                    <div class="circle-icon" style="background: var(--btn-transfer);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Transfer</span>
                                 </div>
-                                <div class="portal-icon-label">${item.title}</div>
-                            </div>
-                        `).join('')}
-                    </div>
 
-                    <!-- Quick Shortcuts / Carousel Slider -->
-                    <div class="portal-section-title">
-                        <span>Pilihan Anda Biasanya</span>
-                    </div>
-                    <div class="carousel-container">
-                        <div class="carousel-card">
-                            <div class="carousel-badge">Preventive Maintenance</div>
-                            <h4>Checklist Rutin Harian PM</h4>
-                            <p>Pantau pendingin ruangan, kelistrikan, dan pompa gedung hari ini.</p>
-                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('checklist-harian-pm')">Buka Modul</button>
-                        </div>
-                        <div class="carousel-card">
-                            <div class="carousel-badge" style="color:var(--accent-red);">Incident Report</div>
-                            <h4>Laporan Kerusakan Terbaru</h4>
-                            <p>Ada 3 tiket keluhan fasilitas yang membutuhkan penanganan segera.</p>
-                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('kerusakan')">Periksa Tiket</button>
-                        </div>
-                        <div class="carousel-card">
-                            <div class="carousel-badge" style="color:var(--accent-blue);">Energi Hijau</div>
-                            <h4>Monitoring PLTS Solar</h4>
-                            <p>Produksi energi hari ini: 124.5 kWh (Hemat Rp 182.000,-).</p>
-                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('plts-dashboard')">Lihat Grafik</button>
-                        </div>
-                    </div>
+                                <!-- Pembayaran -->
+                                <div class="menu-item-btn" onclick="Router.navigate('energi-dashboard')">
+                                    <div class="circle-icon" style="background: var(--btn-bayar);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Pembayaran</span>
+                                </div>
 
-                    <!-- Modern Stats Summary -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div>
-                                <div class="lbl">Tiket Kerusakan Aktif</div>
-                                <div class="val" style="color:var(--accent-red);">4</div>
-                            </div>
-                            <div style="font-size:2rem;">🛠️</div>
-                        </div>
-                        <div class="stat-card">
-                            <div>
-                                <div class="lbl">Checklist PM Selesai</div>
-                                <div class="val" style="color:var(--accent-green);">92%</div>
-                            </div>
-                            <div style="font-size:2rem;">📋</div>
-                        </div>
-                        <div class="stat-card">
-                            <div>
-                                <div class="lbl">Daya Listrik Real-Time</div>
-                                <div class="val" style="color:var(--accent-yellow);">142 kW</div>
-                            </div>
-                            <div style="font-size:2rem;">⚡</div>
-                        </div>
-                        <div class="stat-card">
-                            <div>
-                                <div class="lbl">BAST Terverifikasi</div>
-                                <div class="val" style="color:var(--accent-blue);">28 Dok</div>
-                            </div>
-                            <div style="font-size:2rem;">📁</div>
-                        </div>
-                    </div>
+                                <!-- Pembelian -->
+                                <div class="menu-item-btn" onclick="Router.navigate('checklist-harian-pm')">
+                                    <div class="circle-icon" style="background: var(--btn-beli);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Pembelian</span>
+                                </div>
 
-                    <!-- Summary Table -->
-                    <div class="table-container">
-                        <div class="table-header-tools">
-                            <h3 style="font-size:1.05rem; font-weight:800;">Aktivitas & Log Operasional Terbaru</h3>
-                            <div class="table-actions">
-                                <button class="btn btn-outline" onclick="App.exportCSV()">Export CSV</button>
-                                <button class="btn btn-primary" onclick="window.print()">Print Laporan</button>
+                                <!-- Bale Properti -->
+                                <div class="menu-item-btn" onclick="Router.navigate('dashboard-atm')">
+                                    <div class="circle-icon" style="background: var(--btn-properti);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Bale Properti</span>
+                                </div>
+
+                                <!-- Bale Poin -->
+                                <div class="menu-item-btn" onclick="Router.navigate('plts-dashboard')">
+                                    <div class="circle-icon" style="background: var(--btn-poin); font-weight:800; font-size:0.75rem;">
+                                        bale<span style="font-size:0.6rem; font-weight:500;">poin</span>
+                                    </div>
+                                    <span class="menu-label">Bale Poin</span>
+                                </div>
+
+                                <!-- Cardless -->
+                                <div class="menu-item-btn" onclick="Router.navigate('bast')">
+                                    <div class="circle-icon" style="background: var(--btn-cardless);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Cardless</span>
+                                </div>
+
+                                <!-- Lifestyle -->
+                                <div class="menu-item-btn" onclick="Router.navigate('perencanaan-pm')">
+                                    <div class="circle-icon" style="background: var(--btn-lifestyle);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Lifestyle</span>
+                                </div>
+
+                                <!-- Semua Menu -->
+                                <div class="menu-item-btn" onclick="App.openAllMenuModal()">
+                                    <div class="circle-icon" style="background: var(--btn-semua);">
+                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
+                                    </div>
+                                    <span class="menu-label">Semua Menu</span>
+                                </div>
+
                             </div>
                         </div>
-                        <table class="custom-table" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>ID Tiket</th>
-                                    <th>Kategori Modul</th>
-                                    <th>Lokasi / Unit</th>
-                                    <th>Status</th>
-                                    <th>Waktu Update</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="ID Tiket"><strong>#TK-8821</strong></td>
-                                    <td data-label="Kategori">AC Chiller Gedung A</td>
-                                    <td data-label="Lokasi">Lantai 4 Unit 402</td>
-                                    <td data-label="Status"><span class="badge-status status-danger">Perlu Perbaikan</span></td>
-                                    <td data-label="Waktu">10 Menit Lalu</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="ID Tiket"><strong>#PM-1092</strong></td>
-                                    <td data-label="Kategori">Checklist Panel Genset</td>
-                                    <td data-label="Lokasi">Basement 2 Ruang ME</td>
-                                    <td data-label="Status"><span class="badge-status status-success">Normal / Checked</span></td>
-                                    <td data-label="Waktu">1 Jam Lalu</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="ID Tiket"><strong>#ATM-004</strong></td>
-                                    <td data-label="Kategori">Monitoring Suhu ATM</td>
-                                    <td data-label="Lokasi">Lobby Utama</td>
-                                    <td data-label="Status"><span class="badge-status status-warning">23°C (Optimal)</span></td>
-                                    <td data-label="Waktu">3 Jam Lalu</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                        <!-- CARD 2: DOMPETKU (PERSIS SEPERTI GAMBAR) -->
+                        <div class="wallet-card">
+                            <div class="card-header-flex">
+                                <div class="card-title-wrap">
+                                    <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"></path></svg>
+                                    <span>DompetKu</span>
+                                </div>
+                                <div class="link-action" onclick="App.showToast('Buka pengaturan akun', 'info')">
+                                    <span>Atur akun</span>
+                                    <div class="link-action-btn">›</div>
+                                </div>
+                            </div>
+
+                            <div class="wallet-grid">
+                                <div class="dana-box">
+                                    <strong style="color:#118EEA; font-size:1.1rem; letter-spacing:1px;">DANA</strong>
+                                    <button class="dana-btn" onclick="App.showToast('Menghubungkan akun DANA...', 'info')">Hubungkan</button>
+                                </div>
+                                <div class="promo-box">
+                                    <div>
+                                        <h4>Lihat Saldo dan Top Up</h4>
+                                        <div class="promo-badge">Tanpa Ribet</div>
+                                    </div>
+                                    <div style="font-size:1.5rem; text-align:right;">📣</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: TRANSFER TERAKHIR (PERSIS SEPERTI GAMBAR) -->
+                        <div class="history-card">
+                            <div class="card-header-flex">
+                                <div class="card-title-wrap">
+                                    <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
+                                    <span>Transfer Terakhir</span>
+                                </div>
+                                <div class="link-action" onclick="App.showToast('Membuka riwayat lengkap', 'info')">
+                                    <span>Lihat Semua</span>
+                                    <div class="link-action-btn">›</div>
+                                </div>
+                            </div>
+
+                            <div class="history-list">
+                                <!-- 1. Aprillianto -->
+                                <div class="history-item">
+                                    <div class="history-left">
+                                        <div class="history-icon-circle" style="background: #3B82F6;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
+                                        </div>
+                                        <div class="history-info">
+                                            <h5>APRILIANTO SETYA WIB</h5>
+                                            <p>Sesama BTN • 0006 2015 0075 4193</p>
+                                        </div>
+                                    </div>
+                                    <div class="history-amount">-Rp 110.000</div>
+                                </div>
+
+                                <!-- 2. Dendi Adi -->
+                                <div class="history-item">
+                                    <div class="history-left">
+                                        <div class="history-icon-circle" style="background: #8B5CF6;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
+                                        </div>
+                                        <div class="history-info">
+                                            <h5>DENDI ADI WIJAYA</h5>
+                                            <p>Sesama BTN • 0000 2015 0150 1032</p>
+                                        </div>
+                                    </div>
+                                    <div class="history-amount">-Rp 90.000</div>
+                                </div>
+
+                                <!-- 3. Sutrisno -->
+                                <div class="history-item">
+                                    <div class="history-left">
+                                        <div class="history-icon-circle" style="background: #14B8A6;">
+                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333A48.374 48.374 0 0012 9.75c-2.551 0-5.056.2-7.5.583V21"></path></svg>
+                                        </div>
+                                        <div class="history-info">
+                                            <h5>SUTRISNO</h5>
+                                            <p>BI FAST BANK MANDIRI • 1350 0097 0335 4</p>
+                                        </div>
+                                    </div>
+                                    <div class="history-amount">-Rp 3.000.000</div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 `;
             },
-            renderGASIframeView(menuItem) {
+            viewGAS(menu) {
                 return `
                     <div style="margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <div>
-                            <h2 style="font-size:1.3rem; font-weight:800;">${menuItem.title}</h2>
-                            <p style="font-size:0.8rem; color:var(--text-muted);">Terhubung langsung ke Google Apps Script Spreadsheet Database</p>
+                            <h2 style="font-size:1.3rem; font-weight:800;">${menu.title}</h2>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Terhubung Google Apps Script Enterprise Workspace</p>
                         </div>
                         <div style="display:flex; gap:0.5rem;">
-                            <a href="${menuItem.url}" target="_blank" class="btn btn-outline">Buka di Tab Baru ↗</a>
-                            <button class="btn btn-primary" onclick="Router.navigate('home')">Kembali ke Menu</button>
+                            <a href="${menu.url}" target="_blank" class="dana-btn" style="width:auto; padding:0.5rem 1rem;">Tab Baru ↗</a>
+                            <button class="dana-btn" style="width:auto; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
                         </div>
                     </div>
                     <div class="portal-iframe-container">
-                        <iframe src="${menuItem.url}" class="portal-iframe" allowfullscreen loading="lazy"></iframe>
+                        <iframe src="${menu.url}" class="portal-iframe" allowfullscreen loading="lazy"></iframe>
                     </div>
                 `;
             },
-            renderProfileView() {
+            viewArusKas() {
                 return `
-                    <div style="max-width:600px; margin:0 auto; background:var(--bg-card); padding:2rem; border-radius:var(--radius-lg); border:1px solid var(--border-color); text-align:center;">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" style="width:90px; height:90px; border-radius:50%; margin-bottom:1rem;" alt="Profile">
-                        <h2 style="font-weight:800;">M. Firdaus S.T</h2>
-                        <p style="color:var(--accent-green); font-weight:700; font-size:0.85rem; margin-bottom:1.5rem;">Senior Facility & Building Manager</p>
-                        
-                        <div style="text-align:left; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem;">
-                            <div><strong>NIP:</strong> BM-2026-9901</div>
-                            <div><strong>Departemen:</strong> Maintenance, Electrical & Engineering</div>
-                            <div><strong>Hak Akses:</strong> Super Admin / Full Workspace Access</div>
-                            <div><strong>Integrasi:</strong> Google Apps Script Enterprise Connected</div>
+                    <div class="portal-mobile-container">
+                        <div class="history-card">
+                            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Ringkasan Arus Kas Operasional</h3>
+                            <div style="padding:1rem; background:var(--bg-hover); border-radius:var(--radius-md); margin-bottom:1rem;">
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Total Pengeluaran Bulan Ini</p>
+                                <h2 style="color:var(--primary); font-weight:800;">Rp 3.200.000</h2>
+                            </div>
+                            <button class="dana-btn" style="width:100%;" onclick="App.showToast('Laporan diunduh', 'success')">Download Laporan PDF</button>
                         </div>
-
-                        <button class="btn btn-primary" style="margin-top:1.5rem; width:100%; justify-content:center;" onclick="Router.navigate('home')">Kembali ke Beranda</button>
+                    </div>
+                `;
+            },
+            viewProfile() {
+                return `
+                    <div class="portal-mobile-container">
+                        <div class="wallet-card" style="text-align:center;">
+                            <div class="user-avatar" style="width:70px; height:70px; margin:0 auto 1rem; font-size:1.6rem;">S</div>
+                            <h3 style="font-weight:800;">SUTRISNO</h3>
+                            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Unit Leader Building Management</p>
+                            <div style="text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md);">
+                                <div><strong>ID Pegawai:</strong> BM-2026-901</div>
+                                <div><strong>Unit Kerja:</strong> KC Surabaya & Jawa Timur</div>
+                                <div><strong>Akses Modul:</strong> 14 Modul Google Apps Script Terintegrasi</div>
+                            </div>
+                        </div>
                     </div>
                 `;
             }
         };
 
         /**
-         * 5. APPLICATION HELPER & CONTROLLERS
+         * 5. APPLICATION CONTROLLER
          */
         const App = {
             init() {
                 Theme.init();
                 Clock.init();
-                this.renderSidebarMenu();
+                this.renderSidebar();
                 Router.init();
                 document.getElementById('footerYear').innerText = new Date().getFullYear();
             },
-            renderSidebarMenu() {
-                const listContainer = document.getElementById('sidebarNavList');
+            renderSidebar() {
+                const list = document.getElementById('sidebarNavList');
                 let html = `
-                    <li class="nav-item active" data-route="home">
-                        <a href="#/home">
+                    <li class="nav-item active" data-route="beranda">
+                        <a href="#/beranda">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
-                            <span>Dashboard Utama</span>
+                            <span>Beranda</span>
                         </a>
                     </li>
                 `;
 
-                PORTAL_MENUS.forEach(menu => {
+                GAS_MODULES.forEach(m => {
                     html += `
-                        <li class="nav-item" data-route="${menu.id}">
-                            <a href="#/${menu.id}">
-                                <span style="font-size:1.1rem; width:20px; text-align:center;">${menu.icon}</span>
-                                <span>${menu.title}</span>
+                        <li class="nav-item" data-route="${m.id}">
+                            <a href="#/${m.id}">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25V18z"></path></svg>
+                                <span>${m.title}</span>
                             </a>
                         </li>
                     `;
                 });
 
-                listContainer.innerHTML = html;
+                list.innerHTML = html;
             },
-            showToast(message, type = 'success') {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                if (type === 'info') toast.style.borderLeftColor = 'var(--accent-blue)';
-                if (type === 'error') toast.style.borderLeftColor = 'var(--accent-red)';
-
-                toast.innerHTML = `
-                    <span>${type === 'success' ? '✅' : type === 'info' ? 'ℹ️' : '⚠️'}</span>
-                    <span style="font-size:0.85rem; font-weight:600;">${message}</span>
-                `;
-                container.appendChild(toast);
-
+            showToast(msg, type = 'info') {
+                const con = document.getElementById('toastContainer');
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+                con.appendChild(t);
                 setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateX(100%)';
-                    toast.style.transition = 'all 0.3s ease';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
+                    t.style.opacity = '0';
+                    t.style.transform = 'translateX(100%)';
+                    t.style.transition = 'all 0.3s ease';
+                    setTimeout(() => t.remove(), 300);
+                }, 2500);
             },
             toggleFullscreen() {
                 if (!document.fullscreenElement) {
@@ -1423,35 +1297,51 @@
                     document.exitFullscreen().catch(() => {});
                 }
             },
-            reloadPage() {
-                this.showToast('Memperbarui data sistem...', 'info');
-                Router.handleRouting();
+            openAllMenuModal() {
+                const card = document.getElementById('modalCard');
+                card.innerHTML = `
+                    <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Semua Modul Terhubung</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; max-height:60vh; overflow-y:auto; padding-right:4px;">
+                        ${GAS_MODULES.map(m => `
+                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700;">
+                                ${m.title}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                document.getElementById('appModal').style.display = 'flex';
             },
-            handleSearch(query) {
-                const q = query.toLowerCase();
-                const cards = document.querySelectorAll('.portal-icon-card');
-                cards.forEach(card => {
-                    const label = card.innerText.toLowerCase();
-                    card.style.display = label.includes(q) ? 'flex' : 'none';
-                });
+            openQRISModal() {
+                const card = document.getElementById('modalCard');
+                card.innerHTML = `
+                    <div style="text-align:center;">
+                        <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:0.5rem;">QRIS Pay & Scan</h3>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Pindai QR Code untuk pembayaran atau verifikasi checklist</p>
+                        <div style="width:200px; height:200px; margin:0 auto 1.5rem; background:#fff; padding:10px; border-radius:16px; border:2px dashed var(--primary); display:flex; align-items:center; justify-content:center;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PORTAL-BM-QRIS" style="width:100%;" alt="QRIS">
+                        </div>
+                        <button class="dana-btn" onclick="App.closeModalDirect()">Tutup Scanner</button>
+                    </div>
+                `;
+                document.getElementById('appModal').style.display = 'flex';
             },
-            exportCSV() {
-                let csv = 'ID Tiket,Kategori,Lokasi,Status,Waktu\n';
-                csv += '#TK-8821,AC Chiller Gedung A,Lantai 4 Unit 402,Perlu Perbaikan,10 Menit Lalu\n';
-                csv += '#PM-1092,Checklist Panel Genset,Basement 2 Ruang ME,Normal,1 Jam Lalu\n';
-                csv += '#ATM-004,Monitoring Suhu ATM,Lobby Utama,Optimal,3 Jam Lalu\n';
-
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.setAttribute('href', url);
-                a.setAttribute('download', `laporan-bm-${Date.now()}.csv`);
-                a.click();
-                this.showToast('File CSV berhasil di-download', 'success');
+            closeModal(e) {
+                if (e.target.id === 'appModal') {
+                    document.getElementById('appModal').style.display = 'none';
+                }
+            },
+            closeModalDirect() {
+                document.getElementById('appModal').style.display = 'none';
+            },
+            handleSearch(q) {
+                const match = GAS_MODULES.find(m => m.title.toLowerCase().includes(q.toLowerCase()));
+                if (q.length > 2 && match) {
+                    Router.navigate(match.id);
+                }
             }
         };
 
-        // Initialize App on DOM Loaded
+        // Initialize on DOM Ready
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
