@@ -2,367 +2,1457 @@
 <html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal BM - Akses Cepat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Enterprise Facility Portal & Building Management</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM & CSS VARIABLES
+           ========================================================================== */
         :root {
-            --primary: #059669;
-            --primary-hover: #047857;
-            --primary-glow: rgba(5, 150, 105, 0.35);
-            --bg-gradient: radial-gradient(circle at 50% 0%, #ecfdf5 0%, #f1f5f9 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(255, 255, 255, 0.7);
-            --text-main: #0f172a;
-            --text-sub: #64748b;
-            --badge-bg: #d1fae5;
-            --badge-text: #065f46;
-            --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.8);
+            --primary: #00880C;
+            --primary-dark: #006609;
+            --primary-light: #e6f7e8;
+            --primary-glow: rgba(0, 136, 12, 0.28);
+            --accent-green: #00AA13;
+            --accent-yellow: #FDB813;
+            --accent-blue: #0081A7;
+            --accent-red: #EE2737;
+
+            --bg-body: #F4F6F9;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-header: rgba(255, 255, 255, 0.88);
+            --bg-sidebar: #FFFFFF;
+            --bg-hover: #F1F5F9;
+            --border-color: #E2E8F0;
+            --border-light: rgba(255, 255, 255, 0.8);
+
+            --text-main: #111827;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.1);
+            --shadow-bottom-nav: 0 -4px 20px rgba(0, 0, 0, 0.08);
+
+            --sidebar-width: 280px;
+            --sidebar-width-collapsed: 82px;
+            --header-height: 72px;
+            --bottom-nav-height: 72px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-pill: 9999px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="dark"] {
-            --primary: #10b981;
-            --primary-hover: #059669;
-            --primary-glow: rgba(16, 185, 129, 0.4);
-            --bg-gradient: radial-gradient(circle at 50% 0%, #064e3b 0%, #090d16 100%);
-            --card-bg: rgba(15, 23, 42, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --badge-bg: rgba(16, 185, 129, 0.15);
-            --badge-text: #34d399;
-            --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            --bg-body: #0B0F17;
+            --bg-card: rgba(22, 30, 46, 0.9);
+            --bg-header: rgba(15, 23, 42, 0.88);
+            --bg-sidebar: #0F172A;
+            --bg-hover: #1E293B;
+            --border-color: #1E293B;
+            --border-light: rgba(255, 255, 255, 0.05);
+
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --text-light: #64748B;
+
+            --primary-light: rgba(0, 170, 19, 0.15);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
+            --shadow-bottom-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
         }
 
+        /* ==========================================================================
+           2. BASE RESETS & TYPOGRAPHY
+           ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease, border-color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            min-height: 100vh;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
+            background-color: var(--bg-body);
             color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        header {
-            width: 100%;
-            padding: 1rem 1.5rem;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           3. APP SHELL LAYOUT (HEADER, SIDEBAR, FOOTER)
+           ========================================================================== */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-header);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-        }
-
-        .brand img {
-            height: 32px;
-            width: auto;
-        }
-
-        .live-clock-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-sub);
-            background: var(--card-bg);
-            padding: 0.35rem 0.75rem;
-            border-radius: 9999px;
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(10px);
-        }
-
-        .theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
             cursor: pointer;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            backdrop-filter: blur(10px);
         }
 
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 440px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 28px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-card);
-            position: relative;
-            transform: translateY(0);
-            animation: floatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes floatIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .badge-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--badge-bg);
-            color: var(--badge-text);
-            padding: 0.4rem 0.9rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary);
-            position: relative;
-        }
-
-        .pulse-dot::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: var(--primary);
-            opacity: 0.6;
-            animation: ripple 1.6s infinite ease-out;
-        }
-
-        @keyframes ripple {
-            0% { transform: scale(1); opacity: 0.7; }
-            100% { transform: scale(2.6); opacity: 0; }
-        }
-
-        .card-logo {
-            width: 64px;
-            height: 64px;
-            background: #ffffff;
-            border-radius: 20px;
-            margin: 0 auto 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .card-logo img {
+        .brand-logo-wrap {
             width: 42px;
-            height: auto;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--primary-glow);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
         }
 
-        .title {
-            font-size: 1.5rem;
+        .brand-title {
+            font-size: 1.1rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            margin-bottom: 0.4rem;
+            display: flex;
+            flex-direction: column;
         }
 
-        .subtitle {
-            font-size: 0.875rem;
-            color: var(--text-sub);
-            margin-bottom: 2rem;
-            line-height: 1.4;
+        .brand-title span.sub {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .cta-btn {
+        .header-search {
             position: relative;
+            margin-left: 2rem;
+            display: none;
+        }
+
+        .header-search input {
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem 0.6rem 2.6rem;
+            border-radius: var(--radius-pill);
+            color: var(--text-main);
+            font-size: 0.875rem;
+            width: 260px;
+            transition: var(--transition-smooth);
+        }
+
+        .header-search input:focus {
+            width: 320px;
+            background: var(--bg-card);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            outline: none;
+        }
+
+        .header-search svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+        }
+
+        .header-center {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .live-clock {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--accent-green);
+        }
+
+        .live-date {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: capitalize;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 1.15rem 1.5rem;
-            background: var(--primary);
-            color: #ffffff;
-            text-decoration: none;
+            color: var(--text-main);
+            background: var(--bg-hover);
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--primary-light);
+            color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .icon-btn .badge-counter {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--accent-red);
+            color: #fff;
+            font-size: 0.6rem;
             font-weight: 700;
-            font-size: 1.05rem;
-            border-radius: 18px;
-            box-shadow: 0 12px 24px var(--primary-glow);
-            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-radius: 9999px;
+            padding: 2px 5px;
+            border: 2px solid var(--bg-card);
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+            border-radius: var(--radius-pill);
+            background: var(--bg-hover);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ccc;
+        }
+
+        .profile-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: none;
+        }
+
+        /* App Main Shell */
+        .app-shell {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+            position: relative;
+        }
+
+        /* Sidebar Desktop */
+        .app-sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: var(--header-height);
+            bottom: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.25rem 0.75rem;
+            z-index: 900;
+            transition: var(--transition-smooth);
+            overflow-y: auto;
+        }
+
+        .sidebar-user-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: var(--bg-hover);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .sidebar-user-info {
             overflow: hidden;
         }
 
-        .cta-btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 16px 30px var(--primary-glow);
+        .sidebar-user-info h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .cta-btn:active {
-            transform: translateY(1px) scale(0.99);
+        .sidebar-user-info p {
+            font-size: 0.72rem;
+            color: var(--accent-green);
+            font-weight: 600;
         }
 
-        .cta-btn svg {
+        .sidebar-menu-title {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            padding: 0.5rem 0.75rem;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.75rem 0.85rem;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-item a svg {
             width: 20px;
             height: 20px;
-            transition: transform 0.2s ease;
+            flex-shrink: 0;
         }
 
-        .cta-btn:hover svg {
-            transform: translateX(4px);
+        .nav-item.active a, .nav-item a:hover {
+            background: var(--primary-light);
+            color: var(--accent-green);
+            font-weight: 700;
         }
 
-        .cta-shine {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-            transform: skewX(-25deg);
-            animation: shine 3.5s infinite;
+        .nav-item.active a svg {
+            color: var(--accent-green);
         }
 
-        @keyframes shine {
-            0%, 60% { left: -100%; }
-            100% { left: 160%; }
+        .sidebar-collapsed .app-sidebar {
+            width: var(--sidebar-width-collapsed);
         }
 
-        .security-badge {
-            margin-top: 1.5rem;
+        .sidebar-collapsed .brand-title,
+        .sidebar-collapsed .sidebar-user-info,
+        .sidebar-collapsed .sidebar-menu-title,
+        .sidebar-collapsed .nav-item span {
+            display: none;
+        }
+
+        .sidebar-collapsed .app-main-content {
+            margin-left: var(--sidebar-width-collapsed);
+        }
+
+        /* Main Content Workspace */
+        .app-main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 1.5rem;
+            padding-bottom: calc(var(--bottom-nav-height) + 2rem);
+            min-height: calc(100vh - var(--header-height));
+            transition: var(--transition-smooth);
+        }
+
+        /* ==========================================================================
+           4. GOJEK-STYLE MODERN MOBILE PORTAL & DASHBOARD CARDS
+           ========================================================================== */
+        /* Top Promo/Status Bar Banner */
+        .go-banner {
+            background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            color: #064e3b;
+        }
+
+        .go-banner-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .go-banner-desc {
+            font-size: 0.78rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Circular Grid Style Menus (Gojek Icon Grid) */
+        .portal-section-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-card);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .portal-icon-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .portal-icon-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .icon-bubble-wrap {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            background: var(--bg-hover);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+            margin-bottom: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .portal-icon-card:hover .icon-bubble-wrap {
+            box-shadow: 0 10px 20px var(--primary-glow);
+            transform: scale(1.05);
+        }
+
+        .icon-bubble-wrap svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .badge-tag {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #111827;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 8px;
+            border: 2px solid var(--bg-card);
+            text-transform: uppercase;
+        }
+
+        .badge-tag.hot {
+            background: var(--accent-red);
+        }
+
+        .badge-tag.eco {
+            background: var(--accent-green);
+        }
+
+        .badge-tag.warn {
+            background: var(--accent-yellow);
+            color: #000;
+        }
+
+        .portal-icon-label {
             font-size: 0.75rem;
-            color: var(--text-sub);
-            font-weight: 500;
+            font-weight: 700;
+            max-width: 80px;
+            line-height: 1.25;
+            color: var(--text-main);
         }
 
-        .security-badge svg {
-            width: 14px;
-            height: 14px;
-            color: var(--primary);
+        /* Horizontal Carousel Section (Pilihan Anda/Shortcuts) */
+        .carousel-container {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            scroll-snap-type: x mandatory;
         }
 
-        footer {
+        .carousel-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             padding: 1.25rem;
-            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth);
+        }
+
+        .carousel-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .carousel-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .carousel-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .carousel-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Stats Grid Modern */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card .val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-top: 0.2rem;
+        }
+
+        .stat-card .lbl {
             font-size: 0.75rem;
-            color: var(--text-sub);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Modern Data Table */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .table-header-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--accent-green); color: #fff; box-shadow: 0 4px 12px var(--primary-glow); }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { border: 1px solid var(--border-color); color: var(--text-main); background: var(--bg-card); }
+        .btn-outline:hover { background: var(--bg-hover); }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .custom-table th {
+            color: var(--text-muted);
+            font-weight: 700;
+            background: var(--bg-hover);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-status {
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-success { background: #dcfce7; color: #15803d; }
+        .status-warning { background: #fef9c3; color: #a16207; }
+        .status-danger { background: #fee2e2; color: #b91c1c; }
+
+        /* Mobile Card View for Table */
+        @media (max-width: 768px) {
+            .custom-table thead { display: none; }
+            .custom-table, .custom-table tbody, .custom-table tr, .custom-table td {
+                display: block;
+                width: 100%;
+            }
+            .custom-table tr {
+                margin-bottom: 1rem;
+                background: var(--bg-hover);
+                border-radius: var(--radius-md);
+                padding: 0.75rem;
+                border: 1px solid var(--border-color);
+            }
+            .custom-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid rgba(0,0,0,0.04);
+            }
+            .custom-table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--text-muted);
+            }
+        }
+
+        /* Iframe View Wrapper (Untuk Halaman Eksternal) */
+        .portal-iframe-container {
+            width: 100%;
+            height: calc(100vh - var(--header-height) - 100px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .portal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ==========================================================================
+           5. GOJEK-STYLE BOTTOM NAVIGATION (MOBILE)
+           ========================================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottom-nav-height);
+            background: var(--bg-header);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-color);
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 0.5rem;
+            z-index: 1000;
+            box-shadow: var(--shadow-bottom-nav);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            flex: 1;
+            padding: 6px 0;
+            border-radius: 12px;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            transition: var(--transition-smooth);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--accent-green);
+            font-weight: 800;
+        }
+
+        .bottom-nav-item.active svg {
+            transform: translateY(-2px);
+            color: var(--accent-green);
+        }
+
+        .nav-badge-dot {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 14px);
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+        }
+
+        /* ==========================================================================
+           6. FOOTER COMPONENT
+           ========================================================================== */
+        .app-footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .footer-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        /* ==========================================================================
+           7. MODAL, TOAST & UTILITIES
+           ========================================================================== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 280px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInRight 0.3s forwards;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Quick Floating Action Button (FAB) */
+        .fab {
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + 16px);
+            right: 20px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            z-index: 800;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .fab:hover {
+            transform: scale(1.08) rotate(90deg);
+        }
+
+        /* Responsive Breakpoints */
+        @media (min-width: 992px) {
+            .header-search { display: block; }
+            .header-center { display: flex; }
+            .profile-name { display: block; }
+        }
+
+        @media (max-width: 991px) {
+            .app-sidebar { width: var(--sidebar-width-collapsed); }
+            .sidebar-user-info, .sidebar-menu-title, .nav-item span { display: none; }
+            .app-main-content { margin-left: var(--sidebar-width-collapsed); }
+        }
+
+        @media (max-width: 767px) {
+            .app-sidebar { display: none; }
+            .bottom-nav { display: flex; }
+            .app-main-content { margin-left: 0; padding: 1rem; padding-bottom: calc(var(--bottom-nav-height) + 1.5rem); }
+            .fab { bottom: calc(var(--bottom-nav-height) + 12px); }
+            .app-footer { margin-bottom: var(--bottom-nav-height); }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="brand">
-            <img src="https://www.belfis.bpb.co.id/assets/img/logo-8-t.png" alt="Belfis">
+    <!-- ==========================================================================
+         TOP HEADER BAR
+         ========================================================================== -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="brand" onclick="Router.navigate('home')">
+                <div class="brand-logo-wrap">BM</div>
+                <div class="brand-title">
+                    <span>Portal BM</span>
+                    <span class="sub">Enterprise Apps</span>
+                </div>
+            </div>
+
+            <div class="header-search">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
+                <input type="text" id="globalSearchInput" placeholder="Cari modul, tiket, checklist..." onkeyup="App.handleSearch(this.value)">
+            </div>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <div class="live-clock-badge" id="liveClock">Loading...</div>
-            <button class="theme-btn" id="themeToggle" title="Ganti Tema" aria-label="Toggle Dark Mode">🌙</button>
+
+        <div class="header-center">
+            <div class="live-clock" id="clock">00:00:00 WIB</div>
+            <div class="live-date" id="date">Hari, 00 Bulan 2026</div>
+        </div>
+
+        <div class="header-right">
+            <button class="icon-btn" onclick="App.toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"></path></svg>
+            </button>
+            <button class="icon-btn" onclick="App.reloadPage()" title="Refresh" aria-label="Refresh">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path></svg>
+            </button>
+            <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Dark/Light" aria-label="Theme Switch">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
+            </button>
+            <button class="icon-btn" onclick="App.showToast('Tidak ada notifikasi baru', 'info')" aria-label="Notifikasi">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path></svg>
+                <span class="badge-counter">3</span>
+            </button>
+
+            <div class="profile-btn" onclick="Router.navigate('profil')">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User" class="profile-avatar">
+                <span class="profile-name">Admin BM</span>
+            </div>
         </div>
     </header>
 
-    <main>
-        <div class="card">
-            <div class="badge-status">
-                <span class="pulse-dot"></span>
-                Sistem Terhubung
+    <!-- ==========================================================================
+         MAIN SHELL (SIDEBAR & DYNAMIC CONTENT)
+         ========================================================================== -->
+    <div class="app-shell">
+        
+        <!-- SIDEBAR DESKTOP -->
+        <aside class="app-sidebar" id="sidebar">
+            <div>
+                <div class="sidebar-user-card">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="sidebar-user-avatar" alt="Avatar">
+                    <div class="sidebar-user-info">
+                        <h4>M. Firdaus</h4>
+                        <p>Facility Lead Engineer</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-menu-title">Main Menu Portal</div>
+                <ul class="nav-list" id="sidebarNavList">
+                    <!-- Populated via JavaScript Array -->
+                </ul>
             </div>
 
-            <div class="card-logo">
-                <img src="https://www.belfis.bpb.co.id/assets/img/logo-8-t.png" alt="Portal Logo">
+            <div style="padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
+        </aside>
 
-            <h1 class="title">Portal Building Management</h1>
-            <p class="subtitle">Akses langsung seluruh checklist, monitoring operasional & pelaporan fasilitas.</p>
+        <!-- DYNAMIC MAIN CONTENT -->
+        <main class="app-main-content" id="appContent">
+            <!-- Router injected templates will render here -->
+        </main>
+    </div>
 
-            <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec" 
-               class="cta-btn" 
-               id="portalLink">
-                <span>Buka Dashboard BM</span>
-                <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-                </svg>
-                <div class="cta-shine"></div>
-            </a>
+    <!-- ==========================================================================
+         FLOATING ACTION BUTTON (FAB)
+         ========================================================================== -->
+    <button class="fab" onclick="App.showToast('Fitur Quick Action Terbuka', 'success')" title="Buat Laporan Cepat" aria-label="Tambah Tiket">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+    </button>
 
-            <div class="security-badge">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9 9 4 9 9z"></path>
-                </svg>
-                <span>Akses Resmi Google Cloud Workspace</span>
-            </div>
+    <!-- ==========================================================================
+         BOTTOM NAVIGATION (GOJEK STYLE FOR MOBILE)
+         ========================================================================== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="#/home" class="bottom-nav-item active" data-route="home">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
+            <span>Beranda</span>
+        </a>
+        <a href="#/kerusakan" class="bottom-nav-item" data-route="kerusakan">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg>
+            <span>Kerusakan</span>
+            <span class="nav-badge-dot"></span>
+        </a>
+        <a href="#/checklist-pm" class="bottom-nav-item" data-route="checklist-pm">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>Checklist</span>
+        </a>
+        <a href="#/profil" class="bottom-nav-item" data-route="profil">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path></svg>
+            <span>Akun</span>
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         FOOTER
+         ========================================================================== -->
+    <footer class="app-footer">
+        <div>
+            &copy; <span id="footerYear">2026</span> <strong>Enterprise Building Management Portal</strong>. All Rights Reserved.
         </div>
-    </main>
-
-    <footer>
-        &copy; <span id="year"></span> Building Management System. All Rights Reserved.
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>Cloud Google Workspace Terkoneksi (v3.2)</span>
+        </div>
     </footer>
 
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==========================================================================
+         CORE JAVASCRIPT ARCHITECTURE
+         ========================================================================== -->
     <script>
-        // Update Year
-        document.getElementById('year').textContent = new Date().getFullYear();
+        /**
+         * 1. GOOGLE APPS SCRIPT URL MAP & MENU REGISTRY
+         * Mengintegrasikan 14 link modul utama yang Anda berikan
+         */
+        const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
-        // Real-Time Clock
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('liveClock').textContent = timeStr + ' WIB';
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        const PORTAL_MENUS = [
+            { id: 'index', title: 'Portal Index', icon: '🏠', color: '#E8F5E9', iconColor: '#2E7D32', badge: '', url: `${BASE_GAS_URL}?page=index` },
+            { id: 'dashboard', title: 'Main Dashboard', icon: '📊', color: '#E3F2FD', iconColor: '#1565C0', badge: 'Utama', url: `${BASE_GAS_URL}?page=dashboard` },
+            { id: 'kerusakan', title: 'Lapor Kerusakan', icon: '⚠️', color: '#FFEBEE', iconColor: '#C62828', badge: 'Hot', url: `${BASE_GAS_URL}?page=kerusakan` },
+            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', icon: '📅', color: '#FFF3E0', iconColor: '#EF6C00', badge: '', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
+            { id: 'plts-dashboard', title: 'PLTS Solar Panel', icon: '☀️', color: '#FFFDE7', iconColor: '#F9A825', badge: 'Eco', url: `${BASE_GAS_URL}?page=plts-dashboard` },
+            { id: 'energi-dashboard', title: 'Energi Listrik', icon: '⚡', color: '#EDE7F6', iconColor: '#6A1B9A', badge: '', url: `${BASE_GAS_URL}?page=energi-dashboard` },
+            { id: 'bast', title: 'Input BAST', icon: '📝', color: '#E0F2F1', iconColor: '#00695C', badge: '', url: `${BASE_GAS_URL}?page=bast` },
+            { id: 'dashboard-bast', title: 'Dashboard BAST', icon: '📁', color: '#F3E5F5', iconColor: '#8E24AA', badge: '', url: `${BASE_GAS_URL}?page=dashboard-bast` },
+            { id: 'dashboard-atm', title: 'Monitoring ATM', icon: '🏧', color: '#E1F5FE', iconColor: '#0277BD', badge: '24 Jam', url: `${BASE_GAS_URL}?page=dashboard-atm` },
+            { id: 'perencanaan-pm', title: 'Rencana PM', icon: '📋', color: '#FBE9E7', iconColor: '#D84315', badge: '', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'progres-jadwal-pm', title: 'Progress PM', icon: '⏳', color: '#F1F8E9', iconColor: '#558B2F', badge: '', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
+            { id: 'dashboard-pm', title: 'Dashboard PM', icon: '📈', color: '#ECEFF1', iconColor: '#37474F', badge: '', url: `${BASE_GAS_URL}?page=dashboard-pm` },
+            { id: 'checklist-harian-pm', title: 'Checklist Harian', icon: '✅', color: '#E8F8F5', iconColor: '#117A65', badge: 'Rutin', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
+            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', icon: '📑', color: '#FEF9E7', iconColor: '#B7950B', badge: '', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
+        ];
 
-        // Theme Toggle (Light / Dark)
-        const themeBtn = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('bm_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
-            localStorage.setItem('bm_theme', theme);
-        }
-        applyTheme(savedTheme);
+        /**
+         * 2. THEME & LOCAL STORAGE MANAGER
+         */
+        const Theme = {
+            init() {
+                const saved = localStorage.getItem('bm_theme') || 'light';
+                document.documentElement.setAttribute('data-theme', saved);
+                this.updateButton(saved);
+            },
+            toggle() {
+                const current = document.documentElement.getAttribute('data-theme');
+                const target = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', target);
+                localStorage.setItem('bm_theme', target);
+                this.updateButton(target);
+                App.showToast(`Beralih ke mode ${target === 'dark' ? 'Gelap' : 'Terang'}`, 'info');
+            },
+            updateButton(theme) {
+                const btn = document.getElementById('themeToggleBtn');
+                if (btn) {
+                    btn.innerHTML = theme === 'dark' 
+                        ? '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>'
+                        : '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>';
+                }
+            }
+        };
 
-        themeBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            applyTheme(current === 'dark' ? 'light' : 'dark');
-        });
+        /**
+         * 3. REAL-TIME CLOCK & CALENDAR
+         */
+        const Clock = {
+            init() {
+                this.tick();
+                setInterval(() => this.tick(), 1000);
+            },
+            tick() {
+                const now = new Date();
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-        // Click Ripple & Immediate Launch Feedback
-        const portalBtn = document.getElementById('portalLink');
-        portalBtn.addEventListener('click', function() {
-            this.style.opacity = '0.85';
-            this.querySelector('span').textContent = 'Membuka Sistem...';
-        });
+                const dayName = days[now.getDay()];
+                const dateNum = now.getDate();
+                const monthName = months[now.getMonth()];
+                const year = now.getFullYear();
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                const clockElem = document.getElementById('clock');
+                const dateElem = document.getElementById('date');
+
+                if (clockElem) clockElem.innerText = `${hours}:${minutes}:${seconds} WIB`;
+                if (dateElem) dateElem.innerText = `${dayName}, ${dateNum} ${monthName} ${year}`;
+            }
+        };
+
+        /**
+         * 4. ROUTER & DYNAMIC VIEW GENERATOR
+         */
+        const Router = {
+            init() {
+                window.addEventListener('hashchange', () => this.handleRouting());
+                this.handleRouting();
+            },
+            navigate(route) {
+                window.location.hash = '#/' + route;
+            },
+            handleRouting() {
+                const hash = window.location.hash.replace('#/', '') || 'home';
+                this.updateActiveMenu(hash);
+
+                const contentArea = document.getElementById('appContent');
+                contentArea.innerHTML = '<div style="text-align:center; padding:3rem; color:var(--text-muted);">Memuat Modul...</div>';
+
+                // Cari apakah modul eksternal GAS
+                const matchedMenu = PORTAL_MENUS.find(m => m.id === hash);
+
+                if (hash === 'home' || hash === '') {
+                    contentArea.innerHTML = this.renderHomeView();
+                } else if (hash === 'profil') {
+                    contentArea.innerHTML = this.renderProfileView();
+                } else if (matchedMenu) {
+                    contentArea.innerHTML = this.renderGASIframeView(matchedMenu);
+                } else {
+                    contentArea.innerHTML = `<div style="text-align:center; padding:4rem;"><h2>404 - Modul Tidak Ditemukan</h2></div>`;
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+            updateActiveMenu(route) {
+                // Update Sidebar Desktop
+                document.querySelectorAll('#sidebarNavList .nav-item').forEach(li => {
+                    li.classList.toggle('active', li.getAttribute('data-route') === route);
+                });
+                // Update Bottom Nav
+                document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-route') === route);
+                });
+            },
+            renderHomeView() {
+                return `
+                    <!-- Top Notification Banner -->
+                    <div class="go-banner">
+                        <div>
+                            <div class="go-banner-title">
+                                <span>⚡ Sistem Operasional Gedung Aktif</span>
+                            </div>
+                            <div class="go-banner-desc">Seluruh checklist preventif harian dapat diakses langsung tanpa login ulang.</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="Router.navigate('checklist-harian-pm')" style="font-size:0.75rem; padding:0.4rem 0.8rem;">Mulai Cek</button>
+                    </div>
+
+                    <!-- GOJEK STYLE ICON GRID (14 Modul Lengkap) -->
+                    <div class="portal-section-title">
+                        <span>Layanan Modul Portal BM</span>
+                        <span style="font-size:0.8rem; color:var(--accent-green); font-weight:700; cursor:pointer;" onclick="App.showToast('Semua modul siap digunakan', 'info')">Lihat Semua</span>
+                    </div>
+
+                    <div class="portal-grid">
+                        ${PORTAL_MENUS.map(item => `
+                            <div class="portal-icon-card" onclick="Router.navigate('${item.id}')">
+                                <div class="icon-bubble-wrap" style="background: ${item.color};">
+                                    <span style="font-size: 1.6rem;">${item.icon}</span>
+                                    ${item.badge ? `<span class="badge-tag ${item.badge === 'Hot' ? 'hot' : item.badge === 'Eco' ? 'eco' : 'warn'}">${item.badge}</span>` : ''}
+                                </div>
+                                <div class="portal-icon-label">${item.title}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Quick Shortcuts / Carousel Slider -->
+                    <div class="portal-section-title">
+                        <span>Pilihan Anda Biasanya</span>
+                    </div>
+                    <div class="carousel-container">
+                        <div class="carousel-card">
+                            <div class="carousel-badge">Preventive Maintenance</div>
+                            <h4>Checklist Rutin Harian PM</h4>
+                            <p>Pantau pendingin ruangan, kelistrikan, dan pompa gedung hari ini.</p>
+                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('checklist-harian-pm')">Buka Modul</button>
+                        </div>
+                        <div class="carousel-card">
+                            <div class="carousel-badge" style="color:var(--accent-red);">Incident Report</div>
+                            <h4>Laporan Kerusakan Terbaru</h4>
+                            <p>Ada 3 tiket keluhan fasilitas yang membutuhkan penanganan segera.</p>
+                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('kerusakan')">Periksa Tiket</button>
+                        </div>
+                        <div class="carousel-card">
+                            <div class="carousel-badge" style="color:var(--accent-blue);">Energi Hijau</div>
+                            <h4>Monitoring PLTS Solar</h4>
+                            <p>Produksi energi hari ini: 124.5 kWh (Hemat Rp 182.000,-).</p>
+                            <button class="btn btn-outline" style="width:100%; justify-content:center;" onclick="Router.navigate('plts-dashboard')">Lihat Grafik</button>
+                        </div>
+                    </div>
+
+                    <!-- Modern Stats Summary -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div>
+                                <div class="lbl">Tiket Kerusakan Aktif</div>
+                                <div class="val" style="color:var(--accent-red);">4</div>
+                            </div>
+                            <div style="font-size:2rem;">🛠️</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <div class="lbl">Checklist PM Selesai</div>
+                                <div class="val" style="color:var(--accent-green);">92%</div>
+                            </div>
+                            <div style="font-size:2rem;">📋</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <div class="lbl">Daya Listrik Real-Time</div>
+                                <div class="val" style="color:var(--accent-yellow);">142 kW</div>
+                            </div>
+                            <div style="font-size:2rem;">⚡</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <div class="lbl">BAST Terverifikasi</div>
+                                <div class="val" style="color:var(--accent-blue);">28 Dok</div>
+                            </div>
+                            <div style="font-size:2rem;">📁</div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Table -->
+                    <div class="table-container">
+                        <div class="table-header-tools">
+                            <h3 style="font-size:1.05rem; font-weight:800;">Aktivitas & Log Operasional Terbaru</h3>
+                            <div class="table-actions">
+                                <button class="btn btn-outline" onclick="App.exportCSV()">Export CSV</button>
+                                <button class="btn btn-primary" onclick="window.print()">Print Laporan</button>
+                            </div>
+                        </div>
+                        <table class="custom-table" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>ID Tiket</th>
+                                    <th>Kategori Modul</th>
+                                    <th>Lokasi / Unit</th>
+                                    <th>Status</th>
+                                    <th>Waktu Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="ID Tiket"><strong>#TK-8821</strong></td>
+                                    <td data-label="Kategori">AC Chiller Gedung A</td>
+                                    <td data-label="Lokasi">Lantai 4 Unit 402</td>
+                                    <td data-label="Status"><span class="badge-status status-danger">Perlu Perbaikan</span></td>
+                                    <td data-label="Waktu">10 Menit Lalu</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="ID Tiket"><strong>#PM-1092</strong></td>
+                                    <td data-label="Kategori">Checklist Panel Genset</td>
+                                    <td data-label="Lokasi">Basement 2 Ruang ME</td>
+                                    <td data-label="Status"><span class="badge-status status-success">Normal / Checked</span></td>
+                                    <td data-label="Waktu">1 Jam Lalu</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="ID Tiket"><strong>#ATM-004</strong></td>
+                                    <td data-label="Kategori">Monitoring Suhu ATM</td>
+                                    <td data-label="Lokasi">Lobby Utama</td>
+                                    <td data-label="Status"><span class="badge-status status-warning">23°C (Optimal)</span></td>
+                                    <td data-label="Waktu">3 Jam Lalu</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            },
+            renderGASIframeView(menuItem) {
+                return `
+                    <div style="margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                        <div>
+                            <h2 style="font-size:1.3rem; font-weight:800;">${menuItem.title}</h2>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Terhubung langsung ke Google Apps Script Spreadsheet Database</p>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <a href="${menuItem.url}" target="_blank" class="btn btn-outline">Buka di Tab Baru ↗</a>
+                            <button class="btn btn-primary" onclick="Router.navigate('home')">Kembali ke Menu</button>
+                        </div>
+                    </div>
+                    <div class="portal-iframe-container">
+                        <iframe src="${menuItem.url}" class="portal-iframe" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                `;
+            },
+            renderProfileView() {
+                return `
+                    <div style="max-width:600px; margin:0 auto; background:var(--bg-card); padding:2rem; border-radius:var(--radius-lg); border:1px solid var(--border-color); text-align:center;">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" style="width:90px; height:90px; border-radius:50%; margin-bottom:1rem;" alt="Profile">
+                        <h2 style="font-weight:800;">M. Firdaus S.T</h2>
+                        <p style="color:var(--accent-green); font-weight:700; font-size:0.85rem; margin-bottom:1.5rem;">Senior Facility & Building Manager</p>
+                        
+                        <div style="text-align:left; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem;">
+                            <div><strong>NIP:</strong> BM-2026-9901</div>
+                            <div><strong>Departemen:</strong> Maintenance, Electrical & Engineering</div>
+                            <div><strong>Hak Akses:</strong> Super Admin / Full Workspace Access</div>
+                            <div><strong>Integrasi:</strong> Google Apps Script Enterprise Connected</div>
+                        </div>
+
+                        <button class="btn btn-primary" style="margin-top:1.5rem; width:100%; justify-content:center;" onclick="Router.navigate('home')">Kembali ke Beranda</button>
+                    </div>
+                `;
+            }
+        };
+
+        /**
+         * 5. APPLICATION HELPER & CONTROLLERS
+         */
+        const App = {
+            init() {
+                Theme.init();
+                Clock.init();
+                this.renderSidebarMenu();
+                Router.init();
+                document.getElementById('footerYear').innerText = new Date().getFullYear();
+            },
+            renderSidebarMenu() {
+                const listContainer = document.getElementById('sidebarNavList');
+                let html = `
+                    <li class="nav-item active" data-route="home">
+                        <a href="#/home">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
+                            <span>Dashboard Utama</span>
+                        </a>
+                    </li>
+                `;
+
+                PORTAL_MENUS.forEach(menu => {
+                    html += `
+                        <li class="nav-item" data-route="${menu.id}">
+                            <a href="#/${menu.id}">
+                                <span style="font-size:1.1rem; width:20px; text-align:center;">${menu.icon}</span>
+                                <span>${menu.title}</span>
+                            </a>
+                        </li>
+                    `;
+                });
+
+                listContainer.innerHTML = html;
+            },
+            showToast(message, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                if (type === 'info') toast.style.borderLeftColor = 'var(--accent-blue)';
+                if (type === 'error') toast.style.borderLeftColor = 'var(--accent-red)';
+
+                toast.innerHTML = `
+                    <span>${type === 'success' ? '✅' : type === 'info' ? 'ℹ️' : '⚠️'}</span>
+                    <span style="font-size:0.85rem; font-weight:600;">${message}</span>
+                `;
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.transition = 'all 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            },
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            },
+            reloadPage() {
+                this.showToast('Memperbarui data sistem...', 'info');
+                Router.handleRouting();
+            },
+            handleSearch(query) {
+                const q = query.toLowerCase();
+                const cards = document.querySelectorAll('.portal-icon-card');
+                cards.forEach(card => {
+                    const label = card.innerText.toLowerCase();
+                    card.style.display = label.includes(q) ? 'flex' : 'none';
+                });
+            },
+            exportCSV() {
+                let csv = 'ID Tiket,Kategori,Lokasi,Status,Waktu\n';
+                csv += '#TK-8821,AC Chiller Gedung A,Lantai 4 Unit 402,Perlu Perbaikan,10 Menit Lalu\n';
+                csv += '#PM-1092,Checklist Panel Genset,Basement 2 Ruang ME,Normal,1 Jam Lalu\n';
+                csv += '#ATM-004,Monitoring Suhu ATM,Lobby Utama,Optimal,3 Jam Lalu\n';
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `laporan-bm-${Date.now()}.csv`);
+                a.click();
+                this.showToast('File CSV berhasil di-download', 'success');
+            }
+        };
+
+        // Initialize App on DOM Loaded
+        document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
 </html>
