@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#00529C">
-    <meta name="description" content="Portal Enterprise Banking & Facility Management System">
-    <title>Portal Sistem Terpadu - Mobile Banking & Facility Management</title>
+    <title>Enterprise Facility Portal & Building Management System</title>
+    
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
@@ -19,60 +19,55 @@
             --primary: #00529C;
             --primary-dark: #003B73;
             --primary-light: #E6F0FA;
-            --primary-glow: rgba(0, 82, 156, 0.25);
+            --primary-glow: rgba(0, 82, 156, 0.28);
             
-            --btn-transfer: #3B82F6;
-            --btn-bayar: #8B5CF6;
-            --btn-beli: #10B981;
-            --btn-properti: #EC4899;
-            --btn-poin: #F43F5E;
-            --btn-cardless: #14B8A6;
-            --btn-lifestyle: #8B5CF6;
-            --btn-semua: #3B82F6;
-            
-            --bg-body: #F4F7FC;
-            --bg-card: #FFFFFF;
-            --bg-header: rgba(255, 255, 255, 0.95);
+            --accent-green: #00AA13;
+            --accent-yellow: #FDB813;
+            --accent-red: #EE2737;
+            --accent-purple: #8B5CF6;
+            --accent-teal: #14B8A6;
+
+            --bg-body: #F4F6F9;
+            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-header: rgba(255, 255, 255, 0.9);
             --bg-sidebar: #FFFFFF;
-            --bg-hover: #F8FAFC;
+            --bg-hover: #F1F5F9;
             --border-color: #E2E8F0;
-            --border-light: rgba(255, 255, 255, 0.8);
 
             --text-main: #0F172A;
             --text-muted: #64748B;
             --text-light: #94A3B8;
 
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-            --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
-            --shadow-bottom-nav: 0 -4px 25px rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
+            --shadow-bottom-nav: 0 -4px 25px rgba(0, 0, 0, 0.08);
 
-            --sidebar-width: 260px;
+            --sidebar-width: 280px;
             --sidebar-width-collapsed: 80px;
             --header-height: 70px;
-            --bottom-nav-height: 74px;
+            --bottom-nav-height: 72px;
             --radius-sm: 12px;
             --radius-md: 18px;
             --radius-lg: 24px;
             --radius-pill: 9999px;
-            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="dark"] {
             --bg-body: #090D16;
-            --bg-card: #131B2E;
-            --bg-header: rgba(19, 27, 46, 0.92);
-            --bg-sidebar: #101726;
+            --bg-card: rgba(19, 27, 46, 0.95);
+            --bg-header: rgba(15, 23, 42, 0.9);
+            --bg-sidebar: #0F172A;
             --bg-hover: #1E293B;
             --border-color: #1E293B;
-            --border-light: rgba(255, 255, 255, 0.05);
 
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --text-light: #64748B;
 
-            --primary-light: rgba(0, 82, 156, 0.2);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --primary-light: rgba(0, 82, 156, 0.25);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
             --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.5);
             --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.7);
             --shadow-bottom-nav: 0 -4px 25px rgba(0,0,0,0.6);
@@ -99,18 +94,8 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button {
-            border: none;
-            outline: none;
-            background: transparent;
-            cursor: pointer;
-            font-family: inherit;
-        }
+        a { text-decoration: none; color: inherit; }
+        button { border: none; outline: none; background: transparent; cursor: pointer; font-family: inherit; }
 
         /* ==========================================================================
            3. APP HEADER
@@ -130,44 +115,47 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 1.5rem;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
 
-        .brand-logo {
+        .brand {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            font-weight: 800;
-            font-size: 1.15rem;
-            color: var(--primary);
+            gap: 0.75rem;
             cursor: pointer;
         }
 
         .brand-badge {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
             background: var(--primary);
-            color: #fff;
-            border-radius: 10px;
+            color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
             font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px var(--primary-glow);
         }
 
-        .header-search {
-            position: relative;
-            margin-left: 1.5rem;
-            display: none;
+        .brand-text h1 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
         }
 
+        .brand-text p {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-search { position: relative; margin-left: 1.5rem; display: none; }
         .header-search input {
             background: var(--bg-hover);
             border: 1px solid var(--border-color);
@@ -176,16 +164,15 @@
             color: var(--text-main);
             font-size: 0.85rem;
             width: 240px;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
-
         .header-search input:focus {
-            width: 300px;
+            width: 320px;
             background: var(--bg-card);
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-glow);
+            outline: none;
         }
-
         .header-search svg {
             position: absolute;
             left: 12px;
@@ -204,10 +191,10 @@
         }
 
         .live-clock {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            letter-spacing: 0.5px;
             color: var(--primary);
+            letter-spacing: 0.5px;
         }
 
         .live-date {
@@ -216,11 +203,7 @@
             color: var(--text-muted);
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        .header-right { display: flex; align-items: center; gap: 0.5rem; }
 
         .icon-btn {
             width: 38px;
@@ -231,7 +214,7 @@
             justify-content: center;
             color: var(--text-main);
             background: var(--bg-hover);
-            transition: var(--transition-smooth);
+            transition: var(--transition);
             position: relative;
         }
 
@@ -247,12 +230,12 @@
             right: 6px;
             width: 8px;
             height: 8px;
-            background: #EF4444;
+            background: var(--accent-red);
             border-radius: 50%;
             border: 2px solid var(--bg-card);
         }
 
-        .user-dropdown-btn {
+        .profile-btn {
             display: flex;
             align-items: center;
             gap: 0.6rem;
@@ -262,7 +245,7 @@
             cursor: pointer;
         }
 
-        .user-avatar {
+        .profile-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -271,12 +254,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
+            font-weight: 800;
+            font-size: 0.85rem;
         }
 
         /* ==========================================================================
-           4. APP LAYOUT (SIDEBAR & MAIN CONTENT)
+           4. APP LAYOUT (SIDEBAR & MAIN VIEW)
            ========================================================================== */
         .app-shell {
             display: flex;
@@ -297,12 +280,47 @@
             justify-content: space-between;
             padding: 1.25rem 0.75rem;
             z-index: 900;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
             overflow-y: auto;
         }
 
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: var(--bg-hover);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-info h4 {
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .sidebar-user-info p {
+            font-size: 0.72rem;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
         .sidebar-menu-title {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -322,19 +340,14 @@
             align-items: center;
             gap: 0.85rem;
             padding: 0.7rem 0.85rem;
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             color: var(--text-muted);
             font-weight: 600;
             font-size: 0.85rem;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        .nav-item a svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
+        .nav-item a svg { width: 20px; height: 20px; flex-shrink: 0; }
         .nav-item.active a, .nav-item a:hover {
             background: var(--primary-light);
             color: var(--primary);
@@ -347,21 +360,20 @@
             padding: 1.5rem;
             padding-bottom: calc(var(--bottom-nav-height) + 2rem);
             min-height: calc(100vh - var(--header-height));
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
         /* ==========================================================================
-           5. EXACT MOBILE BANKING UI (SESUAI GAMBAR)
+           5. MOBILE BANKING EXACT UI COMPONENTS
            ========================================================================== */
-        .portal-mobile-container {
-            max-width: 540px;
+        .portal-container {
+            max-width: 520px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1.2rem;
         }
 
-        /* 8 Icon Grid Card */
         .grid-icon-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -382,13 +394,11 @@
             align-items: center;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
             user-select: none;
         }
 
-        .menu-item-btn:hover {
-            transform: translateY(-3px);
-        }
+        .menu-item-btn:hover { transform: translateY(-3px); }
 
         .circle-icon {
             width: 56px;
@@ -400,13 +410,10 @@
             color: #FFFFFF;
             margin-bottom: 0.5rem;
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        .circle-icon svg {
-            width: 26px;
-            height: 26px;
-        }
+        .circle-icon svg { width: 26px; height: 26px; }
 
         .menu-label {
             font-size: 0.75rem;
@@ -415,8 +422,7 @@
             line-height: 1.25;
         }
 
-        /* DompetKu Section */
-        .wallet-card {
+        .wallet-card, .history-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
             padding: 1.25rem;
@@ -489,7 +495,10 @@
             width: 100%;
             text-align: center;
             box-shadow: 0 4px 10px var(--primary-glow);
+            transition: var(--transition);
         }
+
+        .dana-btn:hover { background: var(--primary-dark); }
 
         .promo-box {
             background: linear-gradient(135deg, #4F86F7 0%, #2563EB 100%);
@@ -499,16 +508,9 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
-            overflow: hidden;
         }
 
-        .promo-box h4 {
-            font-size: 0.8rem;
-            font-weight: 800;
-            line-height: 1.3;
-        }
-
+        .promo-box h4 { font-size: 0.8rem; font-weight: 800; line-height: 1.3; }
         .promo-badge {
             background: #fff;
             color: #2563EB;
@@ -521,20 +523,7 @@
             width: fit-content;
         }
 
-        /* Transfer Terakhir Section */
-        .history-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-        }
+        .history-list { display: flex; flex-direction: column; gap: 0.85rem; }
 
         .history-item {
             display: flex;
@@ -544,16 +533,9 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .history-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
+        .history-item:last-child { border-bottom: none; padding-bottom: 0; }
 
-        .history-left {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-        }
+        .history-left { display: flex; align-items: center; gap: 0.85rem; }
 
         .history-icon-circle {
             width: 44px;
@@ -587,7 +569,7 @@
         }
 
         /* ==========================================================================
-           6. BOTTOM NAVIGATION (EXACT SESUAI GAMBAR DENGAN TOMBOL QRIS TENGAH)
+           6. BOTTOM NAVIGATION (QRIS CENTER)
            ========================================================================== */
         .bottom-nav {
             position: fixed;
@@ -618,17 +600,11 @@
             font-weight: 700;
             flex: 1;
             padding: 6px 0;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        .bottom-nav-item svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .bottom-nav-item.active {
-            color: var(--primary);
-        }
+        .bottom-nav-item svg { width: 24px; height: 24px; }
+        .bottom-nav-item.active { color: var(--primary); }
 
         .nav-qris-wrap {
             position: relative;
@@ -652,31 +628,19 @@
             box-shadow: 0 8px 20px var(--primary-glow);
             border: 4px solid var(--bg-card);
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: var(--transition);
         }
 
-        .btn-qris-center:hover {
-            transform: scale(1.06);
-        }
-
-        .btn-qris-center svg {
-            width: 26px;
-            height: 26px;
-        }
-
-        .qris-subtext {
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
+        .btn-qris-center:hover { transform: scale(1.06); }
+        .btn-qris-center svg { width: 26px; height: 26px; }
+        .qris-subtext { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; margin-top: 2px; }
 
         /* ==========================================================================
-           7. GAS IFRAME VIEW & MODAL
+           7. GAS IFRAME VIEW
            ========================================================================== */
         .portal-iframe-container {
             width: 100%;
-            height: calc(100vh - var(--header-height) - 90px);
+            height: calc(100vh - var(--header-height) - 100px);
             border-radius: var(--radius-lg);
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -684,11 +648,7 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .portal-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        .portal-iframe { width: 100%; height: 100%; border: none; }
 
         .app-footer {
             background: var(--bg-card);
@@ -773,7 +733,7 @@
 
         @media (max-width: 991px) {
             .app-sidebar { width: var(--sidebar-width-collapsed); }
-            .sidebar-menu-title, .nav-item span { display: none; }
+            .sidebar-user, .sidebar-menu-title, .nav-item span { display: none; }
             .app-main-content { margin-left: var(--sidebar-width-collapsed); }
         }
 
@@ -792,9 +752,12 @@
          ========================================================================== -->
     <header class="app-header">
         <div class="header-left">
-            <div class="brand-logo" onclick="Router.navigate('beranda')">
+            <div class="brand" onclick="Router.navigate('beranda')">
                 <div class="brand-badge">B</div>
-                <span>Portal BM</span>
+                <div class="brand-text">
+                    <h1>Portal BM</h1>
+                    <p>Enterprise System</p>
+                </div>
             </div>
 
             <div class="header-search">
@@ -820,29 +783,37 @@
                 <span class="badge-dot"></span>
             </button>
 
-            <div class="user-dropdown-btn" onclick="Router.navigate('profil')">
-                <div class="user-avatar">S</div>
+            <div class="profile-btn" onclick="Router.navigate('profil')">
+                <div class="profile-avatar">S</div>
             </div>
         </div>
     </header>
 
     <!-- ==========================================================================
-         APP SHELL (SIDEBAR & CONTENT)
+         APP SHELL (SIDEBAR & MAIN CONTENT)
          ========================================================================== -->
     <div class="app-shell">
         
         <!-- SIDEBAR DESKTOP -->
         <aside class="app-sidebar" id="sidebar">
             <div>
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">S</div>
+                    <div class="sidebar-user-info">
+                        <h4>Sutrisno</h4>
+                        <p>Unit Leader BM</p>
+                    </div>
+                </div>
+
                 <div class="sidebar-menu-title">Menu Utama</div>
                 <ul class="nav-list" id="sidebarNavList">
-                    <!-- Populated via JavaScript Array -->
+                    <!-- Dynamic Items -->
                 </ul>
             </div>
             <div>
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar', 'info')">
+                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
                             <span>Keluar</span>
                         </a>
@@ -853,12 +824,12 @@
 
         <!-- DYNAMIC MAIN CONTENT -->
         <main class="app-main-content" id="appContent">
-            <!-- Router injected views will render here -->
+            <!-- Router will render views here -->
         </main>
     </div>
 
     <!-- ==========================================================================
-         BOTTOM NAVIGATION (PERSIS SEPERTI GAMBAR)
+         BOTTOM NAVIGATION (EXACT SESUAI GAMBAR)
          ========================================================================== -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="#/beranda" class="bottom-nav-item active" data-route="beranda">
@@ -893,17 +864,14 @@
          ========================================================================== -->
     <footer class="app-footer">
         <div>&copy; <span id="footerYear">2026</span> <strong>Portal Enterprise System</strong>. All Rights Reserved.</div>
-        <div>Status: <strong style="color:var(--btn-beli)">● Terhubung Cloud</strong></div>
+        <div>Status: <strong style="color:var(--accent-green)">● Google Workspace Active</strong></div>
     </footer>
 
-    <!-- TOAST CONTAINER -->
+    <!-- TOAST & MODAL CONTAINERS -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- MODAL POPUP (SEMUA MENU & QRIS) -->
     <div class="modal-backdrop" id="appModal" onclick="App.closeModal(event)">
-        <div class="modal-card" id="modalCard">
-            <!-- Injected dynamically -->
-        </div>
+        <div class="modal-card" id="modalCard"></div>
     </div>
 
     <!-- ==========================================================================
@@ -933,7 +901,7 @@
         ];
 
         /**
-         * 2. THEME CONTROLLER
+         * 2. THEME MANAGER
          */
         const Theme = {
             init() {
@@ -947,7 +915,7 @@
                 document.documentElement.setAttribute('data-theme', target);
                 localStorage.setItem('app_theme', target);
                 this.updateBtn(target);
-                App.showToast(`Beralih ke tema ${target === 'dark' ? 'Gelap' : 'Terang'}`);
+                App.showToast(`Beralih ke mode ${target === 'dark' ? 'Gelap' : 'Terang'}`);
             },
             updateBtn(theme) {
                 const btn = document.getElementById('themeToggleBtn');
@@ -990,7 +958,7 @@
         };
 
         /**
-         * 4. SPA ROUTER & VIEWS
+         * 4. SPA ROUTER & VIEW GENERATOR
          */
         const Router = {
             init() {
@@ -1031,71 +999,71 @@
             },
             viewHome() {
                 return `
-                    <div class="portal-mobile-container">
+                    <div class="portal-container">
                         
-                        <!-- CARD 1: 8 ICON MENU (PERSIS SEPERTI GAMBAR) -->
+                        <!-- CARD 1: 8 ICON MENU (PERSIS GAMBAR) -->
                         <div class="grid-icon-card">
                             <div class="grid-icon-layout">
                                 
-                                <!-- Transfer -->
+                                <!-- Transfer -> Lapor Kerusakan -->
                                 <div class="menu-item-btn" onclick="Router.navigate('kerusakan')">
-                                    <div class="circle-icon" style="background: var(--btn-transfer);">
+                                    <div class="circle-icon" style="background: #3B82F6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
                                     </div>
                                     <span class="menu-label">Transfer</span>
                                 </div>
 
-                                <!-- Pembayaran -->
+                                <!-- Pembayaran -> Energi Dashboard -->
                                 <div class="menu-item-btn" onclick="Router.navigate('energi-dashboard')">
-                                    <div class="circle-icon" style="background: var(--btn-bayar);">
+                                    <div class="circle-icon" style="background: #8B5CF6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                     </div>
                                     <span class="menu-label">Pembayaran</span>
                                 </div>
 
-                                <!-- Pembelian -->
+                                <!-- Pembelian -> Checklist Harian -->
                                 <div class="menu-item-btn" onclick="Router.navigate('checklist-harian-pm')">
-                                    <div class="circle-icon" style="background: var(--btn-beli);">
+                                    <div class="circle-icon" style="background: #10B981;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
                                     </div>
                                     <span class="menu-label">Pembelian</span>
                                 </div>
 
-                                <!-- Bale Properti -->
+                                <!-- Bale Properti -> Monitoring ATM -->
                                 <div class="menu-item-btn" onclick="Router.navigate('dashboard-atm')">
-                                    <div class="circle-icon" style="background: var(--btn-properti);">
+                                    <div class="circle-icon" style="background: #EC4899;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
                                     </div>
                                     <span class="menu-label">Bale Properti</span>
                                 </div>
 
-                                <!-- Bale Poin -->
+                                <!-- Bale Poin -> PLTS Dashboard -->
                                 <div class="menu-item-btn" onclick="Router.navigate('plts-dashboard')">
-                                    <div class="circle-icon" style="background: var(--btn-poin); font-weight:800; font-size:0.75rem;">
+                                    <div class="circle-icon" style="background: #F43F5E; font-weight:800; font-size:0.75rem;">
                                         bale<span style="font-size:0.6rem; font-weight:500;">poin</span>
                                     </div>
                                     <span class="menu-label">Bale Poin</span>
                                 </div>
 
-                                <!-- Cardless -->
+                                <!-- Cardless -> Input BAST -->
                                 <div class="menu-item-btn" onclick="Router.navigate('bast')">
-                                    <div class="circle-icon" style="background: var(--btn-cardless);">
+                                    <div class="circle-icon" style="background: #14B8A6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
                                     </div>
                                     <span class="menu-label">Cardless</span>
                                 </div>
 
-                                <!-- Lifestyle -->
+                                <!-- Lifestyle -> Rencana PM -->
                                 <div class="menu-item-btn" onclick="Router.navigate('perencanaan-pm')">
-                                    <div class="circle-icon" style="background: var(--btn-lifestyle);">
+                                    <div class="circle-icon" style="background: #8B5CF6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"></path></svg>
                                     </div>
                                     <span class="menu-label">Lifestyle</span>
                                 </div>
 
-                                <!-- Semua Menu -->
+                                <!-- Semua Menu Modal -->
                                 <div class="menu-item-btn" onclick="App.openAllMenuModal()">
-                                    <div class="circle-icon" style="background: var(--btn-semua);">
+                                    <div class="circle-icon" style="background: #3B82F6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
                                     </div>
                                     <span class="menu-label">Semua Menu</span>
@@ -1104,14 +1072,14 @@
                             </div>
                         </div>
 
-                        <!-- CARD 2: DOMPETKU (PERSIS SEPERTI GAMBAR) -->
+                        <!-- CARD 2: DOMPETKU -->
                         <div class="wallet-card">
                             <div class="card-header-flex">
                                 <div class="card-title-wrap">
                                     <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"></path></svg>
                                     <span>DompetKu</span>
                                 </div>
-                                <div class="link-action" onclick="App.showToast('Buka pengaturan akun', 'info')">
+                                <div class="link-action" onclick="App.showToast('Buka pengaturan rekening', 'info')">
                                     <span>Atur akun</span>
                                     <div class="link-action-btn">›</div>
                                 </div>
@@ -1119,7 +1087,7 @@
 
                             <div class="wallet-grid">
                                 <div class="dana-box">
-                                    <strong style="color:#118EEA; font-size:1.1rem; letter-spacing:1px;">DANA</strong>
+                                    <strong style="color:#118EEA; font-size:1.15rem; letter-spacing:1px;">DANA</strong>
                                     <button class="dana-btn" onclick="App.showToast('Menghubungkan akun DANA...', 'info')">Hubungkan</button>
                                 </div>
                                 <div class="promo-box">
@@ -1132,21 +1100,20 @@
                             </div>
                         </div>
 
-                        <!-- CARD 3: TRANSFER TERAKHIR (PERSIS SEPERTI GAMBAR) -->
+                        <!-- CARD 3: TRANSFER TERAKHIR -->
                         <div class="history-card">
                             <div class="card-header-flex">
                                 <div class="card-title-wrap">
                                     <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
                                     <span>Transfer Terakhir</span>
                                 </div>
-                                <div class="link-action" onclick="App.showToast('Membuka riwayat lengkap', 'info')">
+                                <div class="link-action" onclick="App.showToast('Menampilkan seluruh riwayat', 'info')">
                                     <span>Lihat Semua</span>
                                     <div class="link-action-btn">›</div>
                                 </div>
                             </div>
 
                             <div class="history-list">
-                                <!-- 1. Aprillianto -->
                                 <div class="history-item">
                                     <div class="history-left">
                                         <div class="history-icon-circle" style="background: #3B82F6;">
@@ -1160,7 +1127,6 @@
                                     <div class="history-amount">-Rp 110.000</div>
                                 </div>
 
-                                <!-- 2. Dendi Adi -->
                                 <div class="history-item">
                                     <div class="history-left">
                                         <div class="history-icon-circle" style="background: #8B5CF6;">
@@ -1174,7 +1140,6 @@
                                     <div class="history-amount">-Rp 90.000</div>
                                 </div>
 
-                                <!-- 3. Sutrisno -->
                                 <div class="history-item">
                                     <div class="history-left">
                                         <div class="history-icon-circle" style="background: #14B8A6;">
@@ -1197,11 +1162,13 @@
                 return `
                     <div style="margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                         <div>
-                            <h2 style="font-size:1.3rem; font-weight:800;">${menu.title}</h2>
-                            <p style="font-size:0.8rem; color:var(--text-muted);">Terhubung Google Apps Script Enterprise Workspace</p>
+                            <h2 style="font-size:1.25rem; font-weight:800;">${menu.title}</h2>
+                            <p style="font-size:0.78rem; color:var(--text-muted);">Terintegrasi Google Apps Script Backend</p>
                         </div>
                         <div style="display:flex; gap:0.5rem;">
-                            <a href="${menu.url}" target="_blank" class="dana-btn" style="width:auto; padding:0.5rem 1rem;">Tab Baru ↗</a>
+                            <a href="${menu.url}" target="_blank" class="dana-btn" style="width:auto; padding:0.5rem 1.1rem; display:inline-flex; align-items:center; gap:4px;">
+                                Buka di Tab Baru ↗
+                            </a>
                             <button class="dana-btn" style="width:auto; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
                         </div>
                     </div>
@@ -1212,28 +1179,28 @@
             },
             viewArusKas() {
                 return `
-                    <div class="portal-mobile-container">
+                    <div class="portal-container">
                         <div class="history-card">
                             <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Ringkasan Arus Kas Operasional</h3>
                             <div style="padding:1rem; background:var(--bg-hover); border-radius:var(--radius-md); margin-bottom:1rem;">
                                 <p style="font-size:0.8rem; color:var(--text-muted);">Total Pengeluaran Bulan Ini</p>
                                 <h2 style="color:var(--primary); font-weight:800;">Rp 3.200.000</h2>
                             </div>
-                            <button class="dana-btn" style="width:100%;" onclick="App.showToast('Laporan diunduh', 'success')">Download Laporan PDF</button>
+                            <button class="dana-btn" style="width:100%;" onclick="App.showToast('Laporan PDF berhasil di-download', 'success')">Download Laporan PDF</button>
                         </div>
                     </div>
                 `;
             },
             viewProfile() {
                 return `
-                    <div class="portal-mobile-container">
+                    <div class="portal-container">
                         <div class="wallet-card" style="text-align:center;">
-                            <div class="user-avatar" style="width:70px; height:70px; margin:0 auto 1rem; font-size:1.6rem;">S</div>
+                            <div class="sidebar-user-avatar" style="width:70px; height:70px; margin:0 auto 1rem; font-size:1.6rem;">S</div>
                             <h3 style="font-weight:800;">SUTRISNO</h3>
-                            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Unit Leader Building Management</p>
+                            <p style="font-size:0.8rem; color:var(--accent-green); font-weight:700; margin-bottom:1.5rem;">Unit Leader Building Management</p>
                             <div style="text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md);">
                                 <div><strong>ID Pegawai:</strong> BM-2026-901</div>
-                                <div><strong>Unit Kerja:</strong> KC Surabaya & Jawa Timur</div>
+                                <div><strong>Unit Operasional:</strong> KC Surabaya & Jawa Timur</div>
                                 <div><strong>Akses Modul:</strong> 14 Modul Google Apps Script Terintegrasi</div>
                             </div>
                         </div>
@@ -1268,7 +1235,7 @@
                     html += `
                         <li class="nav-item" data-route="${m.id}">
                             <a href="#/${m.id}">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25V18z"></path></svg>
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
                                 <span>${m.title}</span>
                             </a>
                         </li>
@@ -1300,11 +1267,14 @@
             openAllMenuModal() {
                 const card = document.getElementById('modalCard');
                 card.innerHTML = `
-                    <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Semua Modul Terhubung</h3>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; max-height:60vh; overflow-y:auto; padding-right:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                        <h3 style="font-size:1.1rem; font-weight:800;">14 Modul Sistem Building Management</h3>
+                        <button onclick="App.closeModalDirect()" style="font-size:1.2rem; font-weight:700;">✕</button>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; max-height:60vh; overflow-y:auto;">
                         ${GAS_MODULES.map(m => `
-                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700;">
-                                ${m.title}
+                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700; border:1px solid var(--border-color);">
+                                📁 ${m.title}
                             </button>
                         `).join('')}
                     </div>
@@ -1316,7 +1286,7 @@
                 card.innerHTML = `
                     <div style="text-align:center;">
                         <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:0.5rem;">QRIS Pay & Scan</h3>
-                        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Pindai QR Code untuk pembayaran atau verifikasi checklist</p>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Pindai QR Code untuk verifikasi checklist atau pembayaran</p>
                         <div style="width:200px; height:200px; margin:0 auto 1.5rem; background:#fff; padding:10px; border-radius:16px; border:2px dashed var(--primary); display:flex; align-items:center; justify-content:center;">
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PORTAL-BM-QRIS" style="width:100%;" alt="QRIS">
                         </div>
