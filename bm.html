@@ -12,7 +12,71 @@
 
     <style>
         /* ==========================================================================
-           1. DESIGN SYSTEM VARIABLES
+           1. WINDOWS 11 BOOT SPLASH SCREEN
+           ========================================================================== */
+        #winBootSplash {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            color: #FFFFFF;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+        }
+
+        #winBootSplash.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-logo-grid {
+            display: grid;
+            grid-template-columns: 36px 36px;
+            grid-template-rows: 36px 36px;
+            gap: 5px;
+            filter: drop-shadow(0 0 16px rgba(0, 120, 212, 0.6));
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
+
+        .splash-logo-grid span {
+            background: #0078D4;
+            border-radius: 3px;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(0, 120, 212, 0.5)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 24px rgba(0, 120, 212, 0.9)); }
+        }
+
+        .win-spinner {
+            width: 38px;
+            height: 38px;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            border-top-color: #0078D4;
+            border-radius: 50%;
+            animation: winSpin 1s infinite cubic-bezier(0.55, 0.15, 0.45, 0.85);
+        }
+
+        @keyframes winSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .splash-text {
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #A0A0A0;
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           2. DESIGN SYSTEM & VARIABLES
            ========================================================================== */
         :root {
             --win-blue: #0078D4;
@@ -20,8 +84,8 @@
             
             --mica-bg: rgba(243, 243, 243, 0.78);
             --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: rgba(255, 255, 255, 0.9);
-            --window-border: rgba(255, 255, 255, 0.45);
+            --window-bg: rgba(255, 255, 255, 0.92);
+            --window-border: rgba(255, 255, 255, 0.5);
             --taskbar-bg: rgba(243, 243, 243, 0.85);
             --menu-hover: rgba(0, 0, 0, 0.06);
 
@@ -41,7 +105,7 @@
         [data-theme="dark"] {
             --mica-bg: rgba(32, 32, 32, 0.8);
             --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6');
-            --window-bg: rgba(28, 28, 28, 0.9);
+            --window-bg: rgba(28, 28, 28, 0.92);
             --window-border: rgba(255, 255, 255, 0.12);
             --taskbar-bg: rgba(24, 24, 24, 0.85);
             --menu-hover: rgba(255, 255, 255, 0.08);
@@ -79,15 +143,12 @@
         }
 
         /* ==========================================================================
-           2. DESKTOP AREA & DYNAMIC ICONS
+           3. DESKTOP WORKSPACE & DYNAMIC ICONS
            ========================================================================== */
         .desktop-area {
             flex: 1;
             padding: 1.5rem;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
 
@@ -165,11 +226,12 @@
         }
 
         /* ==========================================================================
-           3. FLOATING WINDOW
+           4. FLOATING & DRAGGABLE WINDOWS
            ========================================================================== */
         .win-frame {
+            position: absolute;
             width: 100%;
-            max-width: 960px;
+            max-width: 860px;
             background: var(--window-bg);
             border-radius: var(--radius-win);
             border: 1px solid var(--window-border);
@@ -180,7 +242,12 @@
             flex-direction: column;
             overflow: hidden;
             z-index: 20;
-            transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.25s ease;
+            touch-action: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .win-frame.dragging {
+            transition: none !important;
         }
 
         .win-frame.minimized {
@@ -198,6 +265,7 @@
             padding: 0 0 0 1rem;
             border-bottom: 1px solid var(--border-subtle);
             flex-shrink: 0;
+            cursor: move;
         }
 
         .win-title-left {
@@ -210,6 +278,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            pointer-events: none;
         }
 
         .win-app-logo {
@@ -250,8 +319,8 @@
 
         .win-body {
             padding: 1.5rem;
-            max-height: calc(100vh - 180px);
-            max-height: calc(100dvh - 180px);
+            max-height: calc(100vh - 200px);
+            max-height: calc(100dvh - 200px);
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -303,7 +372,6 @@
             color: var(--text-secondary);
         }
 
-        /* Tiles Grid */
         .win-tiles-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -376,8 +444,97 @@
             margin-top: 3px;
         }
 
+        /* Notepad Specific */
+        #notepadWindow {
+            max-width: 540px;
+            height: 400px;
+            display: none;
+        }
+
+        .notepad-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0.85rem;
+            background: var(--mica-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .notepad-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .notepad-btn {
+            background: var(--window-bg);
+            border: 1px solid var(--border-subtle);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notepad-btn:hover {
+            background: var(--win-blue);
+            color: #fff;
+            border-color: var(--win-blue);
+        }
+
+        .notepad-textarea {
+            width: 100%;
+            height: calc(100% - 44px - 34px);
+            border: none;
+            outline: none;
+            padding: 0.85rem;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            background: transparent;
+            color: var(--text-primary);
+            resize: none;
+            user-select: text;
+        }
+
+        /* Gempa Warning Window */
+        #gempaWindow {
+            max-width: 500px;
+            display: none;
+            border: 1.5px solid #EE2737;
+        }
+
+        .gempa-content-card {
+            background: rgba(238, 39, 55, 0.06);
+            border-radius: var(--radius-card);
+            border: 1px solid rgba(238, 39, 55, 0.2);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            font-size: 0.82rem;
+        }
+
+        .gempa-header-mag {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .gempa-mag-badge {
+            background: #EE2737;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.95rem;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(238, 39, 55, 0.35);
+        }
+
         /* ==========================================================================
-           4. TASKBAR & START MENU
+           5. TASKBAR & START MENU
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -537,26 +694,40 @@
             border-color: var(--border-subtle);
         }
 
+        /* Toast Container & Notification Style */
         .toast-container {
             position: fixed;
             bottom: calc(var(--taskbar-height) + 14px);
             right: 14px;
             z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 360px;
+            width: calc(100% - 28px);
+            pointer-events: none;
         }
 
         .win-toast {
             background: var(--window-bg);
             border: 1px solid var(--window-border);
             border-radius: var(--radius-card);
-            padding: 0.8rem 1.1rem;
+            padding: 0.85rem 1.1rem;
             box-shadow: var(--shadow-flyout);
             font-size: 0.8rem;
             font-weight: 600;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.65rem;
             animation: toastPop 0.25s forwards;
             backdrop-filter: blur(20px);
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .win-toast.toast-gempa {
+            border-left: 4px solid #EE2737;
+            background: var(--window-bg);
         }
 
         @keyframes toastPop {
@@ -565,12 +736,11 @@
         }
 
         /* ==========================================================================
-           5. MOBILE SPECIAL VIEW
+           6. MOBILE SPECIAL VIEW
            ========================================================================== */
         @media (max-width: 768px) {
             .desktop-area {
                 padding: 0.6rem;
-                align-items: stretch;
             }
 
             .desktop-icons-container {
@@ -594,8 +764,11 @@
             .desktop-icon-btn span.lbl { font-size: 0.68rem; }
 
             .win-frame {
-                max-width: 100%;
-                height: 100%;
+                left: 0.6rem !important;
+                top: 0.6rem !important;
+                width: calc(100% - 1.2rem) !important;
+                max-width: 100% !important;
+                height: calc(100dvh - var(--taskbar-height) - 1.2rem) !important;
                 border-radius: var(--radius-win);
             }
 
@@ -682,38 +855,46 @@
 <body>
 
     <!-- ==========================================================================
-         1. DESKTOP WORKSPACE & DYNAMIC SHORTCUTS
+         0. WINDOWS BOOT SPLASH SCREEN
          ========================================================================== -->
-    <main class="desktop-area">
+    <div id="winBootSplash">
+        <div class="splash-logo-grid">
+            <span></span><span></span>
+            <span></span><span></span>
+        </div>
+        <div class="win-spinner"></div>
+        <div class="splash-text">Starting Portal Building Management OS...</div>
+    </div>
+
+    <!-- ==========================================================================
+         1. DESKTOP WORKSPACE & DRAGGABLE WINDOWS
+         ========================================================================== -->
+    <main class="desktop-area" id="desktopArea">
         
-        <!-- Ikon Desktop Terisolasi Per Perangkat -->
         <div class="desktop-icons-container" id="desktopIconsContainer">
             <!-- Rendered by Device-Specific LocalStorage -->
         </div>
 
-        <!-- Central Windows App Window -->
-        <div class="win-frame" id="mainWindow">
+        <!-- 1. Central Windows App Window (Portal Hub) -->
+        <div class="win-frame" id="mainWindow" style="top: 8%; left: calc(50% - 430px);">
             
-            <!-- Window Titlebar -->
-            <div class="win-titlebar">
+            <div class="win-titlebar" id="mainTitlebar">
                 <div class="win-title-left">
                     <div class="win-app-logo">BM</div>
                     <span>Portal Building Management Hub</span>
                 </div>
                 <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize ke Desktop" onclick="OS.minimizeWindow()">─</button>
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('mainWindow', 'taskbarHubBtn')">─</button>
                     <button class="win-control-btn" title="Maximize" onclick="OS.toggleFullscreen()">□</button>
-                    <button class="win-control-btn close" title="Tutup Jendela" onclick="OS.closeWindow()">✕</button>
+                    <button class="win-control-btn close" title="Tutup Jendela" onclick="OS.minimizeWindow('mainWindow', 'taskbarHubBtn')">✕</button>
                 </div>
             </div>
 
-            <!-- Window Content Area -->
             <div class="win-body">
-                
                 <div class="win-nav-header">
                     <div class="win-nav-title">
                         <h2>Menu Operasional Utama</h2>
-                        <p>Klik 📌 untuk mengeluarkan ikon ke Desktop perangkat ini</p>
+                        <p>Klik & geser titlebar untuk memindahkan jendela. Klik 📌 untuk pin ke desktop.</p>
                     </div>
 
                     <div class="win-search-box">
@@ -726,9 +907,69 @@
                 <div class="win-tiles-grid" id="tilesContainer">
                     <!-- Dynamic Tiles -->
                 </div>
-
             </div>
 
+        </div>
+
+        <!-- 2. Windows Notepad App Window -->
+        <div class="win-frame" id="notepadWindow" style="top: 15%; left: calc(50% - 270px);">
+            <div class="win-titlebar" id="notepadTitlebar">
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#107C41;">📝</div>
+                    <span>Notepad — Catatan Teknisi</span>
+                </div>
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('notepadWindow', 'taskbarNotepadBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup Notepad" onclick="Notepad.close()">✕</button>
+                </div>
+            </div>
+            
+            <div class="notepad-toolbar">
+                <span id="notepadStatus" style="color:var(--text-secondary);">Tersimpan otomatis di localhost</span>
+                <div class="notepad-actions">
+                    <button class="notepad-btn" onclick="Notepad.clear()">Baru</button>
+                    <button class="notepad-btn" onclick="Notepad.download()">Export TXT</button>
+                </div>
+            </div>
+
+            <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi, log pekerjaan, atau checklist di sini... (Otomatis tersimpan di LocalStorage)"></textarea>
+        </div>
+
+        <!-- 3. Windows Gempa BMKG Alert Window -->
+        <div class="win-frame" id="gempaWindow" style="top: 18%; left: calc(50% - 250px);">
+            <div class="win-titlebar" id="gempaTitlebar">
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#EE2737;">⚠️</div>
+                    <span>Peringatan Gempa Terkini (BMKG Real-time)</span>
+                </div>
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('gempaWindow', 'taskbarGempaBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="GempaAlert.close()">✕</button>
+                </div>
+            </div>
+
+            <div class="win-body" style="padding: 1.2rem;">
+                <div class="gempa-content-card" id="gempaDetailCard">
+                    <div class="gempa-header-mag">
+                        <div>
+                            <strong style="color:#EE2737; font-size:1.05rem;">Info Gempabumi Terkini</strong>
+                            <div style="font-size:0.75rem; color:var(--text-secondary);" id="gempaWaktu">Memuat data BMKG...</div>
+                        </div>
+                        <div class="gempa-mag-badge" id="gempaMag">M -.--</div>
+                    </div>
+
+                    <div style="margin-top:0.4rem; display:flex; flex-direction:column; gap:0.35rem;">
+                        <div><strong>Lokasi:</strong> <span id="gempaWilayah">-</span></div>
+                        <div><strong>Kedalaman:</strong> <span id="gempaKedalaman">-</span></div>
+                        <div><strong>Koordinat:</strong> <span id="gempaKoordinat">-</span></div>
+                        <div><strong>Potensi:</strong> <span id="gempaPotensi" style="font-weight:700; color:#EE2737;">-</span></div>
+                    </div>
+
+                    <div style="display:flex; gap:8px; margin-top:0.6rem;">
+                        <button class="notepad-btn" style="background:#EE2737; color:#fff; border:none; padding:6px 12px;" onclick="GempaAlert.refresh()">Perbarui Data BMKG 🔄</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
@@ -776,8 +1017,14 @@
                     <span></span><span></span>
                 </div>
             </button>
-            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleMainWindow()" title="Buka/Tutup Jendela Hub">
+            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka/Tutup Jendela Hub">
                 <span style="font-size:1.15rem;">🏢</span>
+            </button>
+            <button class="task-btn" id="taskbarNotepadBtn" onclick="Notepad.toggle()" title="Buka Notepad">
+                <span style="font-size:1.15rem;">📝</span>
+            </button>
+            <button class="task-btn" id="taskbarGempaBtn" onclick="GempaAlert.toggle()" title="Monitoring Gempa BMKG">
+                <span style="font-size:1.15rem;">⚠️</span>
             </button>
             <button class="task-btn" onclick="OS.openApp('dashboard')" title="Dashboard Utama">
                 <span style="font-size:1.15rem;">📊</span>
@@ -806,7 +1053,7 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT CONTROLLER & DEVICE-SPECIFIC PERSISTENCE
+         4. JAVASCRIPT: BOOT SPLASH, GEMPA BMKG API, DRAG & DROP, AUDIO, & OS
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
@@ -819,6 +1066,8 @@
             { id: 'plts-dashboard', title: 'PLTS Solar', sub: 'Produksi solar panel', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'gempa', title: 'Peringatan Gempa', sub: 'BMKG Real-time', icon: '⚠️', color: '#EE2737', action: 'gempa' },
+            { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
             { id: 'all-modules', title: 'Semua Modul', sub: '14 Modul Operasional', icon: '📁', color: '#0078D4', action: 'start' },
             
             // Sub Modules
@@ -831,23 +1080,220 @@
             { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'all-modules'];
+        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'gempa'];
 
         /**
-         * Device Detector & Storage Isolator (Kunci penyimpanan terpisah HP vs PC)
+         * GEMPA BMKG REAL-TIME NOTIFICATION ENGINE
          */
+        const GempaAlert = {
+            lastEventId: null,
+            init() {
+                this.fetchData(true);
+                // Polling setiap 60 detik
+                setInterval(() => this.fetchData(false), 60000);
+            },
+            async fetchData(isFirstLoad = false) {
+                try {
+                    const res = await fetch('https://data.bmkg.go.id/DataMKG/TEKTONIK/autogempa.json');
+                    if (!res.ok) throw new Error('Network error');
+                    const data = await res.json();
+                    const gempa = data?.Infogempa?.gempa;
+                    if (!gempa) return;
+
+                    // Update UI detail
+                    document.getElementById('gempaMag').innerText = `M ${gempa.Magnitude}`;
+                    document.getElementById('gempaWaktu').innerText = `${gempa.Tanggal} • ${gempa.Jam}`;
+                    document.getElementById('gempaWilayah').innerText = gempa.Wilayah;
+                    document.getElementById('gempaKedalaman').innerText = gempa.Kedalaman;
+                    document.getElementById('gempaKoordinat').innerText = `${gempa.Lintang} - ${gempa.Bujur}`;
+                    document.getElementById('gempaPotensi').innerText = gempa.Potensi;
+
+                    const eventId = `${gempa.DateTime}_${gempa.Magnitude}`;
+                    if (this.lastEventId !== eventId) {
+                        this.lastEventId = eventId;
+                        if (!isFirstLoad) {
+                            Sound.alarm();
+                            OS.showGempaToast(`Gempa M ${gempa.Magnitude} - ${gempa.Wilayah} (${gempa.Potensi})`);
+                        }
+                    }
+                } catch(e) {
+                    console.warn('Gagal memuat API BMKG, fallback mode:', e);
+                }
+            },
+            open() {
+                Sound.click();
+                const win = document.getElementById('gempaWindow');
+                const btn = document.getElementById('taskbarGempaBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                if (btn) btn.classList.add('active');
+                OS.bringToFront('gempaWindow');
+            },
+            close() {
+                Sound.click();
+                const win = document.getElementById('gempaWindow');
+                const btn = document.getElementById('taskbarGempaBtn');
+                win.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            },
+            toggle() {
+                const win = document.getElementById('gempaWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            },
+            refresh() {
+                Sound.click();
+                OS.showToast('Memperbarui data gempa BMKG...');
+                this.fetchData(false);
+            }
+        };
+
+        /**
+         * NOTEPAD LOCALSTORAGE MANAGER
+         */
+        const Notepad = {
+            storageKey: 'win_notepad_content_v1',
+            init() {
+                const el = document.getElementById('notepadContent');
+                const saved = localStorage.getItem(this.storageKey) || '';
+                el.value = saved;
+
+                el.addEventListener('input', () => {
+                    localStorage.setItem(this.storageKey, el.value);
+                    const status = document.getElementById('notepadStatus');
+                    status.innerText = 'Menyimpan ke localhost...';
+                    setTimeout(() => {
+                        status.innerText = 'Tersimpan di localhost';
+                    }, 400);
+                });
+            },
+            open() {
+                Sound.click();
+                const win = document.getElementById('notepadWindow');
+                const btn = document.getElementById('taskbarNotepadBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                btn.classList.add('active');
+                OS.bringToFront('notepadWindow');
+            },
+            close() {
+                Sound.click();
+                const win = document.getElementById('notepadWindow');
+                const btn = document.getElementById('taskbarNotepadBtn');
+                win.style.display = 'none';
+                btn.classList.remove('active');
+            },
+            toggle() {
+                const win = document.getElementById('notepadWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            },
+            clear() {
+                Sound.click();
+                if (confirm('Kosongkan isi catatan?')) {
+                    const el = document.getElementById('notepadContent');
+                    el.value = '';
+                    localStorage.setItem(this.storageKey, '');
+                    OS.showToast('Catatan baru siap');
+                }
+            },
+            download() {
+                Sound.click();
+                const text = document.getElementById('notepadContent').value;
+                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `Catatan_BM_${new Date().toISOString().slice(0,10)}.txt`;
+                a.click();
+                OS.showToast('File TXT berhasil diunduh');
+            }
+        };
+
+        /**
+         * WINDOW DRAG & DROP ENGINE
+         */
+        const WindowManager = {
+            topZ: 25,
+            makeDraggable(winId, titlebarId) {
+                const win = document.getElementById(winId);
+                const titlebar = document.getElementById(titlebarId);
+                let isDragging = false;
+                let startX, startY, initialLeft, initialTop;
+
+                win.addEventListener('pointerdown', () => {
+                    OS.bringToFront(winId);
+                });
+
+                const startDrag = (e) => {
+                    if (window.innerWidth <= 768) return;
+                    
+                    isDragging = true;
+                    win.classList.add('dragging');
+                    OS.bringToFront(winId);
+
+                    startX = e.clientX || e.touches[0].clientX;
+                    startY = e.clientY || e.touches[0].clientY;
+
+                    const rect = win.getBoundingClientRect();
+                    initialLeft = rect.left;
+                    initialTop = rect.top;
+
+                    document.addEventListener('pointermove', onDrag);
+                    document.addEventListener('pointerup', stopDrag);
+                };
+
+                const onDrag = (e) => {
+                    if (!isDragging) return;
+                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                    const deltaX = clientX - startX;
+                    const deltaY = clientY - startY;
+
+                    let newLeft = initialLeft + deltaX;
+                    let newTop = initialTop + deltaY;
+
+                    const maxLeft = window.innerWidth - win.offsetWidth;
+                    const maxTop = window.innerHeight - 80;
+
+                    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                    newTop = Math.max(0, Math.min(newTop, maxTop));
+
+                    win.style.left = `${newLeft}px`;
+                    win.style.top = `${newTop}px`;
+                };
+
+                const stopDrag = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        win.classList.remove('dragging');
+                        document.removeEventListener('pointermove', onDrag);
+                        document.removeEventListener('pointerup', stopDrag);
+                    }
+                };
+
+                titlebar.addEventListener('pointerdown', startDrag);
+            }
+        };
+
         const DeviceManager = {
             isMobile() {
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             },
             getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_v1' : 'win_pinned_desktop_v1';
+                return this.isMobile() ? 'win_pinned_mobile_v2' : 'win_pinned_desktop_v2';
             },
             getPinnedIcons() {
                 const key = this.getStorageKey();
                 const defaultIcons = this.isMobile() 
-                    ? ['kerusakan', 'checklist-harian-pm'] 
-                    : ['kerusakan', 'checklist-harian-pm', 'dashboard'];
+                    ? ['kerusakan', 'checklist-harian-pm', 'notepad', 'gempa'] 
+                    : ['kerusakan', 'checklist-harian-pm', 'notepad', 'gempa', 'dashboard'];
                 
                 try {
                     const saved = localStorage.getItem(key);
@@ -931,6 +1377,26 @@
                     });
                 } catch(e) {}
             },
+            alarm() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    // Sirene 3 nada darurat
+                    [880, 587, 880, 587].forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.15);
+                        gain.gain.setValueAtTime(0.2, now + idx * 0.15);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.14);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(now + idx * 0.15);
+                        osc.stop(now + idx * 0.15 + 0.14);
+                    });
+                } catch(e) {}
+            },
             startup() {
                 try {
                     this.init();
@@ -941,12 +1407,12 @@
                         const gain = this.ctx.createGain();
                         osc.type = 'sine';
                         osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.8);
+                        gain.gain.setValueAtTime(0.14, now + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.9);
                         osc.connect(gain);
                         gain.connect(this.ctx.destination);
                         osc.start(now + idx * 0.08);
-                        osc.stop(now + idx * 0.08 + 0.8);
+                        osc.stop(now + idx * 0.08 + 0.9);
                     });
                 } catch(e) {}
             }
@@ -971,11 +1437,18 @@
             init() {
                 Theme.init();
                 Wallpaper.init();
+                Notepad.init();
+                GempaAlert.init();
                 this.renderTiles();
                 this.renderDesktopIcons();
                 this.renderStartApps();
                 this.startClock();
+                this.initBootSplash();
                 
+                WindowManager.makeDraggable('mainWindow', 'mainTitlebar');
+                WindowManager.makeDraggable('notepadWindow', 'notepadTitlebar');
+                WindowManager.makeDraggable('gempaWindow', 'gempaTitlebar');
+
                 const unlockAudio = () => {
                     Sound.init();
                     document.removeEventListener('click', unlockAudio);
@@ -992,7 +1465,6 @@
                     }
                 });
 
-                // Auto-sync icon layout saat resize/orientasi layar berubah
                 let resizeTimeout;
                 window.addEventListener('resize', () => {
                     clearTimeout(resizeTimeout);
@@ -1000,6 +1472,21 @@
                         OS.renderDesktopIcons();
                     }, 200);
                 });
+            },
+            initBootSplash() {
+                const splash = document.getElementById('winBootSplash');
+                setTimeout(() => {
+                    Sound.startup();
+                    splash.classList.add('fade-out');
+                    setTimeout(() => {
+                        splash.remove();
+                    }, 800);
+                }, 1600);
+            },
+            bringToFront(winId) {
+                WindowManager.topZ += 1;
+                const win = document.getElementById(winId);
+                if (win) win.style.zIndex = WindowManager.topZ;
             },
             renderDesktopIcons() {
                 const con = document.getElementById('desktopIconsContainer');
@@ -1026,7 +1513,7 @@
                 const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
 
                 container.innerHTML = primary.map(m => `
-                    <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : `OS.openDirect('${m.url}')`}">
+                    <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : `OS.openDirect('${m.url}')`}">
                         ${m.action !== 'start' ? `<button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop perangkat ini">📌</button>` : ''}
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
@@ -1041,7 +1528,7 @@
                 const realModules = MODULES.filter(m => m.id !== 'all-modules');
                 
                 list.innerHTML = realModules.map(m => `
-                    <div class="app-item-btn" onclick="OS.openDirect('${m.url}'); OS.toggleStart();">
+                    <div class="app-item-btn" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span style="font-size:1.25rem;">${m.icon}</span>
                             <div>
@@ -1061,7 +1548,7 @@
                     pinned.push(id);
                     DeviceManager.savePinnedIcons(pinned);
                     this.renderDesktopIcons();
-                    this.showToast('Ikon berhasil dipin ke Desktop perangkat ini');
+                    this.showToast('Ikon berhasil dipin ke Desktop');
                 } else {
                     this.showToast('Ikon sudah ada di Desktop');
                 }
@@ -1078,7 +1565,15 @@
             openApp(id) {
                 Sound.click();
                 const mod = MODULES.find(m => m.id === id);
-                if (mod && mod.url) this.openDirect(mod.url);
+                if (mod) {
+                    if (mod.action === 'notepad') {
+                        Notepad.open();
+                    } else if (mod.action === 'gempa') {
+                        GempaAlert.open();
+                    } else if (mod.url) {
+                        this.openDirect(mod.url);
+                    }
+                }
             },
             openDirect(url) {
                 Sound.click();
@@ -1089,27 +1584,25 @@
                 Sound.click();
                 document.getElementById('startMenu').classList.toggle('open');
             },
-            minimizeWindow() {
+            minimizeWindow(winId, taskBtnId) {
                 Sound.click();
-                const win = document.getElementById('mainWindow');
-                const taskBtn = document.getElementById('taskbarHubBtn');
+                const win = document.getElementById(winId);
+                const taskBtn = document.getElementById(taskBtnId);
                 win.classList.add('minimized');
-                taskBtn.classList.remove('active');
-                this.showToast('Menampilkan Desktop');
+                if (taskBtn) taskBtn.classList.remove('active');
+                this.showToast('Jendela di-minimize');
             },
-            closeWindow() {
-                this.minimizeWindow();
-            },
-            toggleMainWindow() {
+            toggleWindow(winId, taskBtnId) {
                 Sound.click();
-                const win = document.getElementById('mainWindow');
-                const taskBtn = document.getElementById('taskbarHubBtn');
+                const win = document.getElementById(winId);
+                const taskBtn = document.getElementById(taskBtnId);
                 if (win.classList.contains('minimized')) {
                     win.classList.remove('minimized');
-                    taskBtn.classList.add('active');
+                    if (taskBtn) taskBtn.classList.add('active');
+                    this.bringToFront(winId);
                 } else {
                     win.classList.add('minimized');
-                    taskBtn.classList.remove('active');
+                    if (taskBtn) taskBtn.classList.remove('active');
                 }
             },
             toggleFullscreen() {
@@ -1132,6 +1625,25 @@
                     t.style.transition = 'all 0.3s ease';
                     setTimeout(() => t.remove(), 300);
                 }, 2200);
+            },
+            showGempaToast(msg) {
+                const box = document.getElementById('toastBox');
+                const t = document.createElement('div');
+                t.className = 'win-toast toast-gempa';
+                t.innerHTML = `
+                    <span style="font-size:1.2rem;">⚠️</span>
+                    <div>
+                        <div style="color:#EE2737; font-weight:800;">Peringatan Gempa BMKG</div>
+                        <div style="font-size:0.75rem; color:var(--text-primary); margin-top:2px;">${msg}</div>
+                    </div>
+                `;
+                t.onclick = () => GempaAlert.open();
+                box.appendChild(t);
+                setTimeout(() => {
+                    t.style.opacity = '0';
+                    t.style.transition = 'all 0.3s ease';
+                    setTimeout(() => t.remove(), 500);
+                }, 6000);
             },
             startClock() {
                 const update = () => {
