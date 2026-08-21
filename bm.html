@@ -881,7 +881,7 @@
          ========================================================================== -->
     <main class="desktop-area" id="desktopArea">
         
-        <!-- Ikon-ikon Desktop (Posisi Koordinat Bebas Digeser Sesuai Keinginan) -->
+        <!-- Ikon Desktop (Posisi X & Y Bebas Digeser) -->
         <div class="desktop-icons-container" id="desktopIconsContainer"></div>
 
         <!-- 1. Central Windows App Window (Portal Hub) - Default: MINIMIZED -->
@@ -903,7 +903,7 @@
                 <div class="win-nav-header">
                     <div class="win-nav-title">
                         <h2>Menu Operasional & Layanan</h2>
-                        <p>Klik 📌 untuk mengeluarkan ikon ke Desktop (Bebas digeser di mana saja)</p>
+                        <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop (Bisa digeser ke mana saja)</p>
                     </div>
 
                     <div class="win-search-box">
@@ -1110,7 +1110,7 @@
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
-            // Menu Tambahan Sesuai Request
+            // Menu Tambahan
             { id: 'bmis', title: 'BMIS BPB', sub: 'bmis.bpb.co.id', icon: '🏢', color: '#00529C', url: 'https://bmis.bpb.co.id' },
             { id: 'belfis', title: 'BELFIS BPB', sub: 'belfis.bpb.co.id', icon: '🏗️', color: '#0284C7', url: 'https://belfis.bpb.co.id' },
             { id: 'absensi', title: 'Binayasa Absensi', sub: 'binayasa-absensi.com', icon: '👤', color: '#10B981', url: 'https://binayasa-absensi.com' },
@@ -1143,7 +1143,6 @@
             getStorageKey() {
                 return this.isMobile() ? 'win_pinned_mobile_pos_v4' : 'win_pinned_desktop_pos_v4';
             },
-            // Mengembalikan Array Object: [{ id: 'kerusakan', x: 20, y: 20 }, ...]
             getPinnedIcons() {
                 const key = this.getStorageKey();
                 try {
@@ -1584,7 +1583,6 @@
                         iconEl.id = `desktop_icon_${mod.id}`;
                         iconEl.title = `Klik untuk buka, drag untuk geser ${mod.title}`;
                         
-                        // Hitung posisi default jika belum ada koordinat tersimpan
                         const defaultCol = Math.floor(index / 5);
                         const defaultRow = index % 5;
                         const posX = item.x !== undefined ? item.x : (16 + defaultCol * 90);
@@ -1599,15 +1597,12 @@
                             <span class="lbl">${mod.title}</span>
                         `;
 
-                        // Remove Icon Click Handler
                         iconEl.querySelector('.remove-icon-btn').addEventListener('pointerdown', (e) => {
                             e.stopPropagation();
                             OS.unpinFromDesktop(mod.id);
                         });
 
-                        // Dragging logic for Desktop Icons
                         this.makeIconDraggable(iconEl, mod.id);
-
                         con.appendChild(iconEl);
                     }
                 });
@@ -1623,7 +1618,6 @@
                     startX = e.clientX || (e.touches && e.touches[0].clientX);
                     startY = e.clientY || (e.touches && e.touches[0].clientY);
 
-                    const rect = el.getBoundingClientRect();
                     initialLeft = el.offsetLeft;
                     initialTop = el.offsetTop;
 
@@ -1657,7 +1651,6 @@
                         document.removeEventListener('pointerup', end);
 
                         if (hasMoved) {
-                            // Simpan posisi terbaru ke LocalStorage
                             const pinned = DeviceManager.getPinnedIcons();
                             const target = pinned.find(x => x.id === modId);
                             if (target) {
@@ -1666,7 +1659,6 @@
                                 DeviceManager.savePinnedIcons(pinned);
                             }
                         } else {
-                            // Klik biasa (buka aplikasi)
                             OS.openApp(modId);
                         }
                     }
@@ -1680,7 +1672,7 @@
 
                 container.innerHTML = primary.map(m => `
                     <div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
-                        <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop perangkat ini">📌</button>
+                        <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌</button>
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
                         </div>
@@ -1710,7 +1702,6 @@
                 Sound.click();
                 let pinned = DeviceManager.getPinnedIcons();
                 if (!pinned.some(x => x.id === id)) {
-                    // Beri koordinat awal yang proporsional
                     const count = pinned.length;
                     const col = Math.floor(count / 5);
                     const row = count % 5;
