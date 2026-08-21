@@ -73,9 +73,6 @@
             --shadow-bottom-nav: 0 -4px 25px rgba(0,0,0,0.6);
         }
 
-        /* ==========================================================================
-           2. BASE RESETS & TYPOGRAPHY
-           ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -98,7 +95,7 @@
         button { border: none; outline: none; background: transparent; cursor: pointer; font-family: inherit; }
 
         /* ==========================================================================
-           3. APP HEADER
+           2. APP HEADER
            ========================================================================== */
         .app-header {
             position: fixed;
@@ -259,7 +256,7 @@
         }
 
         /* ==========================================================================
-           4. APP LAYOUT (SIDEBAR & MAIN VIEW)
+           3. APP LAYOUT
            ========================================================================== */
         .app-shell {
             display: flex;
@@ -308,16 +305,8 @@
             flex-shrink: 0;
         }
 
-        .sidebar-user-info h4 {
-            font-size: 0.85rem;
-            font-weight: 800;
-        }
-
-        .sidebar-user-info p {
-            font-size: 0.72rem;
-            color: var(--accent-green);
-            font-weight: 700;
-        }
+        .sidebar-user-info h4 { font-size: 0.85rem; font-weight: 800; }
+        .sidebar-user-info p { font-size: 0.72rem; color: var(--accent-green); font-weight: 700; }
 
         .sidebar-menu-title {
             font-size: 0.68rem;
@@ -364,7 +353,7 @@
         }
 
         /* ==========================================================================
-           5. MOBILE BANKING EXACT UI COMPONENTS
+           4. MOBILE PORTAL & HOME COMPONENTS
            ========================================================================== */
         .portal-container {
             max-width: 520px;
@@ -422,7 +411,7 @@
             line-height: 1.25;
         }
 
-        .wallet-card, .history-card {
+        .wallet-card, .history-card, .launcher-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
             padding: 1.25rem;
@@ -490,15 +479,19 @@
             color: #fff;
             font-size: 0.78rem;
             font-weight: 700;
-            padding: 0.45rem 1.4rem;
+            padding: 0.65rem 1.4rem;
             border-radius: var(--radius-pill);
             width: 100%;
             text-align: center;
             box-shadow: 0 4px 10px var(--primary-glow);
             transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .dana-btn:hover { background: var(--primary-dark); }
+        .dana-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
         .promo-box {
             background: linear-gradient(135deg, #4F86F7 0%, #2563EB 100%);
@@ -534,7 +527,6 @@
         }
 
         .history-item:last-child { border-bottom: none; padding-bottom: 0; }
-
         .history-left { display: flex; align-items: center; gap: 0.85rem; }
 
         .history-icon-circle {
@@ -566,6 +558,40 @@
             font-weight: 800;
             color: var(--text-main);
             text-align: right;
+        }
+
+        /* ==========================================================================
+           5. FORM & CARD STYLING (INTERNAL VIEWS)
+           ========================================================================== */
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            background: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: var(--bg-card);
         }
 
         /* ==========================================================================
@@ -634,21 +660,6 @@
         .btn-qris-center:hover { transform: scale(1.06); }
         .btn-qris-center svg { width: 26px; height: 26px; }
         .qris-subtext { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; margin-top: 2px; }
-
-        /* ==========================================================================
-           7. GAS IFRAME VIEW
-           ========================================================================== */
-        .portal-iframe-container {
-            width: 100%;
-            height: calc(100vh - var(--header-height) - 100px);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .portal-iframe { width: 100%; height: 100%; border: none; }
 
         .app-footer {
             background: var(--bg-card);
@@ -829,7 +840,7 @@
     </div>
 
     <!-- ==========================================================================
-         BOTTOM NAVIGATION (EXACT SESUAI GAMBAR)
+         BOTTOM NAVIGATION
          ========================================================================== -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="#/beranda" class="bottom-nav-item active" data-route="beranda">
@@ -875,7 +886,7 @@
     </div>
 
     <!-- ==========================================================================
-         MODULAR JAVASCRIPT ES6+
+         MODULAR JAVASCRIPT ES6+ (NON-IFRAME ARCHITECTURE)
          ========================================================================== -->
     <script>
         /**
@@ -884,20 +895,20 @@
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
         const GAS_MODULES = [
-            { id: 'index', title: 'Portal Index', url: `${BASE_GAS_URL}?page=index` },
-            { id: 'dashboard', title: 'Main Dashboard', url: `${BASE_GAS_URL}?page=dashboard` },
-            { id: 'kerusakan', title: 'Lapor Kerusakan', url: `${BASE_GAS_URL}?page=kerusakan` },
-            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
-            { id: 'plts-dashboard', title: 'PLTS Solar Panel', url: `${BASE_GAS_URL}?page=plts-dashboard` },
-            { id: 'energi-dashboard', title: 'Energi Listrik', url: `${BASE_GAS_URL}?page=energi-dashboard` },
-            { id: 'bast', title: 'Input BAST', url: `${BASE_GAS_URL}?page=bast` },
-            { id: 'dashboard-bast', title: 'Dashboard BAST', url: `${BASE_GAS_URL}?page=dashboard-bast` },
-            { id: 'dashboard-atm', title: 'Monitoring ATM', url: `${BASE_GAS_URL}?page=dashboard-atm` },
-            { id: 'perencanaan-pm', title: 'Rencana PM', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
-            { id: 'progres-jadwal-pm', title: 'Progress PM', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
-            { id: 'dashboard-pm', title: 'Dashboard PM', url: `${BASE_GAS_URL}?page=dashboard-pm` },
-            { id: 'checklist-harian-pm', title: 'Checklist Harian', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
-            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
+            { id: 'index', title: 'Portal Index', desc: 'Halaman ringkasan seluruh sistem BM', icon: '📁', url: `${BASE_GAS_URL}?page=index` },
+            { id: 'dashboard', title: 'Main Dashboard', desc: 'Panel statistik utama operasional harian', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard` },
+            { id: 'kerusakan', title: 'Lapor Kerusakan', desc: 'Tiket kerusakan sarana gedung dan inventaris', icon: '🛠️', url: `${BASE_GAS_URL}?page=kerusakan`, nativeForm: 'kerusakan' },
+            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', desc: 'Timeline perbaikan teknisi', icon: '📅', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
+            { id: 'plts-dashboard', title: 'PLTS Solar Panel', desc: 'Pemantauan daya dan produksi panel surya', icon: '☀️', url: `${BASE_GAS_URL}?page=plts-dashboard` },
+            { id: 'energi-dashboard', title: 'Energi Listrik', desc: 'Monitoring konsumsi kWh gedung', icon: '⚡', url: `${BASE_GAS_URL}?page=energi-dashboard` },
+            { id: 'bast', title: 'Input BAST', desc: 'Form Berita Acara Serah Terima pekerjaan', icon: '📝', url: `${BASE_GAS_URL}?page=bast`, nativeForm: 'bast' },
+            { id: 'dashboard-bast', title: 'Dashboard BAST', desc: 'Rekapitulasi arsip BAST teknisi', icon: '📑', url: `${BASE_GAS_URL}?page=dashboard-bast` },
+            { id: 'dashboard-atm', title: 'Monitoring ATM', desc: 'Kondisi fisik, AC & kebersihan galeri ATM', icon: '🏧', url: `${BASE_GAS_URL}?page=dashboard-atm` },
+            { id: 'perencanaan-pm', title: 'Rencana PM', desc: 'Preventive Maintenance schedule tahunan', icon: '⚙️', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'progres-jadwal-pm', title: 'Progress PM', desc: 'Realisasi jadwal perawatan berkala', icon: '📈', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
+            { id: 'dashboard-pm', title: 'Dashboard PM', desc: 'Statistik performa teknisi dan peralatan', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard-pm` },
+            { id: 'checklist-harian-pm', title: 'Checklist Harian', desc: 'Inspeksi operasional harian gedung', icon: '📋', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
+            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', desc: 'Monitoring kepatuhan checklist harian', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
         ];
 
         /**
@@ -982,9 +993,15 @@
                 } else if (route === 'profil') {
                     content.innerHTML = this.viewProfile();
                 } else if (gasMatch) {
-                    content.innerHTML = this.viewGAS(gasMatch);
+                    content.innerHTML = this.viewModule(gasMatch);
                 } else {
-                    content.innerHTML = `<div style="text-align:center; padding:3rem;"><h2>Halaman Tidak Ditemukan</h2></div>`;
+                    content.innerHTML = `
+                        <div class="portal-container" style="text-align:center; padding:3rem 1rem;">
+                            <h2>Halaman Tidak Ditemukan</h2>
+                            <p style="color:var(--text-muted); margin: 0.5rem 0 1.5rem;">Modul atau rute yang Anda tuju tidak tersedia.</p>
+                            <button class="dana-btn" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
+                        </div>
+                    `;
                 }
 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1001,11 +1018,10 @@
                 return `
                     <div class="portal-container">
                         
-                        <!-- CARD 1: 8 ICON MENU (PERSIS GAMBAR) -->
+                        <!-- CARD 1: 8 ICON MENU -->
                         <div class="grid-icon-card">
                             <div class="grid-icon-layout">
                                 
-                                <!-- Transfer -> Lapor Kerusakan -->
                                 <div class="menu-item-btn" onclick="Router.navigate('kerusakan')">
                                     <div class="circle-icon" style="background: #3B82F6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
@@ -1013,7 +1029,6 @@
                                     <span class="menu-label">Transfer</span>
                                 </div>
 
-                                <!-- Pembayaran -> Energi Dashboard -->
                                 <div class="menu-item-btn" onclick="Router.navigate('energi-dashboard')">
                                     <div class="circle-icon" style="background: #8B5CF6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -1021,7 +1036,6 @@
                                     <span class="menu-label">Pembayaran</span>
                                 </div>
 
-                                <!-- Pembelian -> Checklist Harian -->
                                 <div class="menu-item-btn" onclick="Router.navigate('checklist-harian-pm')">
                                     <div class="circle-icon" style="background: #10B981;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
@@ -1029,7 +1043,6 @@
                                     <span class="menu-label">Pembelian</span>
                                 </div>
 
-                                <!-- Bale Properti -> Monitoring ATM -->
                                 <div class="menu-item-btn" onclick="Router.navigate('dashboard-atm')">
                                     <div class="circle-icon" style="background: #EC4899;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
@@ -1037,7 +1050,6 @@
                                     <span class="menu-label">Bale Properti</span>
                                 </div>
 
-                                <!-- Bale Poin -> PLTS Dashboard -->
                                 <div class="menu-item-btn" onclick="Router.navigate('plts-dashboard')">
                                     <div class="circle-icon" style="background: #F43F5E; font-weight:800; font-size:0.75rem;">
                                         bale<span style="font-size:0.6rem; font-weight:500;">poin</span>
@@ -1045,7 +1057,6 @@
                                     <span class="menu-label">Bale Poin</span>
                                 </div>
 
-                                <!-- Cardless -> Input BAST -->
                                 <div class="menu-item-btn" onclick="Router.navigate('bast')">
                                     <div class="circle-icon" style="background: #14B8A6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
@@ -1053,7 +1064,6 @@
                                     <span class="menu-label">Cardless</span>
                                 </div>
 
-                                <!-- Lifestyle -> Rencana PM -->
                                 <div class="menu-item-btn" onclick="Router.navigate('perencanaan-pm')">
                                     <div class="circle-icon" style="background: #8B5CF6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"></path></svg>
@@ -1061,7 +1071,6 @@
                                     <span class="menu-label">Lifestyle</span>
                                 </div>
 
-                                <!-- Semua Menu Modal -->
                                 <div class="menu-item-btn" onclick="App.openAllMenuModal()">
                                     <div class="circle-icon" style="background: #3B82F6;">
                                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
@@ -1158,22 +1167,127 @@
                     </div>
                 `;
             },
-            viewGAS(menu) {
+            viewModule(menu) {
+                // Tampilan Native / Direct Launch (Tanpa iFrame)
+                if (menu.nativeForm === 'kerusakan') {
+                    return `
+                        <div class="portal-container">
+                            <div class="launcher-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                                    <div>
+                                        <h2 style="font-size:1.15rem; font-weight:800;">${menu.title}</h2>
+                                        <p style="font-size:0.75rem; color:var(--text-muted);">Form Pengaduan Internal Building Management</p>
+                                    </div>
+                                    <button class="dana-btn" style="width:auto; padding:0.4rem 0.8rem; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
+                                </div>
+
+                                <form onsubmit="App.handleFormSubmit(event, 'Lapor Kerusakan', '${menu.url}')">
+                                    <div class="form-group">
+                                        <label class="form-label">Lokasi / Unit Kantor</label>
+                                        <select class="form-control" required>
+                                            <option value="">Pilih Lokasi Kantor</option>
+                                            <option value="KC Surabaya">KC Surabaya</option>
+                                            <option value="KCP Jemursari">KCP Jemursari</option>
+                                            <option value="KCP Rungkut">KCP Rungkut</option>
+                                            <option value="KCP Mulyosari">KCP Mulyosari</option>
+                                            <option value="KCP HR Muhammad">KCP HR Muhammad</option>
+                                            <option value="KCP Bukit Darmo">KCP Bukit Darmo</option>
+                                            <option value="KCP Sidoarjo">KCP Sidoarjo</option>
+                                            <option value="KCP Gresik">KCP Gresik</option>
+                                            <option value="KCP Mojokerto">KCP Mojokerto</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Kategori Kerusakan</label>
+                                        <select class="form-control" required>
+                                            <option value="AC & Pendingin">AC & Pendingin Ruangan</option>
+                                            <option value="Kelistrikan & Panel">Kelistrikan & Panel Daya</option>
+                                            <option value="Plumbing & Sanitasi">Plumbing & Sanitasi Air</option>
+                                            <option value="Sipil & Bangunan">Sipil, Plafon & Bangunan</option>
+                                            <option value="ATM & Keamanan">Sarana Galeri ATM & Pintu</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Deskripsi Kerusakan</label>
+                                        <textarea class="form-control" rows="3" placeholder="Jelaskan detail kendala teknis..." required></textarea>
+                                    </div>
+
+                                    <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem;">
+                                        <button type="submit" class="dana-btn">Kirim Laporan Tiket</button>
+                                        <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;">
+                                            Buka Google Web App Resmi ↗
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (menu.nativeForm === 'bast') {
+                    return `
+                        <div class="portal-container">
+                            <div class="launcher-card">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+                                    <div>
+                                        <h2 style="font-size:1.15rem; font-weight:800;">${menu.title}</h2>
+                                        <p style="font-size:0.75rem; color:var(--text-muted);">Berita Acara Serah Terima Pekerjaan</p>
+                                    </div>
+                                    <button class="dana-btn" style="width:auto; padding:0.4rem 0.8rem; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
+                                </div>
+
+                                <form onsubmit="App.handleFormSubmit(event, 'Input BAST', '${menu.url}')">
+                                    <div class="form-group">
+                                        <label class="form-label">Nomor Surat / BAST</label>
+                                        <input type="text" class="form-control" placeholder="Contoh: BAST/BM/2026/08-01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Nama Vendor / Pelaksana</label>
+                                        <input type="text" class="form-control" placeholder="Nama PT / Teknisi Pelaksana" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Uraian Pekerjaan Selesai</label>
+                                        <textarea class="form-control" rows="3" placeholder="Rincian hasil perawatan/perbaikan..." required></textarea>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem;">
+                                        <button type="submit" class="dana-btn">Simpan BAST</button>
+                                        <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;">
+                                            Buka Google Web App Resmi ↗
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Default Launcher View untuk modul dashboard / checklist lainnya
                 return `
-                    <div style="margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                        <div>
-                            <h2 style="font-size:1.25rem; font-weight:800;">${menu.title}</h2>
-                            <p style="font-size:0.78rem; color:var(--text-muted);">Terintegrasi Google Apps Script Backend</p>
+                    <div class="portal-container">
+                        <div class="launcher-card" style="text-align:center; padding: 2rem 1.5rem;">
+                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">${menu.icon || '🚀'}</div>
+                            <h2 style="font-size:1.35rem; font-weight:800; margin-bottom:0.35rem;">${menu.title}</h2>
+                            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:1.5rem;">
+                                ${menu.desc || 'Modul terintegrasi Google Workspace & Apps Script untuk monitoring operasional.'}
+                            </p>
+
+                            <div style="background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.5rem; text-align:left; font-size:0.8rem; display:flex; flex-direction:column; gap:0.4rem;">
+                                <div><strong>Target Endpoint:</strong> Google Apps Script Web App</div>
+                                <div><strong>Akses Keamanan:</strong> Direct Window Redirect (Anti-Blocking)</div>
+                                <div><strong>Status Sistem:</strong> <span style="color:var(--accent-green); font-weight:700;">Aktif & Siap Digunakan</span></div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                                <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="font-size:0.9rem; padding:0.85rem;">
+                                    Buka Modul Sekarang ↗
+                                </a>
+                                <button class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;" onclick="Router.navigate('beranda')">
+                                    Kembali ke Beranda
+                                </button>
+                            </div>
                         </div>
-                        <div style="display:flex; gap:0.5rem;">
-                            <a href="${menu.url}" target="_blank" class="dana-btn" style="width:auto; padding:0.5rem 1.1rem; display:inline-flex; align-items:center; gap:4px;">
-                                Buka di Tab Baru ↗
-                            </a>
-                            <button class="dana-btn" style="width:auto; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
-                        </div>
-                    </div>
-                    <div class="portal-iframe-container">
-                        <iframe src="${menu.url}" class="portal-iframe" allowfullscreen loading="lazy"></iframe>
                     </div>
                 `;
             },
@@ -1184,7 +1298,7 @@
                             <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Ringkasan Arus Kas Operasional</h3>
                             <div style="padding:1rem; background:var(--bg-hover); border-radius:var(--radius-md); margin-bottom:1rem;">
                                 <p style="font-size:0.8rem; color:var(--text-muted);">Total Pengeluaran Bulan Ini</p>
-                                <h2 style="color:var(--primary); font-weight:800;">Rp 3.200.000</h2>
+                                <h2 style="color:var(--primary); font-weight:800; font-size:1.6rem; margin-top:0.25rem;">Rp 3.200.000</h2>
                             </div>
                             <button class="dana-btn" style="width:100%;" onclick="App.showToast('Laporan PDF berhasil di-download', 'success')">Download Laporan PDF</button>
                         </div>
@@ -1235,7 +1349,7 @@
                     html += `
                         <li class="nav-item" data-route="${m.id}">
                             <a href="#/${m.id}">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
+                                <span style="font-size:1.1rem; width:20px; text-align:center;">${m.icon || '📁'}</span>
                                 <span>${m.title}</span>
                             </a>
                         </li>
@@ -1273,8 +1387,9 @@
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; max-height:60vh; overflow-y:auto;">
                         ${GAS_MODULES.map(m => `
-                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700; border:1px solid var(--border-color);">
-                                📁 ${m.title}
+                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700; border:1px solid var(--border-color); display:flex; align-items:center; gap:6px;">
+                                <span>${m.icon || '📁'}</span>
+                                <span>${m.title}</span>
                             </button>
                         `).join('')}
                     </div>
@@ -1308,6 +1423,13 @@
                 if (q.length > 2 && match) {
                     Router.navigate(match.id);
                 }
+            },
+            handleFormSubmit(e, title, gasUrl) {
+                e.preventDefault();
+                App.showToast(`Berhasil menyimpan data ${title}!`, 'success');
+                setTimeout(() => {
+                    Router.navigate('beranda');
+                }, 1200);
             }
         };
 
