@@ -12,7 +12,7 @@
 
     <style>
         /* ==========================================================================
-           1. WINDOWS 11 / FLUENT DESIGN SYSTEM
+           1. DESIGN SYSTEM VARIABLES
            ========================================================================== */
         :root {
             --win-blue: #0078D4;
@@ -79,7 +79,7 @@
         }
 
         /* ==========================================================================
-           2. DESKTOP AREA & SHORTCUTS
+           2. DESKTOP AREA & DYNAMIC ICONS
            ========================================================================== */
         .desktop-area {
             flex: 1;
@@ -101,7 +101,8 @@
             flex-wrap: wrap;
             gap: 1.25rem 1rem;
             z-index: 10;
-            max-width: 320px;
+            max-width: 340px;
+            pointer-events: none;
         }
 
         .desktop-icon-btn {
@@ -116,6 +117,7 @@
             background: transparent;
             cursor: pointer;
             position: relative;
+            pointer-events: auto;
             transition: var(--transition);
         }
 
@@ -163,7 +165,7 @@
         }
 
         /* ==========================================================================
-           3. FLOATING WINDOW (RESPONSIVE)
+           3. FLOATING WINDOW
            ========================================================================== */
         .win-frame {
             width: 100%;
@@ -563,7 +565,7 @@
         }
 
         /* ==========================================================================
-           5. MOBILE SPECIAL VIEW (PENYESUAIAN KHUSUS SMARTPHONE)
+           5. MOBILE SPECIAL VIEW
            ========================================================================== */
         @media (max-width: 768px) {
             .desktop-area {
@@ -616,7 +618,6 @@
                 width: 100%;
             }
 
-            /* 2 Kolom Tile Rapi di HP */
             .win-tiles-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.65rem;
@@ -647,7 +648,6 @@
                 padding: 2px 4px;
             }
 
-            /* Start Menu Mobile */
             .start-menu {
                 width: calc(100vw - 20px);
                 left: 10px;
@@ -663,7 +663,6 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Taskbar Mobile */
             .taskbar-center {
                 left: 50%;
                 transform: translateX(-50%);
@@ -687,12 +686,12 @@
          ========================================================================== -->
     <main class="desktop-area">
         
-        <!-- Ikon-ikon Desktop (Tampil di wallpaper) -->
+        <!-- Ikon Desktop Terisolasi Per Perangkat -->
         <div class="desktop-icons-container" id="desktopIconsContainer">
-            <!-- Rendered by OS.renderDesktopIcons() -->
+            <!-- Rendered by Device-Specific LocalStorage -->
         </div>
 
-        <!-- Central Windows 11 App Window -->
+        <!-- Central Windows App Window -->
         <div class="win-frame" id="mainWindow">
             
             <!-- Window Titlebar -->
@@ -714,7 +713,7 @@
                 <div class="win-nav-header">
                     <div class="win-nav-title">
                         <h2>Menu Operasional Utama</h2>
-                        <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop</p>
+                        <p>Klik 📌 untuk mengeluarkan ikon ke Desktop perangkat ini</p>
                     </div>
 
                     <div class="win-search-box">
@@ -735,7 +734,7 @@
     </main>
 
     <!-- ==========================================================================
-         2. WINDOWS START MENU (POPUP)
+         2. START MENU
          ========================================================================== -->
     <div class="start-menu" id="startMenu">
         <div class="start-header-user">
@@ -762,16 +761,14 @@
     </div>
 
     <!-- ==========================================================================
-         3. WINDOWS 11 TASKBAR (BOTTOM)
+         3. WINDOWS TASKBAR
          ========================================================================== -->
     <footer class="win-taskbar">
         
-        <!-- Left Quick Info -->
         <div class="taskbar-info-text" style="display:flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:700; color:var(--text-primary); text-shadow:0 1px 2px rgba(0,0,0,0.2);">
             <span>● Google Active</span>
         </div>
 
-        <!-- Center Taskbar Pinned Icons -->
         <div class="taskbar-center">
             <button class="task-btn" id="startBtn" onclick="OS.toggleStart()" title="Start Menu">
                 <div class="win-start-logo">
@@ -793,7 +790,6 @@
             </button>
         </div>
 
-        <!-- Right System Tray Clock & Volume -->
         <div class="taskbar-tray">
             <button class="task-btn" onclick="Sound.startup()" title="Uji Suara Windows" style="width:32px; height:32px; font-size:0.85rem;">
                 🔊
@@ -810,7 +806,7 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT CONTROLLER & AUDIO ENGINE
+         4. JAVASCRIPT CONTROLLER & DEVICE-SPECIFIC PERSISTENCE
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
@@ -837,10 +833,34 @@
 
         const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'all-modules'];
 
-        // Desktop shortcut state
-        let pinnedDesktopIcons = JSON.parse(localStorage.getItem('win_pinned_desktop')) || [
-            'kerusakan', 'checklist-harian-pm', 'dashboard'
-        ];
+        /**
+         * Device Detector & Storage Isolator (Kunci penyimpanan terpisah HP vs PC)
+         */
+        const DeviceManager = {
+            isMobile() {
+                return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            },
+            getStorageKey() {
+                return this.isMobile() ? 'win_pinned_mobile_v1' : 'win_pinned_desktop_v1';
+            },
+            getPinnedIcons() {
+                const key = this.getStorageKey();
+                const defaultIcons = this.isMobile() 
+                    ? ['kerusakan', 'checklist-harian-pm'] 
+                    : ['kerusakan', 'checklist-harian-pm', 'dashboard'];
+                
+                try {
+                    const saved = localStorage.getItem(key);
+                    return saved ? JSON.parse(saved) : defaultIcons;
+                } catch(e) {
+                    return defaultIcons;
+                }
+            },
+            savePinnedIcons(icons) {
+                const key = this.getStorageKey();
+                localStorage.setItem(key, JSON.stringify(icons));
+            }
+        };
 
         const Wallpaper = {
             list: [
@@ -920,7 +940,7 @@
                         const osc = this.ctx.createOscillator();
                         const gain = this.ctx.createGain();
                         osc.type = 'sine';
-                        osc.frequency.setValueAtTime(c = freq, now + idx * 0.08);
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
                         gain.gain.setValueAtTime(0.12, now + idx * 0.08);
                         gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.8);
                         osc.connect(gain);
@@ -971,12 +991,22 @@
                         sm.classList.remove('open');
                     }
                 });
+
+                // Auto-sync icon layout saat resize/orientasi layar berubah
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        OS.renderDesktopIcons();
+                    }, 200);
+                });
             },
             renderDesktopIcons() {
                 const con = document.getElementById('desktopIconsContainer');
+                const pinned = DeviceManager.getPinnedIcons();
                 let html = '';
                 
-                pinnedDesktopIcons.forEach(id => {
+                pinned.forEach(id => {
                     const mod = MODULES.find(m => m.id === id);
                     if (mod) {
                         html += `
@@ -997,7 +1027,7 @@
 
                 container.innerHTML = primary.map(m => `
                     <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : `OS.openDirect('${m.url}')`}">
-                        ${m.action !== 'start' ? `<button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌</button>` : ''}
+                        ${m.action !== 'start' ? `<button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop perangkat ini">📌</button>` : ''}
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
                         </div>
@@ -1026,11 +1056,12 @@
             pinToDesktop(id, event) {
                 if (event) event.stopPropagation();
                 Sound.click();
-                if (!pinnedDesktopIcons.includes(id)) {
-                    pinnedDesktopIcons.push(id);
-                    localStorage.setItem('win_pinned_desktop', JSON.stringify(pinnedDesktopIcons));
+                let pinned = DeviceManager.getPinnedIcons();
+                if (!pinned.includes(id)) {
+                    pinned.push(id);
+                    DeviceManager.savePinnedIcons(pinned);
                     this.renderDesktopIcons();
-                    this.showToast('Ikon berhasil dipin ke Desktop');
+                    this.showToast('Ikon berhasil dipin ke Desktop perangkat ini');
                 } else {
                     this.showToast('Ikon sudah ada di Desktop');
                 }
@@ -1038,8 +1069,9 @@
             unpinFromDesktop(id, event) {
                 if (event) event.stopPropagation();
                 Sound.click();
-                pinnedDesktopIcons = pinnedDesktopIcons.filter(x => x !== id);
-                localStorage.setItem('win_pinned_desktop', JSON.stringify(pinnedDesktopIcons));
+                let pinned = DeviceManager.getPinnedIcons();
+                pinned = pinned.filter(x => x !== id);
+                DeviceManager.savePinnedIcons(pinned);
                 this.renderDesktopIcons();
                 this.showToast('Shortcut dihapus dari Desktop');
             },
@@ -1063,7 +1095,7 @@
                 const taskBtn = document.getElementById('taskbarHubBtn');
                 win.classList.add('minimized');
                 taskBtn.classList.remove('active');
-                this.showToast('Menampilkan Wallpaper Desktop');
+                this.showToast('Menampilkan Desktop');
             },
             closeWindow() {
                 this.minimizeWindow();
