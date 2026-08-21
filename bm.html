@@ -143,71 +143,69 @@
         }
 
         /* ==========================================================================
-           3. DESKTOP WORKSPACE & DYNAMIC ICONS
+           3. DESKTOP WORKSPACE & ABSOLUTE DRAGGABLE ICONS
            ========================================================================== */
         .desktop-area {
             flex: 1;
-            padding: 1rem;
+            padding: 0;
             position: relative;
             overflow: hidden;
+            width: 100%;
+            height: calc(100vh - var(--taskbar-height));
+            height: calc(100dvh - var(--taskbar-height));
         }
 
         .desktop-icons-container {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            bottom: calc(var(--taskbar-height) + 1rem);
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            gap: 1rem 0.75rem;
+            inset: 0;
             z-index: 10;
-            max-width: 320px;
             pointer-events: none;
         }
 
         .desktop-icon-btn {
+            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 78px;
-            height: 78px;
+            height: 82px;
             border-radius: var(--radius-card);
             border: 1px solid transparent;
             background: transparent;
-            cursor: pointer;
-            position: relative;
+            cursor: move;
             pointer-events: auto;
-            transition: var(--transition);
+            touch-action: none;
+            transition: background 0.15s ease, border-color 0.15s ease;
         }
 
         .desktop-icon-btn:hover, .desktop-icon-btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
 
-        .desktop-icon-btn span.icon { font-size: 2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+        .desktop-icon-btn span.icon { font-size: 2.1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); pointer-events: none; }
         .desktop-icon-btn span.lbl {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 700;
             color: #FFFFFF;
-            margin-top: 4px;
+            margin-top: 3px;
             text-align: center;
             line-height: 1.2;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.95);
             max-width: 74px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            pointer-events: none;
         }
 
         .remove-icon-btn {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: 0;
+            right: 0;
             width: 18px;
             height: 18px;
             border-radius: 50%;
@@ -219,6 +217,8 @@
             align-items: center;
             justify-content: center;
             border: 1.5px solid #fff;
+            cursor: pointer;
+            z-index: 5;
         }
 
         .desktop-icon-btn:hover .remove-icon-btn {
@@ -533,6 +533,23 @@
             box-shadow: 0 4px 10px rgba(238, 39, 55, 0.35);
         }
 
+        /* Radio Player Window */
+        #radioWindow {
+            max-width: 440px;
+            display: none;
+        }
+
+        .radio-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--mica-bg);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
         /* ==========================================================================
            5. TASKBAR (FLEXBOX 3-ZONE CLEAN)
            ========================================================================== */
@@ -642,7 +659,7 @@
             bottom: calc(var(--taskbar-height) + 10px);
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            width: 440px;
+            width: 480px;
             background: var(--window-bg);
             border: 1px solid var(--window-border);
             border-radius: var(--radius-win);
@@ -693,7 +710,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
-            max-height: 280px;
+            max-height: 300px;
             overflow-y: auto;
         }
 
@@ -759,30 +776,6 @@
            6. RESPONSIVE MOBILE FIX
            ========================================================================== */
         @media (max-width: 768px) {
-            .desktop-area {
-                padding: 0.5rem;
-            }
-
-            .desktop-icons-container {
-                top: 0.5rem;
-                left: 0.5rem;
-                right: 0.5rem;
-                bottom: calc(var(--taskbar-height) + 0.5rem);
-                max-width: 100%;
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 0.75rem 0.4rem;
-                align-content: flex-start;
-                justify-items: center;
-            }
-
-            .desktop-icon-btn {
-                width: 70px;
-                height: 70px;
-            }
-            .desktop-icon-btn span.icon { font-size: 1.7rem; }
-            .desktop-icon-btn span.lbl { font-size: 0.65rem; }
-
             .win-frame {
                 left: 0.5rem !important;
                 top: 0.5rem !important;
@@ -888,9 +881,10 @@
          ========================================================================== -->
     <main class="desktop-area" id="desktopArea">
         
+        <!-- Ikon-ikon Desktop (Posisi Koordinat Bebas Digeser Sesuai Keinginan) -->
         <div class="desktop-icons-container" id="desktopIconsContainer"></div>
 
-        <!-- 1. Central Windows App Window (Portal Hub) - Default: MINIMIZED (Tertutup) -->
+        <!-- 1. Central Windows App Window (Portal Hub) - Default: MINIMIZED -->
         <div class="win-frame minimized" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
             
             <div class="win-titlebar" id="mainTitlebar">
@@ -908,8 +902,8 @@
             <div class="win-body">
                 <div class="win-nav-header">
                     <div class="win-nav-title">
-                        <h2>Menu Operasional Utama</h2>
-                        <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop</p>
+                        <h2>Menu Operasional & Layanan</h2>
+                        <p>Klik 📌 untuk mengeluarkan ikon ke Desktop (Bebas digeser di mana saja)</p>
                     </div>
 
                     <div class="win-search-box">
@@ -918,7 +912,7 @@
                     </div>
                 </div>
 
-                <!-- 8 Tiles Grid -->
+                <!-- Modul Tiles Grid -->
                 <div class="win-tiles-grid" id="tilesContainer"></div>
             </div>
 
@@ -985,6 +979,38 @@
             </div>
         </div>
 
+        <!-- 4. Windows Radio Online Window -->
+        <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 220px);">
+            <div class="win-titlebar" id="radioTitlebar">
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#8B5CF6;">📻</div>
+                    <span>Radio Online Player</span>
+                </div>
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('radioWindow', 'taskbarRadioBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup Radio" onclick="RadioPlayer.close()">✕</button>
+                </div>
+            </div>
+
+            <div class="win-body" style="padding: 1.2rem;">
+                <div class="radio-box">
+                    <h3 id="radioChannelName" style="font-size:1rem; font-weight:800;">Suara Surabaya FM</h3>
+                    <p style="font-size:0.75rem; color:var(--text-secondary);">Live Streaming Berita & Musik</p>
+                    
+                    <audio id="audioStream" controls style="width:100%; margin-top:0.5rem;">
+                        <source src="https://stream.suarasurabaya.net/stream" type="audio/mpeg">
+                        Browser Anda tidak mendukung audio player.
+                    </audio>
+
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:0.5rem;">
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Suara Surabaya FM', 'https://stream.suarasurabaya.net/stream')">Suara Surabaya</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Prambors Radio', 'https://masima.rastream.com/masima-pramborsjakarta')">Prambors</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Gen FM', 'https://stream-node0.rri.co.id/streaming/9/9001/rripro1-jakarta.mp3')">RRI Pro 1</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- ==========================================================================
@@ -996,7 +1022,7 @@
                 <div class="user-avatar">BM</div>
                 <div>
                     <h4 style="font-size:0.85rem; font-weight:800;">Enterprise System</h4>
-                    <p style="font-size:0.7rem; color:var(--text-secondary);">14 Modul Operasional Aktif</p>
+                    <p style="font-size:0.7rem; color:var(--text-secondary);">20 Modul & Eksternal Apps</p>
                 </div>
             </div>
             <div style="display:flex; gap:4px;">
@@ -1006,7 +1032,7 @@
         </div>
 
         <div style="font-size:0.7rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-bottom:0.6rem;">
-            Daftar Seluruh Modul (GAS)
+            Daftar Seluruh Modul & Eksternal
         </div>
 
         <div class="all-apps-list" id="startAppsList"></div>
@@ -1017,14 +1043,12 @@
          ========================================================================== -->
     <footer class="win-taskbar">
         
-        <!-- Left Area -->
         <div class="taskbar-left">
             <span class="taskbar-status-text">
                 <span style="color:#107C41;">●</span> Active
             </span>
         </div>
 
-        <!-- Center Area -->
         <div class="taskbar-center">
             <button class="task-btn" id="startBtn" onclick="OS.toggleStart()" title="Start Menu">
                 <div class="win-start-logo">
@@ -1032,7 +1056,7 @@
                     <span></span><span></span>
                 </div>
             </button>
-            <button class="task-btn" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
+            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
             </button>
             <button class="task-btn" id="taskbarNotepadBtn" onclick="Notepad.toggle()" title="Buka Notepad">
@@ -1041,8 +1065,11 @@
             <button class="task-btn" id="taskbarGempaBtn" onclick="GempaAlert.toggle()" title="Monitoring Gempa BMKG">
                 <span style="font-size:1.15rem;">⚠️</span>
             </button>
-            <button class="task-btn" onclick="OS.openApp('dashboard')" title="Dashboard Utama">
-                <span style="font-size:1.15rem;">📊</span>
+            <button class="task-btn" id="taskbarRadioBtn" onclick="RadioPlayer.toggle()" title="Radio Online">
+                <span style="font-size:1.15rem;">📻</span>
+            </button>
+            <button class="task-btn" onclick="OS.openDirect('https://www.google.com')" title="Google Chrome Browser">
+                <span style="font-size:1.15rem;">🌐</span>
             </button>
             <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">
                 <span style="font-size:1.15rem;">🖼️</span>
@@ -1052,7 +1079,6 @@
             </button>
         </div>
 
-        <!-- Right Area -->
         <div class="taskbar-tray">
             <button class="task-btn" onclick="Sound.startup()" title="Uji Suara Windows" style="width:30px; height:30px; font-size:0.82rem;">
                 🔊
@@ -1069,12 +1095,13 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT: LOGIC & ANTI-CACHE BMKG ENGINE
+         4. JAVASCRIPT: LOGIC & FREE DRAGGABLE ICONS
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
         const MODULES = [
+            // Core Operasional BM
             { id: 'kerusakan', title: 'Lapor Kerusakan', sub: 'Input tiket kendala', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
             { id: 'jadwal-kerusakan', title: 'Jadwal Perbaikan', sub: 'Monitoring perbaikan', icon: '📅', color: '#F97316', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
             { id: 'checklist-harian-pm', title: 'Checklist Harian', sub: 'Inspeksi sarana gedung', icon: '📋', color: '#10B981', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
@@ -1082,10 +1109,18 @@
             { id: 'plts-dashboard', title: 'PLTS Solar', sub: 'Produksi solar panel', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            
+            // Menu Tambahan Sesuai Request
+            { id: 'bmis', title: 'BMIS BPB', sub: 'bmis.bpb.co.id', icon: '🏢', color: '#00529C', url: 'https://bmis.bpb.co.id' },
+            { id: 'belfis', title: 'BELFIS BPB', sub: 'belfis.bpb.co.id', icon: '🏗️', color: '#0284C7', url: 'https://belfis.bpb.co.id' },
+            { id: 'absensi', title: 'Binayasa Absensi', sub: 'binayasa-absensi.com', icon: '👤', color: '#10B981', url: 'https://binayasa-absensi.com' },
+            { id: 'radio', title: 'Radio Online', sub: 'Live Streaming Player', icon: '📻', color: '#8B5CF6', action: 'radio' },
+            { id: 'youtube', title: 'YouTube', sub: 'Streaming Video', icon: '▶️', color: '#FF0000', url: 'https://www.youtube.com' },
+            { id: 'chrome', title: 'Google Chrome', sub: 'Web Browser', icon: '🌐', color: '#4285F4', url: 'https://www.google.com' },
             { id: 'gempa', title: 'Peringatan Gempa', sub: 'BMKG Real-time', icon: '⚠️', color: '#EE2737', action: 'gempa' },
             { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
-            { id: 'all-modules', title: 'Semua Modul', sub: '14 Modul Operasional', icon: '📁', color: '#0078D4', action: 'start' },
             
+            // Sub Modules GAS
             { id: 'dashboard', title: 'Dashboard Utama', sub: 'Statistik operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
             { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', sub: 'Statistik harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
             { id: 'progres-jadwal-pm', title: 'Progress PM', sub: 'Realisasi jadwal', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
@@ -1095,15 +1130,20 @@
             { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'gempa'];
+        // Tile yang tampil di jendela hub
+        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'bmis', 'belfis', 'absensi', 'radio', 'youtube', 'chrome', 'gempa', 'notepad', 'dashboard'];
 
+        /**
+         * FREE DRAGGABLE DESKTOP ICONS WITH LOCALSTORAGE POSITIONING
+         */
         const DeviceManager = {
             isMobile() {
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             },
             getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_v3' : 'win_pinned_desktop_v3';
+                return this.isMobile() ? 'win_pinned_mobile_pos_v4' : 'win_pinned_desktop_pos_v4';
             },
+            // Mengembalikan Array Object: [{ id: 'kerusakan', x: 20, y: 20 }, ...]
             getPinnedIcons() {
                 const key = this.getStorageKey();
                 try {
@@ -1119,11 +1159,47 @@
             }
         };
 
+        const RadioPlayer = {
+            open() {
+                Sound.click();
+                const win = document.getElementById('radioWindow');
+                const btn = document.getElementById('taskbarRadioBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                if (btn) btn.classList.add('active');
+                OS.bringToFront('radioWindow');
+            },
+            close() {
+                Sound.click();
+                const win = document.getElementById('radioWindow');
+                const btn = document.getElementById('taskbarRadioBtn');
+                win.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+                const audio = document.getElementById('audioStream');
+                audio.pause();
+            },
+            toggle() {
+                const win = document.getElementById('radioWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            },
+            changeStation(name, url) {
+                Sound.click();
+                document.getElementById('radioChannelName').innerText = name;
+                const audio = document.getElementById('audioStream');
+                audio.src = url;
+                audio.play();
+                OS.showToast(`Memutar: ${name}`);
+            }
+        };
+
         const GempaAlert = {
             lastEventId: null,
             init() {
                 this.fetchData(true);
-                // Polling setiap 30 detik
                 setInterval(() => this.fetchData(false), 30000);
             },
             async fetchData(isFirstLoad = false) {
@@ -1158,9 +1234,7 @@
                             OS.showGempaToast(`Gempa M ${gempa.Magnitude} - ${gempa.Wilayah} (${gempa.Potensi})`);
                         }
                     }
-                } catch(e) {
-                    console.warn('Gagal memuat API BMKG:', e);
-                }
+                } catch(e) {}
             },
             open() {
                 Sound.click();
@@ -1268,13 +1342,12 @@
 
                 const startDrag = (e) => {
                     if (window.innerWidth <= 768) return;
-                    
                     isDragging = true;
                     win.classList.add('dragging');
                     OS.bringToFront(winId);
 
-                    startX = e.clientX || e.touches[0].clientX;
-                    startY = e.clientY || e.touches[0].clientY;
+                    startX = e.clientX || (e.touches && e.touches[0].clientX);
+                    startY = e.clientY || (e.touches && e.touches[0].clientY);
 
                     const rect = win.getBoundingClientRect();
                     initialLeft = rect.left;
@@ -1457,6 +1530,7 @@
                 WindowManager.makeDraggable('mainWindow', 'mainTitlebar');
                 WindowManager.makeDraggable('notepadWindow', 'notepadTitlebar');
                 WindowManager.makeDraggable('gempaWindow', 'gempaTitlebar');
+                WindowManager.makeDraggable('radioWindow', 'radioTitlebar');
 
                 const unlockAudio = () => {
                     Sound.init();
@@ -1500,30 +1574,113 @@
             renderDesktopIcons() {
                 const con = document.getElementById('desktopIconsContainer');
                 const pinned = DeviceManager.getPinnedIcons();
-                let html = '';
-                
-                pinned.forEach(id => {
-                    const mod = MODULES.find(m => m.id === id);
+                con.innerHTML = '';
+
+                pinned.forEach((item, index) => {
+                    const mod = MODULES.find(m => m.id === item.id);
                     if (mod) {
-                        html += `
-                            <div class="desktop-icon-btn" onclick="OS.openApp('${mod.id}')" title="Buka ${mod.title}">
-                                <button class="remove-icon-btn" onclick="OS.unpinFromDesktop('${mod.id}', event)" title="Hapus shortcut">✕</button>
-                                <span class="icon">${mod.icon}</span>
-                                <span class="lbl">${mod.title}</span>
-                            </div>
+                        const iconEl = document.createElement('div');
+                        iconEl.className = 'desktop-icon-btn';
+                        iconEl.id = `desktop_icon_${mod.id}`;
+                        iconEl.title = `Klik untuk buka, drag untuk geser ${mod.title}`;
+                        
+                        // Hitung posisi default jika belum ada koordinat tersimpan
+                        const defaultCol = Math.floor(index / 5);
+                        const defaultRow = index % 5;
+                        const posX = item.x !== undefined ? item.x : (16 + defaultCol * 90);
+                        const posY = item.y !== undefined ? item.y : (16 + defaultRow * 95);
+
+                        iconEl.style.left = `${posX}px`;
+                        iconEl.style.top = `${posY}px`;
+
+                        iconEl.innerHTML = `
+                            <button class="remove-icon-btn" title="Hapus shortcut">✕</button>
+                            <span class="icon">${mod.icon}</span>
+                            <span class="lbl">${mod.title}</span>
                         `;
+
+                        // Remove Icon Click Handler
+                        iconEl.querySelector('.remove-icon-btn').addEventListener('pointerdown', (e) => {
+                            e.stopPropagation();
+                            OS.unpinFromDesktop(mod.id);
+                        });
+
+                        // Dragging logic for Desktop Icons
+                        this.makeIconDraggable(iconEl, mod.id);
+
+                        con.appendChild(iconEl);
                     }
                 });
+            },
+            makeIconDraggable(el, modId) {
+                let isDragging = false;
+                let startX, startY, initialLeft, initialTop;
+                let hasMoved = false;
 
-                con.innerHTML = html;
+                const start = (e) => {
+                    isDragging = true;
+                    hasMoved = false;
+                    startX = e.clientX || (e.touches && e.touches[0].clientX);
+                    startY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                    const rect = el.getBoundingClientRect();
+                    initialLeft = el.offsetLeft;
+                    initialTop = el.offsetTop;
+
+                    document.addEventListener('pointermove', move);
+                    document.addEventListener('pointerup', end);
+                };
+
+                const move = (e) => {
+                    if (!isDragging) return;
+                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                    const dx = clientX - startX;
+                    const dy = clientY - startY;
+
+                    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+                        hasMoved = true;
+                    }
+
+                    const newX = Math.max(0, Math.min(initialLeft + dx, window.innerWidth - 82));
+                    const newY = Math.max(0, Math.min(initialTop + dy, window.innerHeight - 130));
+
+                    el.style.left = `${newX}px`;
+                    el.style.top = `${newY}px`;
+                };
+
+                const end = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        document.removeEventListener('pointermove', move);
+                        document.removeEventListener('pointerup', end);
+
+                        if (hasMoved) {
+                            // Simpan posisi terbaru ke LocalStorage
+                            const pinned = DeviceManager.getPinnedIcons();
+                            const target = pinned.find(x => x.id === modId);
+                            if (target) {
+                                target.x = el.offsetLeft;
+                                target.y = el.offsetTop;
+                                DeviceManager.savePinnedIcons(pinned);
+                            }
+                        } else {
+                            // Klik biasa (buka aplikasi)
+                            OS.openApp(modId);
+                        }
+                    }
+                };
+
+                el.addEventListener('pointerdown', start);
             },
             renderTiles() {
                 const container = document.getElementById('tilesContainer');
                 const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
 
                 container.innerHTML = primary.map(m => `
-                    <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : `OS.openDirect('${m.url}')`}">
-                        ${m.action !== 'start' ? `<button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop perangkat ini">📌</button>` : ''}
+                    <div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
+                        <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop perangkat ini">📌</button>
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
                         </div>
@@ -1534,10 +1691,9 @@
             },
             renderStartApps() {
                 const list = document.getElementById('startAppsList');
-                const realModules = MODULES.filter(m => m.id !== 'all-modules');
                 
-                list.innerHTML = realModules.map(m => `
-                    <div class="app-item-btn" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
+                list.innerHTML = MODULES.map(m => `
+                    <div class="app-item-btn" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span style="font-size:1.25rem;">${m.icon}</span>
                             <div>
@@ -1553,8 +1709,16 @@
                 if (event) event.stopPropagation();
                 Sound.click();
                 let pinned = DeviceManager.getPinnedIcons();
-                if (!pinned.includes(id)) {
-                    pinned.push(id);
+                if (!pinned.some(x => x.id === id)) {
+                    // Beri koordinat awal yang proporsional
+                    const count = pinned.length;
+                    const col = Math.floor(count / 5);
+                    const row = count % 5;
+                    pinned.push({
+                        id: id,
+                        x: 16 + col * 90,
+                        y: 16 + row * 95
+                    });
                     DeviceManager.savePinnedIcons(pinned);
                     this.renderDesktopIcons();
                     this.showToast('Ikon berhasil dipin ke Wallpaper Desktop');
@@ -1562,11 +1726,10 @@
                     this.showToast('Ikon sudah ada di Desktop');
                 }
             },
-            unpinFromDesktop(id, event) {
-                if (event) event.stopPropagation();
+            unpinFromDesktop(id) {
                 Sound.click();
                 let pinned = DeviceManager.getPinnedIcons();
-                pinned = pinned.filter(x => x !== id);
+                pinned = pinned.filter(x => x.id !== id);
                 DeviceManager.savePinnedIcons(pinned);
                 this.renderDesktopIcons();
                 this.showToast('Shortcut dihapus dari Desktop');
@@ -1579,6 +1742,8 @@
                         Notepad.open();
                     } else if (mod.action === 'gempa') {
                         GempaAlert.open();
+                    } else if (mod.action === 'radio') {
+                        RadioPlayer.open();
                     } else if (mod.url) {
                         this.openDirect(mod.url);
                     }
@@ -1586,7 +1751,7 @@
             },
             openDirect(url) {
                 Sound.click();
-                this.showToast('Membuka modul Google Apps Script...');
+                this.showToast('Membuka tautan sistem...');
                 window.open(url, '_blank', 'noopener,noreferrer');
             },
             toggleStart() {
