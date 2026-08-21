@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Enterprise OS - Multi-Theme Building Management</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans & Retro Monospace -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           1. WINDOWS 11 BOOT SPLASH SCREEN
+           1. BOOT SPLASH SCREEN
            ========================================================================== */
         #winBootSplash {
             position: fixed;
@@ -76,7 +75,7 @@
         }
 
         /* ==========================================================================
-           2. MULTI-THEME ENGINE (VARIABLES & SYSTEM STYLES)
+           2. MULTI-THEME ENGINE VARIABLES
            ========================================================================== */
         :root, [data-theme="win11"] {
             --sys-font: 'Plus Jakarta Sans', sans-serif;
@@ -95,7 +94,26 @@
             --radius-win: 12px;
             --radius-card: 10px;
             --taskbar-height: 52px;
-            --start-btn-style: 'grid';
+        }
+
+        /* Windows XP (Luna Blue Theme) */
+        [data-theme="winxp"] {
+            --sys-font: 'Tahoma', sans-serif;
+            --win-blue: #0055EA;
+            --win-blue-hover: #1C68FF;
+            --wallpaper-url: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop');
+            --window-bg: #ECE9D8;
+            --window-border: #0055EA;
+            --taskbar-bg: linear-gradient(180deg, #245EDC 0%, #3F8CF3 9%, #245EDC 18%, #1941A5 92%, #1941A5 100%);
+            --mica-bg: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #444444;
+            --border-subtle: #D4D0C8;
+            --shadow-window: 3px 3px 12px rgba(0, 0, 0, 0.4);
+            --shadow-flyout: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            --radius-win: 8px 8px 0 0;
+            --radius-card: 4px;
+            --taskbar-height: 46px;
         }
 
         /* Windows 7 Aero Glass */
@@ -104,10 +122,10 @@
             --win-blue: #2E86DE;
             --win-blue-hover: #54A0FF;
             --wallpaper-url: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: rgba(235, 245, 255, 0.78);
+            --window-bg: rgba(235, 245, 255, 0.82);
             --window-border: rgba(255, 255, 255, 0.75);
-            --taskbar-bg: linear-gradient(180deg, rgba(40, 75, 115, 0.75) 0%, rgba(15, 30, 50, 0.88) 100%);
-            --mica-bg: rgba(255, 255, 255, 0.55);
+            --taskbar-bg: linear-gradient(180deg, rgba(40, 75, 115, 0.8) 0%, rgba(15, 30, 50, 0.92) 100%);
+            --mica-bg: rgba(255, 255, 255, 0.65);
             --text-primary: #0F172A;
             --text-secondary: #334155;
             --border-subtle: rgba(255, 255, 255, 0.4);
@@ -246,6 +264,11 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
+        [data-theme="winxp"] .desktop-icon-btn:hover {
+            background: rgba(49, 106, 197, 0.4);
+            border-color: #316AC5;
+        }
+
         .desktop-icon-btn span.icon { font-size: 2.1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); pointer-events: none; }
         .desktop-icon-btn span.lbl {
             font-size: 0.68rem;
@@ -286,7 +309,7 @@
         }
 
         /* ==========================================================================
-           4. FLOATING & DRAGGABLE WINDOWS
+           4. WINDOW FRAMES & THEMED TITLEBARS
            ========================================================================== */
         .win-frame {
             position: absolute;
@@ -304,6 +327,15 @@
             z-index: 20;
             touch-action: none;
             transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        /* Theme-specific Window Frames */
+        [data-theme="winxp"] .win-frame {
+            border: 3px solid #0055EA;
+            border-top: none;
+            background: #ECE9D8;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         [data-theme="win97"] .win-frame {
@@ -333,6 +365,24 @@
             cursor: move;
         }
 
+        /* Windows XP Luna Titlebar */
+        [data-theme="winxp"] .win-titlebar {
+            background: linear-gradient(180deg, #0A246A 0%, #A6CAF0 100%), linear-gradient(180deg, #245EDC 0%, #3F8CF3 12%, #0055EA 50%, #0040B0 100%);
+            background: linear-gradient(180deg, #0058E6 0%, #3A93FF 8%, #0055EA 40%, #0045B5 100%);
+            color: #FFFFFF;
+            height: 32px;
+            padding: 0 6px 0 8px;
+            border-radius: 6px 6px 0 0;
+            border-bottom: none;
+        }
+
+        [data-theme="winxp"] .win-title-left {
+            color: #FFFFFF !important;
+            font-weight: 800;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        /* Windows 97 Titlebar */
         [data-theme="win97"] .win-titlebar {
             background: linear-gradient(90deg, #000080, #1084d0);
             color: #FFFFFF;
@@ -389,6 +439,24 @@
             color: var(--text-primary);
             cursor: pointer;
             transition: var(--transition);
+        }
+
+        /* Windows XP Luna Window Buttons */
+        [data-theme="winxp"] .win-control-btn {
+            width: 22px;
+            height: 22px;
+            margin: auto 2px;
+            background: linear-gradient(180deg, #4A9FFF 0%, #156AE8 100%);
+            border: 1px solid #FFFFFF;
+            border-radius: 3px;
+            color: #FFFFFF;
+            font-size: 0.7rem;
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        [data-theme="winxp"] .win-control-btn.close {
+            background: linear-gradient(180deg, #FF7B60 0%, #E81123 100%);
         }
 
         [data-theme="win97"] .win-control-btn {
@@ -482,9 +550,34 @@
             overflow: hidden;
         }
 
+        /* Themed Menu Tiles */
+        [data-theme="winxp"] .win-tile {
+            border: 1px solid #7F9DB9;
+            background: #FFFFFF;
+            border-radius: 4px;
+        }
+
+        [data-theme="winxp"] .win-tile:hover {
+            background: #FFE88C;
+            border-color: #0055EA;
+        }
+
+        [data-theme="win8"] .win-tile {
+            border-radius: 0px;
+            background: #EDE8F5;
+            border: none;
+        }
+
         [data-theme="win97"] .win-tile {
             border: 2px outset #FFFFFF;
             background: #D4D0C8;
+            border-radius: 0px;
+        }
+
+        [data-theme="linux"] .win-tile {
+            background: #3C1033;
+            border: 1px solid #E95420;
+            color: #FFFFFF;
         }
 
         .win-tile:hover, .win-tile:active {
@@ -522,6 +615,10 @@
             margin-bottom: 0.6rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: var(--transition);
+        }
+
+        [data-theme="win8"] .tile-icon-box, [data-theme="win97"] .tile-icon-box {
+            border-radius: 0px;
         }
 
         .tile-title {
@@ -564,7 +661,7 @@
             border-color: var(--win-blue);
         }
 
-        /* Notepad Specific */
+        /* Notepad */
         #notepadWindow {
             max-width: 520px;
             height: 380px;
@@ -756,10 +853,6 @@
         .radio-visualizer.playing span {
             animation: bounceBar 0.8s infinite alternate ease-in-out;
         }
-        .radio-visualizer.playing span:nth-child(2) { animation-delay: 0.2s; }
-        .radio-visualizer.playing span:nth-child(3) { animation-delay: 0.4s; }
-        .radio-visualizer.playing span:nth-child(4) { animation-delay: 0.1s; }
-        .radio-visualizer.playing span:nth-child(5) { animation-delay: 0.3s; }
 
         @keyframes bounceBar {
             from { height: 6px; }
@@ -795,10 +888,10 @@
         }
 
         /* ==========================================================================
-           6. THEME PICKER DIALOG / WINDOW
+           5. THEME PICKER DIALOG / WINDOW
            ========================================================================== */
         #themeWindow {
-            max-width: 500px;
+            max-width: 520px;
             display: none;
         }
 
@@ -840,7 +933,7 @@
         }
 
         /* ==========================================================================
-           7. AUTHENTIC MULTI-THEME START MENU
+           6. AUTHENTIC MULTI-THEME START MENU
            ========================================================================== */
         .start-menu {
             position: absolute;
@@ -865,6 +958,43 @@
             gap: 1rem;
         }
 
+        /* Windows XP 2-Column Start Menu */
+        [data-theme="winxp"] .start-menu {
+            border: 2px solid #0055EA;
+            background: #FFFFFF;
+            left: 12px !important;
+            transform: translateY(10px) !important;
+            width: 420px;
+            border-radius: 6px 6px 0 0;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 2px 2px 14px rgba(0,0,0,0.5);
+        }
+
+        [data-theme="winxp"] .start-xp-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(180deg, #0055EA 0%, #245EDC 100%);
+            color: #FFFFFF;
+            padding: 0.75rem 1rem;
+            font-weight: 800;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        [data-theme="winxp"] .start-xp-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #FFFFFF;
+            min-height: 280px;
+        }
+
+        [data-theme="winxp"] .start-xp-right {
+            background: #D3E5FA;
+            border-left: 1px solid #95BEEE;
+            padding: 0.5rem;
+        }
+
         [data-theme="win97"] .start-menu {
             border: 2px outset #FFFFFF;
             background: #C0C0C0;
@@ -879,7 +1009,7 @@
             transform: translateX(-50%) translateY(0) scale(1);
         }
 
-        [data-theme="win97"] .start-menu.open {
+        [data-theme="winxp"] .start-menu.open, [data-theme="win97"] .start-menu.open {
             transform: translateY(0) scale(1) !important;
         }
 
@@ -990,7 +1120,7 @@
         }
 
         /* ==========================================================================
-           8. TASKBAR (ADAPTIVE SYSTEM TASKBAR)
+           7. TASKBAR
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -1006,6 +1136,12 @@
             padding-bottom: env(safe-area-inset-bottom);
             position: relative;
             gap: 0.5rem;
+        }
+
+        [data-theme="winxp"] .win-taskbar {
+            border-top: 1px solid #4387E8;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+            backdrop-filter: none;
         }
 
         [data-theme="win97"] .win-taskbar {
@@ -1029,6 +1165,11 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+        }
+
+        [data-theme="winxp"] .taskbar-status-text, [data-theme="win7"] .taskbar-status-text {
+            color: #FFFFFF !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
         .taskbar-center-scrollable {
@@ -1057,6 +1198,14 @@
             padding-right: 0.25rem;
         }
 
+        [data-theme="winxp"] .taskbar-tray {
+            background: linear-gradient(180deg, #166AE8 0%, #0C43A8 100%);
+            border-left: 1px solid #104AB8;
+            padding: 0 8px;
+            height: 100%;
+            border-radius: 0;
+        }
+
         .task-btn {
             width: 40px;
             height: 40px;
@@ -1071,6 +1220,22 @@
             transition: var(--transition);
             position: relative;
             flex-shrink: 0;
+        }
+
+        /* Windows XP Green Start Button */
+        [data-theme="winxp"] #startBtn {
+            width: auto;
+            padding: 0 12px;
+            height: 38px;
+            background: linear-gradient(180deg, #388E3C 0%, #4CAF50 10%, #2E7D32 85%, #1B5E20 100%);
+            border-radius: 0 10px 10px 0;
+            box-shadow: 2px 0 6px rgba(0,0,0,0.3);
+            color: #FFFFFF;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 0.95rem;
+            border: 1px solid #2E7D32;
+            text-shadow: 1px 1px 2px #000;
         }
 
         [data-theme="win97"] .task-btn {
@@ -1099,7 +1264,7 @@
             background: var(--win-blue);
         }
 
-        [data-theme="win97"] .task-btn.active::after { display: none; }
+        [data-theme="winxp"] .task-btn.active::after, [data-theme="win97"] .task-btn.active::after { display: none; }
 
         .win-start-logo {
             display: grid;
@@ -1123,6 +1288,11 @@
             border-radius: var(--radius-card);
             cursor: pointer;
             white-space: nowrap;
+        }
+
+        [data-theme="winxp"] .tray-clock, [data-theme="win7"] .tray-clock {
+            color: #FFFFFF !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
         [data-theme="win97"] .tray-clock {
@@ -1170,7 +1340,7 @@
         }
 
         /* ==========================================================================
-           9. RESPONSIVE MOBILE FIX
+           8. RESPONSIVE MOBILE FIX
            ========================================================================== */
         @media (max-width: 768px) {
             .win-frame {
@@ -1209,6 +1379,11 @@
                 padding: 1rem;
             }
 
+            [data-theme="winxp"] .start-menu, [data-theme="win97"] .start-menu {
+                left: 8px !important;
+                width: calc(100vw - 16px);
+            }
+
             .start-pinned-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
@@ -1233,9 +1408,7 @@
 </head>
 <body>
 
-    <!-- ==========================================================================
-         0. WINDOWS BOOT SPLASH SCREEN
-         ========================================================================== -->
+    <!-- BOOT SPLASH SCREEN -->
     <div id="winBootSplash">
         <div class="splash-logo-grid">
             <span></span><span></span>
@@ -1245,17 +1418,13 @@
         <div class="splash-text">Starting Portal Building Management OS...</div>
     </div>
 
-    <!-- ==========================================================================
-         1. DESKTOP WORKSPACE & DRAGGABLE WINDOWS
-         ========================================================================== -->
+    <!-- DESKTOP WORKSPACE -->
     <main class="desktop-area" id="desktopArea">
         
-        <!-- Ikon Desktop (Posisi X & Y Bebas Digeser) -->
         <div class="desktop-icons-container" id="desktopIconsContainer"></div>
 
-        <!-- 1. Central Windows App Window (Portal Hub) - Default: MINIMIZED -->
+        <!-- 1. Portal Hub -->
         <div class="win-frame minimized" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
-            
             <div class="win-titlebar" id="mainTitlebar">
                 <div class="win-title-left">
                     <div class="win-app-logo">BM</div>
@@ -1281,13 +1450,11 @@
                     </div>
                 </div>
 
-                <!-- Modul Tiles Grid -->
                 <div class="win-tiles-grid" id="tilesContainer"></div>
             </div>
-
         </div>
 
-        <!-- 2. Windows Watermark & Image Compressor Window -->
+        <!-- 2. Watermark & Image Compressor -->
         <div class="win-frame" id="watermarkWindow" style="top: 10%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="watermarkTitlebar">
                 <div class="win-title-left">
@@ -1342,8 +1509,8 @@
             </div>
         </div>
 
-        <!-- 3. Windows Theme Switcher Window -->
-        <div class="win-frame" id="themeWindow" style="top: 14%; left: calc(50% - 250px);">
+        <!-- 3. Theme Switcher -->
+        <div class="win-frame" id="themeWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="themeTitlebar">
                 <div class="win-title-left">
                     <div class="win-app-logo" style="background:#8B5CF6;">🎨</div>
@@ -1360,7 +1527,7 @@
             </div>
         </div>
 
-        <!-- 4. Windows Notepad App Window -->
+        <!-- 4. Notepad -->
         <div class="win-frame" id="notepadWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="notepadTitlebar">
                 <div class="win-title-left">
@@ -1381,10 +1548,10 @@
                 </div>
             </div>
 
-            <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi, log pekerjaan, atau checklist di sini... (Otomatis tersimpan di LocalStorage)"></textarea>
+            <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi di sini..."></textarea>
         </div>
 
-        <!-- 5. Windows File Explorer (Buka File HP / Laptop) -->
+        <!-- 5. File Explorer -->
         <div class="win-frame" id="explorerWindow" style="top: 12%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="explorerTitlebar">
                 <div class="win-title-left">
@@ -1420,7 +1587,7 @@
             </div>
         </div>
 
-        <!-- 6. Windows Gempa BMKG Alert Window -->
+        <!-- 6. Gempa BMKG Alert -->
         <div class="win-frame" id="gempaWindow" style="top: 16%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="gempaTitlebar">
                 <div class="win-title-left">
@@ -1457,7 +1624,7 @@
             </div>
         </div>
 
-        <!-- 7. Windows Radio Online Window -->
+        <!-- 7. Radio Online -->
         <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
                 <div class="win-title-left">
@@ -1498,68 +1665,81 @@
 
     </main>
 
-    <!-- ==========================================================================
-         2. AUTHENTIC MULTI-THEME START MENU
-         ========================================================================== -->
+    <!-- START MENU -->
     <div class="start-menu" id="startMenu">
         
-        <div class="start-search-bar">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-            <input type="text" placeholder="Type here to search apps, files, settings..." onkeyup="OS.handleSearch(this.value)">
-        </div>
-
-        <div>
-            <div class="start-section-header">
-                <span>Pinned</span>
-                <button class="start-all-btn" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
+        <div id="startMenuStandardView">
+            <div class="start-search-bar">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
+                <input type="text" placeholder="Type here to search apps, files, settings..." onkeyup="OS.handleSearch(this.value)">
             </div>
-            <div class="start-pinned-grid" id="startPinnedGrid"></div>
-        </div>
 
-        <div>
-            <div class="start-section-header">
-                <span>Recommended</span>
-                <span style="font-size:0.7rem; color:var(--text-secondary);">Recent</span>
+            <div style="margin-top:0.75rem;">
+                <div class="start-section-header">
+                    <span>Pinned</span>
+                    <button class="start-all-btn" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
+                </div>
+                <div class="start-pinned-grid" id="startPinnedGrid"></div>
             </div>
-            <div class="start-recommended-list">
-                <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();">
-                    <span style="font-size:1.4rem;">📸</span>
-                    <div class="rec-info">
-                        <h5>Watermark Foto</h5>
-                        <p>Kompres & cap tanggal/lokasi/nama</p>
+
+            <div style="margin-top:0.75rem;">
+                <div class="start-section-header">
+                    <span>Recommended</span>
+                    <span style="font-size:0.7rem; color:var(--text-secondary);">Recent</span>
+                </div>
+                <div class="start-recommended-list">
+                    <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();">
+                        <span style="font-size:1.4rem;">📸</span>
+                        <div class="rec-info">
+                            <h5>Watermark Foto</h5>
+                            <p>Kompres & cap tanggal/lokasi/nama</p>
+                        </div>
+                    </div>
+                    <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();">
+                        <span style="font-size:1.4rem;">🎨</span>
+                        <div class="rec-info">
+                            <h5>Pilihan Tema OS</h5>
+                            <p>Win 11, Win 7, Win 8, Win 97, Linux, XP</p>
+                        </div>
                     </div>
                 </div>
-                <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();">
-                    <span style="font-size:1.4rem;">🎨</span>
-                    <div class="rec-info">
-                        <h5>Pilihan Tema OS</h5>
-                        <p>Win 11, Win 7, Win 8, Win 97, Linux</p>
+            </div>
+
+            <div class="start-footer">
+                <div class="start-user-pill">
+                    <div style="width:30px; height:30px; border-radius:50%; background:var(--win-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">S</div>
+                    <div style="text-align:left;">
+                        <div style="font-size:0.78rem; font-weight:800;">Sutrisno</div>
+                        <div style="font-size:0.65rem; color:var(--text-secondary);">Building Management Hub</div>
                     </div>
+                </div>
+
+                <div class="start-power-actions">
+                    <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
+                    <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
+                    <button class="task-btn" onclick="OS.showToast('Sistem Enterprise Siaga', 'info')" title="Power Options">⏻</button>
                 </div>
             </div>
         </div>
 
-        <div class="start-footer">
-            <div class="start-user-pill">
-                <div style="width:30px; height:30px; border-radius:50%; background:var(--win-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">S</div>
-                <div style="text-align:left;">
-                    <div style="font-size:0.78rem; font-weight:800;">Sutrisno</div>
-                    <div style="font-size:0.65rem; color:var(--text-secondary);">Building Management Hub</div>
-                </div>
+        <!-- Windows XP Specific Start Menu Layout -->
+        <div id="startMenuXPView" style="display:none;">
+            <div class="start-xp-header">
+                <div style="width:32px; height:32px; border-radius:4px; background:#fff; color:#0055EA; display:flex; align-items:center; justify-content:center; font-weight:900;">S</div>
+                <span>Sutrisno - Building Management</span>
             </div>
-
-            <div class="start-power-actions">
-                <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
-                <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
-                <button class="task-btn" onclick="OS.showToast('Sistem Enterprise Siaga', 'info')" title="Power Options">⏻</button>
+            <div class="start-xp-body">
+                <div style="padding:0.5rem;" id="startXPPinnedLeft"></div>
+                <div class="start-xp-right" id="startXPPinnedRight"></div>
+            </div>
+            <div style="background:#245EDC; padding:0.4rem 0.75rem; display:flex; justify-content:flex-end; gap:6px;">
+                <button class="notepad-btn" style="background:#E81123; color:#fff; border:none;" onclick="OS.toggleStart()">Log Off / Turn Off</button>
             </div>
         </div>
 
     </div>
 
-    <!-- ==========================================================================
-         3. WINDOWS TASKBAR
-         ========================================================================== -->
+    <!-- TASKBAR -->
     <footer class="win-taskbar">
         
         <div class="taskbar-left">
@@ -1574,12 +1754,13 @@
                     <span></span><span></span>
                     <span></span><span></span>
                 </div>
+                <span id="startTextWinXP" style="display:none;">start</span>
                 <span id="startTextWin97" style="display:none;">Start</span>
             </button>
             <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
             </button>
-            <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema (Win 11, Win 7, Win 8, Win 97, Linux)">
+            <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema OS">
                 <span style="font-size:1.15rem;">🎨</span>
             </button>
             <button class="task-btn" id="taskbarWatermarkBtn" onclick="Watermarker.toggle()" title="Watermark & Kompres Foto">
@@ -1623,14 +1804,13 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastBox"></div>
 
-    <!-- ==========================================================================
-         4. JAVASCRIPT: THEMES, WATERMARK, AUDIO, & OS LOGIC
-         ========================================================================== -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
         const THEMES_LIST = [
-            { id: 'win11', name: 'Windows 11 Fluent', icon: '🪟', color: '#0078D4', desc: 'Desain modern, rounded, acrylic glass & centered taskbar' },
+            { id: 'win11', name: 'Windows 11 Fluent', icon: '🪟', color: '#0078D4', desc: 'Modern acrylic glass, rounded corners & centered taskbar' },
+            { id: 'winxp', name: 'Windows XP Luna', icon: '🌄', color: '#0055EA', desc: 'Tema Bliss klasik, taskbar biru gradien & start menu hijau' },
             { id: 'win7', name: 'Windows 7 Aero', icon: '💎', color: '#2E86DE', desc: 'Efek kaca tembus pandang Aero Glass & gradien biru klasik' },
             { id: 'win8', name: 'Windows 8 Metro', icon: '🟦', color: '#68217A', desc: 'Gaya flat metro tile, sharp edge & aksen ungu modern' },
             { id: 'win97', name: 'Windows 97 / 95 Classic', icon: '💾', color: '#000080', desc: 'Tampilan retro klasik 90-an, tombol bevel 3D & font Tahoma' },
@@ -1647,7 +1827,7 @@
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
             // Themes & Tools
-            { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, 7, 8, 97, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
+            { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, XP, 7, 8, 97, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
             { id: 'watermark', title: 'Watermark Foto', sub: 'Kompres & Cap Tanggal/Lokasi', icon: '📸', color: '#F97316', action: 'watermark' },
             { id: 'explorer', title: 'File Explorer', sub: 'Buka File HP & PC', icon: '📁', color: '#FDB813', action: 'explorer' },
             { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
@@ -1693,7 +1873,7 @@
         ];
 
         /**
-         * THEME SWITCHER ENGINE
+         * THEME SWITCHER ENGINE (TERMUTAKHIR DENGAN WINDOWS XP)
          */
         const ThemeEngine = {
             init() {
@@ -1705,18 +1885,53 @@
                 document.documentElement.setAttribute('data-theme', themeId);
                 localStorage.setItem('app_os_theme', themeId);
 
-                // Update start logo button for win97
                 const logo = document.getElementById('taskbarStartLogo');
+                const textXP = document.getElementById('startTextWinXP');
                 const text97 = document.getElementById('startTextWin97');
-                if (themeId === 'win97') {
+                const stdStart = document.getElementById('startMenuStandardView');
+                const xpStart = document.getElementById('startMenuXPView');
+
+                if (themeId === 'winxp') {
                     if (logo) logo.style.display = 'none';
+                    if (textXP) textXP.style.display = 'inline';
+                    if (text97) text97.style.display = 'none';
+                    if (stdStart) stdStart.style.display = 'none';
+                    if (xpStart) xpStart.style.display = 'block';
+                    this.renderXPStartMenu();
+                } else if (themeId === 'win97') {
+                    if (logo) logo.style.display = 'none';
+                    if (textXP) textXP.style.display = 'none';
                     if (text97) text97.style.display = 'inline';
+                    if (stdStart) stdStart.style.display = 'block';
+                    if (xpStart) xpStart.style.display = 'none';
                 } else {
                     if (logo) logo.style.display = 'grid';
+                    if (textXP) textXP.style.display = 'none';
                     if (text97) text97.style.display = 'none';
+                    if (stdStart) stdStart.style.display = 'block';
+                    if (xpStart) xpStart.style.display = 'none';
                 }
 
                 this.renderThemeCards();
+            },
+            renderXPStartMenu() {
+                const left = document.getElementById('startXPPinnedLeft');
+                const right = document.getElementById('startXPPinnedRight');
+                if (!left || !right) return;
+
+                left.innerHTML = MODULES.slice(0, 7).map(m => `
+                    <div style="display:flex; align-items:center; gap:6px; padding:4px; cursor:pointer;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
+                        <span style="font-size:1.2rem;">${m.icon}</span>
+                        <span style="font-size:0.75rem; font-weight:700; color:#000;">${m.title}</span>
+                    </div>
+                `).join('');
+
+                right.innerHTML = MODULES.slice(7, 14).map(m => `
+                    <div style="display:flex; align-items:center; gap:6px; padding:4px; cursor:pointer;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
+                        <span style="font-size:1.2rem;">${m.icon}</span>
+                        <span style="font-size:0.72rem; font-weight:700; color:#0A246A;">${m.title}</span>
+                    </div>
+                `).join('');
             },
             renderThemeCards() {
                 const con = document.getElementById('themeSelectorContainer');
@@ -2336,6 +2551,7 @@
         const Wallpaper = {
             list: [
                 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop',
