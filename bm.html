@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#00529C">
-    <title>Enterprise Facility Portal & Building Management System</title>
+    <title>Portal Operasional Facility & Building Management</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,13 +19,14 @@
             --primary: #00529C;
             --primary-dark: #003B73;
             --primary-light: #E6F0FA;
-            --primary-glow: rgba(0, 82, 156, 0.28);
+            --primary-glow: rgba(0, 82, 156, 0.25);
             
             --accent-green: #00AA13;
             --accent-yellow: #FDB813;
             --accent-red: #EE2737;
             --accent-purple: #8B5CF6;
             --accent-teal: #14B8A6;
+            --accent-orange: #F97316;
 
             --bg-body: #F4F6F9;
             --bg-card: rgba(255, 255, 255, 0.95);
@@ -46,7 +47,7 @@
             --sidebar-width: 280px;
             --sidebar-width-collapsed: 80px;
             --header-height: 70px;
-            --bottom-nav-height: 72px;
+            --bottom-nav-height: 68px;
             --radius-sm: 12px;
             --radius-md: 18px;
             --radius-lg: 24px;
@@ -95,7 +96,7 @@
         button { border: none; outline: none; background: transparent; cursor: pointer; font-family: inherit; }
 
         /* ==========================================================================
-           2. APP HEADER
+           2. HEADER
            ========================================================================== */
         .app-header {
             position: fixed;
@@ -125,16 +126,16 @@
         }
 
         .brand-badge {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: var(--radius-sm);
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             box-shadow: 0 4px 12px var(--primary-glow);
         }
 
@@ -160,7 +161,7 @@
             border-radius: var(--radius-pill);
             color: var(--text-main);
             font-size: 0.85rem;
-            width: 240px;
+            width: 260px;
             transition: var(--transition);
         }
         .header-search input:focus {
@@ -212,24 +213,12 @@
             color: var(--text-main);
             background: var(--bg-hover);
             transition: var(--transition);
-            position: relative;
         }
 
         .icon-btn:hover {
             background: var(--primary-light);
             color: var(--primary);
             transform: translateY(-2px);
-        }
-
-        .badge-dot {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: var(--accent-red);
-            border-radius: 50%;
-            border: 2px solid var(--bg-card);
         }
 
         .profile-btn {
@@ -336,7 +325,6 @@
             transition: var(--transition);
         }
 
-        .nav-item a svg { width: 20px; height: 20px; flex-shrink: 0; }
         .nav-item.active a, .nav-item a:hover {
             background: var(--primary-light);
             color: var(--primary);
@@ -353,22 +341,75 @@
         }
 
         /* ==========================================================================
-           4. MOBILE PORTAL & HOME COMPONENTS
+           4. REDESIGNED PORTAL CARDS (100% OPERASIONAL BM)
            ========================================================================== */
         .portal-container {
-            max-width: 520px;
+            max-width: 540px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            gap: 1.25rem;
         }
 
-        .grid-icon-card {
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            color: #fff;
+            box-shadow: 0 10px 25px var(--primary-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 110px;
+            height: 110px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+
+        .hero-status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(8px);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .hero-banner h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .hero-banner p { font-size: 0.78rem; opacity: 0.9; }
+
+        .section-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
-            padding: 1.5rem 1rem 1.25rem;
+            padding: 1.25rem;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.1rem;
+        }
+
+        .card-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
         }
 
         .grid-icon-layout {
@@ -399,87 +440,81 @@
             color: #FFFFFF;
             margin-bottom: 0.5rem;
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+            font-size: 1.35rem;
             transition: var(--transition);
         }
 
         .circle-icon svg { width: 26px; height: 26px; }
 
         .menu-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.25;
         }
 
-        .wallet-card, .history-card, .launcher-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            box-shadow: var(--shadow-sm);
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .stat-box {
+            background: var(--bg-hover);
+            padding: 0.85rem 0.6rem;
+            border-radius: var(--radius-md);
+            text-align: center;
             border: 1px solid var(--border-color);
         }
 
-        .card-header-flex {
+        .stat-box h3 { font-size: 1.15rem; font-weight: 800; color: var(--primary); }
+        .stat-box p { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .action-item-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .card-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .link-action {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .link-action-btn {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wallet-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.85rem;
-        }
-
-        .dana-box {
-            background: #EBF3FF;
+            padding: 0.85rem 1rem;
+            background: var(--bg-hover);
             border-radius: var(--radius-md);
-            padding: 1.1rem 0.85rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            border: 1px solid rgba(0, 82, 156, 0.08);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .dana-btn {
+        .action-item-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateX(3px);
+        }
+
+        .action-left { display: flex; align-items: center; gap: 0.75rem; }
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            background: var(--bg-card);
+        }
+
+        .action-text h4 { font-size: 0.82rem; font-weight: 800; }
+        .action-text p { font-size: 0.7rem; color: var(--text-muted); }
+
+        .btn-direct {
             background: var(--primary);
             color: #fff;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             font-weight: 700;
-            padding: 0.65rem 1.4rem;
+            padding: 0.7rem 1.2rem;
             border-radius: var(--radius-pill);
             width: 100%;
             text-align: center;
@@ -491,111 +526,10 @@
             gap: 6px;
         }
 
-        .dana-btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
-
-        .promo-box {
-            background: linear-gradient(135deg, #4F86F7 0%, #2563EB 100%);
-            border-radius: var(--radius-md);
-            padding: 0.85rem;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .promo-box h4 { font-size: 0.8rem; font-weight: 800; line-height: 1.3; }
-        .promo-badge {
-            background: #fff;
-            color: #2563EB;
-            font-size: 0.68rem;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: var(--radius-pill);
-            display: inline-block;
-            margin-top: 0.4rem;
-            width: fit-content;
-        }
-
-        .history-list { display: flex; flex-direction: column; gap: 0.85rem; }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 0.85rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .history-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .history-left { display: flex; align-items: center; gap: 0.85rem; }
-
-        .history-icon-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        .history-info h5 {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 0.15rem;
-        }
-
-        .history-info p {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .history-amount {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: var(--text-main);
-            text-align: right;
-        }
+        .btn-direct:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
         /* ==========================================================================
-           5. FORM & CARD STYLING (INTERNAL VIEWS)
-           ========================================================================== */
-        .form-group {
-            margin-bottom: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        .form-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .form-control {
-            background: var(--bg-hover);
-            border: 1px solid var(--border-color);
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
-            color: var(--text-main);
-            font-size: 0.85rem;
-            width: 100%;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-            background: var(--bg-card);
-        }
-
-        /* ==========================================================================
-           6. BOTTOM NAVIGATION (QRIS CENTER)
+           5. BOTTOM NAVIGATION
            ========================================================================== */
         .bottom-nav {
             position: fixed;
@@ -629,37 +563,8 @@
             transition: var(--transition);
         }
 
-        .bottom-nav-item svg { width: 24px; height: 24px; }
+        .bottom-nav-item svg { width: 22px; height: 22px; }
         .bottom-nav-item.active { color: var(--primary); }
-
-        .nav-qris-wrap {
-            position: relative;
-            top: -18px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
-
-        .btn-qris-center {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            box-shadow: 0 8px 20px var(--primary-glow);
-            border: 4px solid var(--bg-card);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-qris-center:hover { transform: scale(1.06); }
-        .btn-qris-center svg { width: 26px; height: 26px; }
-        .qris-subtext { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.5px; margin-top: 2px; }
 
         .app-footer {
             background: var(--bg-card);
@@ -675,7 +580,6 @@
             margin-top: auto;
         }
 
-        /* Toast Container */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -707,7 +611,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* Modal View */
         .modal-backdrop {
             position: fixed;
             inset: 0;
@@ -736,7 +639,6 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* Responsive Breakpoints */
         @media (min-width: 992px) {
             .header-search { display: block; }
             .header-center { display: flex; }
@@ -758,22 +660,20 @@
 </head>
 <body>
 
-    <!-- ==========================================================================
-         TOP HEADER BAR
-         ========================================================================== -->
+    <!-- TOP HEADER BAR -->
     <header class="app-header">
         <div class="header-left">
             <div class="brand" onclick="Router.navigate('beranda')">
-                <div class="brand-badge">B</div>
+                <div class="brand-badge">BM</div>
                 <div class="brand-text">
                     <h1>Portal BM</h1>
-                    <p>Enterprise System</p>
+                    <p>Facility System</p>
                 </div>
             </div>
 
             <div class="header-search">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                <input type="text" placeholder="Cari transaksi, modul BM..." onkeyup="App.handleSearch(this.value)">
+                <input type="text" placeholder="Cari modul operasional BM..." onkeyup="App.handleSearch(this.value)">
             </div>
         </div>
 
@@ -789,20 +689,13 @@
             <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Tema" aria-label="Theme Switch">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
             </button>
-            <button class="icon-btn" onclick="App.showToast('Tidak ada notifikasi baru', 'info')" aria-label="Notifikasi">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path></svg>
-                <span class="badge-dot"></span>
-            </button>
-
             <div class="profile-btn" onclick="Router.navigate('profil')">
                 <div class="profile-avatar">S</div>
             </div>
         </div>
     </header>
 
-    <!-- ==========================================================================
-         APP SHELL (SIDEBAR & MAIN CONTENT)
-         ========================================================================== -->
+    <!-- APP SHELL -->
     <div class="app-shell">
         
         <!-- SIDEBAR DESKTOP -->
@@ -816,17 +709,17 @@
                     </div>
                 </div>
 
-                <div class="sidebar-menu-title">Menu Utama</div>
+                <div class="sidebar-menu-title">Daftar Modul BM</div>
                 <ul class="nav-list" id="sidebarNavList">
-                    <!-- Dynamic Items -->
+                    <!-- Dynamic Sidebar Modules -->
                 </ul>
             </div>
             <div>
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
-                            <span>Keluar</span>
+                        <a href="javascript:void(0)" onclick="App.openDirectLink(BASE_GAS_URL + '?page=dashboard')">
+                            <span style="font-size:1.1rem; width:20px; text-align:center;">📊</span>
+                            <span>Dashboard GAS</span>
                         </a>
                     </li>
                 </ul>
@@ -835,47 +728,30 @@
 
         <!-- DYNAMIC MAIN CONTENT -->
         <main class="app-main-content" id="appContent">
-            <!-- Router will render views here -->
+            <!-- Rendered by Router -->
         </main>
     </div>
 
-    <!-- ==========================================================================
-         BOTTOM NAVIGATION
-         ========================================================================== -->
+    <!-- BOTTOM NAVIGATION (MOBILE) -->
     <nav class="bottom-nav" id="bottomNav">
         <a href="#/beranda" class="bottom-nav-item active" data-route="beranda">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
             <span>Beranda</span>
         </a>
-        <a href="#/arus-kas" class="bottom-nav-item" data-route="arus-kas">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path></svg>
-            <span>Arus Kas</span>
+        <a href="javascript:void(0)" onclick="App.openAllMenuModal()" class="bottom-nav-item">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
+            <span>Semua Modul</span>
         </a>
-        
-        <!-- CENTER QRIS BUTTON -->
-        <div class="nav-qris-wrap" onclick="App.openQRISModal()">
-            <div class="btn-qris-center">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 13.5h3.75v3.75H13.5zM17.25 17.25h3.75v3.75h-3.75zM13.5 17.25h3.75v3.75H13.5z"></path></svg>
-            </div>
-            <span class="qris-subtext">QRIS</span>
-        </div>
-
         <a href="#/profil" class="bottom-nav-item" data-route="profil">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path></svg>
             <span>Profil</span>
         </a>
-        <a href="javascript:void(0)" onclick="App.showToast('Berhasil keluar sistem', 'info')" class="bottom-nav-item">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"></path></svg>
-            <span>Keluar</span>
-        </a>
     </nav>
 
-    <!-- ==========================================================================
-         FOOTER
-         ========================================================================== -->
+    <!-- FOOTER -->
     <footer class="app-footer">
-        <div>&copy; <span id="footerYear">2026</span> <strong>Portal Enterprise System</strong>. All Rights Reserved.</div>
-        <div>Status: <strong style="color:var(--accent-green)">● Google Workspace Active</strong></div>
+        <div>&copy; <span id="footerYear">2026</span> <strong>Portal Operasional BM</strong>. All Rights Reserved.</div>
+        <div>Status: <strong style="color:var(--accent-green)">● Google Apps Script Server Active</strong></div>
     </footer>
 
     <!-- TOAST & MODAL CONTAINERS -->
@@ -886,34 +762,40 @@
     </div>
 
     <!-- ==========================================================================
-         MODULAR JAVASCRIPT ES6+ (NON-IFRAME ARCHITECTURE)
+         MODULAR JAVASCRIPT ES6+
          ========================================================================== -->
     <script>
-        /**
-         * 1. GOOGLE APPS SCRIPT URL MAP & MENU REGISTRY
-         */
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
+        // Registrasi 14 Modul Operasional Murni
         const GAS_MODULES = [
-            { id: 'index', title: 'Portal Index', desc: 'Halaman ringkasan seluruh sistem BM', icon: '📁', url: `${BASE_GAS_URL}?page=index` },
-            { id: 'dashboard', title: 'Main Dashboard', desc: 'Panel statistik utama operasional harian', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard` },
-            { id: 'kerusakan', title: 'Lapor Kerusakan', desc: 'Tiket kerusakan sarana gedung dan inventaris', icon: '🛠️', url: `${BASE_GAS_URL}?page=kerusakan`, nativeForm: 'kerusakan' },
-            { id: 'jadwal-kerusakan', title: 'Jadwal Kerusakan', desc: 'Timeline perbaikan teknisi', icon: '📅', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
-            { id: 'plts-dashboard', title: 'PLTS Solar Panel', desc: 'Pemantauan daya dan produksi panel surya', icon: '☀️', url: `${BASE_GAS_URL}?page=plts-dashboard` },
-            { id: 'energi-dashboard', title: 'Energi Listrik', desc: 'Monitoring konsumsi kWh gedung', icon: '⚡', url: `${BASE_GAS_URL}?page=energi-dashboard` },
-            { id: 'bast', title: 'Input BAST', desc: 'Form Berita Acara Serah Terima pekerjaan', icon: '📝', url: `${BASE_GAS_URL}?page=bast`, nativeForm: 'bast' },
-            { id: 'dashboard-bast', title: 'Dashboard BAST', desc: 'Rekapitulasi arsip BAST teknisi', icon: '📑', url: `${BASE_GAS_URL}?page=dashboard-bast` },
-            { id: 'dashboard-atm', title: 'Monitoring ATM', desc: 'Kondisi fisik, AC & kebersihan galeri ATM', icon: '🏧', url: `${BASE_GAS_URL}?page=dashboard-atm` },
-            { id: 'perencanaan-pm', title: 'Rencana PM', desc: 'Preventive Maintenance schedule tahunan', icon: '⚙️', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
-            { id: 'progres-jadwal-pm', title: 'Progress PM', desc: 'Realisasi jadwal perawatan berkala', icon: '📈', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
-            { id: 'dashboard-pm', title: 'Dashboard PM', desc: 'Statistik performa teknisi dan peralatan', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard-pm` },
-            { id: 'checklist-harian-pm', title: 'Checklist Harian', desc: 'Inspeksi operasional harian gedung', icon: '📋', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
-            { id: 'dashboard-checklist-pm', title: 'Statistik Checklist', desc: 'Monitoring kepatuhan checklist harian', icon: '📊', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` }
+            { id: 'dashboard', title: 'Dashboard Utama', desc: 'Panel statistik & ringkasan operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
+            { id: 'kerusakan', title: 'Lapor Kerusakan', desc: 'Form input pengaduan kerusakan fasilitas', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
+            { id: 'jadwal-kerusakan', title: 'Jadwal Perbaikan', desc: 'Timeline & monitoring progress perbaikan', icon: '📅', color: '#F97316', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
+            { id: 'checklist-harian-pm', title: 'Checklist Harian', desc: 'Inspeksi & kontrol rutin sarana gedung', icon: '📋', color: '#10B981', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
+            { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', desc: 'Statistik kepatuhan checklist harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
+            { id: 'perencanaan-pm', title: 'Rencana PM', desc: 'Jadwal Preventive Maintenance tahunan', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'progres-jadwal-pm', title: 'Progress PM', desc: 'Realisasi jadwal perawatan berkala', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
+            { id: 'dashboard-pm', title: 'Dashboard PM', desc: 'Evaluasi & performa pemeliharaan gedung', icon: '📉', color: '#EC4899', url: `${BASE_GAS_URL}?page=dashboard-pm` },
+            { id: 'plts-dashboard', title: 'PLTS Solar', desc: 'Monitoring produksi daya panel surya', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
+            { id: 'energi-dashboard', title: 'Energi Listrik', desc: 'Monitoring konsumsi kWh PLN & Genset', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
+            { id: 'dashboard-atm', title: 'Monitoring ATM', desc: 'Kebersihan, AC & fisik galeri ATM', icon: '🏧', color: '#14B8A6', url: `${BASE_GAS_URL}?page=dashboard-atm` },
+            { id: 'bast', title: 'Input BAST', desc: 'Form Berita Acara Serah Terima pekerjaan', icon: '📝', color: '#0284C7', url: `${BASE_GAS_URL}?page=bast` },
+            { id: 'dashboard-bast', title: 'Dashboard BAST', desc: 'Rekap & arsip dokumen BAST teknisi', icon: '📑', color: '#475569', url: `${BASE_GAS_URL}?page=dashboard-bast` },
+            { id: 'index', title: 'Portal Index', desc: 'Indeks navigasi lengkap sistem GAS', icon: '📁', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        /**
-         * 2. THEME MANAGER
-         */
+        // 8 Modul Prioritas untuk Tampilan Grid Depan
+        const PRIMARY_GRID_IDS = [
+            'kerusakan',
+            'jadwal-kerusakan',
+            'checklist-harian-pm',
+            'dashboard-atm',
+            'plts-dashboard',
+            'energi-dashboard',
+            'perencanaan-pm'
+        ];
+
         const Theme = {
             init() {
                 const saved = localStorage.getItem('app_theme') || 'light';
@@ -938,9 +820,6 @@
             }
         };
 
-        /**
-         * 3. REAL-TIME CLOCK & CALENDAR
-         */
         const Clock = {
             init() {
                 this.tick();
@@ -968,9 +847,6 @@
             }
         };
 
-        /**
-         * 4. SPA ROUTER & VIEW GENERATOR
-         */
         const Router = {
             init() {
                 window.addEventListener('hashchange', () => this.render());
@@ -988,18 +864,16 @@
 
                 if (route === 'beranda') {
                     content.innerHTML = this.viewHome();
-                } else if (route === 'arus-kas') {
-                    content.innerHTML = this.viewArusKas();
                 } else if (route === 'profil') {
                     content.innerHTML = this.viewProfile();
                 } else if (gasMatch) {
-                    content.innerHTML = this.viewModule(gasMatch);
+                    content.innerHTML = this.viewModuleDetail(gasMatch);
                 } else {
                     content.innerHTML = `
                         <div class="portal-container" style="text-align:center; padding:3rem 1rem;">
                             <h2>Halaman Tidak Ditemukan</h2>
-                            <p style="color:var(--text-muted); margin: 0.5rem 0 1.5rem;">Modul atau rute yang Anda tuju tidak tersedia.</p>
-                            <button class="dana-btn" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
+                            <p style="color:var(--text-muted); margin: 0.5rem 0 1.5rem;">Rute modul tidak tersedia.</p>
+                            <button class="btn-direct" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
                         </div>
                     `;
                 }
@@ -1015,151 +889,106 @@
                 });
             },
             viewHome() {
+                const primaryModules = PRIMARY_GRID_IDS.map(id => GAS_MODULES.find(m => m.id === id)).filter(Boolean);
+
                 return `
                     <div class="portal-container">
                         
-                        <!-- CARD 1: 8 ICON MENU -->
-                        <div class="grid-icon-card">
+                        <!-- HERO BANNER OPERASIONAL -->
+                        <div class="hero-banner">
+                            <div class="hero-status-tag">
+                                <span>●</span> Unit KC Surabaya & Jatim
+                            </div>
+                            <h2>Building Management Hub</h2>
+                            <p>Sistem terpusat pemantauan sarana, checklist harian, energi & BAST teknisi.</p>
+                        </div>
+
+                        <!-- STATISTIK RINGKAS SISTEM -->
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <h3>14</h3>
+                                <p>Modul Aktif</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3>9</h3>
+                                <p>Titik Kantor</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3 style="color:var(--accent-green);">100%</h3>
+                                <p>Kesiapan Unit</p>
+                            </div>
+                        </div>
+
+                        <!-- 8 MENU UTAMA OPERASIONAL -->
+                        <div class="section-card">
+                            <div class="card-header-flex">
+                                <div class="card-title-wrap">
+                                    <span>⚡</span>
+                                    <span>Menu Operasional Utama</span>
+                                </div>
+                            </div>
+
                             <div class="grid-icon-layout">
-                                
-                                <div class="menu-item-btn" onclick="Router.navigate('kerusakan')">
-                                    <div class="circle-icon" style="background: #3B82F6;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
+                                ${primaryModules.map(m => `
+                                    <div class="menu-item-btn" onclick="App.openDirectLink('${m.url}')">
+                                        <div class="circle-icon" style="background: ${m.color};">
+                                            ${m.icon}
+                                        </div>
+                                        <span class="menu-label">${m.title}</span>
                                     </div>
-                                    <span class="menu-label">Transfer</span>
-                                </div>
+                                `).join('')}
 
-                                <div class="menu-item-btn" onclick="Router.navigate('energi-dashboard')">
-                                    <div class="circle-icon" style="background: #8B5CF6;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                    </div>
-                                    <span class="menu-label">Pembayaran</span>
-                                </div>
-
-                                <div class="menu-item-btn" onclick="Router.navigate('checklist-harian-pm')">
-                                    <div class="circle-icon" style="background: #10B981;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
-                                    </div>
-                                    <span class="menu-label">Pembelian</span>
-                                </div>
-
-                                <div class="menu-item-btn" onclick="Router.navigate('dashboard-atm')">
-                                    <div class="circle-icon" style="background: #EC4899;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
-                                    </div>
-                                    <span class="menu-label">Bale Properti</span>
-                                </div>
-
-                                <div class="menu-item-btn" onclick="Router.navigate('plts-dashboard')">
-                                    <div class="circle-icon" style="background: #F43F5E; font-weight:800; font-size:0.75rem;">
-                                        bale<span style="font-size:0.6rem; font-weight:500;">poin</span>
-                                    </div>
-                                    <span class="menu-label">Bale Poin</span>
-                                </div>
-
-                                <div class="menu-item-btn" onclick="Router.navigate('bast')">
-                                    <div class="circle-icon" style="background: #14B8A6;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path></svg>
-                                    </div>
-                                    <span class="menu-label">Cardless</span>
-                                </div>
-
-                                <div class="menu-item-btn" onclick="Router.navigate('perencanaan-pm')">
-                                    <div class="circle-icon" style="background: #8B5CF6;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"></path></svg>
-                                    </div>
-                                    <span class="menu-label">Lifestyle</span>
-                                </div>
-
+                                <!-- Tombol Semua Menu -->
                                 <div class="menu-item-btn" onclick="App.openAllMenuModal()">
-                                    <div class="circle-icon" style="background: #3B82F6;">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
+                                    <div class="circle-icon" style="background: #2563EB;">
+                                        📁
                                     </div>
-                                    <span class="menu-label">Semua Menu</span>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- CARD 2: DOMPETKU -->
-                        <div class="wallet-card">
-                            <div class="card-header-flex">
-                                <div class="card-title-wrap">
-                                    <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"></path></svg>
-                                    <span>DompetKu</span>
-                                </div>
-                                <div class="link-action" onclick="App.showToast('Buka pengaturan rekening', 'info')">
-                                    <span>Atur akun</span>
-                                    <div class="link-action-btn">›</div>
-                                </div>
-                            </div>
-
-                            <div class="wallet-grid">
-                                <div class="dana-box">
-                                    <strong style="color:#118EEA; font-size:1.15rem; letter-spacing:1px;">DANA</strong>
-                                    <button class="dana-btn" onclick="App.showToast('Menghubungkan akun DANA...', 'info')">Hubungkan</button>
-                                </div>
-                                <div class="promo-box">
-                                    <div>
-                                        <h4>Lihat Saldo dan Top Up</h4>
-                                        <div class="promo-badge">Tanpa Ribet</div>
-                                    </div>
-                                    <div style="font-size:1.5rem; text-align:right;">📣</div>
+                                    <span class="menu-label">Semua Modul</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- CARD 3: TRANSFER TERAKHIR -->
-                        <div class="history-card">
+                        <!-- QUICK ACTIONS & LAPORAN CEPAT -->
+                        <div class="section-card">
                             <div class="card-header-flex">
                                 <div class="card-title-wrap">
-                                    <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
-                                    <span>Transfer Terakhir</span>
-                                </div>
-                                <div class="link-action" onclick="App.showToast('Menampilkan seluruh riwayat', 'info')">
-                                    <span>Lihat Semua</span>
-                                    <div class="link-action-btn">›</div>
+                                    <span>🚀</span>
+                                    <span>Aksi Cepat Teknisi</span>
                                 </div>
                             </div>
 
-                            <div class="history-list">
-                                <div class="history-item">
-                                    <div class="history-left">
-                                        <div class="history-icon-circle" style="background: #3B82F6;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
-                                        </div>
-                                        <div class="history-info">
-                                            <h5>APRILIANTO SETYA WIB</h5>
-                                            <p>Sesama BTN • 0006 2015 0075 4193</p>
+                            <div class="action-list">
+                                <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=kerusakan')">
+                                    <div class="action-left">
+                                        <div class="action-icon">🛠️</div>
+                                        <div class="action-text">
+                                            <h4>Input Laporan Kerusakan Baru</h4>
+                                            <p>Kirim tiket kendala sarana gedung</p>
                                         </div>
                                     </div>
-                                    <div class="history-amount">-Rp 110.000</div>
+                                    <span style="font-weight:800; color:var(--primary);">↗</span>
                                 </div>
 
-                                <div class="history-item">
-                                    <div class="history-left">
-                                        <div class="history-icon-circle" style="background: #8B5CF6;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path></svg>
-                                        </div>
-                                        <div class="history-info">
-                                            <h5>DENDI ADI WIJAYA</h5>
-                                            <p>Sesama BTN • 0000 2015 0150 1032</p>
+                                <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=checklist-harian-pm')">
+                                    <div class="action-left">
+                                        <div class="action-icon">📋</div>
+                                        <div class="action-text">
+                                            <h4>Pengisian Checklist Harian</h4>
+                                            <p>Inspeksi harian teknisi gedung</p>
                                         </div>
                                     </div>
-                                    <div class="history-amount">-Rp 90.000</div>
+                                    <span style="font-weight:800; color:var(--primary);">↗</span>
                                 </div>
 
-                                <div class="history-item">
-                                    <div class="history-left">
-                                        <div class="history-icon-circle" style="background: #14B8A6;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.333A48.374 48.374 0 0012 9.75c-2.551 0-5.056.2-7.5.583V21"></path></svg>
-                                        </div>
-                                        <div class="history-info">
-                                            <h5>SUTRISNO</h5>
-                                            <p>BI FAST BANK MANDIRI • 1350 0097 0335 4</p>
+                                <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=bast')">
+                                    <div class="action-left">
+                                        <div class="action-icon">📝</div>
+                                        <div class="action-text">
+                                            <h4>Form Input BAST Pekerjaan</h4>
+                                            <p>Berita acara serah terima selesai kerja</p>
                                         </div>
                                     </div>
-                                    <div class="history-amount">-Rp 3.000.000</div>
+                                    <span style="font-weight:800; color:var(--primary);">↗</span>
                                 </div>
                             </div>
                         </div>
@@ -1167,123 +996,27 @@
                     </div>
                 `;
             },
-            viewModule(menu) {
-                // Tampilan Native / Direct Launch (Tanpa iFrame)
-                if (menu.nativeForm === 'kerusakan') {
-                    return `
-                        <div class="portal-container">
-                            <div class="launcher-card">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-                                    <div>
-                                        <h2 style="font-size:1.15rem; font-weight:800;">${menu.title}</h2>
-                                        <p style="font-size:0.75rem; color:var(--text-muted);">Form Pengaduan Internal Building Management</p>
-                                    </div>
-                                    <button class="dana-btn" style="width:auto; padding:0.4rem 0.8rem; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
-                                </div>
-
-                                <form onsubmit="App.handleFormSubmit(event, 'Lapor Kerusakan', '${menu.url}')">
-                                    <div class="form-group">
-                                        <label class="form-label">Lokasi / Unit Kantor</label>
-                                        <select class="form-control" required>
-                                            <option value="">Pilih Lokasi Kantor</option>
-                                            <option value="KC Surabaya">KC Surabaya</option>
-                                            <option value="KCP Jemursari">KCP Jemursari</option>
-                                            <option value="KCP Rungkut">KCP Rungkut</option>
-                                            <option value="KCP Mulyosari">KCP Mulyosari</option>
-                                            <option value="KCP HR Muhammad">KCP HR Muhammad</option>
-                                            <option value="KCP Bukit Darmo">KCP Bukit Darmo</option>
-                                            <option value="KCP Sidoarjo">KCP Sidoarjo</option>
-                                            <option value="KCP Gresik">KCP Gresik</option>
-                                            <option value="KCP Mojokerto">KCP Mojokerto</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label">Kategori Kerusakan</label>
-                                        <select class="form-control" required>
-                                            <option value="AC & Pendingin">AC & Pendingin Ruangan</option>
-                                            <option value="Kelistrikan & Panel">Kelistrikan & Panel Daya</option>
-                                            <option value="Plumbing & Sanitasi">Plumbing & Sanitasi Air</option>
-                                            <option value="Sipil & Bangunan">Sipil, Plafon & Bangunan</option>
-                                            <option value="ATM & Keamanan">Sarana Galeri ATM & Pintu</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label">Deskripsi Kerusakan</label>
-                                        <textarea class="form-control" rows="3" placeholder="Jelaskan detail kendala teknis..." required></textarea>
-                                    </div>
-
-                                    <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem;">
-                                        <button type="submit" class="dana-btn">Kirim Laporan Tiket</button>
-                                        <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;">
-                                            Buka Google Web App Resmi ↗
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                if (menu.nativeForm === 'bast') {
-                    return `
-                        <div class="portal-container">
-                            <div class="launcher-card">
-                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-                                    <div>
-                                        <h2 style="font-size:1.15rem; font-weight:800;">${menu.title}</h2>
-                                        <p style="font-size:0.75rem; color:var(--text-muted);">Berita Acara Serah Terima Pekerjaan</p>
-                                    </div>
-                                    <button class="dana-btn" style="width:auto; padding:0.4rem 0.8rem; background:var(--text-muted);" onclick="Router.navigate('beranda')">Kembali</button>
-                                </div>
-
-                                <form onsubmit="App.handleFormSubmit(event, 'Input BAST', '${menu.url}')">
-                                    <div class="form-group">
-                                        <label class="form-label">Nomor Surat / BAST</label>
-                                        <input type="text" class="form-control" placeholder="Contoh: BAST/BM/2026/08-01" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nama Vendor / Pelaksana</label>
-                                        <input type="text" class="form-control" placeholder="Nama PT / Teknisi Pelaksana" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Uraian Pekerjaan Selesai</label>
-                                        <textarea class="form-control" rows="3" placeholder="Rincian hasil perawatan/perbaikan..." required></textarea>
-                                    </div>
-                                    <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:1.25rem;">
-                                        <button type="submit" class="dana-btn">Simpan BAST</button>
-                                        <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;">
-                                            Buka Google Web App Resmi ↗
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Default Launcher View untuk modul dashboard / checklist lainnya
+            viewModuleDetail(menu) {
                 return `
                     <div class="portal-container">
-                        <div class="launcher-card" style="text-align:center; padding: 2rem 1.5rem;">
-                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">${menu.icon || '🚀'}</div>
+                        <div class="section-card" style="text-align:center; padding: 2rem 1.5rem;">
+                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">${menu.icon}</div>
                             <h2 style="font-size:1.35rem; font-weight:800; margin-bottom:0.35rem;">${menu.title}</h2>
                             <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:1.5rem;">
-                                ${menu.desc || 'Modul terintegrasi Google Workspace & Apps Script untuk monitoring operasional.'}
+                                ${menu.desc}
                             </p>
 
                             <div style="background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.5rem; text-align:left; font-size:0.8rem; display:flex; flex-direction:column; gap:0.4rem;">
-                                <div><strong>Target Endpoint:</strong> Google Apps Script Web App</div>
-                                <div><strong>Akses Keamanan:</strong> Direct Window Redirect (Anti-Blocking)</div>
-                                <div><strong>Status Sistem:</strong> <span style="color:var(--accent-green); font-weight:700;">Aktif & Siap Digunakan</span></div>
+                                <div><strong>Integrasi:</strong> Google Apps Script Web App</div>
+                                <div><strong>Target:</strong> Full Window Direct Access (Bypass iFrame Lock)</div>
+                                <div><strong>Status Sistem:</strong> <span style="color:var(--accent-green); font-weight:700;">Siap Digunakan</span></div>
                             </div>
 
                             <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                                <a href="${menu.url}" target="_blank" rel="noopener noreferrer" class="dana-btn" style="font-size:0.9rem; padding:0.85rem;">
+                                <button class="btn-direct" onclick="App.openDirectLink('${menu.url}')">
                                     Buka Modul Sekarang ↗
-                                </a>
-                                <button class="dana-btn" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;" onclick="Router.navigate('beranda')">
+                                </button>
+                                <button class="btn-direct" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;" onclick="Router.navigate('beranda')">
                                     Kembali ke Beranda
                                 </button>
                             </div>
@@ -1291,41 +1024,27 @@
                     </div>
                 `;
             },
-            viewArusKas() {
-                return `
-                    <div class="portal-container">
-                        <div class="history-card">
-                            <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem;">Ringkasan Arus Kas Operasional</h3>
-                            <div style="padding:1rem; background:var(--bg-hover); border-radius:var(--radius-md); margin-bottom:1rem;">
-                                <p style="font-size:0.8rem; color:var(--text-muted);">Total Pengeluaran Bulan Ini</p>
-                                <h2 style="color:var(--primary); font-weight:800; font-size:1.6rem; margin-top:0.25rem;">Rp 3.200.000</h2>
-                            </div>
-                            <button class="dana-btn" style="width:100%;" onclick="App.showToast('Laporan PDF berhasil di-download', 'success')">Download Laporan PDF</button>
-                        </div>
-                    </div>
-                `;
-            },
             viewProfile() {
                 return `
                     <div class="portal-container">
-                        <div class="wallet-card" style="text-align:center;">
+                        <div class="section-card" style="text-align:center;">
                             <div class="sidebar-user-avatar" style="width:70px; height:70px; margin:0 auto 1rem; font-size:1.6rem;">S</div>
                             <h3 style="font-weight:800;">SUTRISNO</h3>
                             <p style="font-size:0.8rem; color:var(--accent-green); font-weight:700; margin-bottom:1.5rem;">Unit Leader Building Management</p>
-                            <div style="text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md);">
-                                <div><strong>ID Pegawai:</strong> BM-2026-901</div>
-                                <div><strong>Unit Operasional:</strong> KC Surabaya & Jawa Timur</div>
-                                <div><strong>Akses Modul:</strong> 14 Modul Google Apps Script Terintegrasi</div>
+                            
+                            <div style="text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.25rem;">
+                                <div><strong>ID Teknisi:</strong> BM-2026-901</div>
+                                <div><strong>Wilayah Kerja:</strong> KC Surabaya & 9 Kantor Cabang</div>
+                                <div><strong>Sistem:</strong> Google Apps Script Engine</div>
                             </div>
+
+                            <button class="btn-direct" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
                         </div>
                     </div>
                 `;
             }
         };
 
-        /**
-         * 5. APPLICATION CONTROLLER
-         */
         const App = {
             init() {
                 Theme.init();
@@ -1339,7 +1058,7 @@
                 let html = `
                     <li class="nav-item active" data-route="beranda">
                         <a href="#/beranda">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
+                            <span style="font-size:1.1rem; width:20px; text-align:center;">🏠</span>
                             <span>Beranda</span>
                         </a>
                     </li>
@@ -1348,8 +1067,8 @@
                 GAS_MODULES.forEach(m => {
                     html += `
                         <li class="nav-item" data-route="${m.id}">
-                            <a href="#/${m.id}">
-                                <span style="font-size:1.1rem; width:20px; text-align:center;">${m.icon || '📁'}</span>
+                            <a href="javascript:void(0)" onclick="App.openDirectLink('${m.url}')">
+                                <span style="font-size:1.1rem; width:20px; text-align:center;">${m.icon}</span>
                                 <span>${m.title}</span>
                             </a>
                         </li>
@@ -1357,6 +1076,10 @@
                 });
 
                 list.innerHTML = html;
+            },
+            openDirectLink(url) {
+                this.showToast('Membuka modul Google Apps Script...', 'info');
+                window.open(url, '_blank', 'noopener,noreferrer');
             },
             showToast(msg, type = 'info') {
                 const con = document.getElementById('toastContainer');
@@ -1382,30 +1105,16 @@
                 const card = document.getElementById('modalCard');
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-                        <h3 style="font-size:1.1rem; font-weight:800;">14 Modul Sistem Building Management</h3>
+                        <h3 style="font-size:1.1rem; font-weight:800;">14 Modul Operasional BM</h3>
                         <button onclick="App.closeModalDirect()" style="font-size:1.2rem; font-weight:700;">✕</button>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; max-height:60vh; overflow-y:auto;">
                         ${GAS_MODULES.map(m => `
-                            <button onclick="App.closeModalDirect(); Router.navigate('${m.id}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.8rem; font-weight:700; border:1px solid var(--border-color); display:flex; align-items:center; gap:6px;">
-                                <span>${m.icon || '📁'}</span>
+                            <button onclick="App.closeModalDirect(); App.openDirectLink('${m.url}')" style="text-align:left; padding:0.75rem; background:var(--bg-hover); border-radius:12px; font-size:0.78rem; font-weight:700; border:1px solid var(--border-color); display:flex; align-items:center; gap:6px;">
+                                <span>${m.icon}</span>
                                 <span>${m.title}</span>
                             </button>
                         `).join('')}
-                    </div>
-                `;
-                document.getElementById('appModal').style.display = 'flex';
-            },
-            openQRISModal() {
-                const card = document.getElementById('modalCard');
-                card.innerHTML = `
-                    <div style="text-align:center;">
-                        <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:0.5rem;">QRIS Pay & Scan</h3>
-                        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1.5rem;">Pindai QR Code untuk verifikasi checklist atau pembayaran</p>
-                        <div style="width:200px; height:200px; margin:0 auto 1.5rem; background:#fff; padding:10px; border-radius:16px; border:2px dashed var(--primary); display:flex; align-items:center; justify-content:center;">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PORTAL-BM-QRIS" style="width:100%;" alt="QRIS">
-                        </div>
-                        <button class="dana-btn" onclick="App.closeModalDirect()">Tutup Scanner</button>
                     </div>
                 `;
                 document.getElementById('appModal').style.display = 'flex';
@@ -1421,19 +1130,11 @@
             handleSearch(q) {
                 const match = GAS_MODULES.find(m => m.title.toLowerCase().includes(q.toLowerCase()));
                 if (q.length > 2 && match) {
-                    Router.navigate(match.id);
+                    this.openDirectLink(match.url);
                 }
-            },
-            handleFormSubmit(e, title, gasUrl) {
-                e.preventDefault();
-                App.showToast(`Berhasil menyimpan data ${title}!`, 'success');
-                setTimeout(() => {
-                    Router.navigate('beranda');
-                }, 1200);
             }
         };
 
-        // Initialize on DOM Ready
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
