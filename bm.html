@@ -144,7 +144,7 @@
 
         /* ==========================================================================
            3. DESKTOP WORKSPACE & DYNAMIC ICONS
-           ========================================================================= */
+           ========================================================================== */
         .desktop-area {
             flex: 1;
             padding: 1rem;
@@ -534,7 +534,7 @@
         }
 
         /* ==========================================================================
-           5. TASKBAR
+           5. TASKBAR (FLEXBOX 3-ZONE CLEAN)
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -1013,7 +1013,7 @@
     </div>
 
     <!-- ==========================================================================
-         3. WINDOWS TASKBAR
+         3. WINDOWS TASKBAR (3-ZONE CLEAN LAYOUT)
          ========================================================================== -->
     <footer class="win-taskbar">
         
@@ -1069,7 +1069,7 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT: LOGIC & ENGINES
+         4. JAVASCRIPT: LOGIC & ANTI-CACHE BMKG ENGINE
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
@@ -1123,13 +1123,23 @@
             lastEventId: null,
             init() {
                 this.fetchData(true);
-                setInterval(() => this.fetchData(false), 60000);
+                // Polling setiap 30 detik
+                setInterval(() => this.fetchData(false), 30000);
             },
             async fetchData(isFirstLoad = false) {
+                const targetUrl = 'https://data.bmkg.go.id/DataMKG/TEKTONIK/autogempa.json?t=' + Date.now();
                 try {
-                    const res = await fetch('https://data.bmkg.go.id/DataMKG/TEKTONIK/autogempa.json');
-                    if (!res.ok) throw new Error('Network error');
-                    const data = await res.json();
+                    let data;
+                    try {
+                        const res = await fetch(targetUrl, { cache: 'no-store' });
+                        if (!res.ok) throw new Error('Direct fetch failed');
+                        data = await res.json();
+                    } catch (err) {
+                        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
+                        const resProxy = await fetch(proxyUrl);
+                        data = await resProxy.json();
+                    }
+
                     const gempa = data?.Infogempa?.gempa;
                     if (!gempa) return;
 
@@ -1148,7 +1158,9 @@
                             OS.showGempaToast(`Gempa M ${gempa.Magnitude} - ${gempa.Wilayah} (${gempa.Potensi})`);
                         }
                     }
-                } catch(e) {}
+                } catch(e) {
+                    console.warn('Gagal memuat API BMKG:', e);
+                }
             },
             open() {
                 Sound.click();
