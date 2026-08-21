@@ -12,18 +12,17 @@
 
     <style>
         /* ==========================================================================
-           1. WINDOWS 11 / FLUENT DESIGN SYSTEM VARIABLES & WALLPAPERS
+           1. WINDOWS 11 / FLUENT DESIGN SYSTEM
            ========================================================================== */
         :root {
             --win-blue: #0078D4;
             --win-blue-hover: #106EBE;
-            --win-blue-active: #005A9E;
             
             --mica-bg: rgba(243, 243, 243, 0.75);
             --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: rgba(255, 255, 255, 0.85);
-            --window-border: rgba(255, 255, 255, 0.4);
-            --taskbar-bg: rgba(243, 243, 243, 0.8);
+            --window-bg: rgba(255, 255, 255, 0.88);
+            --window-border: rgba(255, 255, 255, 0.45);
+            --taskbar-bg: rgba(243, 243, 243, 0.82);
             --menu-hover: rgba(0, 0, 0, 0.06);
 
             --text-primary: #1C1C1C;
@@ -42,9 +41,9 @@
         [data-theme="dark"] {
             --mica-bg: rgba(32, 32, 32, 0.75);
             --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6');
-            --window-bg: rgba(30, 30, 30, 0.85);
+            --window-bg: rgba(30, 30, 30, 0.88);
             --window-border: rgba(255, 255, 255, 0.12);
-            --taskbar-bg: rgba(24, 24, 24, 0.8);
+            --taskbar-bg: rgba(24, 24, 24, 0.82);
             --menu-hover: rgba(255, 255, 255, 0.08);
 
             --text-primary: #FFFFFF;
@@ -79,7 +78,7 @@
         }
 
         /* ==========================================================================
-           2. DESKTOP WORKSPACE & FLOATING WINDOW
+           2. DESKTOP AREA & DESKTOP ICONS GRID
            ========================================================================== */
         .desktop-area {
             flex: 1;
@@ -91,15 +90,18 @@
             overflow: hidden;
         }
 
-        /* Desktop App Icons */
-        .desktop-icons {
+        /* Grid Ikon Desktop Dinamis (Bisa ditambah dari dalam jendela) */
+        .desktop-icons-container {
             position: absolute;
             top: 1.5rem;
             left: 1.5rem;
+            bottom: calc(var(--taskbar-height) + 1.5rem);
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1.25rem 1rem;
             z-index: 10;
+            max-width: 320px;
         }
 
         .desktop-icon-btn {
@@ -107,12 +109,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 80px;
-            height: 80px;
+            width: 82px;
+            height: 82px;
             border-radius: var(--radius-card);
             border: 1px solid transparent;
             background: transparent;
             cursor: pointer;
+            position: relative;
             transition: var(--transition);
         }
 
@@ -123,16 +126,45 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
-        .desktop-icon-btn span.icon { font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
+        .desktop-icon-btn span.icon { font-size: 2.1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
         .desktop-icon-btn span.lbl {
             font-size: 0.72rem;
             font-weight: 700;
             color: #FFFFFF;
             margin-top: 4px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            text-align: center;
+            line-height: 1.2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            max-width: 78px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        /* Primary Windows UI Frame */
+        .remove-icon-btn {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #E81123;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #fff;
+        }
+
+        .desktop-icon-btn:hover .remove-icon-btn {
+            display: flex;
+        }
+
+        /* ==========================================================================
+           3. FLOATING WINDOW
+           ========================================================================== */
         .win-frame {
             width: 100%;
             max-width: 960px;
@@ -146,15 +178,15 @@
             flex-direction: column;
             overflow: hidden;
             z-index: 20;
-            animation: winOpen 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+            transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.25s ease;
         }
 
-        @keyframes winOpen {
-            from { transform: scale(0.96); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .win-frame.minimized {
+            transform: scale(0.7) translateY(200px);
+            opacity: 0;
+            pointer-events: none;
         }
 
-        /* Windows Title Bar */
         .win-titlebar {
             height: 42px;
             background: transparent;
@@ -209,14 +241,12 @@
         .win-control-btn:hover { background: var(--menu-hover); }
         .win-control-btn.close:hover { background: #E81123; color: #FFFFFF; }
 
-        /* Window Content */
         .win-body {
             padding: 1.5rem;
             max-height: calc(100vh - 180px);
             overflow-y: auto;
         }
 
-        /* Window Breadcrumb / Action header */
         .win-nav-header {
             display: flex;
             align-items: center;
@@ -262,7 +292,7 @@
             color: var(--text-secondary);
         }
 
-        /* 8 Fluent Grid Tiles */
+        /* Tiles Grid */
         .win-tiles-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -290,6 +320,27 @@
             background: var(--window-bg);
             border-color: var(--win-blue);
             box-shadow: 0 10px 22px rgba(0, 120, 212, 0.16);
+        }
+
+        .tile-pin-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.75rem;
+            opacity: 0;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.06);
+            transition: var(--transition);
+        }
+
+        .win-tile:hover .tile-pin-btn {
+            opacity: 1;
+        }
+
+        .tile-pin-btn:hover {
+            background: var(--win-blue);
+            color: #fff;
         }
 
         .tile-icon-box {
@@ -323,7 +374,7 @@
         }
 
         /* ==========================================================================
-           3. WINDOWS 11 TASKBAR & START MENU
+           4. TASKBAR & START MENU
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -405,7 +456,6 @@
 
         .tray-clock:hover { background: var(--menu-hover); }
 
-        /* Start Menu Flyout */
         .start-menu {
             position: absolute;
             bottom: calc(var(--taskbar-height) + 12px);
@@ -469,7 +519,7 @@
         .app-item-btn {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            justify-content: space-between;
             padding: 0.6rem 0.75rem;
             background: transparent;
             border: 1px solid transparent;
@@ -485,7 +535,6 @@
             border-color: var(--border-subtle);
         }
 
-        /* Toast notification */
         .toast-container {
             position: fixed;
             bottom: calc(var(--taskbar-height) + 16px);
@@ -513,9 +562,8 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Responsive */
         @media (max-width: 820px) {
-            .desktop-icons { display: none; }
+            .desktop-icons-container { display: none; }
             .win-tiles-grid { grid-template-columns: repeat(2, 1fr); }
             .start-menu { width: calc(100vw - 32px); left: 16px; transform: translateY(20px); }
             .start-menu.open { transform: translateY(0); }
@@ -526,28 +574,13 @@
 <body>
 
     <!-- ==========================================================================
-         1. DESKTOP WORKSPACE & WALLPAPER
+         1. DESKTOP WORKSPACE & DYNAMIC SHORTCUTS
          ========================================================================== -->
     <main class="desktop-area">
         
-        <!-- Desktop Shortcuts -->
-        <div class="desktop-icons">
-            <div class="desktop-icon-btn" onclick="OS.openApp('kerusakan')">
-                <span class="icon">🛠️</span>
-                <span class="lbl">Lapor</span>
-            </div>
-            <div class="desktop-icon-btn" onclick="OS.openApp('checklist-harian-pm')">
-                <span class="icon">📋</span>
-                <span class="lbl">Checklist</span>
-            </div>
-            <div class="desktop-icon-btn" onclick="OS.openApp('dashboard')">
-                <span class="icon">📊</span>
-                <span class="lbl">Stats GAS</span>
-            </div>
-            <div class="desktop-icon-btn" onclick="Wallpaper.next()">
-                <span class="icon">🖼️</span>
-                <span class="lbl">Wallpaper</span>
-            </div>
+        <!-- Ikon-ikon Desktop (Bisa ditambah / dihapus dinamis) -->
+        <div class="desktop-icons-container" id="desktopIconsContainer">
+            <!-- Rendered by OS.renderDesktopIcons() -->
         </div>
 
         <!-- Central Windows 11 App Window -->
@@ -560,9 +593,9 @@
                     <span>Portal Building Management — Central Hub</span>
                 </div>
                 <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize" onclick="Sound.click()">─</button>
+                    <button class="win-control-btn" title="Minimize ke Desktop" onclick="OS.minimizeWindow()">─</button>
                     <button class="win-control-btn" title="Maximize" onclick="OS.toggleFullscreen()">□</button>
-                    <button class="win-control-btn close" title="Tutup" onclick="OS.handleCloseWindow()">✕</button>
+                    <button class="win-control-btn close" title="Tutup Jendela" onclick="OS.closeWindow()">✕</button>
                 </div>
             </div>
 
@@ -572,7 +605,7 @@
                 <div class="win-nav-header">
                     <div class="win-nav-title">
                         <h2>Menu Operasional Utama</h2>
-                        <p>Akses langsung modul integrasi Google Apps Script</p>
+                        <p>Klik 📌 untuk mengeluarkan modul ke wallpaper desktop</p>
                     </div>
 
                     <div class="win-search-box">
@@ -637,7 +670,7 @@
                     <span></span><span></span>
                 </div>
             </button>
-            <button class="task-btn active" onclick="Sound.click()" title="Portal BM (Active)">
+            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleMainWindow()" title="Portal BM Hub">
                 <span style="font-size:1.15rem;">🏢</span>
             </button>
             <button class="task-btn" onclick="OS.openApp('dashboard')" title="Dashboard Utama">
@@ -653,7 +686,7 @@
 
         <!-- Right System Tray Clock & Volume -->
         <div class="taskbar-tray">
-            <button class="task-btn" onclick="Sound.startup()" title="Uji Suara Windows (Startup Sound)" style="width:32px; height:32px; font-size:0.85rem;">
+            <button class="task-btn" onclick="Sound.startup()" title="Uji Suara Windows" style="width:32px; height:32px; font-size:0.85rem;">
                 🔊
             </button>
             <div class="tray-clock" id="taskbarClock" onclick="Sound.click()">
@@ -668,132 +701,9 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT CONTROLLER, SOUND & WALLPAPER ENGINE
+         4. JAVASCRIPT CONTROLLER, PIN TO DESKTOP & SOUND ENGINE
          ========================================================================== -->
     <script>
-        /**
-         * 1. WALLPAPER ENGINE (Windows 11 Official Bloom & Fluent Wallpapers)
-         */
-        const Wallpaper = {
-            list: [
-                'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop', // Win 11 Bloom Blue
-                'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6', // Win 11 Bloom Dark
-                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop', // Windows Fluent Gradient
-                'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop'  // Deep Abstract Blue
-            ],
-            index: 0,
-            init() {
-                const saved = localStorage.getItem('win_wallpaper');
-                if (saved) {
-                    document.body.style.backgroundImage = `url('${saved}')`;
-                }
-            },
-            next() {
-                Sound.click();
-                this.index = (this.index + 1) % this.list.length;
-                const nextUrl = this.list[this.index];
-                document.body.style.backgroundImage = `url('${nextUrl}')`;
-                localStorage.setItem('win_wallpaper', nextUrl);
-                OS.showToast('Wallpaper desktop diperbarui');
-            }
-        };
-
-        /**
-         * 2. WINDOWS SOUND SYNTHESIZER (Web Audio API)
-         */
-        const Sound = {
-            ctx: null,
-            init() {
-                if (!this.ctx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    if (AudioContext) this.ctx = new AudioContext();
-                }
-                if (this.ctx && this.ctx.state === 'suspended') {
-                    this.ctx.resume();
-                }
-            },
-            click() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.04);
-                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.04);
-                } catch(e) {}
-            },
-            notify() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    const notes = [698.46, 880.00];
-                    notes.forEach((freq, idx) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(now + idx * 0.08);
-                        osc.stop(now + idx * 0.08 + 0.25);
-                    });
-                } catch(e) {}
-            },
-            error() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(160, now);
-                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.18);
-                    gain.gain.setValueAtTime(0.18, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start(now);
-                    osc.stop(now + 0.18);
-                } catch(e) {}
-            },
-            startup() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    const chords = [
-                        { freq: 440.00, delay: 0.00 },
-                        { freq: 554.37, delay: 0.08 },
-                        { freq: 659.25, delay: 0.16 },
-                        { freq: 880.00, delay: 0.24 }
-                    ];
-                    chords.forEach(c => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(c.freq, now + c.delay);
-                        gain.gain.setValueAtTime(0.12, now + c.delay);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + c.delay + 0.8);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(now + c.delay);
-                        osc.stop(now + c.delay + 0.8);
-                    });
-                } catch(e) {}
-            }
-        };
-
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
         const MODULES = [
@@ -818,6 +728,99 @@
 
         const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'all-modules'];
 
+        // Desktop shortcut persistence
+        let pinnedDesktopIcons = JSON.parse(localStorage.getItem('win_pinned_desktop')) || [
+            'kerusakan', 'checklist-harian-pm', 'dashboard'
+        ];
+
+        const Wallpaper = {
+            list: [
+                'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6',
+                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop'
+            ],
+            index: 0,
+            init() {
+                const saved = localStorage.getItem('win_wallpaper');
+                if (saved) document.body.style.backgroundImage = `url('${saved}')`;
+            },
+            next() {
+                Sound.click();
+                this.index = (this.index + 1) % this.list.length;
+                const nextUrl = this.list[this.index];
+                document.body.style.backgroundImage = `url('${nextUrl}')`;
+                localStorage.setItem('win_wallpaper', nextUrl);
+                OS.showToast('Wallpaper desktop diperbarui');
+            }
+        };
+
+        const Sound = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) this.ctx = new AudioContext();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            click() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.04);
+                } catch(e) {}
+            },
+            notify() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    [698.46, 880.00].forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(now + idx * 0.08);
+                        osc.stop(now + idx * 0.08 + 0.25);
+                    });
+                } catch(e) {}
+            },
+            startup() {
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    [440.00, 554.37, 659.25, 880.00].forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.8);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(now + idx * 0.08);
+                        osc.stop(now + idx * 0.08 + 0.8);
+                    });
+                } catch(e) {}
+            }
+        };
+
         const Theme = {
             init() {
                 const saved = localStorage.getItem('win_theme') || 'light';
@@ -838,6 +841,7 @@
                 Theme.init();
                 Wallpaper.init();
                 this.renderTiles();
+                this.renderDesktopIcons();
                 this.renderStartApps();
                 this.startClock();
                 
@@ -855,12 +859,32 @@
                     }
                 });
             },
+            renderDesktopIcons() {
+                const con = document.getElementById('desktopIconsContainer');
+                let html = '';
+                
+                pinnedDesktopIcons.forEach(id => {
+                    const mod = MODULES.find(m => m.id === id);
+                    if (mod) {
+                        html += `
+                            <div class="desktop-icon-btn" onclick="OS.openApp('${mod.id}')" title="Buka ${mod.title}">
+                                <button class="remove-icon-btn" onclick="OS.unpinFromDesktop('${mod.id}', event)" title="Hapus shortcut">✕</button>
+                                <span class="icon">${mod.icon}</span>
+                                <span class="lbl">${mod.title}</span>
+                            </div>
+                        `;
+                    }
+                });
+
+                con.innerHTML = html;
+            },
             renderTiles() {
                 const container = document.getElementById('tilesContainer');
                 const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
 
                 container.innerHTML = primary.map(m => `
                     <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : `OS.openDirect('${m.url}')`}">
+                        ${m.action !== 'start' ? `<button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌 Keluar</button>` : ''}
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
                         </div>
@@ -874,14 +898,37 @@
                 const realModules = MODULES.filter(m => m.id !== 'all-modules');
                 
                 list.innerHTML = realModules.map(m => `
-                    <button class="app-item-btn" onclick="OS.openDirect('${m.url}'); OS.toggleStart();">
-                        <span style="font-size:1.25rem;">${m.icon}</span>
-                        <div>
-                            <div style="font-size:0.78rem; font-weight:700;">${m.title}</div>
-                            <div style="font-size:0.65rem; color:var(--text-secondary);">${m.sub}</div>
+                    <div class="app-item-btn" onclick="OS.openDirect('${m.url}'); OS.toggleStart();">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1.25rem;">${m.icon}</span>
+                            <div>
+                                <div style="font-size:0.78rem; font-weight:700;">${m.title}</div>
+                                <div style="font-size:0.65rem; color:var(--text-secondary);">${m.sub}</div>
+                            </div>
                         </div>
-                    </button>
+                        <button style="font-size:0.75rem; padding:2px 6px;" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌</button>
+                    </div>
                 `).join('');
+            },
+            pinToDesktop(id, event) {
+                if (event) event.stopPropagation();
+                Sound.click();
+                if (!pinnedDesktopIcons.includes(id)) {
+                    pinnedDesktopIcons.push(id);
+                    localStorage.setItem('win_pinned_desktop', JSON.stringify(pinnedDesktopIcons));
+                    this.renderDesktopIcons();
+                    this.showToast('Ikon berhasil dikeluarkan ke Desktop');
+                } else {
+                    this.showToast('Ikon sudah ada di Desktop');
+                }
+            },
+            unpinFromDesktop(id, event) {
+                if (event) event.stopPropagation();
+                Sound.click();
+                pinnedDesktopIcons = pinnedDesktopIcons.filter(x => x !== id);
+                localStorage.setItem('win_pinned_desktop', JSON.stringify(pinnedDesktopIcons));
+                this.renderDesktopIcons();
+                this.showToast('Shortcut dihapus dari Desktop');
             },
             openApp(id) {
                 Sound.click();
@@ -897,6 +944,34 @@
                 Sound.click();
                 document.getElementById('startMenu').classList.toggle('open');
             },
+            minimizeWindow() {
+                Sound.click();
+                const win = document.getElementById('mainWindow');
+                const taskBtn = document.getElementById('taskbarHubBtn');
+                win.classList.add('minimized');
+                taskBtn.classList.remove('active');
+                this.showToast('Jendela di-minimize ke Taskbar');
+            },
+            closeWindow() {
+                Sound.click();
+                const win = document.getElementById('mainWindow');
+                const taskBtn = document.getElementById('taskbarHubBtn');
+                win.classList.add('minimized');
+                taskBtn.classList.remove('active');
+                this.showToast('Jendela ditutup (Klik ikon 🏢 di taskbar untuk membuka lagi)');
+            },
+            toggleMainWindow() {
+                Sound.click();
+                const win = document.getElementById('mainWindow');
+                const taskBtn = document.getElementById('taskbarHubBtn');
+                if (win.classList.contains('minimized')) {
+                    win.classList.remove('minimized');
+                    taskBtn.classList.add('active');
+                } else {
+                    win.classList.add('minimized');
+                    taskBtn.classList.remove('active');
+                }
+            },
             toggleFullscreen() {
                 Sound.click();
                 if (!document.fullscreenElement) {
@@ -904,10 +979,6 @@
                 } else {
                     document.exitFullscreen().catch(() => {});
                 }
-            },
-            handleCloseWindow() {
-                Sound.error();
-                this.showToast('Jendela utama tidak dapat ditutup!');
             },
             showToast(msg) {
                 Sound.notify();
