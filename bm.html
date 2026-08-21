@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Enterprise OS - Multi-Theme Building Management</title>
+    <title>Enterprise OS - Authentic Multi-Theme System</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +75,7 @@
         }
 
         /* ==========================================================================
-           2. MULTI-THEME ENGINE VARIABLES (AUTENTIK 100%)
+           2. THEME ENGINE VARIABLES (AUTENTIK 100%)
            ========================================================================== */
         :root, [data-theme="win11"] {
             --sys-font: 'Plus Jakarta Sans', sans-serif;
@@ -96,41 +96,21 @@
             --taskbar-height: 52px;
         }
 
-        /* Windows XP Luna */
-        [data-theme="winxp"] {
-            --sys-font: 'Tahoma', sans-serif;
-            --win-blue: #0055EA;
-            --win-blue-hover: #1C68FF;
-            --wallpaper-url: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: #ECE9D8;
-            --window-border: #0055EA;
-            --taskbar-bg: linear-gradient(180deg, #245EDC 0%, #3F8CF3 9%, #245EDC 18%, #1941A5 92%, #1941A5 100%);
-            --mica-bg: #FFFFFF;
-            --text-primary: #000000;
-            --text-secondary: #444444;
-            --border-subtle: #D4D0C8;
-            --shadow-window: 3px 3px 12px rgba(0, 0, 0, 0.4);
-            --shadow-flyout: 2px 2px 10px rgba(0, 0, 0, 0.5);
-            --radius-win: 8px 8px 0 0;
-            --radius-card: 4px;
-            --taskbar-height: 46px;
-        }
-
         /* Windows 7 Aero Glass */
         [data-theme="win7"] {
             --sys-font: 'Segoe UI', Tahoma, sans-serif;
             --win-blue: #2E86DE;
             --win-blue-hover: #54A0FF;
             --wallpaper-url: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: rgba(230, 242, 255, 0.86);
+            --window-bg: rgba(230, 242, 255, 0.88);
             --window-border: rgba(255, 255, 255, 0.8);
-            --taskbar-bg: linear-gradient(180deg, rgba(50, 95, 145, 0.75) 0%, rgba(20, 45, 75, 0.9) 50%, rgba(10, 25, 45, 0.95) 100%);
+            --taskbar-bg: linear-gradient(180deg, rgba(40, 75, 115, 0.85) 0%, rgba(10, 25, 45, 0.95) 100%);
             --mica-bg: rgba(255, 255, 255, 0.65);
             --text-primary: #0F172A;
             --text-secondary: #334155;
             --border-subtle: rgba(255, 255, 255, 0.5);
-            --shadow-window: 0 16px 36px rgba(0, 45, 95, 0.45), inset 0 1px 0 rgba(255,255,255,0.8);
-            --shadow-flyout: 0 10px 25px rgba(0, 0, 0, 0.35);
+            --shadow-window: 0 16px 36px rgba(0, 45, 95, 0.45);
+            --shadow-flyout: 0 10px 25px rgba(0, 0, 0, 0.4);
             --radius-win: 8px;
             --radius-card: 6px;
             --taskbar-height: 48px;
@@ -221,7 +201,7 @@
         }
 
         /* ==========================================================================
-           3. DESKTOP WORKSPACE & ABSOLUTE DRAGGABLE ICONS
+           3. DESKTOP WORKSPACE & ICONS
            ========================================================================== */
         .desktop-area {
             flex: 1;
@@ -313,7 +293,7 @@
         }
 
         /* ==========================================================================
-           4. FLOATING WINDOWS & THEMED TITLEBARS
+           4. FLOATING WINDOWS
            ========================================================================== */
         .win-frame {
             position: absolute;
@@ -336,38 +316,27 @@
         [data-theme="win7"] .win-frame {
             border: 1px solid rgba(255, 255, 255, 0.7);
             background: rgba(225, 238, 255, 0.88);
-            box-shadow: 0 12px 35px rgba(0, 30, 80, 0.4), inset 0 1px 0 rgba(255,255,255,0.9);
         }
 
         [data-theme="win8"] .win-frame {
             border: 2px solid #68217A;
             border-radius: 0;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         [data-theme="win95"] .win-frame {
             border: 3px outset #FFFFFF;
             background: #C0C0C0;
             border-radius: 0;
-            box-shadow: none;
             padding: 2px;
         }
 
         [data-theme="linux"] .win-frame {
             border: 1px solid #E95420;
             background: #300A24;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
         }
 
-        .win-frame.dragging {
-            transition: none !important;
-        }
-
-        .win-frame.minimized {
-            transform: scale(0.85) translateY(180px);
-            opacity: 0;
-            pointer-events: none;
-        }
+        .win-frame.dragging { transition: none !important; }
+        .win-frame.minimized { transform: scale(0.85) translateY(180px); opacity: 0; pointer-events: none; }
 
         .win-titlebar {
             height: 44px;
@@ -381,23 +350,8 @@
             cursor: move;
         }
 
-        [data-theme="winxp"] .win-titlebar {
-            background: linear-gradient(180deg, #0058E6 0%, #3A93FF 8%, #0055EA 40%, #0045B5 100%);
-            color: #FFFFFF;
-            height: 32px;
-            padding: 0 6px 0 8px;
-            border-radius: 6px 6px 0 0;
-            border-bottom: none;
-        }
-        [data-theme="winxp"] .win-title-left {
-            color: #FFFFFF !important;
-            font-weight: 800;
-            text-shadow: 1px 1px 2px #000000;
-        }
-
         [data-theme="win7"] .win-titlebar {
             background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(200,225,255,0.3) 100%);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
             height: 38px;
         }
 
@@ -406,13 +360,8 @@
             color: #FFFFFF;
             height: 26px;
             padding: 0 3px;
-            border-bottom: none;
         }
-        [data-theme="win95"] .win-title-left {
-            color: #FFFFFF !important;
-            font-size: 0.75rem;
-            font-weight: 800;
-        }
+        [data-theme="win95"] .win-title-left { color: #FFFFFF !important; font-size: 0.75rem; font-weight: 800; }
 
         [data-theme="linux"] .win-titlebar {
             background: #24051B;
@@ -448,11 +397,7 @@
             flex-shrink: 0;
         }
 
-        .win-controls {
-            display: flex;
-            height: 100%;
-        }
-
+        .win-controls { display: flex; height: 100%; }
         .win-control-btn {
             width: 44px;
             height: 100%;
@@ -466,48 +411,23 @@
             transition: var(--transition);
         }
 
-        [data-theme="winxp"] .win-control-btn {
-            width: 22px;
-            height: 22px;
-            margin: auto 2px;
-            background: linear-gradient(180deg, #4A9FFF 0%, #156AE8 100%);
-            border: 1px solid #FFFFFF;
-            border-radius: 3px;
-            color: #FFFFFF;
-            font-size: 0.7rem;
-            font-weight: 800;
-        }
-        [data-theme="winxp"] .win-control-btn.close {
-            background: linear-gradient(180deg, #FF7B60 0%, #E81123 100%);
-        }
-
         [data-theme="win95"] .win-control-btn {
             width: 18px;
             height: 18px;
             margin: auto 2px;
             background: #C0C0C0;
             border: 2px outset #FFFFFF;
-            color: #000000;
+            color: #000;
             font-size: 0.65rem;
             font-weight: 900;
         }
-        [data-theme="win95"] .win-control-btn:active {
-            border: 2px inset #FFFFFF;
-        }
-
         [data-theme="win7"] .win-control-btn {
             width: 32px;
             height: 24px;
             margin: auto 1px;
             border-radius: 3px;
             background: rgba(255,255,255,0.4);
-            border: 1px solid rgba(255,255,255,0.6);
         }
-        [data-theme="win7"] .win-control-btn.close:hover {
-            background: #E81123;
-            color: #fff;
-        }
-
         [data-theme="linux"] .win-control-btn {
             width: 18px;
             height: 18px;
@@ -516,9 +436,7 @@
             font-size: 0;
             background: #4A4A4A;
         }
-        [data-theme="linux"] .win-control-btn.close {
-            background: #E95420;
-        }
+        [data-theme="linux"] .win-control-btn.close { background: #E95420; }
 
         .win-control-btn:hover { background: var(--menu-hover); }
         .win-control-btn.close:hover { background: #E81123; color: #FFFFFF; }
@@ -541,14 +459,10 @@
             gap: 0.75rem;
             flex-wrap: wrap;
         }
-
         .win-nav-title h2 { font-size: 1.15rem; font-weight: 800; }
         .win-nav-title p { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
 
-        .win-search-box {
-            position: relative;
-        }
-
+        .win-search-box { position: relative; }
         .win-search-box input {
             background: var(--mica-bg);
             border: 1px solid var(--border-subtle);
@@ -558,15 +472,8 @@
             color: var(--text-primary);
             outline: none;
             width: 220px;
-            transition: var(--transition);
         }
-
-        [data-theme="win95"] .win-search-box input {
-            border: 2px inset #FFFFFF;
-            background: #FFFFFF;
-            color: #000000;
-        }
-
+        [data-theme="win95"] .win-search-box input { border: 2px inset #FFF; background: #FFF; color: #000; }
         .win-search-box svg {
             position: absolute;
             left: 10px;
@@ -582,7 +489,6 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 0.85rem;
         }
-
         .win-tile {
             background: var(--mica-bg);
             border: 1px solid var(--border-subtle);
@@ -594,48 +500,12 @@
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             position: relative;
-            overflow: hidden;
         }
-
-        [data-theme="winxp"] .win-tile {
-            border: 1px solid #7F9DB9;
-            background: #FFFFFF;
-            border-radius: 4px;
-        }
-        [data-theme="winxp"] .win-tile:hover {
-            background: #FFE88C;
-            border-color: #0055EA;
-        }
-
-        [data-theme="win8"] .win-tile {
-            border-radius: 0;
-            border: none;
-            background: #EDE8F5;
-        }
-
-        [data-theme="win95"] .win-tile {
-            border: 2px outset #FFFFFF;
-            background: #C0C0C0;
-            border-radius: 0;
-        }
-        [data-theme="win95"] .win-tile:active {
-            border: 2px inset #FFFFFF;
-        }
-
-        [data-theme="linux"] .win-tile {
-            background: #3C1033;
-            border: 1px solid #E95420;
-            color: #FFFFFF;
-        }
-
-        .win-tile:hover, .win-tile:active {
-            transform: translateY(-3px);
-            background: var(--window-bg);
-            border-color: var(--win-blue);
-            box-shadow: 0 10px 22px rgba(0, 120, 212, 0.16);
-        }
+        [data-theme="win8"] .win-tile { border-radius: 0; border: none; background: #EDE8F5; }
+        [data-theme="win95"] .win-tile { border: 2px outset #FFF; background: #C0C0C0; border-radius: 0; }
+        [data-theme="linux"] .win-tile { background: #3C1033; border: 1px solid #E95420; color: #FFF; }
+        .win-tile:hover { transform: translateY(-3px); }
 
         .tile-pin-btn {
             position: absolute;
@@ -646,9 +516,7 @@
             padding: 2px 5px;
             border-radius: 4px;
             background: rgba(0,0,0,0.06);
-            transition: var(--transition);
         }
-
         .tile-icon-box {
             width: 50px;
             height: 50px;
@@ -658,26 +526,11 @@
             justify-content: center;
             font-size: 1.5rem;
             margin-bottom: 0.6rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
         }
+        [data-theme="win8"] .tile-icon-box, [data-theme="win95"] .tile-icon-box { border-radius: 0; }
 
-        [data-theme="win8"] .tile-icon-box, [data-theme="win95"] .tile-icon-box {
-            border-radius: 0;
-        }
-
-        .tile-title {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
-        .tile-sub {
-            font-size: 0.68rem;
-            color: var(--text-secondary);
-            margin-top: 3px;
-        }
+        .tile-title { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); }
+        .tile-sub { font-size: 0.68rem; color: var(--text-secondary); margin-top: 3px; }
 
         .notepad-btn {
             background: var(--window-bg);
@@ -688,22 +541,10 @@
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
         }
+        [data-theme="win95"] .notepad-btn { border: 2px outset #FFF; background: #C0C0C0; border-radius: 0; }
 
-        [data-theme="win95"] .notepad-btn {
-            border: 2px outset #FFFFFF;
-            background: #C0C0C0;
-            border-radius: 0;
-        }
-        [data-theme="win95"] .notepad-btn:active {
-            border: 2px inset #FFFFFF;
-        }
-
-        /* Notepad Specific */
+        /* Window Specifics */
         #notepadWindow { max-width: 520px; height: 380px; display: none; }
         .notepad-toolbar {
             display: flex;
@@ -721,214 +562,46 @@
             border: none;
             outline: none;
             padding: 0.85rem;
-            font-family: 'Consolas', 'Courier New', monospace;
+            font-family: 'Consolas', monospace;
             font-size: 0.85rem;
             background: transparent;
             color: var(--text-primary);
             resize: none;
-            user-select: text;
         }
-        [data-theme="win95"] .notepad-textarea { background: #FFFFFF; color: #000; }
+        [data-theme="win95"] .notepad-textarea { background: #FFF; color: #000; }
 
-        /* Watermark */
         #watermarkWindow { max-width: 680px; display: none; }
-        .watermark-grid-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-        .form-group-win {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .form-group-win label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        .form-group-win input {
-            background: var(--mica-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.78rem;
-            color: var(--text-primary);
-            outline: none;
-        }
-        .watermark-canvas-container {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            background: var(--mica-bg);
-            min-height: 200px;
-            max-height: 320px;
-            overflow: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-        #wmCanvas {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        .watermark-grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+        .form-group-win { display: flex; flex-direction: column; gap: 4px; }
+        .form-group-win label { font-size: 0.72rem; font-weight: 700; }
+        .form-group-win input { background: var(--mica-bg); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; outline: none; }
+        .watermark-canvas-container { border: 1px solid var(--border-subtle); border-radius: var(--radius-card); background: var(--mica-bg); min-height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        #wmCanvas { max-width: 100%; max-height: 280px; object-fit: contain; }
 
-        /* File Explorer */
         #explorerWindow { max-width: 680px; height: 480px; display: none; }
-        .explorer-dropzone {
-            border: 2px dashed var(--win-blue);
-            border-radius: var(--radius-card);
-            padding: 1.5rem;
-            text-align: center;
-            background: var(--mica-bg);
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 1rem;
-        }
-        .explorer-preview-area {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            padding: 0.85rem;
-            background: var(--window-bg);
-            min-height: 200px;
-            max-height: 280px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+        .explorer-dropzone { border: 2px dashed var(--win-blue); border-radius: 8px; padding: 1.5rem; text-align: center; background: var(--mica-bg); cursor: pointer; margin-bottom: 1rem; }
+        .explorer-preview-area { border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem; background: var(--window-bg); min-height: 180px; display: flex; align-items: center; justify-content: center; }
 
-        /* Gempa Warning Window */
         #gempaWindow { max-width: 480px; display: none; border: 1.5px solid #EE2737; }
-        .gempa-content-card {
-            background: rgba(238, 39, 55, 0.06);
-            border-radius: var(--radius-card);
-            border: 1px solid rgba(238, 39, 55, 0.2);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            font-size: 0.82rem;
-        }
-        .gempa-header-mag {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .gempa-mag-badge {
-            background: #EE2737;
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            font-size: 0.95rem;
-            font-weight: 800;
-            box-shadow: 0 4px 10px rgba(238, 39, 55, 0.35);
-        }
+        .gempa-content-card { background: rgba(238, 39, 55, 0.06); border-radius: var(--radius-card); border: 1px solid rgba(238, 39, 55, 0.2); padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; }
+        .gempa-header-mag { display: flex; align-items: center; justify-content: space-between; }
+        .gempa-mag-badge { background: #EE2737; color: #fff; padding: 4px 10px; border-radius: var(--radius-pill); font-size: 0.95rem; font-weight: 800; }
 
-        /* Radio Window */
         #radioWindow { max-width: 480px; display: none; }
-        .radio-box {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-            padding: 1.25rem;
-            background: var(--mica-bg);
-            border-radius: var(--radius-card);
-            border: 1px solid var(--border-subtle);
-            text-align: center;
-        }
-        .radio-visualizer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            height: 24px;
-            margin: 0.25rem 0;
-        }
-        .radio-visualizer span {
-            width: 4px;
-            height: 8px;
-            background: var(--win-blue);
-            border-radius: 2px;
-            transition: height 0.2s ease;
-        }
-        .radio-visualizer.playing span {
-            animation: bounceBar 0.8s infinite alternate ease-in-out;
-        }
-        @keyframes bounceBar {
-            from { height: 6px; }
-            to { height: 22px; }
-        }
-        .radio-play-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--win-blue);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin: 0 auto;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(0, 120, 212, 0.4);
-            transition: var(--transition);
-        }
-        .radio-play-btn:hover {
-            transform: scale(1.08);
-            background: var(--win-blue-hover);
-        }
-        .station-btn-active {
-            background: var(--win-blue) !important;
-            color: #fff !important;
-            border-color: var(--win-blue) !important;
-        }
+        .radio-box { display: flex; flex-direction: column; gap: 0.85rem; padding: 1.25rem; background: var(--mica-bg); border-radius: var(--radius-card); border: 1px solid var(--border-subtle); text-align: center; }
+        .radio-visualizer { display: flex; align-items: center; justify-content: center; gap: 4px; height: 24px; margin: 0.25rem 0; }
+        .radio-visualizer span { width: 4px; height: 8px; background: var(--win-blue); border-radius: 2px; }
+        .radio-play-btn { width: 52px; height: 52px; border-radius: 50%; background: var(--win-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto; border: none; cursor: pointer; }
+        .station-btn-active { background: var(--win-blue) !important; color: #fff !important; }
 
-        /* Theme Picker */
         #themeWindow { max-width: 520px; display: none; }
-        .theme-grid-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-        .theme-card-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem;
-            background: var(--mica-bg);
-            border: 1.5px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            cursor: pointer;
-            text-align: left;
-            transition: var(--transition);
-        }
-        .theme-card-btn:hover, .theme-card-btn.active {
-            border-color: var(--win-blue);
-            background: var(--window-bg);
-            transform: translateY(-2px);
-        }
-        .theme-preview-badge {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: #fff;
-            flex-shrink: 0;
-        }
+        .theme-grid-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        .theme-card-btn { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; background: var(--mica-bg); border: 1.5px solid var(--border-subtle); border-radius: var(--radius-card); cursor: pointer; text-align: left; }
+        .theme-card-btn.active { border-color: var(--win-blue); background: var(--window-bg); }
+        .theme-preview-badge { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #fff; flex-shrink: 0; }
 
         /* ==========================================================================
-           6. START MENUS (AUTENTIK)
+           5. START MENUS (AUTENTIK SESUAI OS)
            ========================================================================== */
         .start-menu {
             position: absolute;
@@ -942,7 +615,6 @@
             border-radius: var(--radius-win);
             box-shadow: var(--shadow-flyout);
             backdrop-filter: blur(36px);
-            -webkit-backdrop-filter: blur(36px);
             padding: 1.5rem 1.5rem 0.75rem;
             opacity: 0;
             pointer-events: none;
@@ -951,6 +623,16 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+        }
+
+        /* Windows 7 Start Menu (Left Aligned, Two Column) */
+        [data-theme="win7"] .start-menu {
+            left: 12px !important;
+            transform: translateY(15px) !important;
+            width: 440px;
+            background: rgba(235, 245, 255, 0.95);
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(0, 30, 80, 0.4);
         }
 
         /* Windows XP Start Menu */
@@ -965,31 +647,10 @@
             overflow: hidden;
             box-shadow: 2px 2px 14px rgba(0,0,0,0.5);
         }
-        [data-theme="winxp"] .start-xp-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(180deg, #0055EA 0%, #245EDC 100%);
-            color: #FFFFFF;
-            padding: 0.75rem 1rem;
-            font-weight: 800;
-            text-shadow: 1px 1px 2px #000;
-        }
-        [data-theme="winxp"] .start-xp-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: #FFFFFF;
-            min-height: 280px;
-        }
-        [data-theme="winxp"] .start-xp-right {
-            background: #D3E5FA;
-            border-left: 1px solid #95BEEE;
-            padding: 0.5rem;
-        }
 
         /* Windows 95 Start Menu */
         [data-theme="win95"] .start-menu {
-            border: 3px outset #FFFFFF !important;
+            border: 3px outset #FFF !important;
             background: #C0C0C0 !important;
             left: 0px !important;
             bottom: var(--taskbar-height) !important;
@@ -999,33 +660,17 @@
             padding: 0 !important;
             box-shadow: 2px 2px 8px #000 !important;
         }
-        .win95-start-wrap { display: flex; }
-        .win95-sidebar-banner {
-            width: 32px;
-            background: linear-gradient(180deg, #000080, #1084d0);
-            color: #FFFFFF;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            padding: 8px 4px;
-            font-size: 0.9rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-align: center;
-        }
 
         .start-menu.open {
             opacity: 1;
             pointer-events: auto;
             transform: translateX(-50%) translateY(0) scale(1);
         }
-        [data-theme="winxp"] .start-menu.open, [data-theme="win95"] .start-menu.open {
+        [data-theme="win7"] .start-menu.open, [data-theme="winxp"] .start-menu.open, [data-theme="win95"] .start-menu.open {
             transform: translateY(0) scale(1) !important;
         }
 
-        .start-search-bar {
-            position: relative;
-            width: 100%;
-        }
+        .start-search-bar { position: relative; width: 100%; }
         .start-search-bar input {
             width: 100%;
             background: var(--mica-bg);
@@ -1035,7 +680,6 @@
             font-size: 0.82rem;
             color: var(--text-primary);
             outline: none;
-            transition: var(--transition);
         }
 
         .start-pinned-grid {
@@ -1054,59 +698,24 @@
             border-radius: var(--radius-card);
             cursor: pointer;
             text-align: center;
-            transition: var(--transition);
             background: transparent;
             border: none;
         }
         .start-pinned-item:hover { background: var(--menu-hover); }
         .start-pinned-item .icon { font-size: 1.7rem; margin-bottom: 4px; }
-        .start-pinned-item .lbl {
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            max-width: 68px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+        .start-pinned-item .lbl { font-size: 0.68rem; font-weight: 600; color: var(--text-primary); max-width: 68px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .start-recommended-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.4rem;
-        }
-        .start-rec-item {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.45rem 0.65rem;
-            border-radius: var(--radius-card);
-            cursor: pointer;
-            transition: var(--transition);
-        }
+        .start-recommended-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+        .start-rec-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0.65rem; border-radius: var(--radius-card); cursor: pointer; }
         .start-rec-item:hover { background: var(--menu-hover); }
         .start-rec-item .rec-info h5 { font-size: 0.75rem; font-weight: 700; }
         .start-rec-item .rec-info p { font-size: 0.65rem; color: var(--text-secondary); }
 
-        .start-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border-subtle);
-            margin-top: 0.25rem;
-        }
-        .start-user-pill {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 4px 8px;
-            border-radius: var(--radius-pill);
-            cursor: pointer;
-        }
+        .start-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); margin-top: 0.25rem; }
+        .start-user-pill { display: flex; align-items: center; gap: 0.6rem; padding: 4px 8px; border-radius: var(--radius-pill); cursor: pointer; }
 
         /* ==========================================================================
-           7. TASKBAR
+           6. TASKBAR (PROFESSIONAL & RESPONSIVE)
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -1124,38 +733,12 @@
             gap: 0.5rem;
         }
 
-        [data-theme="winxp"] .win-taskbar {
-            border-top: 1px solid #4387E8;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-            backdrop-filter: none;
-        }
+        [data-theme="winxp"] .win-taskbar { border-top: 1px solid #4387E8; backdrop-filter: none; }
+        [data-theme="win95"] .win-taskbar { border-top: 2px outset #FFF; background: #C0C0C0; backdrop-filter: none; padding: 2px 4px; }
 
-        [data-theme="win95"] .win-taskbar {
-            border-top: 2px outset #FFFFFF;
-            background: #C0C0C0;
-            backdrop-filter: none;
-            padding: 2px 4px;
-        }
-
-        .taskbar-left {
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-            padding-left: 0.25rem;
-        }
-        .taskbar-status-text {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        [data-theme="winxp"] .taskbar-status-text, [data-theme="win7"] .taskbar-status-text {
-            color: #FFFFFF !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-        }
+        .taskbar-left { display: flex; align-items: center; flex-shrink: 0; padding-left: 0.25rem; }
+        .taskbar-status-text { font-size: 0.72rem; font-weight: 700; color: var(--text-primary); white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+        [data-theme="winxp"] .taskbar-status-text, [data-theme="win7"] .taskbar-status-text { color: #FFF !important; text-shadow: 0 1px 2px #000; }
 
         .taskbar-center-scrollable {
             display: flex;
@@ -1171,21 +754,8 @@
         }
         .taskbar-center-scrollable::-webkit-scrollbar { display: none; }
 
-        .taskbar-tray {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.25rem;
-            flex-shrink: 0;
-            padding-right: 0.25rem;
-        }
-
-        [data-theme="winxp"] .taskbar-tray {
-            background: linear-gradient(180deg, #166AE8 0%, #0C43A8 100%);
-            border-left: 1px solid #104AB8;
-            padding: 0 8px;
-            height: 100%;
-        }
+        .taskbar-tray { display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem; flex-shrink: 0; padding-right: 0.25rem; }
+        [data-theme="winxp"] .taskbar-tray { background: linear-gradient(180deg, #166AE8 0%, #0C43A8 100%); border-left: 1px solid #104AB8; padding: 0 8px; height: 100%; }
 
         .task-btn {
             width: 40px;
@@ -1203,151 +773,54 @@
             flex-shrink: 0;
         }
 
-        /* Windows XP Start Button */
+        /* Win XP Start Button */
         [data-theme="winxp"] #startBtn {
-            width: auto;
-            padding: 0 12px;
-            height: 38px;
+            width: auto; padding: 0 12px; height: 38px;
             background: linear-gradient(180deg, #388E3C 0%, #4CAF50 10%, #2E7D32 85%, #1B5E20 100%);
-            border-radius: 0 10px 10px 0;
-            box-shadow: 2px 0 6px rgba(0,0,0,0.3);
-            color: #FFFFFF;
-            font-weight: 900;
-            font-style: italic;
-            font-size: 0.95rem;
-            border: 1px solid #2E7D32;
-            text-shadow: 1px 1px 2px #000;
+            border-radius: 0 10px 10px 0; color: #FFF; font-weight: 900; font-style: italic; font-size: 0.95rem; border: 1px solid #2E7D32; text-shadow: 1px 1px 2px #000;
         }
-
-        /* Windows 7 Start Orb */
+        /* Win 7 Start Orb */
         [data-theme="win7"] #startBtn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+            width: 44px; height: 44px; border-radius: 50%;
             background: radial-gradient(circle at 50% 30%, #54A0FF 0%, #0040B0 70%, #001A50 100%);
-            box-shadow: 0 0 10px rgba(84, 160, 255, 0.8), inset 0 1px 2px rgba(255,255,255,0.9);
-            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 0 10px rgba(84, 160, 255, 0.8), inset 0 1px 2px rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.6);
         }
-
-        /* Windows 95 Start Button */
+        /* Win 95 Start Button */
         [data-theme="win95"] #startBtn {
-            width: auto;
-            padding: 2px 10px;
-            height: 30px;
-            background: #C0C0C0;
-            border: 2px outset #FFFFFF;
-            font-weight: 900;
-            font-size: 0.8rem;
-            display: inline-flex;
-            gap: 4px;
+            width: auto; padding: 2px 10px; height: 30px; background: #C0C0C0; border: 2px outset #FFF; font-weight: 900; font-size: 0.8rem; display: inline-flex; gap: 4px;
         }
-        [data-theme="win95"] #startBtn:active { border: 2px inset #FFFFFF; }
+        [data-theme="win95"] #startBtn:active { border: 2px inset #FFF; }
+        [data-theme="win95"] .task-btn { width: auto; padding: 2px 8px; height: 28px; background: #C0C0C0; border: 2px outset #FFF; font-weight: 800; font-size: 0.72rem; border-radius: 0; }
+        [data-theme="win95"] .task-btn:active { border: 2px inset #FFF; }
 
-        [data-theme="win95"] .task-btn {
-            width: auto;
-            padding: 2px 8px;
-            height: 28px;
-            background: #C0C0C0;
-            border: 2px outset #FFFFFF;
-            font-weight: 800;
-            font-size: 0.72rem;
-            border-radius: 0;
-        }
-        [data-theme="win95"] .task-btn:active { border: 2px inset #FFFFFF; }
-
-        .task-btn:hover, .task-btn:active { background: var(--menu-hover); }
+        .task-btn:hover { background: var(--menu-hover); }
         .task-btn.active { background: var(--menu-hover); }
         .task-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            width: 14px;
-            height: 3px;
-            border-radius: 2px;
-            background: var(--win-blue);
+            content: ''; position: absolute; bottom: 2px; width: 14px; height: 3px; border-radius: 2px; background: var(--win-blue);
         }
-
         [data-theme="winxp"] .task-btn.active::after, [data-theme="win7"] .task-btn.active::after, [data-theme="win95"] .task-btn.active::after { display: none; }
 
-        .win-start-logo {
-            display: grid;
-            grid-template-columns: 8px 8px;
-            grid-template-rows: 8px 8px;
-            gap: 2px;
-        }
-        .win-start-logo span {
-            background: var(--win-blue);
-            border-radius: 1px;
-        }
+        .win-start-logo { display: grid; grid-template-columns: 8px 8px; grid-template-rows: 8px 8px; gap: 2px; }
+        .win-start-logo span { background: var(--win-blue); border-radius: 1px; }
 
-        .tray-clock {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            padding: 3px 6px;
-            border-radius: var(--radius-card);
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        [data-theme="win7"] .tray-clock, [data-theme="winxp"] .tray-clock { color: #FFFFFF !important; text-shadow: 0 1px 2px #000; }
-        [data-theme="win95"] .tray-clock { border: 2px inset #FFFFFF; background: #C0C0C0; padding: 2px 6px; }
+        .tray-clock { display: flex; flex-direction: column; align-items: flex-end; font-size: 0.72rem; font-weight: 600; color: var(--text-primary); padding: 3px 6px; border-radius: var(--radius-card); cursor: pointer; white-space: nowrap; }
+        [data-theme="win7"] .tray-clock, [data-theme="winxp"] .tray-clock { color: #FFF !important; text-shadow: 0 1px 2px #000; }
+        [data-theme="win95"] .tray-clock { border: 2px inset #FFF; background: #C0C0C0; padding: 2px 6px; }
 
-        .toast-container {
-            position: fixed;
-            bottom: calc(var(--taskbar-height) + 14px);
-            right: 14px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 360px;
-            width: calc(100% - 28px);
-            pointer-events: none;
-        }
-
-        .win-toast {
-            background: var(--window-bg);
-            border: 1px solid var(--window-border);
-            border-radius: var(--radius-card);
-            padding: 0.8rem 1.1rem;
-            box-shadow: var(--shadow-flyout);
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.65rem;
-            animation: toastPop 0.25s forwards;
-            backdrop-filter: blur(20px);
-            pointer-events: auto;
-            cursor: pointer;
-        }
+        .toast-container { position: fixed; bottom: calc(var(--taskbar-height) + 14px); right: 14px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; max-width: 360px; width: calc(100% - 28px); pointer-events: none; }
+        .win-toast { background: var(--window-bg); border: 1px solid var(--window-border); border-radius: var(--radius-card); padding: 0.8rem 1.1rem; box-shadow: var(--shadow-flyout); font-size: 0.8rem; font-weight: 600; display: flex; align-items: flex-start; gap: 0.65rem; backdrop-filter: blur(20px); pointer-events: auto; cursor: pointer; }
         .win-toast.toast-gempa { border-left: 4px solid #EE2737; }
 
-        @keyframes toastPop {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         /* ==========================================================================
-           8. RESPONSIVE MOBILE
+           7. RESPONSIVE MOBILE
            ========================================================================== */
         @media (max-width: 768px) {
-            .win-frame {
-                left: 0.5rem !important;
-                top: 0.5rem !important;
-                width: calc(100% - 1rem) !important;
-                max-width: 100% !important;
-                height: calc(100dvh - var(--taskbar-height) - 1rem) !important;
-                border-radius: var(--radius-win);
-            }
+            .win-frame { left: 0.5rem !important; top: 0.5rem !important; width: calc(100% - 1rem) !important; max-width: 100% !important; height: calc(100dvh - var(--taskbar-height) - 1rem) !important; }
             .win-body { padding: 0.85rem; max-height: calc(100dvh - var(--taskbar-height) - 68px); }
             .win-tiles-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
             .theme-grid-selector { grid-template-columns: 1fr; }
             .start-menu { width: calc(100vw - 16px); left: 50%; padding: 1rem; }
-            [data-theme="winxp"] .start-menu, [data-theme="win95"] .start-menu { left: 8px !important; width: calc(100vw - 16px) !important; }
+            [data-theme="win7"] .start-menu, [data-theme="winxp"] .start-menu, [data-theme="win95"] .start-menu { left: 8px !important; width: calc(100vw - 16px) !important; }
             .start-pinned-grid { grid-template-columns: repeat(4, 1fr); }
             .start-recommended-list { grid-template-columns: 1fr; }
             .taskbar-left { display: none; }
@@ -1358,12 +831,9 @@
 </head>
 <body>
 
-    <!-- BOOT SPLASH SCREEN -->
+    <!-- BOOT SPLASH -->
     <div id="winBootSplash">
-        <div class="splash-logo-grid">
-            <span></span><span></span>
-            <span></span><span></span>
-        </div>
+        <div class="splash-logo-grid"><span></span><span></span><span></span><span></span></div>
         <div class="win-spinner"></div>
         <div class="splash-text">Starting Portal Building Management OS...</div>
     </div>
@@ -1372,7 +842,7 @@
     <main class="desktop-area" id="desktopArea">
         <div class="desktop-icons-container" id="desktopIconsContainer"></div>
 
-        <!-- 1. Portal Hub -->
+        <!-- 1. Portal Hub Window -->
         <div class="win-frame minimized" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
             <div class="win-titlebar" id="mainTitlebar">
                 <div class="win-controls">
@@ -1415,7 +885,6 @@
                     <span>Pilih Tema Sistem Operasi</span>
                 </div>
             </div>
-
             <div class="win-body">
                 <div class="theme-grid-selector" id="themeSelectorContainer"></div>
             </div>
@@ -1433,39 +902,18 @@
                     <span>Watermark & Kompresi Foto Dokumentasi</span>
                 </div>
             </div>
-
             <div class="win-body">
                 <input type="file" id="wmFileInput" accept="image/*" style="display:none;" onchange="Watermarker.loadImage(this.files)">
-                
                 <div class="watermark-grid-form">
-                    <div class="form-group-win">
-                        <label>Nama Petugas:</label>
-                        <input type="text" id="wmInputName" value="Sutrisno" oninput="Watermarker.redraw()">
-                    </div>
-                    <div class="form-group-win">
-                        <label>Lokasi / Unit:</label>
-                        <div style="display:flex; gap:4px;">
-                            <input type="text" id="wmInputLocation" value="Unit KC Surabaya" style="flex:1;" oninput="Watermarker.redraw()">
-                            <button class="notepad-btn" onclick="Watermarker.getGPSLocation()">📍 GPS</button>
-                        </div>
-                    </div>
-                    <div class="form-group-win">
-                        <label>Tanggal & Jam:</label>
-                        <input type="text" id="wmInputDatetime" readonly style="opacity:0.8;">
-                    </div>
-                    <div class="form-group-win">
-                        <label>Ukuran Output:</label>
-                        <input type="text" value="JPEG Max 1200px" readonly style="opacity:0.8;">
-                    </div>
+                    <div class="form-group-win"><label>Nama Petugas:</label><input type="text" id="wmInputName" value="Sutrisno" oninput="Watermarker.redraw()"></div>
+                    <div class="form-group-win"><label>Lokasi / Unit:</label><div style="display:flex; gap:4px;"><input type="text" id="wmInputLocation" value="Unit KC Surabaya" style="flex:1;" oninput="Watermarker.redraw()"><button class="notepad-btn" onclick="Watermarker.getGPSLocation()">📍 GPS</button></div></div>
+                    <div class="form-group-win"><label>Tanggal & Jam:</label><input type="text" id="wmInputDatetime" readonly style="opacity:0.8;"></div>
+                    <div class="form-group-win"><label>Ukuran Output:</label><input type="text" value="JPEG Max 1200px" readonly style="opacity:0.8;"></div>
                 </div>
-
                 <div class="watermark-canvas-container" id="wmCanvasWrap" onclick="document.getElementById('wmFileInput').click()">
-                    <span id="wmPlaceholderText" style="font-size:0.85rem; color:var(--text-secondary); text-align:center; cursor:pointer;">
-                        📷 Klik di sini untuk memilih foto dari Kamera / Galeri HP / PC
-                    </span>
+                    <span id="wmPlaceholderText" style="font-size:0.85rem; color:var(--text-secondary); text-align:center; cursor:pointer;">📷 Klik di sini untuk memilih foto</span>
                     <canvas id="wmCanvas" style="display:none;"></canvas>
                 </div>
-
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                     <span id="wmFileInfoText" style="font-size:0.75rem; color:var(--text-secondary);">Belum ada foto</span>
                     <div style="display:flex; gap:6px;">
@@ -1488,15 +936,10 @@
                     <span>Notepad — Catatan Teknisi</span>
                 </div>
             </div>
-            
             <div class="notepad-toolbar">
                 <span id="notepadStatus" style="color:var(--text-secondary);">Tersimpan di localhost</span>
-                <div style="display:flex; gap:4px;">
-                    <button class="notepad-btn" onclick="Notepad.clear()">Baru</button>
-                    <button class="notepad-btn" onclick="Notepad.download()">Export TXT</button>
-                </div>
+                <div style="display:flex; gap:4px;"><button class="notepad-btn" onclick="Notepad.clear()">Baru</button><button class="notepad-btn" onclick="Notepad.download()">Export TXT</button></div>
             </div>
-
             <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi di sini..."></textarea>
         </div>
 
@@ -1512,20 +955,13 @@
                     <span>File Explorer — Buka Berkas Perangkat</span>
                 </div>
             </div>
-
             <div class="win-body">
                 <input type="file" id="filePickerInput" style="display:none;" onchange="FileExplorer.handleFiles(this.files)">
-                
                 <div class="explorer-dropzone" onclick="document.getElementById('filePickerInput').click()">
                     <div style="font-size:2.2rem;">📂</div>
                     <strong>Klik untuk Pilih Berkas dari HP / Komputer</strong>
-                    <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Gambar, PDF, File Teks, Audio & Video</p>
                 </div>
-
-                <div class="explorer-preview-area" id="filePreviewContainer">
-                    <span style="color:var(--text-secondary); font-size:0.8rem;">Belum ada berkas dibuka.</span>
-                </div>
-
+                <div class="explorer-preview-area" id="filePreviewContainer"><span style="color:var(--text-secondary); font-size:0.8rem;">Belum ada berkas dibuka.</span></div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem;">
                     <span id="fileMetaInfo" style="font-size:0.75rem; color:var(--text-secondary);">0 Berkas</span>
                     <button class="notepad-btn" onclick="FileExplorer.sendToNotepad()">Buka di Notepad 📝</button>
@@ -1533,7 +969,7 @@
             </div>
         </div>
 
-        <!-- 6. Gempa BMKG Alert -->
+        <!-- 6. Gempa BMKG -->
         <div class="win-frame" id="gempaWindow" style="top: 16%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="gempaTitlebar">
                 <div class="win-controls">
@@ -1545,27 +981,19 @@
                     <span>Peringatan Gempa Terkini (BMKG)</span>
                 </div>
             </div>
-
             <div class="win-body" style="padding: 1.2rem;">
-                <div class="gempa-content-card" id="gempaDetailCard">
+                <div class="gempa-content-card">
                     <div class="gempa-header-mag">
-                        <div>
-                            <strong style="color:#EE2737; font-size:1.05rem;">Info Gempabumi Terkini</strong>
-                            <div style="font-size:0.75rem; color:var(--text-secondary);" id="gempaWaktu">Memuat data BMKG...</div>
-                        </div>
+                        <div><strong style="color:#EE2737; font-size:1.05rem;">Info Gempabumi Terkini</strong><div style="font-size:0.75rem; color:var(--text-secondary);" id="gempaWaktu">Memuat...</div></div>
                         <div class="gempa-mag-badge" id="gempaMag">M -.--</div>
                     </div>
-
                     <div style="margin-top:0.4rem; display:flex; flex-direction:column; gap:0.35rem;">
                         <div><strong>Lokasi:</strong> <span id="gempaWilayah">-</span></div>
                         <div><strong>Kedalaman:</strong> <span id="gempaKedalaman">-</span></div>
                         <div><strong>Koordinat:</strong> <span id="gempaKoordinat">-</span></div>
                         <div><strong>Potensi:</strong> <span id="gempaPotensi" style="font-weight:700; color:#EE2737;">-</span></div>
                     </div>
-
-                    <div style="display:flex; gap:8px; margin-top:0.6rem;">
-                        <button class="notepad-btn" style="background:#EE2737; color:#fff; border:none; padding:6px 12px;" onclick="GempaAlert.refresh()">Perbarui Data BMKG 🔄</button>
-                    </div>
+                    <button class="notepad-btn" style="background:#EE2737; color:#fff; border:none; margin-top:0.6rem;" onclick="GempaAlert.refresh()">Perbarui Data 🔄</button>
                 </div>
             </div>
         </div>
@@ -1582,29 +1010,16 @@
                     <span>World Radio Online Player</span>
                 </div>
             </div>
-
             <div class="win-body" style="padding: 1.25rem;">
                 <div class="radio-box">
                     <h3 id="radioChannelName" style="font-size:1.1rem; font-weight:800;">Suara Surabaya FM</h3>
-                    <p id="radioCountryInfo" style="font-size:0.78rem; color:var(--text-secondary);">🇮🇩 Indonesia • Berita & Informasi</p>
-                    
-                    <div class="radio-visualizer" id="radioVisualizer">
-                        <span></span><span></span><span></span><span></span><span></span>
-                    </div>
-
-                    <div style="display:flex; align-items:center; justify-content:center; gap:1.25rem; margin:0.4rem 0;">
-                        <button class="radio-play-btn" id="radioMainPlayBtn" onclick="RadioPlayer.togglePlay()">▶</button>
-                    </div>
-
+                    <p id="radioCountryInfo" style="font-size:0.78rem; color:var(--text-secondary);">🇮🇩 Indonesia • Berita & Musik</p>
+                    <div class="radio-visualizer" id="radioVisualizer"><span></span><span></span><span></span><span></span><span></span></div>
+                    <button class="radio-play-btn" id="radioMainPlayBtn" onclick="RadioPlayer.togglePlay()">▶</button>
                     <div id="radioStatusText" style="font-size:0.75rem; font-weight:700; color:var(--win-blue);">Siap Diputar</div>
-
                     <audio id="audioStream" preload="none"></audio>
-
-                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.75rem; text-align:left;">
-                        Stasiun Radio Pilihan:
-                    </div>
-
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:0.25rem;" id="radioStationGrid"></div>
+                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.5rem; text-align:left;">Pilihan Stasiun:</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;" id="radioStationGrid"></div>
                 </div>
             </div>
         </div>
@@ -1636,36 +1051,18 @@
             </div>
 
             <div style="margin-top:0.75rem;">
-                <div style="font-size:0.75rem; font-weight:800; padding:0 4px; margin-bottom:4px;">
-                    <span>Recommended</span>
-                </div>
+                <div style="font-size:0.75rem; font-weight:800; padding:0 4px; margin-bottom:4px;"><span>Recommended</span></div>
                 <div class="start-recommended-list">
-                    <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();">
-                        <span style="font-size:1.4rem;">📸</span>
-                        <div class="rec-info">
-                            <h5>Watermark Foto</h5>
-                            <p>Kompres & cap tanggal/lokasi/nama</p>
-                        </div>
-                    </div>
-                    <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();">
-                        <span style="font-size:1.4rem;">🎨</span>
-                        <div class="rec-info">
-                            <h5>Pilihan Tema OS</h5>
-                            <p>Win 11, XP, 7, 8, 95, Linux</p>
-                        </div>
-                    </div>
+                    <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();"><span style="font-size:1.4rem;">📸</span><div class="rec-info"><h5>Watermark Foto</h5><p>Kompres & cap tanggal/lokasi</p></div></div>
+                    <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();"><span style="font-size:1.4rem;">🎨</span><div class="rec-info"><h5>Pilihan Tema OS</h5><p>Win 11, XP, 7, 8, 95, Linux</p></div></div>
                 </div>
             </div>
 
             <div class="start-footer">
                 <div class="start-user-pill">
                     <div style="width:30px; height:30px; border-radius:50%; background:var(--win-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">S</div>
-                    <div style="text-align:left;">
-                        <div style="font-size:0.78rem; font-weight:800;">Sutrisno</div>
-                        <div style="font-size:0.65rem; color:var(--text-secondary);">Building Management Hub</div>
-                    </div>
+                    <div style="text-align:left;"><div style="font-size:0.78rem; font-weight:800;">Sutrisno</div><div style="font-size:0.65rem; color:var(--text-secondary);">Building Management Hub</div></div>
                 </div>
-
                 <div style="display:flex; gap:4px;">
                     <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
                     <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
@@ -1678,66 +1075,35 @@
 
     <!-- TASKBAR -->
     <footer class="win-taskbar">
-        
-        <div class="taskbar-left">
-            <span class="taskbar-status-text">
-                <span style="color:#107C41;">●</span> Active
-            </span>
-        </div>
+        <div class="taskbar-left"><span class="taskbar-status-text"><span style="color:#107C41;">●</span> Active</span></div>
 
         <div class="taskbar-center-scrollable">
             <button class="task-btn" id="startBtn" onclick="OS.toggleStart()" title="Start Menu">
-                <div class="win-start-logo" id="taskbarStartLogo">
-                    <span></span><span></span>
-                    <span></span><span></span>
-                </div>
+                <div class="win-start-logo" id="taskbarStartLogo"><span></span><span></span><span></span><span></span></div>
                 <span id="startTextWin95" style="display:none;">🏁 Start</span>
             </button>
-            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
-                <span style="font-size:1.15rem;">🏢</span>
-            </button>
-            <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema OS">
-                <span style="font-size:1.15rem;">🎨</span>
-            </button>
-            <button class="task-btn" id="taskbarWatermarkBtn" onclick="Watermarker.toggle()" title="Watermark & Kompres Foto">
-                <span style="font-size:1.15rem;">📸</span>
-            </button>
-            <button class="task-btn" id="taskbarExplorerBtn" onclick="FileExplorer.toggle()" title="File Explorer">
-                <span style="font-size:1.15rem;">📁</span>
-            </button>
-            <button class="task-btn" id="taskbarNotepadBtn" onclick="Notepad.toggle()" title="Buka Notepad">
-                <span style="font-size:1.15rem;">📝</span>
-            </button>
-            <button class="task-btn" id="taskbarGempaBtn" onclick="GempaAlert.toggle()" title="Monitoring Gempa BMKG">
-                <span style="font-size:1.15rem;">⚠️</span>
-            </button>
-            <button class="task-btn" id="taskbarRadioBtn" onclick="RadioPlayer.toggle()" title="Radio Dunia">
-                <span style="font-size:1.15rem;">📻</span>
-            </button>
-            <button class="task-btn" onclick="OS.openDirect('https://gemini.google.com')" title="Google Gemini AI">
-                <span style="font-size:1.15rem;">✨</span>
-            </button>
-            <button class="task-btn" onclick="OS.openDirect('https://chatgpt.com')" title="ChatGPT AI">
-                <span style="font-size:1.15rem;">🤖</span>
-            </button>
-            <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">
-                <span style="font-size:1.15rem;">🖼️</span>
-            </button>
+            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub"><span style="font-size:1.15rem;">🏢</span></button>
+            <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema OS"><span style="font-size:1.15rem;">🎨</span></button>
+            <button class="task-btn" id="taskbarWatermarkBtn" onclick="Watermarker.toggle()" title="Watermark Foto"><span style="font-size:1.15rem;">📸</span></button>
+            <button class="task-btn" id="taskbarExplorerBtn" onclick="FileExplorer.toggle()" title="File Explorer"><span style="font-size:1.15rem;">📁</span></button>
+            <button class="task-btn" id="taskbarNotepadBtn" onclick="Notepad.toggle()" title="Notepad"><span style="font-size:1.15rem;">📝</span></button>
+            <button class="task-btn" id="taskbarGempaBtn" onclick="GempaAlert.toggle()" title="Gempa BMKG"><span style="font-size:1.15rem;">⚠️</span></button>
+            <button class="task-btn" id="taskbarRadioBtn" onclick="RadioPlayer.toggle()" title="Radio Dunia"><span style="font-size:1.15rem;">📻</span></button>
+            <button class="task-btn" onclick="OS.openDirect('https://gemini.google.com')" title="Gemini AI"><span style="font-size:1.15rem;">✨</span></button>
+            <button class="task-btn" onclick="OS.openDirect('https://chatgpt.com')" title="ChatGPT"><span style="font-size:1.15rem;">🤖</span></button>
+            <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper"><span style="font-size:1.15rem;">🖼️</span></button>
         </div>
 
         <div class="taskbar-tray">
-            <button class="task-btn" onclick="Sound.startup()" title="Uji Suara Windows" style="width:30px; height:30px; font-size:0.82rem;">
-                🔊
-            </button>
+            <button class="task-btn" onclick="Sound.startup()" title="Uji Suara" style="width:30px; height:30px; font-size:0.82rem;">🔊</button>
             <div class="tray-clock" id="taskbarClock" onclick="Sound.click()">
                 <span id="trayTime">00:00</span>
                 <span id="trayDate" style="font-size:0.65rem; color:var(--text-secondary);">00/00/2026</span>
             </div>
         </div>
-
     </footer>
 
-    <!-- Toast Container -->
+    <!-- TOAST CONTAINER -->
     <div class="toast-container" id="toastBox"></div>
 
     <!-- JAVASCRIPT ENGINE -->
@@ -1761,35 +1127,23 @@
             { id: 'plts-dashboard', title: 'PLTS Solar', sub: 'Produksi solar panel', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
-            
-            // Tools
             { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, XP, 7, 8, 95, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
             { id: 'watermark', title: 'Watermark Foto', sub: 'Kompres & Cap Tanggal/Lokasi', icon: '📸', color: '#F97316', action: 'watermark' },
             { id: 'explorer', title: 'File Explorer', sub: 'Buka File HP & PC', icon: '📁', color: '#FDB813', action: 'explorer' },
             { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
-            
-            // BPB Portals
             { id: 'bmis', title: 'BMIS BPB', sub: 'bmis.bpb.co.id', icon: '🏢', color: '#00529C', url: 'https://bmis.bpb.co.id' },
             { id: 'belfis', title: 'BELFIS BPB', sub: 'belfis.bpb.co.id', icon: '🏗️', color: '#0284C7', url: 'https://belfis.bpb.co.id' },
             { id: 'absensi', title: 'Binayasa Absensi', sub: 'binayasa-absensi.com', icon: '👤', color: '#10B981', url: 'https://binayasa-absensi.com' },
-            
-            // AI Apps
             { id: 'gemini', title: 'Google Gemini', sub: 'gemini.google.com', icon: '✨', color: '#1BA1E2', url: 'https://gemini.google.com' },
             { id: 'chatgpt', title: 'ChatGPT AI', sub: 'chatgpt.com', icon: '🤖', color: '#10A37F', url: 'https://chatgpt.com' },
-            
-            // Office
             { id: 'maps', title: 'Google Maps', sub: 'maps.google.com', icon: '🗺️', color: '#34A853', url: 'https://maps.google.com' },
             { id: 'spreadsheet', title: 'Google Sheets', sub: 'sheets.new', icon: '📊', color: '#0F9D58', url: 'https://sheets.new' },
             { id: 'excel', title: 'MS Excel Online', sub: 'excel.office.com', icon: '📗', color: '#107C41', url: 'https://www.office.com/launch/excel' },
             { id: 'word', title: 'MS Word Online', sub: 'word.office.com', icon: '📘', color: '#005A9E', url: 'https://www.office.com/launch/word' },
-            
-            // Media
             { id: 'radio', title: 'Radio Dunia', sub: 'World Radio Player', icon: '📻', color: '#8B5CF6', action: 'radio' },
             { id: 'youtube', title: 'YouTube', sub: 'Streaming Video', icon: '▶️', color: '#FF0000', url: 'https://www.youtube.com' },
             { id: 'chrome', title: 'Google Chrome', sub: 'Web Browser', icon: '🌐', color: '#4285F4', url: 'https://www.google.com' },
             { id: 'gempa', title: 'Peringatan Gempa', sub: 'BMKG Real-time', icon: '⚠️', color: '#EE2737', action: 'gempa' },
-            
-            // Sub Modules
             { id: 'dashboard', title: 'Dashboard Utama', sub: 'Statistik operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
             { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', sub: 'Statistik harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
             { id: 'progres-jadwal-pm', title: 'Progress PM', sub: 'Realisasi jadwal', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
@@ -1808,9 +1162,6 @@
             'gempa', 'dashboard'
         ];
 
-        /**
-         * THEME ENGINE
-         */
         const ThemeEngine = {
             init() {
                 const saved = localStorage.getItem('app_os_theme') || 'win11';
@@ -1832,33 +1183,24 @@
                     if (stdStart) stdStart.style.display = 'none';
                     if (win95Start) win95Start.style.display = 'flex';
                     this.renderWin95Menu();
-                } else if (themeId === 'winxp') {
-                    if (logo) logo.style.display = 'none';
-                    if (text95) text95.style.display = 'none';
-                    if (stdStart) stdStart.style.display = 'block';
-                    if (win95Start) win95Start.style.display = 'none';
                 } else {
                     if (logo) logo.style.display = 'grid';
                     if (text95) text95.style.display = 'none';
                     if (stdStart) stdStart.style.display = 'block';
                     if (win95Start) win95Start.style.display = 'none';
                 }
-
                 this.renderThemeCards();
             },
             renderWin95Menu() {
                 const list = document.getElementById('win95MenuItemsList');
                 if (!list) return;
-
                 list.innerHTML = MODULES.slice(0, 10).map(m => `
                     <div style="display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
-                        <span style="font-size:1.1rem;">${m.icon}</span>
-                        <span>${m.title}</span>
+                        <span style="font-size:1.1rem;">${m.icon}</span><span>${m.title}</span>
                     </div>
                 `).join('') + `
-                    <div style="border-top:1px solid #808080; margin:4px 0; padding-top:4px; display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="OS.showToast('Shutting Down Windows 95...', 'info'); OS.toggleStart();">
-                        <span>🚪</span>
-                        <span>Shut Down...</span>
+                    <div style="border-top:1px solid #808080; margin:4px 0; padding-top:4px; display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="OS.showToast('Shutting Down...', 'info'); OS.toggleStart();">
+                        <span>🚪</span><span>Shut Down...</span>
                     </div>
                 `;
             },
@@ -1866,7 +1208,6 @@
                 const con = document.getElementById('themeSelectorContainer');
                 if (!con) return;
                 const current = document.documentElement.getAttribute('data-theme') || 'win11';
-
                 con.innerHTML = THEMES_LIST.map(t => `
                     <div class="theme-card-btn ${t.id === current ? 'active' : ''}" onclick="ThemeEngine.selectTheme('${t.id}')">
                         <div class="theme-preview-badge" style="background:${t.color};">${t.icon}</div>
@@ -1950,7 +1291,6 @@
                 if (!files || files.length === 0) return;
                 const file = files[0];
                 this.originalSize = file.size;
-
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = new Image();
@@ -1969,19 +1309,15 @@
                 if (!this.loadedImg) return;
                 const canvas = document.getElementById('wmCanvas');
                 const ctx = canvas.getContext('2d');
-
                 const MAX_WIDTH = 1200;
                 let targetWidth = this.loadedImg.width;
                 let targetHeight = this.loadedImg.height;
-
                 if (targetWidth > MAX_WIDTH) {
                     targetHeight = Math.round((targetHeight * MAX_WIDTH) / targetWidth);
                     targetWidth = MAX_WIDTH;
                 }
-
                 canvas.width = targetWidth;
                 canvas.height = targetHeight;
-
                 ctx.drawImage(this.loadedImg, 0, 0, targetWidth, targetHeight);
 
                 const name = document.getElementById('wmInputName').value || 'Teknisi BM';
@@ -2017,40 +1353,28 @@
                 ctx.fillText(`🕒 ${datetime}`, posX + padding, posY + (72 * scale));
 
                 canvas.toBlob((blob) => {
-                    const originalKB = (this.originalSize / 1024).toFixed(1);
-                    const compressedKB = (blob.size / 1024).toFixed(1);
-                    document.getElementById('wmFileInfoText').innerText = `Asli: ${originalKB} KB ➔ Kompres: ${compressedKB} KB`;
+                    document.getElementById('wmFileInfoText').innerText = `Asli: ${(this.originalSize/1024).toFixed(1)} KB ➔ Kompres: ${(blob.size/1024).toFixed(1)} KB`;
                 }, 'image/jpeg', 0.75);
             },
             getGPSLocation() {
                 Sound.click();
-                if (!navigator.geolocation) {
-                    OS.showToast('Geolocation tidak didukung');
-                    return;
-                }
+                if (!navigator.geolocation) { OS.showToast('GPS tidak didukung'); return; }
                 OS.showToast('Mengambil GPS...');
                 navigator.geolocation.getCurrentPosition((pos) => {
-                    const lat = pos.coords.latitude.toFixed(5);
-                    const lon = pos.coords.longitude.toFixed(5);
-                    document.getElementById('wmInputLocation').value = `GPS: ${lat}, ${lon} (Surabaya)`;
+                    document.getElementById('wmInputLocation').value = `GPS: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
                     this.redraw();
-                    OS.showToast('Koordinat GPS disematkan');
-                }, () => {
-                    OS.showToast('Izin GPS ditolak');
-                }, { timeout: 8000 });
+                    OS.showToast('GPS disematkan');
+                }, () => { OS.showToast('GPS ditolak'); }, { timeout: 8000 });
             },
             downloadImage() {
                 Sound.click();
-                if (!this.loadedImg) {
-                    OS.showToast('Pilih foto terlebih dahulu');
-                    return;
-                }
+                if (!this.loadedImg) { OS.showToast('Pilih foto dulu'); return; }
                 const canvas = document.getElementById('wmCanvas');
                 const link = document.createElement('a');
-                link.download = `Doc_BM_${new Date().toISOString().slice(0,10)}_${Date.now().toString().slice(-4)}.jpg`;
+                link.download = `Doc_BM_${Date.now()}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.75);
                 link.click();
-                OS.showToast('Foto watermark berhasil diunduh');
+                OS.showToast('Foto diunduh');
             }
         };
 
@@ -2074,77 +1398,34 @@
             },
             toggle() {
                 const win = document.getElementById('explorerWindow');
-                if (win.style.display === 'none' || win.classList.contains('minimized')) {
-                    this.open();
-                } else {
-                    this.close();
-                }
+                if (win.style.display === 'none' || win.classList.contains('minimized')) { this.open(); } else { this.close(); }
             },
             handleFiles(files) {
                 if (!files || files.length === 0) return;
                 const file = files[0];
-                const preview = document.getElementById('filePreviewContainer');
-                const meta = document.getElementById('fileMetaInfo');
-
-                meta.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-                this.currentTextContent = '';
-
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%; max-height:220px; border-radius:6px;" alt="Preview">`;
-                        OS.showToast('Gambar berhasil dimuat');
-                    };
-                    reader.readAsDataURL(file);
-                } else if (file.type.startsWith('audio/')) {
-                    const url = URL.createObjectURL(file);
-                    preview.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
-                    OS.showToast('Audio dimuat');
-                } else if (file.type.startsWith('video/')) {
-                    const url = URL.createObjectURL(file);
-                    preview.innerHTML = `<video controls src="${url}" style="max-width:100%; max-height:220px; border-radius:6px;"></video>`;
-                    OS.showToast('Video dimuat');
-                } else {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.currentTextContent = e.target.result;
-                        preview.innerHTML = `<div style="width:100%; white-space:pre-wrap; font-family:'Consolas',monospace; font-size:0.78rem; text-align:left;">${this.escapeHTML(e.target.result.slice(0, 5000))}${e.target.result.length > 5000 ? '\n... (Konten dipotong)' : ''}</div>`;
-                        OS.showToast('Dokumen teks dimuat');
-                    };
-                    reader.readAsText(file);
-                }
+                document.getElementById('fileMetaInfo').innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.currentTextContent = e.target.result;
+                    document.getElementById('filePreviewContainer').innerHTML = `<div style="width:100%; white-space:pre-wrap; font-family:'Consolas',monospace; font-size:0.78rem; text-align:left;">${e.target.result.slice(0, 3000)}</div>`;
+                    OS.showToast('Berkas dimuat');
+                };
+                reader.readAsText(file);
             },
             sendToNotepad() {
                 Sound.click();
-                if (!this.currentTextContent) {
-                    OS.showToast('Tidak ada teks untuk Notepad');
-                    return;
-                }
+                if (!this.currentTextContent) { OS.showToast('Tidak ada teks'); return; }
                 document.getElementById('notepadContent').value = this.currentTextContent;
-                localStorage.setItem(Notepad.storageKey, this.currentTextContent);
                 Notepad.open();
                 OS.showToast('Dibuka di Notepad');
-            },
-            escapeHTML(str) {
-                return str.replace(/[&<>'"]/g, tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    "'": '&#39;',
-                    '"': '&quot;'
-                }[tag] || tag));
             }
         };
 
         const RADIO_STATIONS = [
-            { name: 'Suara Surabaya FM', country: '🇮🇩 Indonesia • Berita & Musik', url: 'https://stream.suarasurabaya.net/stream' },
-            { name: 'Prambors Radio', country: '🇮🇩 Indonesia • Hits Anak Muda', url: 'https://masima.rastream.com/masima-pramborsjakarta' },
-            { name: 'Hard Rock FM', country: '🇮🇩 Indonesia • Lifestyle & Rock', url: 'https://stream.radiorepublika.id:8000/hardrockfm' },
-            { name: 'BBC World Service', country: '🇬🇧 United Kingdom • Global News', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service' },
-            { name: 'Virgin Radio Paris', country: '🇫🇷 France • European Hits', url: 'https://stream.rcs.revma.com/virgin.mp3' },
-            { name: 'DanceWave Europe', country: '🇪🇺 Europe • Top Dance Music', url: 'https://dancewave.online/dance.mp3' },
-            { name: 'Jazz24 Seattle', country: '🇺🇸 USA • Smooth Jazz', url: 'https://live.wostreaming.net/manifest/kplufm-mp3-128' },
-            { name: 'Radio Garden Map', country: '🌍 Radio Seluruh Dunia Live', url: 'https://radio.garden' }
+            { name: 'Suara Surabaya FM', country: '🇮🇩 Indonesia', url: 'https://stream.suarasurabaya.net/stream' },
+            { name: 'Prambors Radio', country: '🇮🇩 Indonesia', url: 'https://masima.rastream.com/masima-pramborsjakarta' },
+            { name: 'Hard Rock FM', country: '🇮🇩 Indonesia', url: 'https://stream.radiorepublika.id:8000/hardrockfm' },
+            { name: 'BBC World Service', country: '🇬🇧 UK News', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service' }
         ];
 
         const RadioPlayer = {
@@ -2153,134 +1434,63 @@
             init() {
                 this.renderStations();
                 const audio = document.getElementById('audioStream');
-                
                 audio.addEventListener('playing', () => {
                     this.isPlaying = true;
                     document.getElementById('radioMainPlayBtn').innerText = '⏸';
                     document.getElementById('radioVisualizer').classList.add('playing');
-                    document.getElementById('radioStatusText').innerText = 'Sedang Memutar (Live)';
+                    document.getElementById('radioStatusText').innerText = 'Memutar Live';
                 });
-
                 audio.addEventListener('pause', () => {
                     this.isPlaying = false;
                     document.getElementById('radioMainPlayBtn').innerText = '▶';
                     document.getElementById('radioVisualizer').classList.remove('playing');
-                    document.getElementById('radioStatusText').innerText = 'Dijeda (Paused)';
-                });
-
-                audio.addEventListener('waiting', () => {
-                    document.getElementById('radioStatusText').innerText = 'Menghubungkan stream...';
-                });
-
-                audio.addEventListener('error', () => {
-                    this.isPlaying = false;
-                    document.getElementById('radioMainPlayBtn').innerText = '▶';
-                    document.getElementById('radioVisualizer').classList.remove('playing');
-                    document.getElementById('radioStatusText').innerText = 'Gagal memutar stream';
+                    document.getElementById('radioStatusText').innerText = 'Dijeda';
                 });
             },
             renderStations() {
-                const con = document.getElementById('radioStationGrid');
-                con.innerHTML = RADIO_STATIONS.map((st, i) => `
-                    <button class="notepad-btn ${i === this.currentIdx ? 'station-btn-active' : ''}" id="st_btn_${i}" onclick="RadioPlayer.selectStation(${i})">
-                        ${st.name}
-                    </button>
+                document.getElementById('radioStationGrid').innerHTML = RADIO_STATIONS.map((st, i) => `
+                    <button class="notepad-btn ${i === this.currentIdx ? 'station-btn-active' : ''}" onclick="RadioPlayer.selectStation(${i})">${st.name}</button>
                 `).join('');
             },
             selectStation(idx) {
                 Sound.click();
                 this.currentIdx = idx;
                 const st = RADIO_STATIONS[idx];
-
-                if (st.url.includes('radio.garden')) {
-                    window.open(st.url, '_blank', 'noopener,noreferrer');
-                    return;
-                }
-
-                document.querySelectorAll('#radioStationGrid button').forEach((b, i) => {
-                    b.classList.toggle('station-btn-active', i === idx);
-                });
-
                 document.getElementById('radioChannelName').innerText = st.name;
                 document.getElementById('radioCountryInfo').innerText = st.country;
-                document.getElementById('radioStatusText').innerText = 'Memuat saluran...';
-
                 const audio = document.getElementById('audioStream');
                 audio.src = st.url;
-                audio.load();
-                
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        document.getElementById('radioStatusText').innerText = 'Klik tombol Play ▶ di atas untuk memutar';
-                    });
-                }
+                audio.play().catch(() => {});
             },
             togglePlay() {
                 Sound.click();
                 const audio = document.getElementById('audioStream');
-                if (!audio.src || audio.src === '') {
-                    this.selectStation(0);
-                    return;
-                }
-                if (audio.paused) {
-                    audio.play().catch(() => {});
-                } else {
-                    audio.pause();
-                }
+                if (!audio.src) { this.selectStation(0); return; }
+                if (audio.paused) { audio.play().catch(() => {}); } else { audio.pause(); }
             },
             open() {
                 Sound.click();
                 const win = document.getElementById('radioWindow');
-                const btn = document.getElementById('taskbarRadioBtn');
                 win.style.display = 'flex';
                 win.classList.remove('minimized');
-                if (btn) btn.classList.add('active');
                 OS.bringToFront('radioWindow');
-                if (!this.isPlaying) {
-                    const audio = document.getElementById('audioStream');
-                    if (!audio.src) this.selectStation(0);
-                }
             },
             close() {
                 Sound.click();
-                const win = document.getElementById('radioWindow');
-                const btn = document.getElementById('taskbarRadioBtn');
-                win.style.display = 'none';
-                if (btn) btn.classList.remove('active');
-                const audio = document.getElementById('audioStream');
-                audio.pause();
+                document.getElementById('radioWindow').style.display = 'none';
+                document.getElementById('audioStream').pause();
             },
             toggle() {
                 const win = document.getElementById('radioWindow');
-                if (win.style.display === 'none' || win.classList.contains('minimized')) {
-                    this.open();
-                } else {
-                    this.close();
-                }
+                if (win.style.display === 'none' || win.classList.contains('minimized')) { this.open(); } else { this.close(); }
             }
         };
 
         const DeviceManager = {
-            isMobile() {
-                return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            },
-            getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_pos_v9' : 'win_pinned_desktop_pos_v9';
-            },
-            getPinnedIcons() {
-                const key = this.getStorageKey();
-                try {
-                    const saved = localStorage.getItem(key);
-                    return saved ? JSON.parse(saved) : [];
-                } catch(e) {
-                    return [];
-                }
-            },
-            savePinnedIcons(icons) {
-                const key = this.getStorageKey();
-                localStorage.setItem(key, JSON.stringify(icons));
-            }
+            isMobile() { return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent); },
+            getStorageKey() { return this.isMobile() ? 'win_pinned_mobile_pos_v10' : 'win_pinned_desktop_pos_v10'; },
+            getPinnedIcons() { try { return JSON.parse(localStorage.getItem(this.getStorageKey())) || []; } catch(e) { return []; } },
+            savePinnedIcons(icons) { localStorage.setItem(this.getStorageKey(), JSON.stringify(icons)); }
         };
 
         const GempaAlert = {
@@ -2290,128 +1500,40 @@
                 setInterval(() => this.fetchData(false), 30000);
             },
             async fetchData(isFirstLoad = false) {
-                const targetUrl = 'https://data.bmkg.go.id/DataMKG/TEKTONIK/autogempa.json?t=' + Date.now();
                 try {
-                    let data;
-                    try {
-                        const res = await fetch(targetUrl, { cache: 'no-store' });
-                        if (!res.ok) throw new Error('Direct fetch failed');
-                        data = await res.json();
-                    } catch (err) {
-                        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(targetUrl);
-                        const resProxy = await fetch(proxyUrl);
-                        data = await resProxy.json();
-                    }
-
+                    const res = await fetch('https://data.bmkg.go.id/DataMKG/TEKTONIK/autogempa.json?t=' + Date.now());
+                    const data = await res.json();
                     const gempa = data?.Infogempa?.gempa;
                     if (!gempa) return;
-
                     document.getElementById('gempaMag').innerText = `M ${gempa.Magnitude}`;
                     document.getElementById('gempaWaktu').innerText = `${gempa.Tanggal} • ${gempa.Jam}`;
                     document.getElementById('gempaWilayah').innerText = gempa.Wilayah;
                     document.getElementById('gempaKedalaman').innerText = gempa.Kedalaman;
                     document.getElementById('gempaKoordinat').innerText = `${gempa.Lintang} - ${gempa.Bujur}`;
                     document.getElementById('gempaPotensi').innerText = gempa.Potensi;
-
-                    const eventId = `${gempa.DateTime}_${gempa.Magnitude}`;
-                    if (this.lastEventId !== eventId) {
-                        this.lastEventId = eventId;
-                        if (!isFirstLoad) {
-                            Sound.alarm();
-                            OS.showGempaToast(`Gempa M ${gempa.Magnitude} - ${gempa.Wilayah} (${gempa.Potensi})`);
-                        }
-                    }
                 } catch(e) {}
             },
-            open() {
-                Sound.click();
-                const win = document.getElementById('gempaWindow');
-                const btn = document.getElementById('taskbarGempaBtn');
-                win.style.display = 'flex';
-                win.classList.remove('minimized');
-                if (btn) btn.classList.add('active');
-                OS.bringToFront('gempaWindow');
-            },
-            close() {
-                Sound.click();
-                const win = document.getElementById('gempaWindow');
-                const btn = document.getElementById('taskbarGempaBtn');
-                win.style.display = 'none';
-                if (btn) btn.classList.remove('active');
-            },
-            toggle() {
-                const win = document.getElementById('gempaWindow');
-                if (win.style.display === 'none' || win.classList.contains('minimized')) {
-                    this.open();
-                } else {
-                    this.close();
-                }
-            },
-            refresh() {
-                Sound.click();
-                OS.showToast('Memperbarui data gempa BMKG...');
-                this.fetchData(false);
-            }
+            open() { Sound.click(); const w = document.getElementById('gempaWindow'); w.style.display = 'flex'; w.classList.remove('minimized'); OS.bringToFront('gempaWindow'); },
+            close() { Sound.click(); document.getElementById('gempaWindow').style.display = 'none'; },
+            toggle() { const w = document.getElementById('gempaWindow'); if (w.style.display === 'none' || w.classList.contains('minimized')) { this.open(); } else { this.close(); } },
+            refresh() { Sound.click(); OS.showToast('Memperbarui data gempa...'); this.fetchData(false); }
         };
 
         const Notepad = {
             storageKey: 'win_notepad_content_v1',
             init() {
                 const el = document.getElementById('notepadContent');
-                const saved = localStorage.getItem(this.storageKey) || '';
-                el.value = saved;
-
-                el.addEventListener('input', () => {
-                    localStorage.setItem(this.storageKey, el.value);
-                    const status = document.getElementById('notepadStatus');
-                    status.innerText = 'Menyimpan di localhost...';
-                    setTimeout(() => {
-                        status.innerText = 'Tersimpan di localhost';
-                    }, 400);
-                });
+                el.value = localStorage.getItem(this.storageKey) || '';
+                el.addEventListener('input', () => { localStorage.setItem(this.storageKey, el.value); });
             },
-            open() {
-                Sound.click();
-                const win = document.getElementById('notepadWindow');
-                const btn = document.getElementById('taskbarNotepadBtn');
-                win.style.display = 'flex';
-                win.classList.remove('minimized');
-                btn.classList.add('active');
-                OS.bringToFront('notepadWindow');
-            },
-            close() {
-                Sound.click();
-                const win = document.getElementById('notepadWindow');
-                const btn = document.getElementById('taskbarNotepadBtn');
-                win.style.display = 'none';
-                btn.classList.remove('active');
-            },
-            toggle() {
-                const win = document.getElementById('notepadWindow');
-                if (win.style.display === 'none' || win.classList.contains('minimized')) {
-                    this.open();
-                } else {
-                    this.close();
-                }
-            },
-            clear() {
-                Sound.click();
-                if (confirm('Kosongkan isi catatan?')) {
-                    const el = document.getElementById('notepadContent');
-                    el.value = '';
-                    localStorage.setItem(this.storageKey, '');
-                    OS.showToast('Catatan baru siap');
-                }
-            },
+            open() { Sound.click(); const w = document.getElementById('notepadWindow'); w.style.display = 'flex'; w.classList.remove('minimized'); OS.bringToFront('notepadWindow'); },
+            close() { Sound.click(); document.getElementById('notepadWindow').style.display = 'none'; },
+            toggle() { const w = document.getElementById('notepadWindow'); if (w.style.display === 'none' || w.classList.contains('minimized')) { this.open(); } else { this.close(); } },
+            clear() { Sound.click(); if (confirm('Kosongkan?')) { document.getElementById('notepadContent').value = ''; localStorage.removeItem(this.storageKey); } },
             download() {
                 Sound.click();
-                const text = document.getElementById('notepadContent').value;
-                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = `Catatan_BM_${new Date().toISOString().slice(0,10)}.txt`;
-                a.click();
-                OS.showToast('File TXT berhasil diunduh');
+                const blob = new Blob([document.getElementById('notepadContent').value], { type: 'text/plain' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'catatan.txt'; a.click();
             }
         };
 
@@ -2420,60 +1542,24 @@
             makeDraggable(winId, titlebarId) {
                 const win = document.getElementById(winId);
                 const titlebar = document.getElementById(titlebarId);
-                let isDragging = false;
-                let startX, startY, initialLeft, initialTop;
-
-                win.addEventListener('pointerdown', () => {
-                    OS.bringToFront(winId);
-                });
-
-                const startDrag = (e) => {
+                let isDragging = false, startX, startY, initialLeft, initialTop;
+                win.addEventListener('pointerdown', () => OS.bringToFront(winId));
+                titlebar.addEventListener('pointerdown', (e) => {
                     if (window.innerWidth <= 768) return;
                     isDragging = true;
                     win.classList.add('dragging');
                     OS.bringToFront(winId);
-
-                    startX = e.clientX || (e.touches && e.touches[0].clientX);
-                    startY = e.clientY || (e.touches && e.touches[0].clientY);
-
-                    initialLeft = win.offsetLeft;
-                    initialTop = win.offsetTop;
-
+                    startX = e.clientX; startY = e.clientY;
+                    initialLeft = win.offsetLeft; initialTop = win.offsetTop;
                     document.addEventListener('pointermove', onDrag);
                     document.addEventListener('pointerup', stopDrag);
-                };
-
+                });
                 const onDrag = (e) => {
                     if (!isDragging) return;
-                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-                    const deltaX = clientX - startX;
-                    const deltaY = clientY - startY;
-
-                    let newLeft = initialLeft + deltaX;
-                    let newTop = initialTop + deltaY;
-
-                    const maxLeft = window.innerWidth - win.offsetWidth;
-                    const maxTop = window.innerHeight - 80;
-
-                    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-                    newTop = Math.max(0, Math.min(newTop, maxTop));
-
-                    win.style.left = `${newLeft}px`;
-                    win.style.top = `${newTop}px`;
+                    win.style.left = `${Math.max(0, Math.min(initialLeft + (e.clientX - startX), window.innerWidth - win.offsetWidth))}px`;
+                    win.style.top = `${Math.max(0, Math.min(initialTop + (e.clientY - startY), window.innerHeight - 80))}px`;
                 };
-
-                const stopDrag = () => {
-                    if (isDragging) {
-                        isDragging = false;
-                        win.classList.remove('dragging');
-                        document.removeEventListener('pointermove', onDrag);
-                        document.removeEventListener('pointerup', stopDrag);
-                    }
-                };
-
-                titlebar.addEventListener('pointerdown', startDrag);
+                const stopDrag = () => { isDragging = false; win.classList.remove('dragging'); document.removeEventListener('pointermove', onDrag); document.removeEventListener('pointerup', stopDrag); };
             }
         };
 
@@ -2481,106 +1567,23 @@
             list: [
                 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop'
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop'
             ],
             index: 0,
             next() {
                 Sound.click();
                 this.index = (this.index + 1) % this.list.length;
-                const nextUrl = this.list[this.index];
-                document.body.style.backgroundImage = `url('${nextUrl}')`;
+                document.body.style.backgroundImage = `url('${this.list[this.index]}')`;
                 OS.showToast('Wallpaper diperbarui');
             }
         };
 
         const Sound = {
             ctx: null,
-            init() {
-                if (!this.ctx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    if (AudioContext) this.ctx = new AudioContext();
-                }
-                if (this.ctx && this.ctx.state === 'suspended') {
-                    this.ctx.resume();
-                }
-            },
-            click() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.04);
-                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.04);
-                } catch(e) {}
-            },
-            notify() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    [698.46, 880.00].forEach((freq, idx) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                        gain.gain.setValueAtTime(0.12, now + idx * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(now + idx * 0.08);
-                        osc.stop(now + idx * 0.08 + 0.25);
-                    });
-                } catch(e) {}
-            },
-            alarm() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    [880, 587, 880, 587].forEach((freq, idx) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(freq, now + idx * 0.15);
-                        gain.gain.setValueAtTime(0.2, now + idx * 0.15);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.14);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(now + idx * 0.15);
-                        osc.stop(now + idx * 0.15 + 0.14);
-                    });
-                } catch(e) {}
-            },
-            startup() {
-                try {
-                    this.init();
-                    if (!this.ctx) return;
-                    const now = this.ctx.currentTime;
-                    [440.00, 554.37, 659.25, 880.00].forEach((freq, idx) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                        gain.gain.setValueAtTime(0.14, now + idx * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.9);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start(now + idx * 0.08);
-                        osc.stop(now + idx * 0.08 + 0.9);
-                    });
-                } catch(e) {}
-            }
+            init() { if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.ctx = new AC(); } if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+            click() { try { this.init(); if (!this.ctx) return; const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.frequency.setValueAtTime(800, this.ctx.currentTime); o.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.04); g.gain.setValueAtTime(0.08, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04); o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + 0.04); } catch(e){} },
+            notify() { try { this.init(); if (!this.ctx) return; const now = this.ctx.currentTime; [698, 880].forEach((f, i) => { const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.frequency.setValueAtTime(f, now + i*0.08); g.gain.setValueAtTime(0.1, now + i*0.08); g.gain.exponentialRampToValueAtTime(0.001, now + i*0.08 + 0.25); o.connect(g); g.connect(this.ctx.destination); o.start(now + i*0.08); o.stop(now + i*0.08 + 0.25); }); } catch(e){} },
+            startup() { try { this.init(); if (!this.ctx) return; const now = this.ctx.currentTime; [440, 554, 659, 880].forEach((f, i) => { const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.frequency.setValueAtTime(f, now + i*0.08); g.gain.setValueAtTime(0.12, now + i*0.08); g.gain.exponentialRampToValueAtTime(0.001, now + i*0.08 + 0.8); o.connect(g); g.connect(this.ctx.destination); o.start(now + i*0.08); o.stop(now + i*0.08 + 0.8); }); } catch(e){} }
         };
 
         const OS = {
@@ -2594,7 +1597,6 @@
                 this.renderDesktopIcons();
                 this.renderStartPinned();
                 this.startClock();
-                this.initBootSplash();
                 
                 WindowManager.makeDraggable('mainWindow', 'mainTitlebar');
                 WindowManager.makeDraggable('watermarkWindow', 'watermarkTitlebar');
@@ -2604,304 +1606,137 @@
                 WindowManager.makeDraggable('gempaWindow', 'gempaTitlebar');
                 WindowManager.makeDraggable('radioWindow', 'radioTitlebar');
 
-                const unlockAudio = () => {
-                    Sound.init();
-                    document.removeEventListener('click', unlockAudio);
-                    document.removeEventListener('touchstart', unlockAudio);
-                };
-                document.addEventListener('click', unlockAudio);
-                document.addEventListener('touchstart', unlockAudio);
-
                 document.addEventListener('click', (e) => {
                     const sm = document.getElementById('startMenu');
                     const sb = document.getElementById('startBtn');
-                    if (!sm.contains(e.target) && !sb.contains(e.target)) {
-                        sm.classList.remove('open');
-                    }
-                });
-
-                let resizeTimeout;
-                window.addEventListener('resize', () => {
-                    clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(() => {
-                        OS.renderDesktopIcons();
-                    }, 200);
+                    if (!sm.contains(e.target) && !sb.contains(e.target)) sm.classList.remove('open');
                 });
             },
-            initBootSplash() {
-                const splash = document.getElementById('winBootSplash');
-                setTimeout(() => {
-                    Sound.startup();
-                    splash.classList.add('fade-out');
-                    setTimeout(() => {
-                        splash.remove();
-                    }, 800);
-                }, 1400);
-            },
-            bringToFront(winId) {
-                WindowManager.topZ += 1;
-                const win = document.getElementById(winId);
-                if (win) win.style.zIndex = WindowManager.topZ;
-            },
+            bringToFront(winId) { WindowManager.topZ += 1; document.getElementById(winId).style.zIndex = WindowManager.topZ; },
             renderDesktopIcons() {
                 const con = document.getElementById('desktopIconsContainer');
                 const pinned = DeviceManager.getPinnedIcons();
                 con.innerHTML = '';
-
                 pinned.forEach((item, index) => {
                     const mod = MODULES.find(m => m.id === item.id);
                     if (mod) {
                         const iconEl = document.createElement('div');
                         iconEl.className = 'desktop-icon-btn';
-                        iconEl.id = `desktop_icon_${mod.id}`;
-                        iconEl.title = `Klik untuk buka, drag untuk geser ${mod.title}`;
-                        
-                        const defaultCol = Math.floor(index / 5);
-                        const defaultRow = index % 5;
-                        const posX = item.x !== undefined ? item.x : (16 + defaultCol * 90);
-                        const posY = item.y !== undefined ? item.y : (16 + defaultRow * 95);
-
-                        iconEl.style.left = `${posX}px`;
-                        iconEl.style.top = `${posY}px`;
-
-                        iconEl.innerHTML = `
-                            <button class="remove-icon-btn" title="Hapus shortcut">✕</button>
-                            <span class="icon">${mod.icon}</span>
-                            <span class="lbl">${mod.title}</span>
-                        `;
-
-                        iconEl.querySelector('.remove-icon-btn').addEventListener('pointerdown', (e) => {
-                            e.stopPropagation();
-                            OS.unpinFromDesktop(mod.id);
-                        });
-
+                        iconEl.style.left = `${item.x !== undefined ? item.x : 16 + Math.floor(index/5)*90}px`;
+                        iconEl.style.top = `${item.y !== undefined ? item.y : 16 + (index%5)*95}px`;
+                        iconEl.innerHTML = `<button class="remove-icon-btn">✕</button><span class="icon">${mod.icon}</span><span class="lbl">${mod.title}</span>`;
+                        iconEl.querySelector('.remove-icon-btn').addEventListener('pointerdown', (e) => { e.stopPropagation(); OS.unpinFromDesktop(mod.id); });
                         this.makeIconDraggable(iconEl, mod.id);
                         con.appendChild(iconEl);
                     }
                 });
             },
             makeIconDraggable(el, modId) {
-                let isDragging = false;
-                let startX, startY, initialLeft, initialTop;
-                let hasMoved = false;
-
-                const start = (e) => {
-                    isDragging = true;
-                    hasMoved = false;
-                    startX = e.clientX || (e.touches && e.touches[0].clientX);
-                    startY = e.clientY || (e.touches && e.touches[0].clientY);
-
-                    initialLeft = el.offsetLeft;
-                    initialTop = el.offsetTop;
-
+                let isDragging = false, startX, startY, initialLeft, initialTop, hasMoved = false;
+                el.addEventListener('pointerdown', (e) => {
+                    isDragging = true; hasMoved = false;
+                    startX = e.clientX; startY = e.clientY;
+                    initialLeft = el.offsetLeft; initialTop = el.offsetTop;
                     document.addEventListener('pointermove', move);
                     document.addEventListener('pointerup', end);
-                };
-
+                });
                 const move = (e) => {
                     if (!isDragging) return;
-                    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-                    const dx = clientX - startX;
-                    const dy = clientY - startY;
-
-                    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
-                        hasMoved = true;
-                    }
-
-                    const newX = Math.max(0, Math.min(initialLeft + dx, window.innerWidth - 82));
-                    const newY = Math.max(0, Math.min(initialTop + dy, window.innerHeight - 130));
-
-                    el.style.left = `${newX}px`;
-                    el.style.top = `${newY}px`;
+                    const dx = e.clientX - startX, dy = e.clientY - startY;
+                    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
+                    el.style.left = `${Math.max(0, Math.min(initialLeft + dx, window.innerWidth - 82))}px`;
+                    el.style.top = `${Math.max(0, Math.min(initialTop + dy, window.innerHeight - 130))}px`;
                 };
-
                 const end = () => {
                     if (isDragging) {
                         isDragging = false;
                         document.removeEventListener('pointermove', move);
                         document.removeEventListener('pointerup', end);
-
                         if (hasMoved) {
                             const pinned = DeviceManager.getPinnedIcons();
                             const target = pinned.find(x => x.id === modId);
-                            if (target) {
-                                target.x = el.offsetLeft;
-                                target.y = el.offsetTop;
-                                DeviceManager.savePinnedIcons(pinned);
-                            }
-                        } else {
-                            OS.openApp(modId);
-                        }
+                            if (target) { target.x = el.offsetLeft; target.y = el.offsetTop; DeviceManager.savePinnedIcons(pinned); }
+                        } else { OS.openApp(modId); }
                     }
                 };
-
-                el.addEventListener('pointerdown', start);
             },
             renderTiles() {
-                const container = document.getElementById('tilesContainer');
-                const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
-
-                container.innerHTML = primary.map(m => `
-                    <div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
-                        <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌</button>
-                        <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
-                            ${m.icon}
-                        </div>
+                document.getElementById('tilesContainer').innerHTML = PRIMARY_IDS.map(id => {
+                    const m = MODULES.find(mod => mod.id === id);
+                    if (!m) return '';
+                    return `<div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
+                        <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)">📌</button>
+                        <div class="tile-icon-box" style="background:${m.color}; color:#fff;">${m.icon}</div>
                         <div class="tile-title">${m.title}</div>
                         <div class="tile-sub">${m.sub}</div>
-                    </div>
-                `).join('');
+                    </div>`;
+                }).join('');
             },
             renderStartPinned() {
-                const grid = document.getElementById('startPinnedGrid');
-                grid.innerHTML = MODULES.slice(0, 18).map(m => `
+                document.getElementById('startPinnedGrid').innerHTML = MODULES.slice(0, 18).map(m => `
                     <button class="start-pinned-item" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
-                        <span class="icon">${m.icon}</span>
-                        <span class="lbl">${m.title}</span>
+                        <span class="icon">${m.icon}</span><span class="lbl">${m.title}</span>
                     </button>
                 `).join('');
             },
             pinToDesktop(id, event) {
-                if (event) event.stopPropagation();
-                Sound.click();
+                event.stopPropagation(); Sound.click();
                 let pinned = DeviceManager.getPinnedIcons();
                 if (!pinned.some(x => x.id === id)) {
-                    const count = pinned.length;
-                    const col = Math.floor(count / 5);
-                    const row = count % 5;
-                    pinned.push({
-                        id: id,
-                        x: 16 + col * 90,
-                        y: 16 + row * 95
-                    });
+                    pinned.push({ id: id, x: 16 + (pinned.length%4)*90, y: 16 + Math.floor(pinned.length/4)*95 });
                     DeviceManager.savePinnedIcons(pinned);
                     this.renderDesktopIcons();
-                    this.showToast('Ikon berhasil dipin ke Wallpaper Desktop');
-                } else {
-                    this.showToast('Ikon sudah ada di Desktop');
+                    this.showToast('Ikon dipin ke Desktop');
                 }
             },
             unpinFromDesktop(id) {
                 Sound.click();
-                let pinned = DeviceManager.getPinnedIcons();
-                pinned = pinned.filter(x => x.id !== id);
-                DeviceManager.savePinnedIcons(pinned);
+                DeviceManager.savePinnedIcons(DeviceManager.getPinnedIcons().filter(x => x.id !== id));
                 this.renderDesktopIcons();
-                this.showToast('Shortcut dihapus dari Desktop');
             },
             openApp(id) {
                 Sound.click();
-                const mod = MODULES.find(m => m.id === id);
-                if (mod) {
-                    if (mod.action === 'notepad') {
-                        Notepad.open();
-                    } else if (mod.action === 'theme') {
-                        ThemeEngine.open();
-                    } else if (mod.action === 'watermark') {
-                        Watermarker.open();
-                    } else if (mod.action === 'explorer') {
-                        FileExplorer.open();
-                    } else if (mod.action === 'gempa') {
-                        GempaAlert.open();
-                    } else if (mod.action === 'radio') {
-                        RadioPlayer.open();
-                    } else if (mod.url) {
-                        this.openDirect(mod.url);
-                    }
+                const m = MODULES.find(mod => mod.id === id);
+                if (m) {
+                    if (m.action === 'notepad') Notepad.open();
+                    else if (m.action === 'theme') ThemeEngine.open();
+                    else if (m.action === 'watermark') Watermarker.open();
+                    else if (m.action === 'explorer') FileExplorer.open();
+                    else if (m.action === 'gempa') GempaAlert.open();
+                    else if (m.action === 'radio') RadioPlayer.open();
+                    else if (m.url) this.openDirect(m.url);
                 }
             },
-            openDirect(url) {
+            openDirect(url) { Sound.click(); window.open(url, '_blank', 'noopener,noreferrer'); },
+            toggleStart() { Sound.click(); document.getElementById('startMenu').classList.toggle('open'); },
+            minimizeWindow(winId, btnId) { Sound.click(); document.getElementById(winId).classList.add('minimized'); document.getElementById(btnId)?.classList.remove('active'); },
+            toggleWindow(winId, btnId) {
                 Sound.click();
-                this.showToast('Membuka tautan...');
-                window.open(url, '_blank', 'noopener,noreferrer');
-            },
-            toggleStart() {
-                Sound.click();
-                document.getElementById('startMenu').classList.toggle('open');
-            },
-            minimizeWindow(winId, taskBtnId) {
-                Sound.click();
-                const win = document.getElementById(winId);
-                const taskBtn = document.getElementById(taskBtnId);
-                win.classList.add('minimized');
-                if (taskBtn) taskBtn.classList.remove('active');
-                this.showToast('Jendela di-minimize');
-            },
-            toggleWindow(winId, taskBtnId) {
-                Sound.click();
-                const win = document.getElementById(winId);
-                const taskBtn = document.getElementById(taskBtnId);
-                if (win.classList.contains('minimized')) {
-                    win.classList.remove('minimized');
-                    if (taskBtn) taskBtn.classList.add('active');
-                    this.bringToFront(winId);
-                } else {
-                    win.classList.add('minimized');
-                    if (taskBtn) taskBtn.classList.remove('active');
-                }
+                const win = document.getElementById(winId), btn = document.getElementById(btnId);
+                if (win.classList.contains('minimized')) { win.classList.remove('minimized'); btn?.classList.add('active'); this.bringToFront(winId); }
+                else { win.classList.add('minimized'); btn?.classList.remove('active'); }
             },
             toggleFullscreen() {
                 Sound.click();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                } else {
-                    document.exitFullscreen().catch(() => {});
-                }
+                if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+                else document.exitFullscreen().catch(()=>{});
             },
             showToast(msg) {
                 Sound.notify();
-                const box = document.getElementById('toastBox');
-                const t = document.createElement('div');
-                t.className = 'win-toast';
-                t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
-                box.appendChild(t);
-                setTimeout(() => {
-                    t.style.opacity = '0';
-                    t.style.transition = 'all 0.3s ease';
-                    setTimeout(() => t.remove(), 300);
-                }, 2200);
-            },
-            showGempaToast(msg) {
-                const box = document.getElementById('toastBox');
-                const t = document.createElement('div');
-                t.className = 'win-toast toast-gempa';
-                t.innerHTML = `
-                    <span style="font-size:1.2rem;">⚠️</span>
-                    <div>
-                        <div style="color:#EE2737; font-weight:800;">Peringatan Gempa BMKG</div>
-                        <div style="font-size:0.75rem; color:var(--text-primary); margin-top:2px;">${msg}</div>
-                    </div>
-                `;
-                t.onclick = () => GempaAlert.open();
-                box.appendChild(t);
-                setTimeout(() => {
-                    t.style.opacity = '0';
-                    t.style.transition = 'all 0.3s ease';
-                    setTimeout(() => t.remove(), 500);
-                }, 6000);
+                const box = document.getElementById('toastBox'), t = document.createElement('div');
+                t.className = 'win-toast'; t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+                box.appendChild(t); setTimeout(() => t.remove(), 2500);
             },
             startClock() {
-                const update = () => {
+                setInterval(() => {
                     const now = new Date();
-                    const h = String(now.getHours()).padStart(2, '0');
-                    const m = String(now.getMinutes()).padStart(2, '0');
-                    const d = String(now.getDate()).padStart(2, '0');
-                    const mo = String(now.getMonth() + 1).padStart(2, '0');
-                    const y = now.getFullYear();
-
-                    document.getElementById('trayTime').innerText = `${h}:${m}`;
-                    document.getElementById('trayDate').innerText = `${d}/${mo}/${y}`;
-                };
-                update();
-                setInterval(update, 1000);
+                    document.getElementById('trayTime').innerText = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+                    document.getElementById('trayDate').innerText = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+                }, 1000);
             },
             handleSearch(q) {
                 const match = MODULES.find(m => m.title.toLowerCase().includes(q.toLowerCase()) && m.url);
-                if (q.length > 2 && match) {
-                    this.openDirect(match.url);
-                }
+                if (q.length > 2 && match) this.openDirect(match.url);
             }
         };
 
