@@ -3,75 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#00529C">
-    <title>Enterprise Portal Operasional Building Management</title>
+    <title>Enterprise OS - Portal Building Management</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Segoe UI style via Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           1. DESIGN SYSTEM & CSS VARIABLES
+           1. WINDOWS 11 / FLUENT DESIGN SYSTEM VARIABLES
            ========================================================================== */
         :root {
-            --primary: #00529C;
-            --primary-dark: #003B73;
-            --primary-light: #E6F0FA;
-            --primary-glow: rgba(0, 82, 156, 0.25);
+            --win-blue: #0078D4;
+            --win-blue-hover: #106EBE;
+            --win-blue-active: #005A9E;
             
-            --accent-green: #00AA13;
-            --accent-yellow: #FDB813;
-            --accent-red: #EE2737;
-            --accent-purple: #8B5CF6;
-            --accent-teal: #14B8A6;
-            --accent-orange: #F97316;
+            --mica-bg: #F3F3F3;
+            --desktop-bg: radial-gradient(circle at 50% 30%, #E2EEF9 0%, #CCDFF2 100%);
+            --window-bg: rgba(255, 255, 255, 0.94);
+            --window-border: rgba(0, 0, 0, 0.12);
+            --taskbar-bg: rgba(243, 243, 243, 0.85);
+            --menu-hover: rgba(0, 0, 0, 0.05);
 
-            --bg-body: #F8FAFC;
-            --bg-card: rgba(255, 255, 255, 0.98);
-            --bg-header: rgba(255, 255, 255, 0.92);
-            --bg-sidebar: #FFFFFF;
-            --bg-hover: #F1F5F9;
-            --border-color: #E2E8F0;
+            --text-primary: #1C1C1C;
+            --text-secondary: #5C5C5C;
+            --border-subtle: rgba(0, 0, 0, 0.08);
 
-            --text-main: #0F172A;
-            --text-muted: #64748B;
-            --text-light: #94A3B8;
+            --shadow-window: 0 16px 36px rgba(0, 0, 0, 0.14), 0 0 1px rgba(0,0,0,0.2);
+            --shadow-flyout: 0 8px 24px rgba(0, 0, 0, 0.16);
 
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.03);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
-            --shadow-bottom-nav: 0 -4px 25px rgba(0, 0, 0, 0.08);
-
-            --sidebar-width: 280px;
-            --sidebar-width-collapsed: 80px;
-            --header-height: 70px;
-            --bottom-nav-height: 68px;
-            --radius-sm: 12px;
-            --radius-md: 18px;
-            --radius-lg: 24px;
-            --radius-pill: 9999px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-win: 8px;
+            --radius-card: 6px;
+            --taskbar-height: 48px;
+            --transition: all 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
         [data-theme="dark"] {
-            --bg-body: #090D16;
-            --bg-card: rgba(19, 27, 46, 0.95);
-            --bg-header: rgba(15, 23, 42, 0.9);
-            --bg-sidebar: #0F172A;
-            --bg-hover: #1E293B;
-            --border-color: #1E293B;
+            --mica-bg: #202020;
+            --desktop-bg: radial-gradient(circle at 50% 30%, #1A2738 0%, #0F1722 100%);
+            --window-bg: rgba(36, 36, 36, 0.94);
+            --window-border: rgba(255, 255, 255, 0.1);
+            --taskbar-bg: rgba(32, 32, 32, 0.85);
+            --menu-hover: rgba(255, 255, 255, 0.06);
 
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --text-light: #64748B;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0A0;
+            --border-subtle: rgba(255, 255, 255, 0.08);
 
-            --primary-light: rgba(0, 82, 156, 0.25);
-            --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
-            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.5);
-            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.7);
-            --shadow-bottom-nav: 0 -4px 25px rgba(0,0,0,0.6);
+            --shadow-window: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255,255,255,0.1);
+            --shadow-flyout: 0 8px 24px rgba(0, 0, 0, 0.45);
         }
 
         * {
@@ -79,929 +60,690 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        a { text-decoration: none; color: inherit; }
-        button { border: none; outline: none; background: transparent; cursor: pointer; font-family: inherit; }
-
-        /* ==========================================================================
-           2. HEADER
-           ========================================================================== */
-        .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background: var(--bg-header);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 2rem;
-            transition: var(--transition);
-        }
-
-        .header-left { display: flex; align-items: center; gap: 1.25rem; }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            cursor: pointer;
-        }
-
-        .brand-badge {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-sm);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 14px var(--primary-glow);
-        }
-
-        .brand-text h1 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-
-        .brand-text p {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--accent-green);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .header-search { position: relative; margin-left: 1.5rem; display: none; }
-        .header-search input {
-            background: var(--bg-hover);
-            border: 1px solid var(--border-color);
-            padding: 0.6rem 1.2rem 0.6rem 2.5rem;
-            border-radius: var(--radius-pill);
-            color: var(--text-main);
-            font-size: 0.85rem;
-            width: 280px;
-            transition: var(--transition);
-        }
-        .header-search input:focus {
-            width: 340px;
-            background: var(--bg-card);
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-            outline: none;
-        }
-        .header-search svg {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            color: var(--text-muted);
-        }
-
-        .header-center {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .live-clock {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: 0.5px;
-        }
-
-        .live-date {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .header-right { display: flex; align-items: center; gap: 0.75rem; }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-main);
-            background: var(--bg-hover);
-            transition: var(--transition);
-        }
-
-        .icon-btn:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* ==========================================================================
-           3. APP LAYOUT
-           ========================================================================== */
-        .app-shell {
-            display: flex;
-            margin-top: var(--header-height);
-            min-height: calc(100vh - var(--header-height));
-        }
-
-        .app-sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            position: fixed;
-            top: var(--header-height);
-            bottom: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 1.5rem 1rem;
-            z-index: 900;
-            transition: var(--transition);
-            overflow-y: auto;
-        }
-
-        .sidebar-menu-title {
-            font-size: 0.72rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-light);
-            padding: 0.5rem 0.75rem;
-        }
-
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .nav-item a {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding: 0.75rem 0.95rem;
-            border-radius: var(--radius-sm);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.88rem;
-            transition: var(--transition);
-        }
-
-        .nav-item.active a, .nav-item a:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .app-main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
-            padding-bottom: calc(var(--bottom-nav-height) + 2rem);
-            min-height: calc(100vh - var(--header-height));
-            transition: var(--transition);
-        }
-
-        /* ==========================================================================
-           4. ADAPTIVE DESKTOP & MOBILE DASHBOARD
-           ========================================================================== */
-        .portal-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.75rem;
-        }
-
-        .hero-banner {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            border-radius: var(--radius-lg);
-            padding: 1.75rem 2rem;
-            color: #fff;
-            box-shadow: 0 10px 25px var(--primary-glow);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .hero-banner::after {
-            content: '';
-            position: absolute;
-            right: -30px;
-            bottom: -30px;
-            width: 180px;
-            height: 180px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 50%;
-        }
-
-        .hero-left-content { position: relative; z-index: 1; }
-
-        .hero-status-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.18);
-            backdrop-filter: blur(8px);
-            padding: 4px 12px;
-            border-radius: var(--radius-pill);
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-
-        .hero-banner h2 { font-size: 1.45rem; font-weight: 800; margin-bottom: 0.35rem; }
-        .hero-banner p { font-size: 0.88rem; opacity: 0.9; max-width: 600px; line-height: 1.5; }
-
-        /* Two-Column Responsive Layout for Desktop */
-        .dashboard-grid-layout {
-            display: grid;
-            grid-template-columns: 2fr 1.2fr;
-            gap: 1.75rem;
-            align-items: start;
-        }
-
-        .section-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header-flex {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .grid-icon-layout {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem 1rem;
-        }
-
-        .menu-item-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            padding: 1rem 0.5rem;
-            border-radius: var(--radius-md);
-            transition: var(--transition);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             user-select: none;
         }
 
-        .menu-item-btn:hover {
-            transform: translateY(-4px);
-            background: var(--bg-hover);
+        body {
+            background: var(--desktop-bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .circle-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
+        /* ==========================================================================
+           2. DESKTOP WORKSPACE & FLOATING WINDOW
+           ========================================================================== */
+        .desktop-area {
+            flex: 1;
+            padding: 1.5rem;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFFFFF;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
-            font-size: 1.6rem;
-            transition: var(--transition);
+            overflow: hidden;
         }
 
-        .menu-label {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.3;
-        }
-
-        .action-list {
+        /* Floating Desktop App Icons */
+        .desktop-icons {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 1rem;
+            z-index: 10;
         }
 
-        .action-item-card {
+        .desktop-icon-btn {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.15rem;
-            background: var(--bg-hover);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            justify-content: center;
+            width: 76px;
+            height: 76px;
+            border-radius: var(--radius-card);
+            border: 1px solid transparent;
+            background: transparent;
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .action-item-card:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            transform: translateX(4px);
+        .desktop-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
         }
 
-        .action-left { display: flex; align-items: center; gap: 0.95rem; }
-        .action-icon {
-            width: 44px;
-            height: 44px;
+        .desktop-icon-btn span.icon { font-size: 2rem; }
+        .desktop-icon-btn span.lbl {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+
+        /* Primary Windows UI Frame */
+        .win-frame {
+            width: 100%;
+            max-width: 960px;
+            background: var(--window-bg);
+            border-radius: var(--radius-win);
+            border: 1px solid var(--window-border);
+            box-shadow: var(--shadow-window);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 20;
+            animation: winOpen 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes winOpen {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Windows Title Bar */
+        .win-titlebar {
+            height: 42px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0 0 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .win-title-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .win-app-logo {
+            width: 20px;
+            height: 20px;
+            background: var(--win-blue);
+            color: #fff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+        }
+
+        .win-controls {
+            display: flex;
+            height: 100%;
+        }
+
+        .win-control-btn {
+            width: 46px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .win-control-btn:hover { background: var(--menu-hover); }
+        .win-control-btn.close:hover { background: #E81123; color: #FFFFFF; }
+
+        /* Window Content */
+        .win-body {
+            padding: 1.5rem;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+
+        /* Window Breadcrumb / Action header */
+        .win-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .win-nav-title h2 { font-size: 1.15rem; font-weight: 800; }
+        .win-nav-title p { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+
+        .win-search-box {
+            position: relative;
+        }
+
+        .win-search-box input {
+            background: var(--mica-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 0.45rem 0.85rem 0.45rem 2rem;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            outline: none;
+            width: 220px;
+            transition: var(--transition);
+        }
+
+        .win-search-box input:focus {
+            border-color: var(--win-blue);
+            background: var(--window-bg);
+            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+            width: 280px;
+        }
+
+        .win-search-box svg {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* 8 Fluent Grid Tiles */
+        .win-tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .win-tile {
+            background: var(--mica-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .win-tile:hover {
+            transform: translateY(-3px);
+            background: var(--window-bg);
+            border-color: var(--win-blue);
+            box-shadow: 0 8px 18px rgba(0, 120, 212, 0.12);
+        }
+
+        .tile-icon-box {
+            width: 52px;
+            height: 52px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            background: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .action-text h4 { font-size: 0.88rem; font-weight: 800; margin-bottom: 2px; }
-        .action-text p { font-size: 0.75rem; color: var(--text-muted); }
-
-        .btn-direct {
-            background: var(--primary);
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 0.8rem 1.4rem;
-            border-radius: var(--radius-pill);
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 4px 10px var(--primary-glow);
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
 
-        .btn-direct:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .win-tile:hover .tile-icon-box {
+            transform: scale(1.08);
+        }
+
+        .tile-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .tile-sub {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
 
         /* ==========================================================================
-           5. BOTTOM NAVIGATION & FOOTER
+           3. WINDOWS 11 TASKBAR & START MENU
            ========================================================================== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--bottom-nav-height);
-            background: var(--bg-header);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
-            display: none;
-            justify-content: space-around;
+        .win-taskbar {
+            height: var(--taskbar-height);
+            background: var(--taskbar-bg);
+            border-top: 1px solid var(--border-subtle);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            display: flex;
             align-items: center;
-            padding: 0 1rem;
+            justify-content: space-between;
+            padding: 0 0.85rem;
             z-index: 1000;
-            box-shadow: var(--shadow-bottom-nav);
         }
 
-        .bottom-nav-item {
+        .taskbar-center {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .task-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-card);
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .task-btn:hover { background: var(--menu-hover); }
+        .task-btn.active { background: var(--menu-hover); }
+        .task-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            width: 14px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--win-blue);
+        }
+
+        /* Windows Start Logo Icon */
+        .win-start-logo {
+            display: grid;
+            grid-template-columns: 8px 8px;
+            grid-template-rows: 8px 8px;
+            gap: 2px;
+        }
+        .win-start-logo span {
+            background: var(--win-blue);
+            border-radius: 1px;
+        }
+
+        .taskbar-tray {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tray-clock {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
             font-size: 0.72rem;
-            font-weight: 700;
-            flex: 1;
-            padding: 6px 0;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: var(--radius-card);
+            cursor: pointer;
+        }
+
+        .tray-clock:hover { background: var(--menu-hover); }
+
+        /* Start Menu Flyout */
+        .start-menu {
+            position: absolute;
+            bottom: calc(var(--taskbar-height) + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 480px;
+            background: var(--window-bg);
+            border: 1px solid var(--window-border);
+            border-radius: var(--radius-win);
+            box-shadow: var(--shadow-flyout);
+            backdrop-filter: blur(28px);
+            padding: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .start-menu.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .start-header-user {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .user-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--win-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .all-apps-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .app-item-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.6rem 0.75rem;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-card);
+            text-align: left;
+            cursor: pointer;
+            color: var(--text-primary);
             transition: var(--transition);
         }
 
-        .bottom-nav-item svg { width: 22px; height: 22px; }
-        .bottom-nav-item.active { color: var(--primary); }
-
-        .app-footer {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 1.25rem 2rem;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: auto;
+        .app-item-btn:hover {
+            background: var(--menu-hover);
+            border-color: var(--border-subtle);
         }
 
+        /* Toast notification */
         .toast-container {
             position: fixed;
-            top: 24px;
-            right: 24px;
+            bottom: calc(var(--taskbar-height) + 16px);
+            right: 16px;
             z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
-        .toast {
-            min-width: 280px;
-            background: var(--bg-card);
-            color: var(--text-main);
-            padding: 0.95rem 1.3rem;
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-lg);
-            border-left: 4px solid var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.88rem;
+        .win-toast {
+            background: var(--window-bg);
+            border: 1px solid var(--window-border);
+            border-radius: var(--radius-card);
+            padding: 0.85rem 1.15rem;
+            box-shadow: var(--shadow-flyout);
+            font-size: 0.8rem;
             font-weight: 600;
-            animation: slideInRight 0.3s forwards;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
+            gap: 0.65rem;
+            animation: toastPop 0.25s forwards;
         }
 
-        .modal-card {
-            background: var(--bg-card);
-            width: 100%;
-            max-width: 560px;
-            border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        @keyframes toastPop {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Responsive Breakpoints */
-        @media (min-width: 992px) {
-            .header-search { display: block; }
-            .header-center { display: flex; }
-        }
-
-        @media (max-width: 991px) {
-            .app-sidebar { width: var(--sidebar-width-collapsed); padding: 1.25rem 0.5rem; }
-            .sidebar-menu-title, .nav-item span { display: none; }
-            .app-main-content { margin-left: var(--sidebar-width-collapsed); padding: 1.5rem; }
-            .dashboard-grid-layout { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 767px) {
-            .app-sidebar { display: none; }
-            .bottom-nav { display: flex; }
-            .app-main-content { margin-left: 0; padding: 1rem; padding-bottom: calc(var(--bottom-nav-height) + 1.5rem); }
-            .app-header { padding: 0 1rem; }
-            .app-footer { padding: 1.25rem 1rem; margin-bottom: var(--bottom-nav-height); }
-            .grid-icon-layout { gap: 1.25rem 0.5rem; }
-            .circle-icon { width: 56px; height: 56px; font-size: 1.35rem; }
-            .menu-item-btn { padding: 0; }
+        /* Responsive */
+        @media (max-width: 820px) {
+            .desktop-icons { display: none; }
+            .win-tiles-grid { grid-template-columns: repeat(2, 1fr); }
+            .start-menu { width: calc(100vw - 32px); left: 16px; transform: translateY(20px); }
+            .start-menu.open { transform: translateY(0); }
+            .taskbar-center { left: auto; transform: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP HEADER BAR -->
-    <header class="app-header">
-        <div class="header-left">
-            <div class="brand" onclick="Router.navigate('beranda')">
-                <div class="brand-badge">BM</div>
-                <div class="brand-text">
-                    <h1>Portal BM</h1>
-                    <p>Facility System</p>
+    <!-- ==========================================================================
+         1. DESKTOP WORKSPACE
+         ========================================================================== -->
+    <main class="desktop-area">
+        
+        <!-- Desktop Shortcuts -->
+        <div class="desktop-icons">
+            <div class="desktop-icon-btn" onclick="OS.openApp('kerusakan')">
+                <span class="icon">🛠️</span>
+                <span class="lbl">Lapor</span>
+            </div>
+            <div class="desktop-icon-btn" onclick="OS.openApp('checklist-harian-pm')">
+                <span class="icon">📋</span>
+                <span class="lbl">Checklist</span>
+            </div>
+            <div class="desktop-icon-btn" onclick="OS.openApp('dashboard')">
+                <span class="icon">📊</span>
+                <span class="lbl">Stats GAS</span>
+            </div>
+        </div>
+
+        <!-- Central Windows 11 App Window -->
+        <div class="win-frame" id="mainWindow">
+            
+            <!-- Window Titlebar -->
+            <div class="win-titlebar">
+                <div class="win-title-left">
+                    <div class="win-app-logo">BM</div>
+                    <span>Portal Building Management — Central Hub</span>
+                </div>
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize">─</button>
+                    <button class="win-control-btn" title="Maximize" onclick="OS.toggleFullscreen()">□</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="OS.showToast('Jendela tidak dapat ditutup')">✕</button>
                 </div>
             </div>
 
-            <div class="header-search">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                <input type="text" placeholder="Cari modul operasional BM..." onkeyup="App.handleSearch(this.value)">
+            <!-- Window Content Area -->
+            <div class="win-body">
+                
+                <div class="win-nav-header">
+                    <div class="win-nav-title">
+                        <h2>Menu Operasional Utama</h2>
+                        <p>Akses langsung modul integrasi Google Apps Script</p>
+                    </div>
+
+                    <div class="win-search-box">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
+                        <input type="text" placeholder="Cari modul sistem..." onkeyup="OS.handleSearch(this.value)">
+                    </div>
+                </div>
+
+                <!-- 8 Tiles Grid -->
+                <div class="win-tiles-grid" id="tilesContainer">
+                    <!-- Dynamic Tiles -->
+                </div>
+
             </div>
+
         </div>
 
-        <div class="header-center">
-            <div class="live-clock" id="clock">00:00:00 WIB</div>
-            <div class="live-date" id="date">Hari, 00 Bulan 2026</div>
+    </main>
+
+    <!-- ==========================================================================
+         2. WINDOWS START MENU (POPUP)
+         ========================================================================== -->
+    <div class="start-menu" id="startMenu">
+        <div class="start-header-user">
+            <div class="user-left">
+                <div class="user-avatar">BM</div>
+                <div>
+                    <h4 style="font-size:0.85rem; font-weight:800;">Enterprise System</h4>
+                    <p style="font-size:0.7rem; color:var(--text-secondary);">14 Modul Operasional Aktif</p>
+                </div>
+            </div>
+            <button class="task-btn" onclick="Theme.toggle()" title="Ganti Tema">🌓</button>
         </div>
 
-        <div class="header-right">
-            <button class="icon-btn" onclick="App.toggleFullscreen()" title="Fullscreen" aria-label="Fullscreen">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"></path></svg>
-            </button>
-            <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Tema" aria-label="Theme Switch">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
-            </button>
+        <div style="font-size:0.7rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-bottom:0.6rem;">
+            Daftar Seluruh Modul (GAS)
         </div>
-    </header>
 
-    <!-- APP SHELL -->
-    <div class="app-shell">
-        
-        <!-- SIDEBAR DESKTOP -->
-        <aside class="app-sidebar" id="sidebar">
-            <div>
-                <div class="sidebar-menu-title">Modul Operasional</div>
-                <ul class="nav-list" id="sidebarNavList">
-                    <!-- Dynamic Sidebar Modules -->
-                </ul>
-            </div>
-            <div>
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="javascript:void(0)" onclick="App.openDirectLink(BASE_GAS_URL + '?page=dashboard')">
-                            <span style="font-size:1.15rem; width:22px; text-align:center;">📊</span>
-                            <span>Dashboard Utama GAS</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </aside>
-
-        <!-- DYNAMIC MAIN CONTENT -->
-        <main class="app-main-content" id="appContent">
-            <!-- Rendered by Router -->
-        </main>
-    </div>
-
-    <!-- BOTTOM NAVIGATION (MOBILE) -->
-    <nav class="bottom-nav" id="bottomNav">
-        <a href="#/beranda" class="bottom-nav-item active" data-route="beranda">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg>
-            <span>Beranda</span>
-        </a>
-        <a href="javascript:void(0)" onclick="App.openAllMenuModal()" class="bottom-nav-item">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
-            <span>Semua Modul</span>
-        </a>
-    </nav>
-
-    <!-- FOOTER -->
-    <footer class="app-footer">
-        <div>&copy; <span id="footerYear">2026</span> <strong>Portal Operasional Building Management</strong>. All Rights Reserved.</div>
-        <div>Status: <strong style="color:var(--accent-green)">● Google Apps Script Server Active</strong></div>
-    </footer>
-
-    <!-- TOAST & MODAL CONTAINERS -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <div class="modal-backdrop" id="appModal" onclick="App.closeModal(event)">
-        <div class="modal-card" id="modalCard"></div>
+        <div class="all-apps-list" id="startAppsList">
+            <!-- Dynamic Start Menu Items -->
+        </div>
     </div>
 
     <!-- ==========================================================================
-         MODULAR JAVASCRIPT ES6+
+         3. WINDOWS 11 TASKBAR (BOTTOM)
+         ========================================================================== -->
+    <footer class="win-taskbar">
+        
+        <!-- Left Quick Info -->
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; font-weight:700; color:var(--text-secondary);">
+            <span>● Google Workspace Connected</span>
+        </div>
+
+        <!-- Center Taskbar Pinned Icons -->
+        <div class="taskbar-center">
+            <button class="task-btn" id="startBtn" onclick="OS.toggleStart()" title="Start Menu">
+                <div class="win-start-logo">
+                    <span></span><span></span>
+                    <span></span><span></span>
+                </div>
+            </button>
+            <button class="task-btn active" title="Portal BM (Active)">
+                <span style="font-size:1.15rem;">🏢</span>
+            </button>
+            <button class="task-btn" onclick="OS.openApp('dashboard')" title="Dashboard Utama">
+                <span style="font-size:1.15rem;">📊</span>
+            </button>
+            <button class="task-btn" onclick="Theme.toggle()" title="Toggle Dark/Light Mode">
+                <span style="font-size:1.15rem;">🌓</span>
+            </button>
+        </div>
+
+        <!-- Right System Tray Clock -->
+        <div class="taskbar-tray">
+            <div class="tray-clock" id="taskbarClock">
+                <span id="trayTime">00:00</span>
+                <span id="trayDate" style="font-size:0.65rem; color:var(--text-secondary);">00/00/2026</span>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastBox"></div>
+
+    <!-- ==========================================================================
+         4. JAVASCRIPT CONTROLLER
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
-        const GAS_MODULES = [
-            { id: 'dashboard', title: 'Dashboard Utama', desc: 'Panel statistik & ringkasan operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
-            { id: 'kerusakan', title: 'Lapor Kerusakan', desc: 'Form input pengaduan kerusakan fasilitas', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
-            { id: 'jadwal-kerusakan', title: 'Jadwal Perbaikan', desc: 'Timeline & monitoring progress perbaikan', icon: '📅', color: '#F97316', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
-            { id: 'checklist-harian-pm', title: 'Checklist Harian', desc: 'Inspeksi & kontrol rutin sarana gedung', icon: '📋', color: '#10B981', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
-            { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', desc: 'Statistik kepatuhan checklist harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
-            { id: 'perencanaan-pm', title: 'Rencana PM', desc: 'Jadwal Preventive Maintenance tahunan', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
-            { id: 'progres-jadwal-pm', title: 'Progress PM', desc: 'Realisasi jadwal perawatan berkala', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
-            { id: 'dashboard-pm', title: 'Dashboard PM', desc: 'Evaluasi & performa pemeliharaan gedung', icon: '📉', color: '#EC4899', url: `${BASE_GAS_URL}?page=dashboard-pm` },
-            { id: 'plts-dashboard', title: 'PLTS Solar', desc: 'Monitoring produksi daya panel surya', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
-            { id: 'energi-dashboard', title: 'Energi Listrik', desc: 'Monitoring konsumsi kWh PLN & Genset', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
-            { id: 'dashboard-atm', title: 'Monitoring ATM', desc: 'Kebersihan, AC & fisik galeri ATM', icon: '🏧', color: '#14B8A6', url: `${BASE_GAS_URL}?page=dashboard-atm` },
-            { id: 'bast', title: 'Input BAST', desc: 'Form Berita Acara Serah Terima pekerjaan', icon: '📝', color: '#0284C7', url: `${BASE_GAS_URL}?page=bast` },
-            { id: 'dashboard-bast', title: 'Dashboard BAST', desc: 'Rekap & arsip dokumen BAST teknisi', icon: '📑', color: '#475569', url: `${BASE_GAS_URL}?page=dashboard-bast` },
-            { id: 'index', title: 'Portal Index', desc: 'Indeks navigasi lengkap sistem GAS', icon: '📁', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
+        const MODULES = [
+            { id: 'kerusakan', title: 'Lapor Kerusakan', sub: 'Input tiket kendala', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
+            { id: 'jadwal-kerusakan', title: 'Jadwal Perbaikan', sub: 'Monitoring perbaikan', icon: '📅', color: '#F97316', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
+            { id: 'checklist-harian-pm', title: 'Checklist Harian', sub: 'Inspeksi sarana gedung', icon: '📋', color: '#10B981', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
+            { id: 'dashboard-atm', title: 'Monitoring ATM', sub: 'Fisik & AC galeri ATM', icon: '🏧', color: '#14B8A6', url: `${BASE_GAS_URL}?page=dashboard-atm` },
+            { id: 'plts-dashboard', title: 'PLTS Solar', sub: 'Produksi solar panel', icon: '☀️', color: '#FDB813', url: `${BASE_GAS_URL}?page=plts-dashboard` },
+            { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
+            { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
+            { id: 'all-modules', title: 'Semua Modul', sub: '14 Modul Operasional', icon: '📁', color: '#0078D4', action: 'start' },
+            
+            // Sub Modules
+            { id: 'dashboard', title: 'Dashboard Utama', sub: 'Statistik operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
+            { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', sub: 'Statistik harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
+            { id: 'progres-jadwal-pm', title: 'Progress PM', sub: 'Realisasi jadwal', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
+            { id: 'dashboard-pm', title: 'Dashboard PM', sub: 'Evaluasi performa', icon: '📉', color: '#EC4899', url: `${BASE_GAS_URL}?page=dashboard-pm` },
+            { id: 'bast', title: 'Input BAST', sub: 'Berita acara kerja', icon: '📝', color: '#0284C7', url: `${BASE_GAS_URL}?page=bast` },
+            { id: 'dashboard-bast', title: 'Dashboard BAST', sub: 'Arsip berita acara', icon: '📑', color: '#475569', url: `${BASE_GAS_URL}?page=dashboard-bast` },
+            { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        const PRIMARY_GRID_IDS = [
-            'kerusakan',
-            'jadwal-kerusakan',
-            'checklist-harian-pm',
-            'dashboard-atm',
-            'plts-dashboard',
-            'energi-dashboard',
-            'perencanaan-pm'
-        ];
+        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'all-modules'];
 
         const Theme = {
             init() {
-                const saved = localStorage.getItem('app_theme') || 'light';
+                const saved = localStorage.getItem('win_theme') || 'light';
                 document.documentElement.setAttribute('data-theme', saved);
-                this.updateBtn(saved);
             },
             toggle() {
                 const current = document.documentElement.getAttribute('data-theme');
                 const target = current === 'dark' ? 'light' : 'dark';
                 document.documentElement.setAttribute('data-theme', target);
-                localStorage.setItem('app_theme', target);
-                this.updateBtn(target);
-                App.showToast(`Beralih ke mode ${target === 'dark' ? 'Gelap' : 'Terang'}`);
-            },
-            updateBtn(theme) {
-                const btn = document.getElementById('themeToggleBtn');
-                if (btn) {
-                    btn.innerHTML = theme === 'dark'
-                        ? '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>'
-                        : '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>';
-                }
+                localStorage.setItem('win_theme', target);
+                OS.showToast(`Beralih ke mode ${target === 'dark' ? 'Gelap' : 'Terang'}`);
             }
         };
 
-        const Clock = {
-            init() {
-                this.tick();
-                setInterval(() => this.tick(), 1000);
-            },
-            tick() {
-                const now = new Date();
-                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-
-                const day = days[now.getDay()];
-                const d = now.getDate();
-                const m = months[now.getMonth()];
-                const y = now.getFullYear();
-
-                const h = String(now.getHours()).padStart(2, '0');
-                const min = String(now.getMinutes()).padStart(2, '0');
-                const s = String(now.getSeconds()).padStart(2, '0');
-
-                const clockEl = document.getElementById('clock');
-                const dateEl = document.getElementById('date');
-
-                if (clockEl) clockEl.innerText = `${h}:${min}:${s} WIB`;
-                if (dateEl) dateEl.innerText = `${day}, ${d} ${m} ${y}`;
-            }
-        };
-
-        const Router = {
-            init() {
-                window.addEventListener('hashchange', () => this.render());
-                this.render();
-            },
-            navigate(route) {
-                window.location.hash = '#/' + route;
-            },
-            render() {
-                const route = window.location.hash.replace('#/', '') || 'beranda';
-                this.updateNavActive(route);
-
-                const content = document.getElementById('appContent');
-                const gasMatch = GAS_MODULES.find(m => m.id === route);
-
-                if (route === 'beranda') {
-                    content.innerHTML = this.viewHome();
-                } else if (gasMatch) {
-                    content.innerHTML = this.viewModuleDetail(gasMatch);
-                } else {
-                    content.innerHTML = `
-                        <div class="portal-container" style="text-align:center; padding:3rem 1rem;">
-                            <h2>Halaman Tidak Ditemukan</h2>
-                            <p style="color:var(--text-muted); margin: 0.5rem 0 1.5rem;">Rute modul tidak tersedia.</p>
-                            <button class="btn-direct" style="max-width:260px; margin:0 auto;" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
-                        </div>
-                    `;
-                }
-
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            },
-            updateNavActive(route) {
-                document.querySelectorAll('#sidebarNavList .nav-item').forEach(li => {
-                    li.classList.toggle('active', li.getAttribute('data-route') === route);
-                });
-                document.querySelectorAll('.bottom-nav-item').forEach(a => {
-                    a.classList.toggle('active', a.getAttribute('data-route') === route);
-                });
-            },
-            viewHome() {
-                const primaryModules = PRIMARY_GRID_IDS.map(id => GAS_MODULES.find(m => m.id === id)).filter(Boolean);
-
-                return `
-                    <div class="portal-container">
-                        
-                        <!-- HERO BANNER OPERASIONAL -->
-                        <div class="hero-banner">
-                            <div class="hero-left-content">
-                                <div class="hero-status-tag">
-                                    <span>●</span> Unit KC Surabaya & Jatim
-                                </div>
-                                <h2>Building Management Hub</h2>
-                                <p>Sistem operasional terpadu pemantauan sarana, checklist harian, energi & BAST teknisi.</p>
-                            </div>
-                        </div>
-
-                        <!-- TWO-COLUMN DASHBOARD GRID -->
-                        <div class="dashboard-grid-layout">
-                            
-                            <!-- KOLOM KIRI: 8 MENU UTAMA -->
-                            <div class="section-card">
-                                <div class="card-header-flex">
-                                    <div class="card-title-wrap">
-                                        <span>⚡</span>
-                                        <span>Menu Operasional Utama</span>
-                                    </div>
-                                </div>
-
-                                <div class="grid-icon-layout">
-                                    ${primaryModules.map(m => `
-                                        <div class="menu-item-btn" onclick="App.openDirectLink('${m.url}')">
-                                            <div class="circle-icon" style="background: ${m.color};">
-                                                ${m.icon}
-                                            </div>
-                                            <span class="menu-label">${m.title}</span>
-                                        </div>
-                                    `).join('')}
-
-                                    <!-- Tombol Semua Modul -->
-                                    <div class="menu-item-btn" onclick="App.openAllMenuModal()">
-                                        <div class="circle-icon" style="background: #2563EB;">
-                                            📁
-                                        </div>
-                                        <span class="menu-label">Semua Modul</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- KOLOM KANAN: AKSI CEPAT TEKNISI -->
-                            <div class="section-card">
-                                <div class="card-header-flex">
-                                    <div class="card-title-wrap">
-                                        <span>🚀</span>
-                                        <span>Aksi Cepat Teknisi</span>
-                                    </div>
-                                </div>
-
-                                <div class="action-list">
-                                    <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=kerusakan')">
-                                        <div class="action-left">
-                                            <div class="action-icon">🛠️</div>
-                                            <div class="action-text">
-                                                <h4>Input Laporan Kerusakan</h4>
-                                                <p>Buat tiket kendala fasilitas</p>
-                                            </div>
-                                        </div>
-                                        <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">↗</span>
-                                    </div>
-
-                                    <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=checklist-harian-pm')">
-                                        <div class="action-left">
-                                            <div class="action-icon">📋</div>
-                                            <div class="action-text">
-                                                <h4>Isi Checklist Harian</h4>
-                                                <p>Inspeksi harian teknisi</p>
-                                            </div>
-                                        </div>
-                                        <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">↗</span>
-                                    </div>
-
-                                    <div class="action-item-card" onclick="App.openDirectLink('${BASE_GAS_URL}?page=bast')">
-                                        <div class="action-left">
-                                            <div class="action-icon">📝</div>
-                                            <div class="action-text">
-                                                <h4>Input BAST Pekerjaan</h4>
-                                                <p>Berita acara serah terima</p>
-                                            </div>
-                                        </div>
-                                        <span style="font-weight:800; color:var(--primary); font-size:1.1rem;">↗</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                `;
-            },
-            viewModuleDetail(menu) {
-                return `
-                    <div class="portal-container">
-                        <div class="section-card" style="text-align:center; padding: 3rem 2rem; max-width:680px; margin:0 auto;">
-                            <div style="font-size: 3.8rem; margin-bottom: 0.75rem;">${menu.icon}</div>
-                            <h2 style="font-size:1.45rem; font-weight:800; margin-bottom:0.4rem;">${menu.title}</h2>
-                            <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5; margin-bottom:1.75rem;">
-                                ${menu.desc}
-                            </p>
-
-                            <div style="background:var(--bg-hover); padding:1.2rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.75rem; text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.5rem;">
-                                <div><strong>Integrasi:</strong> Google Apps Script Web App</div>
-                                <div><strong>Akses:</strong> Direct Window Redirect (Anti-Framing Block)</div>
-                                <div><strong>Status Sistem:</strong> <span style="color:var(--accent-green); font-weight:700;">Aktif & Siap Digunakan</span></div>
-                            </div>
-
-                            <div style="display:flex; flex-direction:column; gap:0.75rem; max-width:340px; margin:0 auto; width:100%;">
-                                <button class="btn-direct" onclick="App.openDirectLink('${menu.url}')">
-                                    Buka Modul Sekarang ↗
-                                </button>
-                                <button class="btn-direct" style="background:var(--bg-hover); color:var(--text-main); border:1px solid var(--border-color); box-shadow:none;" onclick="Router.navigate('beranda')">
-                                    Kembali ke Beranda
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        };
-
-        const App = {
+        const OS = {
             init() {
                 Theme.init();
-                Clock.init();
-                this.renderSidebar();
-                Router.init();
-                document.getElementById('footerYear').innerText = new Date().getFullYear();
-            },
-            renderSidebar() {
-                const list = document.getElementById('sidebarNavList');
-                let html = `
-                    <li class="nav-item active" data-route="beranda">
-                        <a href="#/beranda">
-                            <span style="font-size:1.15rem; width:22px; text-align:center;">🏠</span>
-                            <span>Beranda</span>
-                        </a>
-                    </li>
-                `;
-
-                GAS_MODULES.forEach(m => {
-                    html += `
-                        <li class="nav-item" data-route="${m.id}">
-                            <a href="javascript:void(0)" onclick="App.openDirectLink('${m.url}')">
-                                <span style="font-size:1.15rem; width:22px; text-align:center;">${m.icon}</span>
-                                <span>${m.title}</span>
-                            </a>
-                        </li>
-                    `;
+                this.renderTiles();
+                this.renderStartApps();
+                this.startClock();
+                
+                // Close start menu if clicked outside
+                document.addEventListener('click', (e) => {
+                    const sm = document.getElementById('startMenu');
+                    const sb = document.getElementById('startBtn');
+                    if (!sm.contains(e.target) && !sb.contains(e.target)) {
+                        sm.classList.remove('open');
+                    }
                 });
-
-                list.innerHTML = html;
             },
-            openDirectLink(url) {
-                this.showToast('Membuka modul Google Apps Script...', 'info');
+            renderTiles() {
+                const container = document.getElementById('tilesContainer');
+                const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
+
+                container.innerHTML = primary.map(m => `
+                    <div class="win-tile" onclick="${m.action === 'start' ? 'OS.toggleStart()' : `OS.openDirect('${m.url}')`}">
+                        <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
+                            ${m.icon}
+                        </div>
+                        <div class="tile-title">${m.title}</div>
+                        <div class="tile-sub">${m.sub}</div>
+                    </div>
+                `).join('');
+            },
+            renderStartApps() {
+                const list = document.getElementById('startAppsList');
+                const realModules = MODULES.filter(m => m.id !== 'all-modules');
+                
+                list.innerHTML = realModules.map(m => `
+                    <button class="app-item-btn" onclick="OS.openDirect('${m.url}'); OS.toggleStart();">
+                        <span style="font-size:1.25rem;">${m.icon}</span>
+                        <div>
+                            <div style="font-size:0.78rem; font-weight:700;">${m.title}</div>
+                            <div style="font-size:0.65rem; color:var(--text-secondary);">${m.sub}</div>
+                        </div>
+                    </button>
+                `).join('');
+            },
+            openApp(id) {
+                const mod = MODULES.find(m => m.id === id);
+                if (mod && mod.url) this.openDirect(mod.url);
+            },
+            openDirect(url) {
+                this.showToast('Membuka modul Google Apps Script...');
                 window.open(url, '_blank', 'noopener,noreferrer');
             },
-            showToast(msg, type = 'info') {
-                const con = document.getElementById('toastContainer');
-                const t = document.createElement('div');
-                t.className = 'toast';
-                t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
-                con.appendChild(t);
-                setTimeout(() => {
-                    t.style.opacity = '0';
-                    t.style.transform = 'translateX(100%)';
-                    t.style.transition = 'all 0.3s ease';
-                    setTimeout(() => t.remove(), 300);
-                }, 2500);
+            toggleStart() {
+                document.getElementById('startMenu').classList.toggle('open');
             },
             toggleFullscreen() {
                 if (!document.fullscreenElement) {
@@ -1010,41 +752,42 @@
                     document.exitFullscreen().catch(() => {});
                 }
             },
-            openAllMenuModal() {
-                const card = document.getElementById('modalCard');
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                        <h3 style="font-size:1.2rem; font-weight:800;">14 Modul Operasional BM</h3>
-                        <button onclick="App.closeModalDirect()" style="font-size:1.25rem; font-weight:700;">✕</button>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; max-height:65vh; overflow-y:auto;">
-                        ${GAS_MODULES.map(m => `
-                            <button onclick="App.closeModalDirect(); App.openDirectLink('${m.url}')" style="text-align:left; padding:0.85rem; background:var(--bg-hover); border-radius:12px; font-size:0.82rem; font-weight:700; border:1px solid var(--border-color); display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:1.2rem;">${m.icon}</span>
-                                <span>${m.title}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-                document.getElementById('appModal').style.display = 'flex';
+            showToast(msg) {
+                const box = document.getElementById('toastBox');
+                const t = document.createElement('div');
+                t.className = 'win-toast';
+                t.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+                box.appendChild(t);
+                setTimeout(() => {
+                    t.style.opacity = '0';
+                    t.style.transition = 'all 0.3s ease';
+                    setTimeout(() => t.remove(), 300);
+                }, 2200);
             },
-            closeModal(e) {
-                if (e.target.id === 'appModal') {
-                    document.getElementById('appModal').style.display = 'none';
-                }
-            },
-            closeModalDirect() {
-                document.getElementById('appModal').style.display = 'none';
+            startClock() {
+                const update = () => {
+                    const now = new Date();
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    const d = String(now.getDate()).padStart(2, '0');
+                    const mo = String(now.getMonth() + 1).padStart(2, '0');
+                    const y = now.getFullYear();
+
+                    document.getElementById('trayTime').innerText = `${h}:${m}`;
+                    document.getElementById('trayDate').innerText = `${d}/${mo}/${y}`;
+                };
+                update();
+                setInterval(update, 1000);
             },
             handleSearch(q) {
-                const match = GAS_MODULES.find(m => m.title.toLowerCase().includes(q.toLowerCase()));
+                const match = MODULES.find(m => m.title.toLowerCase().includes(q.toLowerCase()) && m.url);
                 if (q.length > 2 && match) {
-                    this.openDirectLink(match.url);
+                    this.openDirect(match.url);
                 }
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => App.init());
+        document.addEventListener('DOMContentLoaded', () => OS.init());
     </script>
 </body>
 </html>
