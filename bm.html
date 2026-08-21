@@ -284,17 +284,17 @@
         .app-main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
-            padding: 1.5rem;
+            padding: 1.25rem;
             padding-bottom: calc(var(--bottom-nav-height) + 2rem);
             min-height: calc(100vh - var(--header-height));
             transition: var(--transition);
         }
 
         /* ==========================================================================
-           4. PORTAL CARDS & OPERASIONAL
+           4. PORTAL CARDS
            ========================================================================== */
         .portal-container {
-            max-width: 540px;
+            max-width: 520px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -400,23 +400,6 @@
             color: var(--text-main);
             line-height: 1.25;
         }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-
-        .stat-box {
-            background: var(--bg-hover);
-            padding: 0.85rem 0.6rem;
-            border-radius: var(--radius-md);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .stat-box h3 { font-size: 1.15rem; font-weight: 800; color: var(--primary); }
-        .stat-box p { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
 
         .action-list {
             display: flex;
@@ -700,7 +683,6 @@
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
-        // Registrasi 14 Modul Operasional Murni
         const GAS_MODULES = [
             { id: 'dashboard', title: 'Dashboard Utama', desc: 'Panel statistik & ringkasan operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
             { id: 'kerusakan', title: 'Lapor Kerusakan', desc: 'Form input pengaduan kerusakan fasilitas', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
@@ -718,7 +700,6 @@
             { id: 'index', title: 'Portal Index', desc: 'Indeks navigasi lengkap sistem GAS', icon: '📁', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        // 7 Modul Prioritas + 1 Menu Tambahan (Total 8 Grid Utama)
         const PRIMARY_GRID_IDS = [
             'kerusakan',
             'jadwal-kerusakan',
@@ -832,22 +813,6 @@
                             </div>
                             <h2>Building Management Hub</h2>
                             <p>Sistem terpusat pemantauan sarana, checklist harian, energi & BAST teknisi.</p>
-                        </div>
-
-                        <!-- STATISTIK RINGKAS SISTEM -->
-                        <div class="stat-grid">
-                            <div class="stat-box">
-                                <h3>14</h3>
-                                <p>Modul Aktif</p>
-                            </div>
-                            <div class="stat-box">
-                                <h3>9</h3>
-                                <p>Titik Kantor</p>
-                            </div>
-                            <div class="stat-box">
-                                <h3 style="color:var(--accent-green);">100%</h3>
-                                <p>Kesiapan Unit</p>
-                            </div>
                         </div>
 
                         <!-- 8 MENU UTAMA OPERASIONAL -->
