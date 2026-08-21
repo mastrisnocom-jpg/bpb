@@ -144,7 +144,7 @@
 
         /* ==========================================================================
            3. DESKTOP WORKSPACE & DYNAMIC ICONS
-           ========================================================================== */
+           ========================================================================= */
         .desktop-area {
             flex: 1;
             padding: 1rem;
@@ -534,7 +534,7 @@
         }
 
         /* ==========================================================================
-           5. TASKBAR (FLEXBOX 3-ZONE FIX TANPA OVERLAP)
+           5. TASKBAR
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -851,7 +851,7 @@
             }
 
             .taskbar-left {
-                display: none; /* Sembunyikan label di mobile agar icon di tengah tidak berdesakan */
+                display: none;
             }
 
             .taskbar-center {
@@ -888,11 +888,10 @@
          ========================================================================== -->
     <main class="desktop-area" id="desktopArea">
         
-        <!-- Ikon Desktop (Kosong saat pertama kali, baru terisi jika sengaja di-PIN) -->
         <div class="desktop-icons-container" id="desktopIconsContainer"></div>
 
-        <!-- 1. Central Windows App Window (Portal Hub) -->
-        <div class="win-frame" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
+        <!-- 1. Central Windows App Window (Portal Hub) - Default: MINIMIZED (Tertutup) -->
+        <div class="win-frame minimized" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
             
             <div class="win-titlebar" id="mainTitlebar">
                 <div class="win-title-left">
@@ -1014,7 +1013,7 @@
     </div>
 
     <!-- ==========================================================================
-         3. WINDOWS TASKBAR (3-ZONE CLEAN LAYOUT)
+         3. WINDOWS TASKBAR
          ========================================================================== -->
     <footer class="win-taskbar">
         
@@ -1033,7 +1032,7 @@
                     <span></span><span></span>
                 </div>
             </button>
-            <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka/Tutup Jendela Hub">
+            <button class="task-btn" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
             </button>
             <button class="task-btn" id="taskbarNotepadBtn" onclick="Notepad.toggle()" title="Buka Notepad">
@@ -1098,10 +1097,6 @@
 
         const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm', 'plts-dashboard', 'energi-dashboard', 'perencanaan-pm', 'gempa'];
 
-        /**
-         * DEVICE STORAGE ISOLATOR
-         * Default dibuat kosong [] agar wallpaper bersih saat pertama dibuka
-         */
         const DeviceManager = {
             isMobile() {
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -1113,7 +1108,7 @@
                 const key = this.getStorageKey();
                 try {
                     const saved = localStorage.getItem(key);
-                    return saved ? JSON.parse(saved) : []; // Default kosong
+                    return saved ? JSON.parse(saved) : [];
                 } catch(e) {
                     return [];
                 }
