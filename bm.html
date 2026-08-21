@@ -535,7 +535,7 @@
 
         /* Radio Player Window */
         #radioWindow {
-            max-width: 440px;
+            max-width: 480px;
             display: none;
         }
 
@@ -902,13 +902,13 @@
             <div class="win-body">
                 <div class="win-nav-header">
                     <div class="win-nav-title">
-                        <h2>Menu Operasional & Layanan</h2>
+                        <h2>Menu Operasional & Produktivitas</h2>
                         <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop (Bisa digeser ke mana saja)</p>
                     </div>
 
                     <div class="win-search-box">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                        <input type="text" placeholder="Cari modul sistem..." onkeyup="OS.handleSearch(this.value)">
+                        <input type="text" placeholder="Cari modul, AI, office..." onkeyup="OS.handleSearch(this.value)">
                     </div>
                 </div>
 
@@ -979,12 +979,12 @@
             </div>
         </div>
 
-        <!-- 4. Windows Radio Online Window -->
-        <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 220px);">
+        <!-- 4. Windows Radio Online Window (Radio Dunia) -->
+        <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
                 <div class="win-title-left">
                     <div class="win-app-logo" style="background:#8B5CF6;">📻</div>
-                    <span>Radio Online Player</span>
+                    <span>World Radio Online Player</span>
                 </div>
                 <div class="win-controls">
                     <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('radioWindow', 'taskbarRadioBtn')">─</button>
@@ -994,18 +994,27 @@
 
             <div class="win-body" style="padding: 1.2rem;">
                 <div class="radio-box">
-                    <h3 id="radioChannelName" style="font-size:1rem; font-weight:800;">Suara Surabaya FM</h3>
-                    <p style="font-size:0.75rem; color:var(--text-secondary);">Live Streaming Berita & Musik</p>
+                    <h3 id="radioChannelName" style="font-size:1.05rem; font-weight:800;">Suara Surabaya FM</h3>
+                    <p id="radioCountryInfo" style="font-size:0.75rem; color:var(--text-secondary);">🇮🇩 Indonesia • Live Stream</p>
                     
                     <audio id="audioStream" controls style="width:100%; margin-top:0.5rem;">
                         <source src="https://stream.suarasurabaya.net/stream" type="audio/mpeg">
                         Browser Anda tidak mendukung audio player.
                     </audio>
 
-                    <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:0.5rem;">
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Suara Surabaya FM', 'https://stream.suarasurabaya.net/stream')">Suara Surabaya</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Prambors Radio', 'https://masima.rastream.com/masima-pramborsjakarta')">Prambors</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Gen FM', 'https://stream-node0.rri.co.id/streaming/9/9001/rripro1-jakarta.mp3')">RRI Pro 1</button>
+                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.5rem; text-align:left;">
+                        Stasiun Radio Pilihan Dunia:
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:0.25rem;">
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Suara Surabaya FM', '🇮🇩 Indonesia • Berita & Musik', 'https://stream.suarasurabaya.net/stream')">🇮🇩 Suara Surabaya</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Prambors Jakarta', '🇮🇩 Indonesia • Top Hits', 'https://masima.rastream.com/masima-pramborsjakarta')">🇮🇩 Prambors FM</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('BBC World Service', '🇬🇧 UK • Global News', 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service')">🇬🇧 BBC World</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Capital FM London', '🇬🇧 UK • Hit Music', 'https://media-ice.musicradio.com/CapitalMP3')">🇬🇧 Capital FM</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Hot 97 New York', '🇺🇸 USA • Hip-Hop & RnB', 'https://stream.revma.ihrhls.com/zc1469')">🇺🇸 Hot 97 NYC</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Jazz24 Seattle', '🇺🇸 USA • Classic Jazz', 'https://live.wostreaming.net/manifest/kplufm-mp3-128')">🇺🇸 Jazz24 USA</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Tokyo FM Hits', '🇯🇵 Japan • J-Pop Hits', 'https://stream-node0.rri.co.id/streaming/9/9001/rripro1-jakarta.mp3')">🇯🇵 Japan Hits</button>
+                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Radio Garden Worldwide', '🌍 Global Radio Map', 'https://radio.garden')">🌍 Radio Garden ↗</button>
                     </div>
                 </div>
             </div>
@@ -1022,7 +1031,7 @@
                 <div class="user-avatar">BM</div>
                 <div>
                     <h4 style="font-size:0.85rem; font-weight:800;">Enterprise System</h4>
-                    <p style="font-size:0.7rem; color:var(--text-secondary);">20 Modul & Eksternal Apps</p>
+                    <p style="font-size:0.7rem; color:var(--text-secondary);">25 Modul, AI & Office Apps</p>
                 </div>
             </div>
             <div style="display:flex; gap:4px;">
@@ -1065,11 +1074,17 @@
             <button class="task-btn" id="taskbarGempaBtn" onclick="GempaAlert.toggle()" title="Monitoring Gempa BMKG">
                 <span style="font-size:1.15rem;">⚠️</span>
             </button>
-            <button class="task-btn" id="taskbarRadioBtn" onclick="RadioPlayer.toggle()" title="Radio Online">
+            <button class="task-btn" id="taskbarRadioBtn" onclick="RadioPlayer.toggle()" title="Radio Dunia">
                 <span style="font-size:1.15rem;">📻</span>
             </button>
-            <button class="task-btn" onclick="OS.openDirect('https://www.google.com')" title="Google Chrome Browser">
-                <span style="font-size:1.15rem;">🌐</span>
+            <button class="task-btn" onclick="OS.openDirect('https://gemini.google.com')" title="Google Gemini AI">
+                <span style="font-size:1.15rem;">✨</span>
+            </button>
+            <button class="task-btn" onclick="OS.openDirect('https://chatgpt.com')" title="ChatGPT AI">
+                <span style="font-size:1.15rem;">🤖</span>
+            </button>
+            <button class="task-btn" onclick="OS.openDirect('https://maps.google.com')" title="Google Maps">
+                <span style="font-size:1.15rem;">🗺️</span>
             </button>
             <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">
                 <span style="font-size:1.15rem;">🖼️</span>
@@ -1110,11 +1125,23 @@
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
-            // Menu Tambahan
+            // BPB Portals
             { id: 'bmis', title: 'BMIS BPB', sub: 'bmis.bpb.co.id', icon: '🏢', color: '#00529C', url: 'https://bmis.bpb.co.id' },
             { id: 'belfis', title: 'BELFIS BPB', sub: 'belfis.bpb.co.id', icon: '🏗️', color: '#0284C7', url: 'https://belfis.bpb.co.id' },
             { id: 'absensi', title: 'Binayasa Absensi', sub: 'binayasa-absensi.com', icon: '👤', color: '#10B981', url: 'https://binayasa-absensi.com' },
-            { id: 'radio', title: 'Radio Online', sub: 'Live Streaming Player', icon: '📻', color: '#8B5CF6', action: 'radio' },
+            
+            // AI Apps
+            { id: 'gemini', title: 'Google Gemini', sub: 'gemini.google.com', icon: '✨', color: '#1BA1E2', url: 'https://gemini.google.com' },
+            { id: 'chatgpt', title: 'ChatGPT AI', sub: 'chatgpt.com', icon: '🤖', color: '#10A37F', url: 'https://chatgpt.com' },
+            
+            // Office & Productivity
+            { id: 'maps', title: 'Google Maps', sub: 'maps.google.com', icon: '🗺️', color: '#34A853', url: 'https://maps.google.com' },
+            { id: 'spreadsheet', title: 'Google Sheets', sub: 'sheets.new', icon: '📊', color: '#0F9D58', url: 'https://sheets.new' },
+            { id: 'excel', title: 'MS Excel Online', sub: 'excel.office.com', icon: '📗', color: '#107C41', url: 'https://www.office.com/launch/excel' },
+            { id: 'word', title: 'MS Word Online', sub: 'word.office.com', icon: '📘', color: '#005A9E', url: 'https://www.office.com/launch/word' },
+            
+            // Media & Tools
+            { id: 'radio', title: 'Radio Dunia', sub: 'World Radio Player', icon: '📻', color: '#8B5CF6', action: 'radio' },
             { id: 'youtube', title: 'YouTube', sub: 'Streaming Video', icon: '▶️', color: '#FF0000', url: 'https://www.youtube.com' },
             { id: 'chrome', title: 'Google Chrome', sub: 'Web Browser', icon: '🌐', color: '#4285F4', url: 'https://www.google.com' },
             { id: 'gempa', title: 'Peringatan Gempa', sub: 'BMKG Real-time', icon: '⚠️', color: '#EE2737', action: 'gempa' },
@@ -1130,8 +1157,14 @@
             { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        // Tile yang tampil di jendela hub
-        const PRIMARY_IDS = ['kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'bmis', 'belfis', 'absensi', 'radio', 'youtube', 'chrome', 'gempa', 'notepad', 'dashboard'];
+        // Tile yang tampil di jendela hub utama
+        const PRIMARY_IDS = [
+            'kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm',
+            'bmis', 'belfis', 'absensi', 'gemini',
+            'chatgpt', 'maps', 'spreadsheet', 'excel',
+            'word', 'radio', 'youtube', 'chrome',
+            'gempa', 'notepad', 'dashboard'
+        ];
 
         /**
          * FREE DRAGGABLE DESKTOP ICONS WITH LOCALSTORAGE POSITIONING
@@ -1141,7 +1174,7 @@
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             },
             getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_pos_v4' : 'win_pinned_desktop_pos_v4';
+                return this.isMobile() ? 'win_pinned_mobile_pos_v5' : 'win_pinned_desktop_pos_v5';
             },
             getPinnedIcons() {
                 const key = this.getStorageKey();
@@ -1185,9 +1218,14 @@
                     this.close();
                 }
             },
-            changeStation(name, url) {
+            changeStation(name, country, url) {
                 Sound.click();
+                if (url.startsWith('http') && !url.endsWith('.mp3') && !url.includes('stream')) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                    return;
+                }
                 document.getElementById('radioChannelName').innerText = name;
+                document.getElementById('radioCountryInfo').innerText = country;
                 const audio = document.getElementById('audioStream');
                 audio.src = url;
                 audio.play();
@@ -1348,9 +1386,8 @@
                     startX = e.clientX || (e.touches && e.touches[0].clientX);
                     startY = e.clientY || (e.touches && e.touches[0].clientY);
 
-                    const rect = win.getBoundingClientRect();
-                    initialLeft = rect.left;
-                    initialTop = rect.top;
+                    initialLeft = win.offsetLeft;
+                    initialTop = win.offsetTop;
 
                     document.addEventListener('pointermove', onDrag);
                     document.addEventListener('pointerup', stopDrag);
@@ -1720,7 +1757,7 @@
             unpinFromDesktop(id) {
                 Sound.click();
                 let pinned = DeviceManager.getPinnedIcons();
-                pinned = pinned.filter(x => x.id !== id);
+                pinned = pinned.filter(x => x !== id);
                 DeviceManager.savePinnedIcons(pinned);
                 this.renderDesktopIcons();
                 this.showToast('Shortcut dihapus dari Desktop');
@@ -1742,7 +1779,7 @@
             },
             openDirect(url) {
                 Sound.click();
-                this.showToast('Membuka tautan sistem...');
+                this.showToast('Membuka tautan...');
                 window.open(url, '_blank', 'noopener,noreferrer');
             },
             toggleStart() {
