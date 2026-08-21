@@ -326,6 +326,7 @@
             </footer>
         </main>
     </div>
+    
     <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down max-h-[90vh] overflow-y-auto">
@@ -722,6 +723,7 @@
             </div>
         </div>
     </div>
+
     <!-- MODAL RELASI FOLLOW -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
@@ -1119,7 +1121,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-     <script>
+    <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1221,15 +1223,26 @@
             return false;
         }
 
+        // PERBAIKAN: Fungsi mengecek keterlambatan secara riil tanpa terpengaruh pergantian hari
         function isCompletedLate(task) {
             if (task.status !== 'Selesai') return false;
-            if (isTaskExpired(task.tanggal)) return true;
-            if (task.completed_at && task.jam_selesai) {
-                const compTime = new Date(task.completed_at);
-                const compHours = String(compTime.getHours()).padStart(2, '0');
-                const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
-                return `${compHours}:${compMinutes}` > task.jam_selesai;
-            }
+            if (!task.completed_at || !task.tanggal || !task.jam_selesai) return false;
+
+            const compTime = new Date(task.completed_at);
+            const compYear = compTime.getFullYear();
+            const compMonth = String(compTime.getMonth() + 1).padStart(2, '0');
+            const compDay = String(compTime.getDate()).padStart(2, '0');
+            const compDateStr = `${compYear}-${compMonth}-${compDay}`;
+
+            const compHours = String(compTime.getHours()).padStart(2, '0');
+            const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
+            const compTimeStr = `${compHours}:${compMinutes}`;
+
+            // Terlambat jika baru diselesaikan di hari berikutnya
+            if (compDateStr > task.tanggal) return true;
+            // Terlambat jika diselesaikan di hari yang sama tapi melewati jam_selesai
+            if (compDateStr === task.tanggal && compTimeStr > task.jam_selesai) return true;
+
             return false;
         }
 
@@ -1413,7 +1426,7 @@
         });
 
         // -----------------------------------------------------------
-        // PERHITUNGAN POIN BARU (REWARD & LIMITASI)
+        // PERHITUNGAN POIN & REWARD
         // -----------------------------------------------------------
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
@@ -1482,11 +1495,9 @@
             Object.keys(userEarningsMap).forEach(uid => {
                 const u = userEarningsMap[uid];
                 
-                // LOGIKA 3 & 4: Login Pertama (+1000) & Mutual Follow (+500/relasi)
-                // Karena kita tidak simpan tabel poin terpisah, kita inject langsung untuk currentUser (Saya)
                 if (uid === currentUser?.id) {
-                    u.extraBonus += budgetSettings.pointsNewUser; // +1.000 Bonus Pendaftar
-                    u.extraBonus += (mutualFriends.length * budgetSettings.pointsMutual); // +500 per mutual
+                    u.extraBonus += budgetSettings.pointsNewUser;
+                    u.extraBonus += (mutualFriends.length * budgetSettings.pointsMutual);
                 }
 
                 if (u.activeDates.size >= 5) {
@@ -1539,7 +1550,6 @@
                         let statusIcon = 'fa-hourglass-half';
                         let statusText = w.status;
 
-                        // PERUBAHAN LABEL SUKSES JADI DIBAYAR
                         if (w.status === 'Sukses') {
                             statusColor = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300';
                             statusIcon = 'fa-check-double';
@@ -2380,8 +2390,6 @@
                 if (!error) { showToast("Komentar diperbarui"); cancelEditComment(); fetchComments(activeCommentJadwalId); } else showToast("Gagal memperbarui komentar!");
             } else {
                 input.value = '';
-                // LOGIKA 5: Tambah Poin Otomatis +10 ketika Berkomentar (Berjalan jika user sering komen max batas harian tercapai)
-                // Ini ditangani murni dari total poin dompet yang ditarik per hari. Namun, ini insert basic comment.
                 const { error } = await _supabase.from('jadwal_comments').insert([{ jadwal_id: String(activeCommentJadwalId), user_id: currentUser.id, user_email: currentUser.email, comment: commentText }]);
                 if (error) { showToast("Gagal kirim komentar: " + error.message); input.value = commentText; } 
                 else fetchComments(activeCommentJadwalId);
@@ -2603,6 +2611,5 @@
 
         initTheme(); checkAuth();
     </script>
-
 </body>
 </html>
