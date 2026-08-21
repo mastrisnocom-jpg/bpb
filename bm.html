@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Enterprise OS - Multi-Theme Building Management</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
@@ -75,8 +76,10 @@
         }
 
         /* ==========================================================================
-           2. MULTI-THEME ENGINE VARIABLES
+           2. MULTI-THEME ENGINE (AUTENTIK 100% TIAP OS)
            ========================================================================== */
+        
+        /* --- WINDOWS 11 FLUENT --- */
         :root, [data-theme="win11"] {
             --sys-font: 'Plus Jakarta Sans', sans-serif;
             --win-blue: #0078D4;
@@ -96,47 +99,27 @@
             --taskbar-height: 52px;
         }
 
-        /* Windows XP (Luna Blue Theme) */
-        [data-theme="winxp"] {
-            --sys-font: 'Tahoma', sans-serif;
-            --win-blue: #0055EA;
-            --win-blue-hover: #1C68FF;
-            --wallpaper-url: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: #ECE9D8;
-            --window-border: #0055EA;
-            --taskbar-bg: linear-gradient(180deg, #245EDC 0%, #3F8CF3 9%, #245EDC 18%, #1941A5 92%, #1941A5 100%);
-            --mica-bg: #FFFFFF;
-            --text-primary: #000000;
-            --text-secondary: #444444;
-            --border-subtle: #D4D0C8;
-            --shadow-window: 3px 3px 12px rgba(0, 0, 0, 0.4);
-            --shadow-flyout: 2px 2px 10px rgba(0, 0, 0, 0.5);
-            --radius-win: 8px 8px 0 0;
-            --radius-card: 4px;
-            --taskbar-height: 46px;
-        }
-
-        /* Windows 7 Aero Glass */
+        /* --- WINDOWS 7 AERO GLASS --- */
         [data-theme="win7"] {
             --sys-font: 'Segoe UI', Tahoma, sans-serif;
             --win-blue: #2E86DE;
             --win-blue-hover: #54A0FF;
             --wallpaper-url: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop');
-            --window-bg: rgba(235, 245, 255, 0.82);
-            --window-border: rgba(255, 255, 255, 0.75);
-            --taskbar-bg: linear-gradient(180deg, rgba(40, 75, 115, 0.8) 0%, rgba(15, 30, 50, 0.92) 100%);
+            --window-bg: rgba(230, 242, 255, 0.86);
+            --window-border: rgba(255, 255, 255, 0.8);
+            --taskbar-bg: linear-gradient(180deg, rgba(50, 95, 145, 0.75) 0%, rgba(20, 45, 75, 0.9) 50%, rgba(10, 25, 45, 0.95) 100%);
             --mica-bg: rgba(255, 255, 255, 0.65);
             --text-primary: #0F172A;
             --text-secondary: #334155;
-            --border-subtle: rgba(255, 255, 255, 0.4);
-            --shadow-window: 0 16px 36px rgba(0, 45, 95, 0.4);
-            --shadow-flyout: 0 10px 25px rgba(0, 0, 0, 0.35);
+            --border-subtle: rgba(255, 255, 255, 0.5);
+            --shadow-window: 0 16px 36px rgba(0, 45, 95, 0.45), inset 0 1px 0 rgba(255,255,255,0.8);
+            --shadow-flyout: 0 10px 25px rgba(0, 0, 0, 0.4);
             --radius-win: 8px;
             --radius-card: 6px;
             --taskbar-height: 48px;
         }
 
-        /* Windows 8 Metro */
+        /* --- WINDOWS 8 METRO --- */
         [data-theme="win8"] {
             --sys-font: 'Segoe UI', sans-serif;
             --win-blue: #68217A;
@@ -156,27 +139,27 @@
             --taskbar-height: 48px;
         }
 
-        /* Windows 97 / 95 Classic Retro */
-        [data-theme="win97"] {
+        /* --- WINDOWS 95 / 97 RETRO CLASSIC --- */
+        [data-theme="win95"] {
             --sys-font: 'Tahoma', 'MS Sans Serif', sans-serif;
             --win-blue: #000080;
             --win-blue-hover: #1084d0;
             --wallpaper-url: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop');
             --window-bg: #C0C0C0;
-            --window-border: #FFFFFF #808080 #808080 #FFFFFF;
+            --window-border: 2px outset #FFFFFF;
             --taskbar-bg: #C0C0C0;
-            --mica-bg: #E0E0E0;
+            --mica-bg: #D4D0C8;
             --text-primary: #000000;
-            --text-secondary: #333333;
+            --text-secondary: #222222;
             --border-subtle: #808080;
             --shadow-window: 2px 2px 0px #000000;
             --shadow-flyout: 2px 2px 0px #000000;
             --radius-win: 0px;
             --radius-card: 0px;
-            --taskbar-height: 42px;
+            --taskbar-height: 38px;
         }
 
-        /* Linux Ubuntu Yaru */
+        /* --- LINUX UBUNTU YARU --- */
         [data-theme="linux"] {
             --sys-font: 'Ubuntu', sans-serif;
             --win-blue: #E95420;
@@ -264,9 +247,13 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
-        [data-theme="winxp"] .desktop-icon-btn:hover {
-            background: rgba(49, 106, 197, 0.4);
-            border-color: #316AC5;
+        [data-theme="win95"] .desktop-icon-btn:hover {
+            background: #000080;
+            border-color: #FFFFFF;
+        }
+        [data-theme="win95"] .desktop-icon-btn:hover .lbl {
+            color: #FFFFFF !important;
+            background: #000080;
         }
 
         .desktop-icon-btn span.icon { font-size: 2.1rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); pointer-events: none; }
@@ -309,7 +296,7 @@
         }
 
         /* ==========================================================================
-           4. WINDOW FRAMES & THEMED TITLEBARS
+           4. FLOATING WINDOWS & AUTHENTIC STYLES
            ========================================================================== */
         .win-frame {
             position: absolute;
@@ -329,18 +316,34 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
-        /* Theme-specific Window Frames */
-        [data-theme="winxp"] .win-frame {
-            border: 3px solid #0055EA;
-            border-top: none;
-            background: #ECE9D8;
-            border-radius: 8px 8px 0 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        /* Win 7 Glass Frame */
+        [data-theme="win7"] .win-frame {
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background: rgba(225, 238, 255, 0.88);
+            box-shadow: 0 12px 35px rgba(0, 30, 80, 0.4), inset 0 1px 0 rgba(255,255,255,0.9);
         }
 
-        [data-theme="win97"] .win-frame {
-            border: 2px outset #FFFFFF;
+        /* Win 8 Metro Sharp Frame */
+        [data-theme="win8"] .win-frame {
+            border: 2px solid #68217A;
+            border-radius: 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Win 95 Bevel Frame */
+        [data-theme="win95"] .win-frame {
+            border: 3px outset #FFFFFF;
             background: #C0C0C0;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 2px;
+        }
+
+        /* Linux Ubuntu Frame */
+        [data-theme="linux"] .win-frame {
+            border: 1px solid #E95420;
+            background: #300A24;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
         }
 
         .win-frame.dragging {
@@ -365,34 +368,33 @@
             cursor: move;
         }
 
-        /* Windows XP Luna Titlebar */
-        [data-theme="winxp"] .win-titlebar {
-            background: linear-gradient(180deg, #0A246A 0%, #A6CAF0 100%), linear-gradient(180deg, #245EDC 0%, #3F8CF3 12%, #0055EA 50%, #0040B0 100%);
-            background: linear-gradient(180deg, #0058E6 0%, #3A93FF 8%, #0055EA 40%, #0045B5 100%);
-            color: #FFFFFF;
-            height: 32px;
-            padding: 0 6px 0 8px;
-            border-radius: 6px 6px 0 0;
-            border-bottom: none;
+        /* Win 7 Titlebar */
+        [data-theme="win7"] .win-titlebar {
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(200,225,255,0.3) 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+            height: 38px;
         }
 
-        [data-theme="winxp"] .win-title-left {
-            color: #FFFFFF !important;
-            font-weight: 800;
-            text-shadow: 1px 1px 2px #000000;
-        }
-
-        /* Windows 97 Titlebar */
-        [data-theme="win97"] .win-titlebar {
+        /* Win 95 Titlebar */
+        [data-theme="win95"] .win-titlebar {
             background: linear-gradient(90deg, #000080, #1084d0);
             color: #FFFFFF;
-            height: 28px;
-            padding: 0 4px;
+            height: 26px;
+            padding: 0 3px;
+            border-bottom: none;
         }
-
-        [data-theme="win97"] .win-title-left {
+        [data-theme="win95"] .win-title-left {
             color: #FFFFFF !important;
             font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        /* Linux Ubuntu Titlebar & Left Controls */
+        [data-theme="linux"] .win-titlebar {
+            background: #24051B;
+            height: 38px;
+            flex-direction: row-reverse;
+            padding: 0 1rem 0 0.5rem;
         }
 
         .win-title-left {
@@ -420,7 +422,6 @@
             font-size: 0.68rem;
             font-weight: 800;
             flex-shrink: 0;
-            box-shadow: 0 2px 6px rgba(0, 120, 212, 0.4);
         }
 
         .win-controls {
@@ -441,37 +442,47 @@
             transition: var(--transition);
         }
 
-        /* Windows XP Luna Window Buttons */
-        [data-theme="winxp"] .win-control-btn {
-            width: 22px;
-            height: 22px;
+        /* Win 95 Control Buttons */
+        [data-theme="win95"] .win-control-btn {
+            width: 18px;
+            height: 18px;
             margin: auto 2px;
-            background: linear-gradient(180deg, #4A9FFF 0%, #156AE8 100%);
-            border: 1px solid #FFFFFF;
-            border-radius: 3px;
-            color: #FFFFFF;
-            font-size: 0.7rem;
-            font-weight: 800;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-        }
-
-        [data-theme="winxp"] .win-control-btn.close {
-            background: linear-gradient(180deg, #FF7B60 0%, #E81123 100%);
-        }
-
-        [data-theme="win97"] .win-control-btn {
-            width: 20px;
-            height: 20px;
-            margin: 2px 2px;
             background: #C0C0C0;
-            border: 1px outset #FFFFFF;
+            border: 2px outset #FFFFFF;
             color: #000000;
             font-size: 0.65rem;
-            font-weight: 800;
+            font-weight: 900;
+        }
+        [data-theme="win95"] .win-control-btn:active {
+            border: 2px inset #FFFFFF;
         }
 
-        .win-control-btn:hover { background: var(--menu-hover); }
-        .win-control-btn.close:hover { background: #E81123; color: #FFFFFF; }
+        /* Win 7 Aero Glass Buttons */
+        [data-theme="win7"] .win-control-btn {
+            width: 32px;
+            height: 24px;
+            margin: auto 1px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        [data-theme="win7"] .win-control-btn.close:hover {
+            background: #E81123;
+            color: #fff;
+        }
+
+        /* Linux Ubuntu Circle Buttons (Orange/Gray/Red) */
+        [data-theme="linux"] .win-control-btn {
+            width: 18px;
+            height: 18px;
+            margin: auto 3px;
+            border-radius: 50%;
+            font-size: 0;
+            background: #4A4A4A;
+        }
+        [data-theme="linux"] .win-control-btn.close {
+            background: #E95420;
+        }
 
         .win-body {
             padding: 1.25rem;
@@ -511,11 +522,10 @@
             transition: var(--transition);
         }
 
-        .win-search-box input:focus {
-            border-color: var(--win-blue);
-            background: var(--window-bg);
-            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
-            width: 260px;
+        [data-theme="win95"] .win-search-box input {
+            border: 2px inset #FFFFFF;
+            background: #FFFFFF;
+            color: #000000;
         }
 
         .win-search-box svg {
@@ -550,41 +560,25 @@
             overflow: hidden;
         }
 
-        /* Themed Menu Tiles */
-        [data-theme="winxp"] .win-tile {
-            border: 1px solid #7F9DB9;
-            background: #FFFFFF;
-            border-radius: 4px;
-        }
-
-        [data-theme="winxp"] .win-tile:hover {
-            background: #FFE88C;
-            border-color: #0055EA;
-        }
-
         [data-theme="win8"] .win-tile {
-            border-radius: 0px;
-            background: #EDE8F5;
+            border-radius: 0;
             border: none;
+            background: #EDE8F5;
         }
 
-        [data-theme="win97"] .win-tile {
+        [data-theme="win95"] .win-tile {
             border: 2px outset #FFFFFF;
-            background: #D4D0C8;
-            border-radius: 0px;
+            background: #C0C0C0;
+            border-radius: 0;
+        }
+        [data-theme="win95"] .win-tile:active {
+            border: 2px inset #FFFFFF;
         }
 
         [data-theme="linux"] .win-tile {
             background: #3C1033;
             border: 1px solid #E95420;
             color: #FFFFFF;
-        }
-
-        .win-tile:hover, .win-tile:active {
-            transform: translateY(-3px);
-            background: var(--window-bg);
-            border-color: var(--win-blue);
-            box-shadow: 0 10px 22px rgba(0, 120, 212, 0.16);
         }
 
         .tile-pin-btn {
@@ -597,11 +591,6 @@
             border-radius: 4px;
             background: rgba(0,0,0,0.06);
             transition: var(--transition);
-        }
-
-        .tile-pin-btn:hover, .tile-pin-btn:active {
-            background: var(--win-blue);
-            color: #fff;
         }
 
         .tile-icon-box {
@@ -617,8 +606,8 @@
             transition: var(--transition);
         }
 
-        [data-theme="win8"] .tile-icon-box, [data-theme="win97"] .tile-icon-box {
-            border-radius: 0px;
+        [data-theme="win8"] .tile-icon-box, [data-theme="win95"] .tile-icon-box {
+            border-radius: 0;
         }
 
         .tile-title {
@@ -649,25 +638,17 @@
             gap: 4px;
         }
 
-        [data-theme="win97"] .notepad-btn {
+        [data-theme="win95"] .notepad-btn {
             border: 2px outset #FFFFFF;
             background: #C0C0C0;
-            border-radius: 0px;
+            border-radius: 0;
+        }
+        [data-theme="win95"] .notepad-btn:active {
+            border: 2px inset #FFFFFF;
         }
 
-        .notepad-btn:hover {
-            background: var(--win-blue);
-            color: #fff;
-            border-color: var(--win-blue);
-        }
-
-        /* Notepad */
-        #notepadWindow {
-            max-width: 520px;
-            height: 380px;
-            display: none;
-        }
-
+        /* Notepad Specific */
+        #notepadWindow { max-width: 520px; height: 380px; display: none; }
         .notepad-toolbar {
             display: flex;
             align-items: center;
@@ -678,7 +659,6 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-
         .notepad-textarea {
             width: 100%;
             height: calc(100% - 44px - 34px);
@@ -692,215 +672,15 @@
             resize: none;
             user-select: text;
         }
+        [data-theme="win95"] .notepad-textarea { background: #FFFFFF; color: #000000; }
 
-        /* Watermark */
-        #watermarkWindow {
-            max-width: 680px;
-            display: none;
-        }
-
-        .watermark-grid-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-
-        .form-group-win {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .form-group-win label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .form-group-win input {
-            background: var(--mica-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 0.78rem;
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        .watermark-canvas-container {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            background: var(--mica-bg);
-            min-height: 200px;
-            max-height: 320px;
-            overflow: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        #wmCanvas {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        /* File Explorer */
-        #explorerWindow {
-            max-width: 680px;
-            height: 480px;
-            display: none;
-        }
-
-        .explorer-dropzone {
-            border: 2px dashed var(--win-blue);
-            border-radius: var(--radius-card);
-            padding: 1.5rem;
-            text-align: center;
-            background: var(--mica-bg);
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 1rem;
-        }
-
-        .explorer-preview-area {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-card);
-            padding: 0.85rem;
-            background: var(--window-bg);
-            min-height: 200px;
-            max-height: 280px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Gempa Warning Window */
-        #gempaWindow {
-            max-width: 480px;
-            display: none;
-            border: 1.5px solid #EE2737;
-        }
-
-        .gempa-content-card {
-            background: rgba(238, 39, 55, 0.06);
-            border-radius: var(--radius-card);
-            border: 1px solid rgba(238, 39, 55, 0.2);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            font-size: 0.82rem;
-        }
-
-        .gempa-header-mag {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .gempa-mag-badge {
-            background: #EE2737;
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            font-size: 0.95rem;
-            font-weight: 800;
-            box-shadow: 0 4px 10px rgba(238, 39, 55, 0.35);
-        }
-
-        /* Radio Window */
-        #radioWindow {
-            max-width: 480px;
-            display: none;
-        }
-
-        .radio-box {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-            padding: 1.25rem;
-            background: var(--mica-bg);
-            border-radius: var(--radius-card);
-            border: 1px solid var(--border-subtle);
-            text-align: center;
-        }
-
-        .radio-visualizer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            height: 24px;
-            margin: 0.25rem 0;
-        }
-
-        .radio-visualizer span {
-            width: 4px;
-            height: 8px;
-            background: var(--win-blue);
-            border-radius: 2px;
-            transition: height 0.2s ease;
-        }
-
-        .radio-visualizer.playing span {
-            animation: bounceBar 0.8s infinite alternate ease-in-out;
-        }
-
-        @keyframes bounceBar {
-            from { height: 6px; }
-            to { height: 22px; }
-        }
-
-        .radio-play-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--win-blue);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin: 0 auto;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(0, 120, 212, 0.4);
-            transition: var(--transition);
-        }
-
-        .radio-play-btn:hover {
-            transform: scale(1.08);
-            background: var(--win-blue-hover);
-        }
-
-        .station-btn-active {
-            background: var(--win-blue) !important;
-            color: #fff !important;
-            border-color: var(--win-blue) !important;
-        }
-
-        /* ==========================================================================
-           5. THEME PICKER DIALOG / WINDOW
-           ========================================================================== */
-        #themeWindow {
-            max-width: 520px;
-            display: none;
-        }
-
+        /* Theme Picker */
+        #themeWindow { max-width: 520px; display: none; }
         .theme-grid-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.75rem;
         }
-
         .theme-card-btn {
             display: flex;
             align-items: center;
@@ -913,13 +693,11 @@
             text-align: left;
             transition: var(--transition);
         }
-
         .theme-card-btn:hover, .theme-card-btn.active {
             border-color: var(--win-blue);
             background: var(--window-bg);
             transform: translateY(-2px);
         }
-
         .theme-preview-badge {
             width: 38px;
             height: 38px;
@@ -933,8 +711,10 @@
         }
 
         /* ==========================================================================
-           6. AUTHENTIC MULTI-THEME START MENU
+           5. START MENUS (AUTENTIK SESUAI OS)
            ========================================================================== */
+        
+        /* Default / Win 11 Start Menu */
         .start-menu {
             position: absolute;
             bottom: calc(var(--taskbar-height) + 12px);
@@ -958,59 +738,69 @@
             gap: 1rem;
         }
 
-        /* Windows XP 2-Column Start Menu */
-        [data-theme="winxp"] .start-menu {
-            border: 2px solid #0055EA;
-            background: #FFFFFF;
-            left: 12px !important;
-            transform: translateY(10px) !important;
-            width: 420px;
-            border-radius: 6px 6px 0 0;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 2px 2px 14px rgba(0,0,0,0.5);
-        }
-
-        [data-theme="winxp"] .start-xp-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(180deg, #0055EA 0%, #245EDC 100%);
-            color: #FFFFFF;
-            padding: 0.75rem 1rem;
-            font-weight: 800;
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        [data-theme="winxp"] .start-xp-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: #FFFFFF;
-            min-height: 280px;
-        }
-
-        [data-theme="winxp"] .start-xp-right {
-            background: #D3E5FA;
-            border-left: 1px solid #95BEEE;
-            padding: 0.5rem;
-        }
-
-        [data-theme="win97"] .start-menu {
-            border: 2px outset #FFFFFF;
-            background: #C0C0C0;
-            left: 12px !important;
-            transform: translateY(10px) !important;
-            width: 280px;
-        }
-
         .start-menu.open {
             opacity: 1;
             pointer-events: auto;
             transform: translateX(-50%) translateY(0) scale(1);
         }
 
-        [data-theme="winxp"] .start-menu.open, [data-theme="win97"] .start-menu.open {
-            transform: translateY(0) scale(1) !important;
+        /* Win 7 Start Menu (Left Aligned, Blue Glass Header) */
+        [data-theme="win7"] .start-menu {
+            left: 12px !important;
+            transform: translateY(15px) !important;
+            width: 440px;
+            background: rgba(235, 245, 255, 0.95);
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(0, 30, 80, 0.4);
+        }
+        [data-theme="win7"] .start-menu.open {
+            transform: translateY(0) !important;
+        }
+
+        /* Win 95 Retro Start Menu (Left Aligned, Bevel 3D, Vertical Banner) */
+        [data-theme="win95"] .start-menu {
+            border: 3px outset #FFFFFF !important;
+            background: #C0C0C0 !important;
+            left: 0px !important;
+            bottom: var(--taskbar-height) !important;
+            transform: none !important;
+            width: 320px !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: 2px 2px 8px #000 !important;
+        }
+        [data-theme="win95"] .win95-start-wrap {
+            display: flex;
+        }
+        [data-theme="win95"] .win95-sidebar-banner {
+            width: 36px;
+            background: linear-gradient(180deg, #000080, #1084d0);
+            color: #FFFFFF;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            padding: 8px 4px;
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        /* Win 8 Fullscreen Metro Start Screen */
+        [data-theme="win8"] .start-menu {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            border-radius: 0 !important;
+            background: #68217A !important;
+            border: none !important;
+            color: #FFFFFF !important;
+            padding: 2.5rem 3rem !important;
+            transform: scale(1.05) !important;
+        }
+        [data-theme="win8"] .start-menu.open {
+            transform: scale(1) !important;
         }
 
         .start-search-bar {
@@ -1037,6 +827,21 @@
             max-height: 220px;
             overflow-y: auto;
         }
+
+        [data-theme="win8"] .start-pinned-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            max-height: 70vh;
+        }
+        [data-theme="win8"] .start-pinned-item {
+            background: #0078D7 !important;
+            border-radius: 0 !important;
+            padding: 1rem 0.5rem !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="win8"] .start-pinned-item:nth-child(2n) { background: #008A00 !important; }
+        [data-theme="win8"] .start-pinned-item:nth-child(3n) { background: #D24726 !important; }
+        [data-theme="win8"] .start-pinned-item:nth-child(4n) { background: #825A2C !important; }
 
         .start-pinned-item {
             display: flex;
@@ -1120,7 +925,7 @@
         }
 
         /* ==========================================================================
-           7. TASKBAR
+           6. TASKBAR (AUTHENTIC OS DESIGNS)
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -1138,16 +943,12 @@
             gap: 0.5rem;
         }
 
-        [data-theme="winxp"] .win-taskbar {
-            border-top: 1px solid #4387E8;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-            backdrop-filter: none;
-        }
-
-        [data-theme="win97"] .win-taskbar {
+        /* Win 95 Taskbar Bar */
+        [data-theme="win95"] .win-taskbar {
             border-top: 2px outset #FFFFFF;
             background: #C0C0C0;
             backdrop-filter: none;
+            padding: 2px 4px;
         }
 
         .taskbar-left {
@@ -1167,9 +968,9 @@
             gap: 5px;
         }
 
-        [data-theme="winxp"] .taskbar-status-text, [data-theme="win7"] .taskbar-status-text {
+        [data-theme="win7"] .taskbar-status-text {
             color: #FFFFFF !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px #000000;
         }
 
         .taskbar-center-scrollable {
@@ -1198,14 +999,6 @@
             padding-right: 0.25rem;
         }
 
-        [data-theme="winxp"] .taskbar-tray {
-            background: linear-gradient(180deg, #166AE8 0%, #0C43A8 100%);
-            border-left: 1px solid #104AB8;
-            padding: 0 8px;
-            height: 100%;
-            border-radius: 0;
-        }
-
         .task-btn {
             width: 40px;
             height: 40px;
@@ -1222,33 +1015,43 @@
             flex-shrink: 0;
         }
 
-        /* Windows XP Green Start Button */
-        [data-theme="winxp"] #startBtn {
-            width: auto;
-            padding: 0 12px;
-            height: 38px;
-            background: linear-gradient(180deg, #388E3C 0%, #4CAF50 10%, #2E7D32 85%, #1B5E20 100%);
-            border-radius: 0 10px 10px 0;
-            box-shadow: 2px 0 6px rgba(0,0,0,0.3);
-            color: #FFFFFF;
-            font-weight: 900;
-            font-style: italic;
-            font-size: 0.95rem;
-            border: 1px solid #2E7D32;
-            text-shadow: 1px 1px 2px #000;
+        /* Win 7 Start Orb Icon (Round Glass Button) */
+        [data-theme="win7"] #startBtn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 30%, #54A0FF 0%, #0040B0 70%, #001A50 100%);
+            box-shadow: 0 0 10px rgba(84, 160, 255, 0.8), inset 0 1px 2px rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.6);
         }
 
-        [data-theme="win97"] .task-btn {
+        /* Win 95 Retro Start Button */
+        [data-theme="win95"] #startBtn {
+            width: auto;
+            padding: 2px 10px;
+            height: 30px;
+            background: #C0C0C0;
+            border: 2px outset #FFFFFF;
+            font-weight: 900;
+            font-size: 0.8rem;
+            display: inline-flex;
+            gap: 4px;
+        }
+        [data-theme="win95"] #startBtn:active {
+            border: 2px inset #FFFFFF;
+        }
+
+        [data-theme="win95"] .task-btn {
             width: auto;
             padding: 2px 8px;
             height: 28px;
             background: #C0C0C0;
             border: 2px outset #FFFFFF;
             font-weight: 800;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
+            border-radius: 0;
         }
-
-        [data-theme="win97"] .task-btn:active {
+        [data-theme="win95"] .task-btn:active {
             border: 2px inset #FFFFFF;
         }
 
@@ -1264,7 +1067,8 @@
             background: var(--win-blue);
         }
 
-        [data-theme="winxp"] .task-btn.active::after, [data-theme="win97"] .task-btn.active::after { display: none; }
+        [data-theme="win95"] .task-btn.active::after { display: none; }
+        [data-theme="win95"] .task-btn.active { border: 2px inset #FFFFFF; background: #D4D0C8; }
 
         .win-start-logo {
             display: grid;
@@ -1290,14 +1094,15 @@
             white-space: nowrap;
         }
 
-        [data-theme="winxp"] .tray-clock, [data-theme="win7"] .tray-clock {
+        [data-theme="win7"] .tray-clock {
             color: #FFFFFF !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px #000;
         }
 
-        [data-theme="win97"] .tray-clock {
+        [data-theme="win95"] .tray-clock {
             border: 2px inset #FFFFFF;
             background: #C0C0C0;
+            padding: 2px 6px;
         }
 
         .toast-container {
@@ -1340,7 +1145,7 @@
         }
 
         /* ==========================================================================
-           8. RESPONSIVE MOBILE FIX
+           7. RESPONSIVE MOBILE FIX
            ========================================================================== */
         @media (max-width: 768px) {
             .win-frame {
@@ -1379,9 +1184,9 @@
                 padding: 1rem;
             }
 
-            [data-theme="winxp"] .start-menu, [data-theme="win97"] .start-menu {
+            [data-theme="win7"] .start-menu, [data-theme="win95"] .start-menu {
                 left: 8px !important;
-                width: calc(100vw - 16px);
+                width: calc(100vw - 16px) !important;
             }
 
             .start-pinned-grid {
@@ -1426,14 +1231,14 @@
         <!-- 1. Portal Hub -->
         <div class="win-frame minimized" id="mainWindow" style="top: 6%; left: calc(50% - 430px);">
             <div class="win-titlebar" id="mainTitlebar">
-                <div class="win-title-left">
-                    <div class="win-app-logo">BM</div>
-                    <span>Portal Building Management Hub</span>
-                </div>
                 <div class="win-controls">
                     <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('mainWindow', 'taskbarHubBtn')">─</button>
                     <button class="win-control-btn" title="Maximize" onclick="OS.toggleFullscreen()">□</button>
                     <button class="win-control-btn close" title="Tutup Jendela" onclick="OS.minimizeWindow('mainWindow', 'taskbarHubBtn')">✕</button>
+                </div>
+                <div class="win-title-left">
+                    <div class="win-app-logo">BM</div>
+                    <span>Portal Building Management Hub</span>
                 </div>
             </div>
 
@@ -1454,71 +1259,16 @@
             </div>
         </div>
 
-        <!-- 2. Watermark & Image Compressor -->
-        <div class="win-frame" id="watermarkWindow" style="top: 10%; left: calc(50% - 340px);">
-            <div class="win-titlebar" id="watermarkTitlebar">
-                <div class="win-title-left">
-                    <div class="win-app-logo" style="background:#F97316;">📸</div>
-                    <span>Watermark & Kompresi Foto Dokumentasi</span>
-                </div>
-                <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('watermarkWindow', 'taskbarWatermarkBtn')">─</button>
-                    <button class="win-control-btn close" title="Tutup" onclick="Watermarker.close()">✕</button>
-                </div>
-            </div>
-
-            <div class="win-body">
-                <input type="file" id="wmFileInput" accept="image/*" style="display:none;" onchange="Watermarker.loadImage(this.files)">
-                
-                <div class="watermark-grid-form">
-                    <div class="form-group-win">
-                        <label>Nama Teknisi / Petugas:</label>
-                        <input type="text" id="wmInputName" value="Sutrisno" oninput="Watermarker.redraw()">
-                    </div>
-                    <div class="form-group-win">
-                        <label>Lokasi / Unit Kantor:</label>
-                        <div style="display:flex; gap:4px;">
-                            <input type="text" id="wmInputLocation" value="Unit KC Surabaya" style="flex:1;" oninput="Watermarker.redraw()">
-                            <button class="notepad-btn" onclick="Watermarker.getGPSLocation()" title="Ambil GPS Otomatis">📍 GPS</button>
-                        </div>
-                    </div>
-                    <div class="form-group-win">
-                        <label>Tanggal & Jam (Otomatis):</label>
-                        <input type="text" id="wmInputDatetime" readonly style="opacity:0.8;">
-                    </div>
-                    <div class="form-group-win">
-                        <label>Kompresi & Ukuran Maksimal:</label>
-                        <input type="text" value="JPEG High Quality (Max 1200px)" readonly style="opacity:0.8;">
-                    </div>
-                </div>
-
-                <div class="watermark-canvas-container" id="wmCanvasWrap" onclick="document.getElementById('wmFileInput').click()">
-                    <span id="wmPlaceholderText" style="font-size:0.85rem; color:var(--text-secondary); text-align:center; cursor:pointer;">
-                        📷 Klik di sini untuk memilih foto dari Kamera / Galeri HP / Komputer
-                    </span>
-                    <canvas id="wmCanvas" style="display:none;"></canvas>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <span id="wmFileInfoText" style="font-size:0.75rem; color:var(--text-secondary);">Belum ada foto</span>
-                    <div style="display:flex; gap:6px;">
-                        <button class="notepad-btn" onclick="document.getElementById('wmFileInput').click()">Ganti Foto 📷</button>
-                        <button class="notepad-btn" style="background:var(--win-blue); color:#fff; border:none;" onclick="Watermarker.downloadImage()">Unduh Foto Watermark ⬇</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Theme Switcher -->
+        <!-- 2. Theme Customizer -->
         <div class="win-frame" id="themeWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="themeTitlebar">
-                <div class="win-title-left">
-                    <div class="win-app-logo" style="background:#8B5CF6;">🎨</div>
-                    <span>Theme Customizer — Pilih Gaya Tampilan OS</span>
-                </div>
                 <div class="win-controls">
                     <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('themeWindow', 'taskbarThemeBtn')">─</button>
                     <button class="win-control-btn close" title="Tutup" onclick="ThemeEngine.close()">✕</button>
+                </div>
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#8B5CF6;">🎨</div>
+                    <span>Pilih Tema Sistem Operasi</span>
                 </div>
             </div>
 
@@ -1527,22 +1277,77 @@
             </div>
         </div>
 
+        <!-- 3. Watermark -->
+        <div class="win-frame" id="watermarkWindow" style="top: 10%; left: calc(50% - 340px);">
+            <div class="win-titlebar" id="watermarkTitlebar">
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('watermarkWindow', 'taskbarWatermarkBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="Watermarker.close()">✕</button>
+                </div>
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#F97316;">📸</div>
+                    <span>Watermark & Kompresi Foto Dokumentasi</span>
+                </div>
+            </div>
+
+            <div class="win-body">
+                <input type="file" id="wmFileInput" accept="image/*" style="display:none;" onchange="Watermarker.loadImage(this.files)">
+                
+                <div class="watermark-grid-form" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:0.72rem; font-weight:700;">Nama Petugas:</label>
+                        <input type="text" id="wmInputName" value="Sutrisno" oninput="Watermarker.redraw()" style="padding:6px 10px; font-size:0.78rem;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:0.72rem; font-weight:700;">Lokasi / Unit:</label>
+                        <div style="display:flex; gap:4px;">
+                            <input type="text" id="wmInputLocation" value="Unit KC Surabaya" style="flex:1; padding:6px 10px; font-size:0.78rem;" oninput="Watermarker.redraw()">
+                            <button class="notepad-btn" onclick="Watermarker.getGPSLocation()">📍 GPS</button>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:0.72rem; font-weight:700;">Tanggal & Jam:</label>
+                        <input type="text" id="wmInputDatetime" readonly style="padding:6px 10px; font-size:0.78rem; opacity:0.8;">
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:0.72rem; font-weight:700;">Ukuran Output:</label>
+                        <input type="text" value="JPEG Max 1200px (Kecil)" readonly style="padding:6px 10px; font-size:0.78rem; opacity:0.8;">
+                    </div>
+                </div>
+
+                <div class="watermark-canvas-container" id="wmCanvasWrap" onclick="document.getElementById('wmFileInput').click()" style="border:1px solid var(--border-subtle); padding:1rem; border-radius:8px; min-height:180px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    <span id="wmPlaceholderText" style="font-size:0.85rem; color:var(--text-secondary); text-align:center;">
+                        📷 Klik di sini untuk memilih foto dari Kamera / Galeri HP / PC
+                    </span>
+                    <canvas id="wmCanvas" style="display:none; max-width:100%; max-height:260px;"></canvas>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:0.75rem;">
+                    <span id="wmFileInfoText" style="font-size:0.75rem; color:var(--text-secondary);">Belum ada foto</span>
+                    <div style="display:flex; gap:6px;">
+                        <button class="notepad-btn" onclick="document.getElementById('wmFileInput').click()">Ganti Foto 📷</button>
+                        <button class="notepad-btn" style="background:var(--win-blue); color:#fff; border:none;" onclick="Watermarker.downloadImage()">Unduh Foto ⬇</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 4. Notepad -->
         <div class="win-frame" id="notepadWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="notepadTitlebar">
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('notepadWindow', 'taskbarNotepadBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="Notepad.close()">✕</button>
+                </div>
                 <div class="win-title-left">
                     <div class="win-app-logo" style="background:#107C41;">📝</div>
                     <span>Notepad — Catatan Teknisi</span>
                 </div>
-                <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('notepadWindow', 'taskbarNotepadBtn')">─</button>
-                    <button class="win-control-btn close" title="Tutup Notepad" onclick="Notepad.close()">✕</button>
-                </div>
             </div>
             
             <div class="notepad-toolbar">
-                <span id="notepadStatus" style="color:var(--text-secondary);">Tersimpan otomatis di localhost</span>
-                <div class="notepad-actions">
+                <span id="notepadStatus" style="color:var(--text-secondary);">Tersimpan di localhost</span>
+                <div style="display:flex; gap:4px;">
                     <button class="notepad-btn" onclick="Notepad.clear()">Baru</button>
                     <button class="notepad-btn" onclick="Notepad.download()">Export TXT</button>
                 </div>
@@ -1554,35 +1359,32 @@
         <!-- 5. File Explorer -->
         <div class="win-frame" id="explorerWindow" style="top: 12%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="explorerTitlebar">
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('explorerWindow', 'taskbarExplorerBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="FileExplorer.close()">✕</button>
+                </div>
                 <div class="win-title-left">
                     <div class="win-app-logo" style="background:#FDB813; color:#000;">📁</div>
                     <span>File Explorer — Buka Berkas Perangkat</span>
-                </div>
-                <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('explorerWindow', 'taskbarExplorerBtn')">─</button>
-                    <button class="win-control-btn close" title="Tutup Explorer" onclick="FileExplorer.close()">✕</button>
                 </div>
             </div>
 
             <div class="win-body">
                 <input type="file" id="filePickerInput" style="display:none;" onchange="FileExplorer.handleFiles(this.files)">
                 
-                <div class="explorer-dropzone" onclick="document.getElementById('filePickerInput').click()">
-                    <div style="font-size:2.2rem; margin-bottom:4px;">📂</div>
-                    <strong style="font-size:0.9rem;">Klik atau Tarik Berkas ke Sini</strong>
-                    <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">Mendukung Gambar, PDF, File Teks, Audio, & Video</p>
+                <div style="border:2px dashed var(--win-blue); border-radius:8px; padding:1.5rem; text-align:center; cursor:pointer;" onclick="document.getElementById('filePickerInput').click()">
+                    <div style="font-size:2.2rem;">📂</div>
+                    <strong>Klik untuk Pilih Berkas dari HP / Komputer</strong>
+                    <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Gambar, PDF, File Teks, Audio & Video</p>
                 </div>
 
-                <div class="explorer-preview-area" id="filePreviewContainer">
-                    <span style="color:var(--text-secondary); font-size:0.8rem;">Belum ada berkas yang dibuka.</span>
+                <div id="filePreviewContainer" style="border:1px solid var(--border-subtle); border-radius:8px; padding:0.85rem; min-height:180px; margin-top:0.75rem; display:flex; align-items:center; justify-content:center;">
+                    <span style="color:var(--text-secondary); font-size:0.8rem;">Belum ada berkas dibuka.</span>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem;">
-                    <span id="fileMetaInfo" style="font-size:0.75rem; color:var(--text-secondary);">0 Berkas dipilih</span>
-                    <div style="display:flex; gap:6px;">
-                        <button class="notepad-btn" onclick="FileExplorer.sendToNotepad()">Buka di Notepad 📝</button>
-                        <button class="notepad-btn" onclick="document.getElementById('filePickerInput').click()">Pilih Berkas Lain 📁</button>
-                    </div>
+                    <span id="fileMetaInfo" style="font-size:0.75rem; color:var(--text-secondary);">0 Berkas</span>
+                    <button class="notepad-btn" onclick="FileExplorer.sendToNotepad()">Buka di Notepad 📝</button>
                 </div>
             </div>
         </div>
@@ -1590,13 +1392,13 @@
         <!-- 6. Gempa BMKG Alert -->
         <div class="win-frame" id="gempaWindow" style="top: 16%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="gempaTitlebar">
-                <div class="win-title-left">
-                    <div class="win-app-logo" style="background:#EE2737;">⚠️</div>
-                    <span>Peringatan Gempa Terkini (BMKG)</span>
-                </div>
                 <div class="win-controls">
                     <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('gempaWindow', 'taskbarGempaBtn')">─</button>
                     <button class="win-control-btn close" title="Tutup" onclick="GempaAlert.close()">✕</button>
+                </div>
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#EE2737;">⚠️</div>
+                    <span>Peringatan Gempa Terkini (BMKG)</span>
                 </div>
             </div>
 
@@ -1627,13 +1429,13 @@
         <!-- 7. Radio Online -->
         <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('radioWindow', 'taskbarRadioBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="RadioPlayer.close()">✕</button>
+                </div>
                 <div class="win-title-left">
                     <div class="win-app-logo" style="background:#8B5CF6;">📻</div>
                     <span>World Radio Online Player</span>
-                </div>
-                <div class="win-controls">
-                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('radioWindow', 'taskbarRadioBtn')">─</button>
-                    <button class="win-control-btn close" title="Tutup Radio" onclick="RadioPlayer.close()">✕</button>
                 </div>
             </div>
 
@@ -1655,7 +1457,7 @@
                     <audio id="audioStream" preload="none"></audio>
 
                     <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.75rem; text-align:left;">
-                        Pilihan Stasiun Radio HTTPS Dunia:
+                        Stasiun Radio Pilihan:
                     </div>
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:0.25rem;" id="radioStationGrid"></div>
@@ -1668,24 +1470,30 @@
     <!-- START MENU -->
     <div class="start-menu" id="startMenu">
         
-        <div id="startMenuStandardView">
+        <!-- Win95 Special Layout Container -->
+        <div class="win95-start-wrap" style="display:none;" id="win95StartContainer">
+            <div class="win95-sidebar-banner">WINDOWS 95</div>
+            <div style="flex:1; padding:4px;" id="win95MenuItemsList"></div>
+        </div>
+
+        <!-- Standard Start Menu Layout -->
+        <div id="standardStartContainer">
             <div class="start-search-bar">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
                 <input type="text" placeholder="Type here to search apps, files, settings..." onkeyup="OS.handleSearch(this.value)">
             </div>
 
             <div style="margin-top:0.75rem;">
-                <div class="start-section-header">
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:800; padding:0 4px;">
                     <span>Pinned</span>
-                    <button class="start-all-btn" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
+                    <button class="notepad-btn" style="padding:2px 8px; font-size:0.68rem;" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
                 </div>
-                <div class="start-pinned-grid" id="startPinnedGrid"></div>
+                <div class="start-pinned-grid" id="startPinnedGrid" style="margin-top:6px;"></div>
             </div>
 
             <div style="margin-top:0.75rem;">
-                <div class="start-section-header">
+                <div style="font-size:0.75rem; font-weight:800; padding:0 4px; margin-bottom:4px;">
                     <span>Recommended</span>
-                    <span style="font-size:0.7rem; color:var(--text-secondary);">Recent</span>
                 </div>
                 <div class="start-recommended-list">
                     <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();">
@@ -1699,7 +1507,7 @@
                         <span style="font-size:1.4rem;">🎨</span>
                         <div class="rec-info">
                             <h5>Pilihan Tema OS</h5>
-                            <p>Win 11, Win 7, Win 8, Win 97, Linux, XP</p>
+                            <p>Win 11, 7, 8, 95, Linux</p>
                         </div>
                     </div>
                 </div>
@@ -1714,26 +1522,11 @@
                     </div>
                 </div>
 
-                <div class="start-power-actions">
+                <div style="display:flex; gap:4px;">
                     <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
                     <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
-                    <button class="task-btn" onclick="OS.showToast('Sistem Enterprise Siaga', 'info')" title="Power Options">⏻</button>
+                    <button class="task-btn" onclick="OS.showToast('Sistem Siaga', 'info')" title="Power">⏻</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Windows XP Specific Start Menu Layout -->
-        <div id="startMenuXPView" style="display:none;">
-            <div class="start-xp-header">
-                <div style="width:32px; height:32px; border-radius:4px; background:#fff; color:#0055EA; display:flex; align-items:center; justify-content:center; font-weight:900;">S</div>
-                <span>Sutrisno - Building Management</span>
-            </div>
-            <div class="start-xp-body">
-                <div style="padding:0.5rem;" id="startXPPinnedLeft"></div>
-                <div class="start-xp-right" id="startXPPinnedRight"></div>
-            </div>
-            <div style="background:#245EDC; padding:0.4rem 0.75rem; display:flex; justify-content:flex-end; gap:6px;">
-                <button class="notepad-btn" style="background:#E81123; color:#fff; border:none;" onclick="OS.toggleStart()">Log Off / Turn Off</button>
             </div>
         </div>
 
@@ -1754,8 +1547,7 @@
                     <span></span><span></span>
                     <span></span><span></span>
                 </div>
-                <span id="startTextWinXP" style="display:none;">start</span>
-                <span id="startTextWin97" style="display:none;">Start</span>
+                <span id="startTextWin95" style="display:none;">🏁 Start</span>
             </button>
             <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
@@ -1804,17 +1596,16 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastBox"></div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT ENGINE -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
         const THEMES_LIST = [
-            { id: 'win11', name: 'Windows 11 Fluent', icon: '🪟', color: '#0078D4', desc: 'Modern acrylic glass, rounded corners & centered taskbar' },
-            { id: 'winxp', name: 'Windows XP Luna', icon: '🌄', color: '#0055EA', desc: 'Tema Bliss klasik, taskbar biru gradien & start menu hijau' },
-            { id: 'win7', name: 'Windows 7 Aero', icon: '💎', color: '#2E86DE', desc: 'Efek kaca tembus pandang Aero Glass & gradien biru klasik' },
-            { id: 'win8', name: 'Windows 8 Metro', icon: '🟦', color: '#68217A', desc: 'Gaya flat metro tile, sharp edge & aksen ungu modern' },
-            { id: 'win97', name: 'Windows 97 / 95 Classic', icon: '💾', color: '#000080', desc: 'Tampilan retro klasik 90-an, tombol bevel 3D & font Tahoma' },
-            { id: 'linux', name: 'Linux Ubuntu Yaru', icon: '🐧', color: '#E95420', desc: 'Aksen oranye khas Ubuntu Linux, dark purple aubergine' }
+            { id: 'win11', name: 'Windows 11 Fluent', icon: '🪟', color: '#0078D4', desc: 'Desain acrylic glass, sudut rounded & taskbar modern' },
+            { id: 'win7', name: 'Windows 7 Aero Glass', icon: '💎', color: '#2E86DE', desc: 'Aero Glass transparan & tombol Start Orb bulat biru' },
+            { id: 'win8', name: 'Windows 8 Metro', icon: '🟦', color: '#68217A', desc: 'Fullscreen Metro Start Screen kotak solid & sudut tajam' },
+            { id: 'win95', name: 'Windows 95/97 Classic', icon: '💾', color: '#000080', desc: 'Bevel 3D timbul abu-abu retro & titlebar Navy Blue' },
+            { id: 'linux', name: 'Linux Ubuntu Yaru', icon: '🐧', color: '#E95420', desc: 'Aubergine dark theme dengan kontrol tombol di sebelah kiri' }
         ];
 
         const MODULES = [
@@ -1826,8 +1617,8 @@
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
-            // Themes & Tools
-            { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, XP, 7, 8, 97, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
+            // Tools
+            { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, 7, 8, 95, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
             { id: 'watermark', title: 'Watermark Foto', sub: 'Kompres & Cap Tanggal/Lokasi', icon: '📸', color: '#F97316', action: 'watermark' },
             { id: 'explorer', title: 'File Explorer', sub: 'Buka File HP & PC', icon: '📁', color: '#FDB813', action: 'explorer' },
             { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
@@ -1841,19 +1632,19 @@
             { id: 'gemini', title: 'Google Gemini', sub: 'gemini.google.com', icon: '✨', color: '#1BA1E2', url: 'https://gemini.google.com' },
             { id: 'chatgpt', title: 'ChatGPT AI', sub: 'chatgpt.com', icon: '🤖', color: '#10A37F', url: 'https://chatgpt.com' },
             
-            // Office & Productivity
+            // Office
             { id: 'maps', title: 'Google Maps', sub: 'maps.google.com', icon: '🗺️', color: '#34A853', url: 'https://maps.google.com' },
             { id: 'spreadsheet', title: 'Google Sheets', sub: 'sheets.new', icon: '📊', color: '#0F9D58', url: 'https://sheets.new' },
             { id: 'excel', title: 'MS Excel Online', sub: 'excel.office.com', icon: '📗', color: '#107C41', url: 'https://www.office.com/launch/excel' },
             { id: 'word', title: 'MS Word Online', sub: 'word.office.com', icon: '📘', color: '#005A9E', url: 'https://www.office.com/launch/word' },
             
-            // Media & Tools
+            // Media
             { id: 'radio', title: 'Radio Dunia', sub: 'World Radio Player', icon: '📻', color: '#8B5CF6', action: 'radio' },
             { id: 'youtube', title: 'YouTube', sub: 'Streaming Video', icon: '▶️', color: '#FF0000', url: 'https://www.youtube.com' },
             { id: 'chrome', title: 'Google Chrome', sub: 'Web Browser', icon: '🌐', color: '#4285F4', url: 'https://www.google.com' },
             { id: 'gempa', title: 'Peringatan Gempa', sub: 'BMKG Real-time', icon: '⚠️', color: '#EE2737', action: 'gempa' },
             
-            // Sub Modules GAS
+            // Sub Modules
             { id: 'dashboard', title: 'Dashboard Utama', sub: 'Statistik operasional', icon: '📊', color: '#3B82F6', url: `${BASE_GAS_URL}?page=dashboard` },
             { id: 'dashboard-checklist-pm', title: 'Rekap Checklist', sub: 'Statistik harian', icon: '📈', color: '#00AA13', url: `${BASE_GAS_URL}?page=dashboard-checklist-pm` },
             { id: 'progres-jadwal-pm', title: 'Progress PM', sub: 'Realisasi jadwal', icon: '⏳', color: '#6366F1', url: `${BASE_GAS_URL}?page=progres-jadwal-pm` },
@@ -1873,65 +1664,52 @@
         ];
 
         /**
-         * THEME SWITCHER ENGINE (TERMUTAKHIR DENGAN WINDOWS XP)
+         * THEME ENGINE
          */
         const ThemeEngine = {
             init() {
                 const saved = localStorage.getItem('app_os_theme') || 'win11';
                 this.applyTheme(saved);
-                this.renderThemeCards();
             },
             applyTheme(themeId) {
                 document.documentElement.setAttribute('data-theme', themeId);
                 localStorage.setItem('app_os_theme', themeId);
 
                 const logo = document.getElementById('taskbarStartLogo');
-                const textXP = document.getElementById('startTextWinXP');
-                const text97 = document.getElementById('startTextWin97');
-                const stdStart = document.getElementById('startMenuStandardView');
-                const xpStart = document.getElementById('startMenuXPView');
+                const text95 = document.getElementById('startTextWin95');
+                const stdStart = document.getElementById('standardStartContainer');
+                const win95Start = document.getElementById('win95StartContainer');
 
-                if (themeId === 'winxp') {
+                if (themeId === 'win95') {
                     if (logo) logo.style.display = 'none';
-                    if (textXP) textXP.style.display = 'inline';
-                    if (text97) text97.style.display = 'none';
+                    if (text95) text95.style.display = 'inline-flex';
                     if (stdStart) stdStart.style.display = 'none';
-                    if (xpStart) xpStart.style.display = 'block';
-                    this.renderXPStartMenu();
-                } else if (themeId === 'win97') {
-                    if (logo) logo.style.display = 'none';
-                    if (textXP) textXP.style.display = 'none';
-                    if (text97) text97.style.display = 'inline';
-                    if (stdStart) stdStart.style.display = 'block';
-                    if (xpStart) xpStart.style.display = 'none';
+                    if (win95Start) win95Start.style.display = 'flex';
+                    this.renderWin95Menu();
                 } else {
                     if (logo) logo.style.display = 'grid';
-                    if (textXP) textXP.style.display = 'none';
-                    if (text97) text97.style.display = 'none';
+                    if (text95) text95.style.display = 'none';
                     if (stdStart) stdStart.style.display = 'block';
-                    if (xpStart) xpStart.style.display = 'none';
+                    if (win95Start) win95Start.style.display = 'none';
                 }
 
                 this.renderThemeCards();
             },
-            renderXPStartMenu() {
-                const left = document.getElementById('startXPPinnedLeft');
-                const right = document.getElementById('startXPPinnedRight');
-                if (!left || !right) return;
+            renderWin95Menu() {
+                const list = document.getElementById('win95MenuItemsList');
+                if (!list) return;
 
-                left.innerHTML = MODULES.slice(0, 7).map(m => `
-                    <div style="display:flex; align-items:center; gap:6px; padding:4px; cursor:pointer;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
-                        <span style="font-size:1.2rem;">${m.icon}</span>
-                        <span style="font-size:0.75rem; font-weight:700; color:#000;">${m.title}</span>
+                list.innerHTML = MODULES.slice(0, 10).map(m => `
+                    <div style="display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
+                        <span style="font-size:1.1rem;">${m.icon}</span>
+                        <span>${m.title}</span>
                     </div>
-                `).join('');
-
-                right.innerHTML = MODULES.slice(7, 14).map(m => `
-                    <div style="display:flex; align-items:center; gap:6px; padding:4px; cursor:pointer;" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
-                        <span style="font-size:1.2rem;">${m.icon}</span>
-                        <span style="font-size:0.72rem; font-weight:700; color:#0A246A;">${m.title}</span>
+                `).join('') + `
+                    <div style="border-top:1px solid #808080; margin:4px 0; padding-top:4px; display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="OS.showToast('Shutting Down Windows 95...', 'info'); OS.toggleStart();">
+                        <span>🚪</span>
+                        <span>Shut Down...</span>
                     </div>
-                `).join('');
+                `;
             },
             renderThemeCards() {
                 const con = document.getElementById('themeSelectorContainer');
@@ -2096,16 +1874,16 @@
             getGPSLocation() {
                 Sound.click();
                 if (!navigator.geolocation) {
-                    OS.showToast('Geolocation tidak didukung pada browser');
+                    OS.showToast('Geolocation tidak didukung');
                     return;
                 }
-                OS.showToast('Mengambil titik koordinat GPS...');
+                OS.showToast('Mengambil GPS...');
                 navigator.geolocation.getCurrentPosition((pos) => {
                     const lat = pos.coords.latitude.toFixed(5);
                     const lon = pos.coords.longitude.toFixed(5);
                     document.getElementById('wmInputLocation').value = `GPS: ${lat}, ${lon} (Surabaya)`;
                     this.redraw();
-                    OS.showToast('Koordinat GPS berhasil disematkan');
+                    OS.showToast('Koordinat GPS disematkan');
                 }, () => {
                     OS.showToast('Izin GPS ditolak');
                 }, { timeout: 8000 });
@@ -2121,7 +1899,7 @@
                 link.download = `Doc_BM_${new Date().toISOString().slice(0,10)}_${Date.now().toString().slice(-4)}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.75);
                 link.click();
-                OS.showToast('Foto watermark berhasil diunduh');
+                OS.showToast('Foto terkompresi diunduh');
             }
         };
 
@@ -2170,11 +1948,11 @@
                 } else if (file.type.startsWith('audio/')) {
                     const url = URL.createObjectURL(file);
                     preview.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
-                    OS.showToast('Audio lokal dimuat');
+                    OS.showToast('Audio dimuat');
                 } else if (file.type.startsWith('video/')) {
                     const url = URL.createObjectURL(file);
                     preview.innerHTML = `<video controls src="${url}" style="max-width:100%; max-height:220px; border-radius:6px;"></video>`;
-                    OS.showToast('Video lokal dimuat');
+                    OS.showToast('Video dimuat');
                 } else {
                     const reader = new FileReader();
                     reader.onload = (e) => {
@@ -2188,13 +1966,13 @@
             sendToNotepad() {
                 Sound.click();
                 if (!this.currentTextContent) {
-                    OS.showToast('Tidak ada teks yang dapat dikirim ke Notepad');
+                    OS.showToast('Tidak ada teks untuk Notepad');
                     return;
                 }
                 document.getElementById('notepadContent').value = this.currentTextContent;
                 localStorage.setItem(Notepad.storageKey, this.currentTextContent);
                 Notepad.open();
-                OS.showToast('File dibuka di Notepad');
+                OS.showToast('Dibuka di Notepad');
             },
             escapeHTML(str) {
                 return str.replace(/[&<>'"]/g, tag => ({
@@ -2337,7 +2115,7 @@
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             },
             getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_pos_v8' : 'win_pinned_desktop_pos_v8';
+                return this.isMobile() ? 'win_pinned_mobile_pos_v9' : 'win_pinned_desktop_pos_v9';
             },
             getPinnedIcons() {
                 const key = this.getStorageKey();
@@ -2435,7 +2213,7 @@
                 el.addEventListener('input', () => {
                     localStorage.setItem(this.storageKey, el.value);
                     const status = document.getElementById('notepadStatus');
-                    status.innerText = 'Menyimpan ke localhost...';
+                    status.innerText = 'Menyimpan di localhost...';
                     setTimeout(() => {
                         status.innerText = 'Tersimpan di localhost';
                     }, 400);
@@ -2551,7 +2329,6 @@
         const Wallpaper = {
             list: [
                 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop',
