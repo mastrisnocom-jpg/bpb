@@ -221,29 +221,6 @@
             transform: translateY(-2px);
         }
 
-        .profile-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.3rem 0.6rem 0.3rem 0.3rem;
-            border-radius: var(--radius-pill);
-            background: var(--bg-hover);
-            cursor: pointer;
-        }
-
-        .profile-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.85rem;
-        }
-
         /* ==========================================================================
            3. APP LAYOUT
            ========================================================================== */
@@ -269,33 +246,6 @@
             transition: var(--transition);
             overflow-y: auto;
         }
-
-        .sidebar-user {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem;
-            background: var(--bg-hover);
-            border-radius: var(--radius-md);
-            margin-bottom: 1.25rem;
-        }
-
-        .sidebar-user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .sidebar-user-info h4 { font-size: 0.85rem; font-weight: 800; }
-        .sidebar-user-info p { font-size: 0.72rem; color: var(--accent-green); font-weight: 700; }
 
         .sidebar-menu-title {
             font-size: 0.68rem;
@@ -341,7 +291,7 @@
         }
 
         /* ==========================================================================
-           4. REDESIGNED PORTAL CARDS (100% OPERASIONAL BM)
+           4. PORTAL CARDS & OPERASIONAL
            ========================================================================== */
         .portal-container {
             max-width: 540px;
@@ -444,8 +394,6 @@
             transition: var(--transition);
         }
 
-        .circle-icon svg { width: 26px; height: 26px; }
-
         .menu-label {
             font-size: 0.72rem;
             font-weight: 700;
@@ -544,7 +492,7 @@
             display: none;
             justify-content: space-around;
             align-items: center;
-            padding: 0 0.5rem;
+            padding: 0 1rem;
             z-index: 1000;
             box-shadow: var(--shadow-bottom-nav);
         }
@@ -556,7 +504,7 @@
             justify-content: center;
             gap: 4px;
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 700;
             flex: 1;
             padding: 6px 0;
@@ -646,7 +594,7 @@
 
         @media (max-width: 991px) {
             .app-sidebar { width: var(--sidebar-width-collapsed); }
-            .sidebar-user, .sidebar-menu-title, .nav-item span { display: none; }
+            .sidebar-menu-title, .nav-item span { display: none; }
             .app-main-content { margin-left: var(--sidebar-width-collapsed); }
         }
 
@@ -689,9 +637,6 @@
             <button class="icon-btn" id="themeToggleBtn" onclick="Theme.toggle()" title="Toggle Tema" aria-label="Theme Switch">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"></path></svg>
             </button>
-            <div class="profile-btn" onclick="Router.navigate('profil')">
-                <div class="profile-avatar">S</div>
-            </div>
         </div>
     </header>
 
@@ -701,14 +646,6 @@
         <!-- SIDEBAR DESKTOP -->
         <aside class="app-sidebar" id="sidebar">
             <div>
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar">S</div>
-                    <div class="sidebar-user-info">
-                        <h4>Sutrisno</h4>
-                        <p>Unit Leader BM</p>
-                    </div>
-                </div>
-
                 <div class="sidebar-menu-title">Daftar Modul BM</div>
                 <ul class="nav-list" id="sidebarNavList">
                     <!-- Dynamic Sidebar Modules -->
@@ -741,10 +678,6 @@
         <a href="javascript:void(0)" onclick="App.openAllMenuModal()" class="bottom-nav-item">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"></path></svg>
             <span>Semua Modul</span>
-        </a>
-        <a href="#/profil" class="bottom-nav-item" data-route="profil">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path></svg>
-            <span>Profil</span>
         </a>
     </nav>
 
@@ -785,7 +718,7 @@
             { id: 'index', title: 'Portal Index', desc: 'Indeks navigasi lengkap sistem GAS', icon: '📁', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        // 8 Modul Prioritas untuk Tampilan Grid Depan
+        // 7 Modul Prioritas + 1 Menu Tambahan (Total 8 Grid Utama)
         const PRIMARY_GRID_IDS = [
             'kerusakan',
             'jadwal-kerusakan',
@@ -864,8 +797,6 @@
 
                 if (route === 'beranda') {
                     content.innerHTML = this.viewHome();
-                } else if (route === 'profil') {
-                    content.innerHTML = this.viewProfile();
                 } else if (gasMatch) {
                     content.innerHTML = this.viewModuleDetail(gasMatch);
                 } else {
@@ -938,7 +869,7 @@
                                     </div>
                                 `).join('')}
 
-                                <!-- Tombol Semua Menu -->
+                                <!-- Tombol Semua Modul -->
                                 <div class="menu-item-btn" onclick="App.openAllMenuModal()">
                                     <div class="circle-icon" style="background: #2563EB;">
                                         📁
@@ -1008,7 +939,7 @@
 
                             <div style="background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.5rem; text-align:left; font-size:0.8rem; display:flex; flex-direction:column; gap:0.4rem;">
                                 <div><strong>Integrasi:</strong> Google Apps Script Web App</div>
-                                <div><strong>Target:</strong> Full Window Direct Access (Bypass iFrame Lock)</div>
+                                <div><strong>Target:</strong> Full Window Direct Access</div>
                                 <div><strong>Status Sistem:</strong> <span style="color:var(--accent-green); font-weight:700;">Siap Digunakan</span></div>
                             </div>
 
@@ -1020,25 +951,6 @@
                                     Kembali ke Beranda
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                `;
-            },
-            viewProfile() {
-                return `
-                    <div class="portal-container">
-                        <div class="section-card" style="text-align:center;">
-                            <div class="sidebar-user-avatar" style="width:70px; height:70px; margin:0 auto 1rem; font-size:1.6rem;">S</div>
-                            <h3 style="font-weight:800;">SUTRISNO</h3>
-                            <p style="font-size:0.8rem; color:var(--accent-green); font-weight:700; margin-bottom:1.5rem;">Unit Leader Building Management</p>
-                            
-                            <div style="text-align:left; font-size:0.85rem; display:flex; flex-direction:column; gap:0.75rem; background:var(--bg-hover); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.25rem;">
-                                <div><strong>ID Teknisi:</strong> BM-2026-901</div>
-                                <div><strong>Wilayah Kerja:</strong> KC Surabaya & 9 Kantor Cabang</div>
-                                <div><strong>Sistem:</strong> Google Apps Script Engine</div>
-                            </div>
-
-                            <button class="btn-direct" onclick="Router.navigate('beranda')">Kembali ke Beranda</button>
                         </div>
                     </div>
                 `;
