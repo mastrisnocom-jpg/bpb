@@ -470,8 +470,8 @@
         .notepad-btn {
             background: var(--window-bg);
             border: 1px solid var(--border-subtle);
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 0.72rem;
             font-weight: 700;
             color: var(--text-primary);
@@ -533,7 +533,9 @@
             box-shadow: 0 4px 10px rgba(238, 39, 55, 0.35);
         }
 
-        /* Radio Player Window */
+        /* ==========================================================================
+           5. IMPROVED RADIO ONLINE PLAYER
+           ========================================================================== */
         #radioWindow {
             max-width: 480px;
             display: none;
@@ -542,16 +544,74 @@
         .radio-box {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            padding: 1rem;
+            gap: 0.85rem;
+            padding: 1.25rem;
             background: var(--mica-bg);
             border-radius: var(--radius-card);
             border: 1px solid var(--border-subtle);
             text-align: center;
         }
 
+        .radio-visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 24px;
+            margin: 0.25rem 0;
+        }
+
+        .radio-visualizer span {
+            width: 4px;
+            height: 8px;
+            background: var(--win-blue);
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        .radio-visualizer.playing span {
+            animation: bounceBar 0.8s infinite alternate ease-in-out;
+        }
+        .radio-visualizer.playing span:nth-child(2) { animation-delay: 0.2s; }
+        .radio-visualizer.playing span:nth-child(3) { animation-delay: 0.4s; }
+        .radio-visualizer.playing span:nth-child(4) { animation-delay: 0.1s; }
+        .radio-visualizer.playing span:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes bounceBar {
+            from { height: 6px; }
+            to { height: 22px; }
+        }
+
+        .radio-play-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--win-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin: 0 auto;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 120, 212, 0.4);
+            transition: var(--transition);
+        }
+
+        .radio-play-btn:hover {
+            transform: scale(1.08);
+            background: var(--win-blue-hover);
+        }
+
+        .station-btn-active {
+            background: var(--win-blue) !important;
+            color: #fff !important;
+            border-color: var(--win-blue) !important;
+        }
+
         /* ==========================================================================
-           5. TASKBAR (FLEXBOX 3-ZONE CLEAN)
+           6. TASKBAR (FLEXBOX 3-ZONE CLEAN)
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -571,7 +631,7 @@
         .taskbar-left {
             display: flex;
             align-items: center;
-            min-width: 110px;
+            min-width: 90px;
             flex: 1;
         }
 
@@ -598,7 +658,7 @@
             align-items: center;
             justify-content: flex-end;
             gap: 0.25rem;
-            min-width: 110px;
+            min-width: 90px;
             flex: 1;
         }
 
@@ -773,7 +833,7 @@
         }
 
         /* ==========================================================================
-           6. RESPONSIVE MOBILE FIX
+           7. RESPONSIVE MOBILE FIX
            ========================================================================== */
         @media (max-width: 768px) {
             .win-frame {
@@ -979,7 +1039,7 @@
             </div>
         </div>
 
-        <!-- 4. Windows Radio Online Window (Radio Dunia) -->
+        <!-- 4. Windows Radio Online Window (Pilihan Radio Dunia HTTPS) -->
         <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
                 <div class="win-title-left">
@@ -992,29 +1052,29 @@
                 </div>
             </div>
 
-            <div class="win-body" style="padding: 1.2rem;">
+            <div class="win-body" style="padding: 1.25rem;">
                 <div class="radio-box">
-                    <h3 id="radioChannelName" style="font-size:1.05rem; font-weight:800;">Suara Surabaya FM</h3>
-                    <p id="radioCountryInfo" style="font-size:0.75rem; color:var(--text-secondary);">🇮🇩 Indonesia • Live Stream</p>
+                    <h3 id="radioChannelName" style="font-size:1.1rem; font-weight:800;">Suara Surabaya FM</h3>
+                    <p id="radioCountryInfo" style="font-size:0.78rem; color:var(--text-secondary);">🇮🇩 Indonesia • Berita & Informasi</p>
                     
-                    <audio id="audioStream" controls style="width:100%; margin-top:0.5rem;">
-                        <source src="https://stream.suarasurabaya.net/stream" type="audio/mpeg">
-                        Browser Anda tidak mendukung audio player.
-                    </audio>
-
-                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.5rem; text-align:left;">
-                        Stasiun Radio Pilihan Dunia:
+                    <div class="radio-visualizer" id="radioVisualizer">
+                        <span></span><span></span><span></span><span></span><span></span>
                     </div>
 
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:0.25rem;">
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Suara Surabaya FM', '🇮🇩 Indonesia • Berita & Musik', 'https://stream.suarasurabaya.net/stream')">🇮🇩 Suara Surabaya</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Prambors Jakarta', '🇮🇩 Indonesia • Top Hits', 'https://masima.rastream.com/masima-pramborsjakarta')">🇮🇩 Prambors FM</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('BBC World Service', '🇬🇧 UK • Global News', 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service')">🇬🇧 BBC World</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Capital FM London', '🇬🇧 UK • Hit Music', 'https://media-ice.musicradio.com/CapitalMP3')">🇬🇧 Capital FM</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Hot 97 New York', '🇺🇸 USA • Hip-Hop & RnB', 'https://stream.revma.ihrhls.com/zc1469')">🇺🇸 Hot 97 NYC</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Jazz24 Seattle', '🇺🇸 USA • Classic Jazz', 'https://live.wostreaming.net/manifest/kplufm-mp3-128')">🇺🇸 Jazz24 USA</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Tokyo FM Hits', '🇯🇵 Japan • J-Pop Hits', 'https://stream-node0.rri.co.id/streaming/9/9001/rripro1-jakarta.mp3')">🇯🇵 Japan Hits</button>
-                        <button class="notepad-btn" onclick="RadioPlayer.changeStation('Radio Garden Worldwide', '🌍 Global Radio Map', 'https://radio.garden')">🌍 Radio Garden ↗</button>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:1.25rem; margin:0.4rem 0;">
+                        <button class="radio-play-btn" id="radioMainPlayBtn" onclick="RadioPlayer.togglePlay()">▶</button>
+                    </div>
+
+                    <div id="radioStatusText" style="font-size:0.75rem; font-weight:700; color:var(--win-blue);">Siap Diputar</div>
+
+                    <audio id="audioStream" preload="none"></audio>
+
+                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; margin-top:0.75rem; text-align:left;">
+                        Pilihan Stasiun Radio HTTPS Dunia:
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:0.25rem;" id="radioStationGrid">
+                        <!-- Rendered by RadioPlayer.renderStations() -->
                     </div>
                 </div>
             </div>
@@ -1110,7 +1170,7 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT: LOGIC & FREE DRAGGABLE ICONS
+         4. JAVASCRIPT: LOGIC, DRAGGABLE ICONS & AUDIO ENGINE
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
@@ -1157,7 +1217,6 @@
             { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        // Tile yang tampil di jendela hub utama
         const PRIMARY_IDS = [
             'kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm',
             'bmis', 'belfis', 'absensi', 'gemini',
@@ -1167,8 +1226,134 @@
         ];
 
         /**
-         * FREE DRAGGABLE DESKTOP ICONS WITH LOCALSTORAGE POSITIONING
+         * STASIUN RADIO STREAMING HTTPS 100% TERUJI
          */
+        const RADIO_STATIONS = [
+            { name: 'Suara Surabaya FM', country: '🇮🇩 Indonesia • Berita & Musik', url: 'https://stream.suarasurabaya.net/stream' },
+            { name: 'Prambors Radio', country: '🇮🇩 Indonesia • Hits Anak Muda', url: 'https://masima.rastream.com/masima-pramborsjakarta' },
+            { name: 'Hard Rock FM', country: '🇮🇩 Indonesia • Lifestyle & Rock', url: 'https://stream.radiorepublika.id:8000/hardrockfm' },
+            { name: 'BBC World Service', country: '🇬🇧 United Kingdom • Global News', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service' },
+            { name: 'Virgin Radio Paris', country: '🇫🇷 France • European Hits', url: 'https://stream.rcs.revma.com/virgin.mp3' },
+            { name: 'DanceWave Europe', country: '🇪🇺 Europe • Top Dance Music', url: 'https://dancewave.online/dance.mp3' },
+            { name: 'Jazz24 Seattle', country: '🇺🇸 USA • Smooth Jazz', url: 'https://live.wostreaming.net/manifest/kplufm-mp3-128' },
+            { name: 'Radio Garden Map', country: '🌍 Radio Seluruh Dunia Live', url: 'https://radio.garden' }
+        ];
+
+        const RadioPlayer = {
+            currentIdx: 0,
+            isPlaying: false,
+            init() {
+                this.renderStations();
+                const audio = document.getElementById('audioStream');
+                
+                audio.addEventListener('playing', () => {
+                    this.isPlaying = true;
+                    document.getElementById('radioMainPlayBtn').innerText = '⏸';
+                    document.getElementById('radioVisualizer').classList.add('playing');
+                    document.getElementById('radioStatusText').innerText = 'Sedang Memutar (Live)';
+                });
+
+                audio.addEventListener('pause', () => {
+                    this.isPlaying = false;
+                    document.getElementById('radioMainPlayBtn').innerText = '▶';
+                    document.getElementById('radioVisualizer').classList.remove('playing');
+                    document.getElementById('radioStatusText').innerText = 'Dijeda (Paused)';
+                });
+
+                audio.addEventListener('waiting', () => {
+                    document.getElementById('radioStatusText').innerText = 'Menghubungkan stream (Buffering)...';
+                });
+
+                audio.addEventListener('error', () => {
+                    this.isPlaying = false;
+                    document.getElementById('radioMainPlayBtn').innerText = '▶';
+                    document.getElementById('radioVisualizer').classList.remove('playing');
+                    document.getElementById('radioStatusText').innerText = 'Gagal memutar (Server offline/blokir)';
+                });
+            },
+            renderStations() {
+                const con = document.getElementById('radioStationGrid');
+                con.innerHTML = RADIO_STATIONS.map((st, i) => `
+                    <button class="notepad-btn ${i === this.currentIdx ? 'station-btn-active' : ''}" id="st_btn_${i}" onclick="RadioPlayer.selectStation(${i})">
+                        ${st.name}
+                    </button>
+                `).join('');
+            },
+            selectStation(idx) {
+                Sound.click();
+                this.currentIdx = idx;
+                const st = RADIO_STATIONS[idx];
+
+                if (st.url.includes('radio.garden')) {
+                    window.open(st.url, '_blank', 'noopener,noreferrer');
+                    return;
+                }
+
+                document.querySelectorAll('#radioStationGrid button').forEach((b, i) => {
+                    b.classList.toggle('station-btn-active', i === idx);
+                });
+
+                document.getElementById('radioChannelName').innerText = st.name;
+                document.getElementById('radioCountryInfo').innerText = st.country;
+                document.getElementById('radioStatusText').innerText = 'Memuat saluran...';
+
+                const audio = document.getElementById('audioStream');
+                audio.src = st.url;
+                audio.load();
+                
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.warn("Autoplay dicegah browser:", error);
+                        document.getElementById('radioStatusText').innerText = 'Klik tombol Play ▶ di atas untuk memutar';
+                    });
+                }
+            },
+            togglePlay() {
+                Sound.click();
+                const audio = document.getElementById('audioStream');
+                if (!audio.src || audio.src === '') {
+                    this.selectStation(0);
+                    return;
+                }
+                if (audio.paused) {
+                    audio.play().catch(() => {});
+                } else {
+                    audio.pause();
+                }
+            },
+            open() {
+                Sound.click();
+                const win = document.getElementById('radioWindow');
+                const btn = document.getElementById('taskbarRadioBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                if (btn) btn.classList.add('active');
+                OS.bringToFront('radioWindow');
+                if (!this.isPlaying) {
+                    const audio = document.getElementById('audioStream');
+                    if (!audio.src) this.selectStation(0);
+                }
+            },
+            close() {
+                Sound.click();
+                const win = document.getElementById('radioWindow');
+                const btn = document.getElementById('taskbarRadioBtn');
+                win.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+                const audio = document.getElementById('audioStream');
+                audio.pause();
+            },
+            toggle() {
+                const win = document.getElementById('radioWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            }
+        };
+
         const DeviceManager = {
             isMobile() {
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -1188,48 +1373,6 @@
             savePinnedIcons(icons) {
                 const key = this.getStorageKey();
                 localStorage.setItem(key, JSON.stringify(icons));
-            }
-        };
-
-        const RadioPlayer = {
-            open() {
-                Sound.click();
-                const win = document.getElementById('radioWindow');
-                const btn = document.getElementById('taskbarRadioBtn');
-                win.style.display = 'flex';
-                win.classList.remove('minimized');
-                if (btn) btn.classList.add('active');
-                OS.bringToFront('radioWindow');
-            },
-            close() {
-                Sound.click();
-                const win = document.getElementById('radioWindow');
-                const btn = document.getElementById('taskbarRadioBtn');
-                win.style.display = 'none';
-                if (btn) btn.classList.remove('active');
-                const audio = document.getElementById('audioStream');
-                audio.pause();
-            },
-            toggle() {
-                const win = document.getElementById('radioWindow');
-                if (win.style.display === 'none' || win.classList.contains('minimized')) {
-                    this.open();
-                } else {
-                    this.close();
-                }
-            },
-            changeStation(name, country, url) {
-                Sound.click();
-                if (url.startsWith('http') && !url.endsWith('.mp3') && !url.includes('stream')) {
-                    window.open(url, '_blank', 'noopener,noreferrer');
-                    return;
-                }
-                document.getElementById('radioChannelName').innerText = name;
-                document.getElementById('radioCountryInfo').innerText = country;
-                const audio = document.getElementById('audioStream');
-                audio.src = url;
-                audio.play();
-                OS.showToast(`Memutar: ${name}`);
             }
         };
 
@@ -1557,6 +1700,7 @@
                 Wallpaper.init();
                 Notepad.init();
                 GempaAlert.init();
+                RadioPlayer.init();
                 this.renderTiles();
                 this.renderDesktopIcons();
                 this.renderStartApps();
