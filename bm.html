@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="win11">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Enterprise OS - Portal Building Management</title>
+    <title>Enterprise OS - Multi-Theme Building Management</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Plus Jakarta Sans & Retro Monospace -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
@@ -76,46 +76,106 @@
         }
 
         /* ==========================================================================
-           2. DESIGN SYSTEM & VARIABLES
+           2. MULTI-THEME ENGINE (VARIABLES & SYSTEM STYLES)
            ========================================================================== */
-        :root {
+        :root, [data-theme="win11"] {
+            --sys-font: 'Plus Jakarta Sans', sans-serif;
             --win-blue: #0078D4;
             --win-blue-hover: #106EBE;
-            
-            --mica-bg: rgba(243, 243, 243, 0.78);
             --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop');
             --window-bg: rgba(255, 255, 255, 0.92);
             --window-border: rgba(255, 255, 255, 0.5);
             --taskbar-bg: rgba(243, 243, 243, 0.88);
-            --menu-hover: rgba(0, 0, 0, 0.08);
-
+            --mica-bg: rgba(243, 243, 243, 0.78);
             --text-primary: #1C1C1C;
             --text-secondary: #5C5C5C;
             --border-subtle: rgba(0, 0, 0, 0.08);
-
-            --shadow-window: 0 20px 45px rgba(0, 0, 0, 0.25), 0 0 1px rgba(255,255,255,0.5);
+            --shadow-window: 0 20px 45px rgba(0, 0, 0, 0.25);
             --shadow-flyout: 0 12px 30px rgba(0, 0, 0, 0.22);
-
             --radius-win: 12px;
             --radius-card: 10px;
             --taskbar-height: 52px;
-            --transition: all 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+            --start-btn-style: 'grid';
         }
 
-        [data-theme="dark"] {
-            --mica-bg: rgba(32, 32, 32, 0.8);
-            --wallpaper-url: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6');
-            --window-bg: rgba(28, 28, 28, 0.92);
-            --window-border: rgba(255, 255, 255, 0.12);
-            --taskbar-bg: rgba(24, 24, 24, 0.88);
-            --menu-hover: rgba(255, 255, 255, 0.1);
+        /* Windows 7 Aero Glass */
+        [data-theme="win7"] {
+            --sys-font: 'Segoe UI', Tahoma, sans-serif;
+            --win-blue: #2E86DE;
+            --win-blue-hover: #54A0FF;
+            --wallpaper-url: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop');
+            --window-bg: rgba(235, 245, 255, 0.78);
+            --window-border: rgba(255, 255, 255, 0.75);
+            --taskbar-bg: linear-gradient(180deg, rgba(40, 75, 115, 0.75) 0%, rgba(15, 30, 50, 0.88) 100%);
+            --mica-bg: rgba(255, 255, 255, 0.55);
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --border-subtle: rgba(255, 255, 255, 0.4);
+            --shadow-window: 0 16px 36px rgba(0, 45, 95, 0.4);
+            --shadow-flyout: 0 10px 25px rgba(0, 0, 0, 0.35);
+            --radius-win: 8px;
+            --radius-card: 6px;
+            --taskbar-height: 48px;
+        }
 
+        /* Windows 8 Metro */
+        [data-theme="win8"] {
+            --sys-font: 'Segoe UI', sans-serif;
+            --win-blue: #68217A;
+            --win-blue-hover: #7E2A94;
+            --wallpaper-url: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop');
+            --window-bg: #FFFFFF;
+            --window-border: #68217A;
+            --taskbar-bg: #1F1F1F;
+            --mica-bg: #F1F1F1;
+            --text-primary: #000000;
+            --text-secondary: #444444;
+            --border-subtle: #D2D2D2;
+            --shadow-window: 0 8px 24px rgba(0, 0, 0, 0.25);
+            --shadow-flyout: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --radius-win: 0px;
+            --radius-card: 0px;
+            --taskbar-height: 48px;
+        }
+
+        /* Windows 97 / 95 Classic Retro */
+        [data-theme="win97"] {
+            --sys-font: 'Tahoma', 'MS Sans Serif', sans-serif;
+            --win-blue: #000080;
+            --win-blue-hover: #1084d0;
+            --wallpaper-url: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop');
+            --window-bg: #C0C0C0;
+            --window-border: #FFFFFF #808080 #808080 #FFFFFF;
+            --taskbar-bg: #C0C0C0;
+            --mica-bg: #E0E0E0;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --border-subtle: #808080;
+            --shadow-window: 2px 2px 0px #000000;
+            --shadow-flyout: 2px 2px 0px #000000;
+            --radius-win: 0px;
+            --radius-card: 0px;
+            --taskbar-height: 42px;
+        }
+
+        /* Linux Ubuntu Yaru */
+        [data-theme="linux"] {
+            --sys-font: 'Ubuntu', sans-serif;
+            --win-blue: #E95420;
+            --win-blue-hover: #77216F;
+            --wallpaper-url: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop');
+            --window-bg: #300A24;
+            --window-border: #E95420;
+            --taskbar-bg: #111111;
+            --mica-bg: #4A154B;
             --text-primary: #FFFFFF;
-            --text-secondary: #A0A0A0;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-
-            --shadow-window: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255,255,255,0.1);
-            --shadow-flyout: 0 12px 30px rgba(0, 0, 0, 0.5);
+            --text-secondary: #DDDDDD;
+            --border-subtle: rgba(255, 255, 255, 0.15);
+            --shadow-window: 0 16px 36px rgba(0, 0, 0, 0.6);
+            --shadow-flyout: 0 10px 24px rgba(0, 0, 0, 0.5);
+            --radius-win: 10px;
+            --radius-card: 8px;
+            --taskbar-height: 50px;
         }
 
         * {
@@ -123,7 +183,7 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: var(--sys-font);
             user-select: none;
         }
 
@@ -246,6 +306,11 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
+        [data-theme="win97"] .win-frame {
+            border: 2px outset #FFFFFF;
+            background: #C0C0C0;
+        }
+
         .win-frame.dragging {
             transition: none !important;
         }
@@ -266,6 +331,18 @@
             border-bottom: 1px solid var(--border-subtle);
             flex-shrink: 0;
             cursor: move;
+        }
+
+        [data-theme="win97"] .win-titlebar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: #FFFFFF;
+            height: 28px;
+            padding: 0 4px;
+        }
+
+        [data-theme="win97"] .win-title-left {
+            color: #FFFFFF !important;
+            font-size: 0.75rem;
         }
 
         .win-title-left {
@@ -312,6 +389,17 @@
             color: var(--text-primary);
             cursor: pointer;
             transition: var(--transition);
+        }
+
+        [data-theme="win97"] .win-control-btn {
+            width: 20px;
+            height: 20px;
+            margin: 2px 2px;
+            background: #C0C0C0;
+            border: 1px outset #FFFFFF;
+            color: #000000;
+            font-size: 0.65rem;
+            font-weight: 800;
         }
 
         .win-control-btn:hover { background: var(--menu-hover); }
@@ -394,6 +482,11 @@
             overflow: hidden;
         }
 
+        [data-theme="win97"] .win-tile {
+            border: 2px outset #FFFFFF;
+            background: #D4D0C8;
+        }
+
         .win-tile:hover, .win-tile:active {
             transform: translateY(-3px);
             background: var(--window-bg);
@@ -444,7 +537,6 @@
             margin-top: 3px;
         }
 
-        /* Generic Windows UI Controls */
         .notepad-btn {
             background: var(--window-bg);
             border: 1px solid var(--border-subtle);
@@ -458,6 +550,12 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
+        }
+
+        [data-theme="win97"] .notepad-btn {
+            border: 2px outset #FFFFFF;
+            background: #C0C0C0;
+            border-radius: 0px;
         }
 
         .notepad-btn:hover {
@@ -498,9 +596,7 @@
             user-select: text;
         }
 
-        /* ==========================================================================
-           5. WATERMARK & IMAGE COMPRESSOR WINDOW
-           ========================================================================== */
+        /* Watermark */
         #watermarkWindow {
             max-width: 680px;
             display: none;
@@ -534,11 +630,6 @@
             font-size: 0.78rem;
             color: var(--text-primary);
             outline: none;
-        }
-
-        .form-group-win input:focus {
-            border-color: var(--win-blue);
-            background: var(--window-bg);
         }
 
         .watermark-canvas-container {
@@ -578,11 +669,6 @@
             cursor: pointer;
             transition: var(--transition);
             margin-bottom: 1rem;
-        }
-
-        .explorer-dropzone:hover {
-            background: rgba(0, 120, 212, 0.08);
-            border-color: var(--win-blue-hover);
         }
 
         .explorer-preview-area {
@@ -709,7 +795,52 @@
         }
 
         /* ==========================================================================
-           6. AUTHENTIC WINDOWS 11 START MENU
+           6. THEME PICKER DIALOG / WINDOW
+           ========================================================================== */
+        #themeWindow {
+            max-width: 500px;
+            display: none;
+        }
+
+        .theme-grid-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .theme-card-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem;
+            background: var(--mica-bg);
+            border: 1.5px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+        }
+
+        .theme-card-btn:hover, .theme-card-btn.active {
+            border-color: var(--win-blue);
+            background: var(--window-bg);
+            transform: translateY(-2px);
+        }
+
+        .theme-preview-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        /* ==========================================================================
+           7. AUTHENTIC MULTI-THEME START MENU
            ========================================================================== */
         .start-menu {
             position: absolute;
@@ -720,7 +851,7 @@
             max-width: calc(100vw - 24px);
             background: var(--window-bg);
             border: 1px solid var(--window-border);
-            border-radius: 14px;
+            border-radius: var(--radius-win);
             box-shadow: var(--shadow-flyout);
             backdrop-filter: blur(36px);
             -webkit-backdrop-filter: blur(36px);
@@ -734,10 +865,22 @@
             gap: 1rem;
         }
 
+        [data-theme="win97"] .start-menu {
+            border: 2px outset #FFFFFF;
+            background: #C0C0C0;
+            left: 12px !important;
+            transform: translateY(10px) !important;
+            width: 280px;
+        }
+
         .start-menu.open {
             opacity: 1;
             pointer-events: auto;
             transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        [data-theme="win97"] .start-menu.open {
+            transform: translateY(0) scale(1) !important;
         }
 
         .start-search-bar {
@@ -755,43 +898,6 @@
             color: var(--text-primary);
             outline: none;
             transition: var(--transition);
-        }
-
-        .start-search-bar input:focus {
-            border-color: var(--win-blue);
-            background: var(--window-bg);
-            box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.25);
-        }
-
-        .start-search-bar svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 15px;
-            height: 15px;
-            color: var(--text-secondary);
-        }
-
-        .start-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            padding: 0 0.25rem;
-        }
-
-        .start-all-btn {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 4px;
-            background: var(--mica-bg);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            cursor: pointer;
         }
 
         .start-pinned-grid {
@@ -883,18 +989,8 @@
             cursor: pointer;
         }
 
-        .start-user-pill:hover {
-            background: var(--menu-hover);
-        }
-
-        .start-power-actions {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
         /* ==========================================================================
-           7. TASKBAR (FLEXBOX 3-ZONE CLEAN)
+           8. TASKBAR (ADAPTIVE SYSTEM TASKBAR)
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -905,17 +1001,24 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 0.75rem;
+            padding: 0 0.5rem;
             z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
             position: relative;
+            gap: 0.5rem;
+        }
+
+        [data-theme="win97"] .win-taskbar {
+            border-top: 2px outset #FFFFFF;
+            background: #C0C0C0;
+            backdrop-filter: none;
         }
 
         .taskbar-left {
             display: flex;
             align-items: center;
-            min-width: 90px;
-            flex: 1;
+            flex-shrink: 0;
+            padding-left: 0.25rem;
         }
 
         .taskbar-status-text {
@@ -928,12 +1031,21 @@
             gap: 5px;
         }
 
-        .taskbar-center {
+        .taskbar-center-scrollable {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            flex: 2;
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 4px;
+        }
+
+        .taskbar-center-scrollable::-webkit-scrollbar {
+            display: none;
         }
 
         .taskbar-tray {
@@ -941,13 +1053,13 @@
             align-items: center;
             justify-content: flex-end;
             gap: 0.25rem;
-            min-width: 90px;
-            flex: 1;
+            flex-shrink: 0;
+            padding-right: 0.25rem;
         }
 
         .task-btn {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: var(--radius-card);
             border: none;
             background: transparent;
@@ -961,6 +1073,20 @@
             flex-shrink: 0;
         }
 
+        [data-theme="win97"] .task-btn {
+            width: auto;
+            padding: 2px 8px;
+            height: 28px;
+            background: #C0C0C0;
+            border: 2px outset #FFFFFF;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        [data-theme="win97"] .task-btn:active {
+            border: 2px inset #FFFFFF;
+        }
+
         .task-btn:hover, .task-btn:active { background: var(--menu-hover); }
         .task-btn.active { background: var(--menu-hover); }
         .task-btn.active::after {
@@ -972,6 +1098,8 @@
             border-radius: 2px;
             background: var(--win-blue);
         }
+
+        [data-theme="win97"] .task-btn.active::after { display: none; }
 
         .win-start-logo {
             display: grid;
@@ -995,6 +1123,11 @@
             border-radius: var(--radius-card);
             cursor: pointer;
             white-space: nowrap;
+        }
+
+        [data-theme="win97"] .tray-clock {
+            border: 2px inset #FFFFFF;
+            background: #C0C0C0;
         }
 
         .toast-container {
@@ -1037,7 +1170,7 @@
         }
 
         /* ==========================================================================
-           8. RESPONSIVE MOBILE FIX
+           9. RESPONSIVE MOBILE FIX
            ========================================================================== */
         @media (max-width: 768px) {
             .win-frame {
@@ -1066,7 +1199,7 @@
                 gap: 0.6rem;
             }
 
-            .watermark-grid-form {
+            .theme-grid-selector {
                 grid-template-columns: 1fr;
             }
 
@@ -1088,13 +1221,8 @@
                 display: none;
             }
 
-            .taskbar-center {
+            .taskbar-center-scrollable {
                 justify-content: flex-start;
-                gap: 2px;
-            }
-
-            .taskbar-tray {
-                min-width: auto;
             }
 
             .tray-clock span#trayDate {
@@ -1144,12 +1272,12 @@
                 <div class="win-nav-header">
                     <div class="win-nav-title">
                         <h2>Menu Operasional & Produktivitas</h2>
-                        <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop (Bisa digeser ke mana saja)</p>
+                        <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop</p>
                     </div>
 
                     <div class="win-search-box">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                        <input type="text" placeholder="Cari modul, AI, watermark..." onkeyup="OS.handleSearch(this.value)">
+                        <input type="text" placeholder="Cari modul, AI, tema..." onkeyup="OS.handleSearch(this.value)">
                     </div>
                 </div>
 
@@ -1214,7 +1342,25 @@
             </div>
         </div>
 
-        <!-- 3. Windows Notepad App Window -->
+        <!-- 3. Windows Theme Switcher Window -->
+        <div class="win-frame" id="themeWindow" style="top: 14%; left: calc(50% - 250px);">
+            <div class="win-titlebar" id="themeTitlebar">
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#8B5CF6;">🎨</div>
+                    <span>Theme Customizer — Pilih Gaya Tampilan OS</span>
+                </div>
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('themeWindow', 'taskbarThemeBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="ThemeEngine.close()">✕</button>
+                </div>
+            </div>
+
+            <div class="win-body">
+                <div class="theme-grid-selector" id="themeSelectorContainer"></div>
+            </div>
+        </div>
+
+        <!-- 4. Windows Notepad App Window -->
         <div class="win-frame" id="notepadWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="notepadTitlebar">
                 <div class="win-title-left">
@@ -1238,7 +1384,7 @@
             <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi, log pekerjaan, atau checklist di sini... (Otomatis tersimpan di LocalStorage)"></textarea>
         </div>
 
-        <!-- 4. Windows File Explorer (Buka File HP / Laptop) -->
+        <!-- 5. Windows File Explorer (Buka File HP / Laptop) -->
         <div class="win-frame" id="explorerWindow" style="top: 12%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="explorerTitlebar">
                 <div class="win-title-left">
@@ -1257,7 +1403,7 @@
                 <div class="explorer-dropzone" onclick="document.getElementById('filePickerInput').click()">
                     <div style="font-size:2.2rem; margin-bottom:4px;">📂</div>
                     <strong style="font-size:0.9rem;">Klik atau Tarik Berkas ke Sini</strong>
-                    <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">Mendukung Gambar, PDF, File Teks (TXT/HTML/JS/JSON/MD), Audio, & Video</p>
+                    <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">Mendukung Gambar, PDF, File Teks, Audio, & Video</p>
                 </div>
 
                 <div class="explorer-preview-area" id="filePreviewContainer">
@@ -1274,7 +1420,7 @@
             </div>
         </div>
 
-        <!-- 5. Windows Gempa BMKG Alert Window -->
+        <!-- 6. Windows Gempa BMKG Alert Window -->
         <div class="win-frame" id="gempaWindow" style="top: 16%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="gempaTitlebar">
                 <div class="win-title-left">
@@ -1311,7 +1457,7 @@
             </div>
         </div>
 
-        <!-- 6. Windows Radio Online Window -->
+        <!-- 7. Windows Radio Online Window -->
         <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
                 <div class="win-title-left">
@@ -1353,7 +1499,7 @@
     </main>
 
     <!-- ==========================================================================
-         2. AUTHENTIC WINDOWS 11 START MENU
+         2. AUTHENTIC MULTI-THEME START MENU
          ========================================================================== -->
     <div class="start-menu" id="startMenu">
         
@@ -1365,7 +1511,7 @@
         <div>
             <div class="start-section-header">
                 <span>Pinned</span>
-                <button class="start-all-btn" onclick="OS.showToast('Menampilkan semua aplikasi terpasang')">All apps &gt;</button>
+                <button class="start-all-btn" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
             </div>
             <div class="start-pinned-grid" id="startPinnedGrid"></div>
         </div>
@@ -1383,11 +1529,11 @@
                         <p>Kompres & cap tanggal/lokasi/nama</p>
                     </div>
                 </div>
-                <div class="start-rec-item" onclick="FileExplorer.open(); OS.toggleStart();">
-                    <span style="font-size:1.4rem;">📁</span>
+                <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();">
+                    <span style="font-size:1.4rem;">🎨</span>
                     <div class="rec-info">
-                        <h5>File Explorer</h5>
-                        <p>Akses berkas lokal HP & PC</p>
+                        <h5>Pilihan Tema OS</h5>
+                        <p>Win 11, Win 7, Win 8, Win 97, Linux</p>
                     </div>
                 </div>
             </div>
@@ -1398,13 +1544,13 @@
                 <div style="width:30px; height:30px; border-radius:50%; background:var(--win-blue); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem;">S</div>
                 <div style="text-align:left;">
                     <div style="font-size:0.78rem; font-weight:800;">Sutrisno</div>
-                    <div style="font-size:0.65rem; color:var(--text-secondary);">Unit Leader Building Management</div>
+                    <div style="font-size:0.65rem; color:var(--text-secondary);">Building Management Hub</div>
                 </div>
             </div>
 
             <div class="start-power-actions">
+                <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
                 <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
-                <button class="task-btn" onclick="Theme.toggle()" title="Toggle Tema">🌓</button>
                 <button class="task-btn" onclick="OS.showToast('Sistem Enterprise Siaga', 'info')" title="Power Options">⏻</button>
             </div>
         </div>
@@ -1412,7 +1558,7 @@
     </div>
 
     <!-- ==========================================================================
-         3. WINDOWS TASKBAR (3-ZONE CLEAN LAYOUT)
+         3. WINDOWS TASKBAR
          ========================================================================== -->
     <footer class="win-taskbar">
         
@@ -1422,15 +1568,19 @@
             </span>
         </div>
 
-        <div class="taskbar-center">
+        <div class="taskbar-center-scrollable">
             <button class="task-btn" id="startBtn" onclick="OS.toggleStart()" title="Start Menu">
-                <div class="win-start-logo">
+                <div class="win-start-logo" id="taskbarStartLogo">
                     <span></span><span></span>
                     <span></span><span></span>
                 </div>
+                <span id="startTextWin97" style="display:none;">Start</span>
             </button>
             <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
+            </button>
+            <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema (Win 11, Win 7, Win 8, Win 97, Linux)">
+                <span style="font-size:1.15rem;">🎨</span>
             </button>
             <button class="task-btn" id="taskbarWatermarkBtn" onclick="Watermarker.toggle()" title="Watermark & Kompres Foto">
                 <span style="font-size:1.15rem;">📸</span>
@@ -1456,9 +1606,6 @@
             <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">
                 <span style="font-size:1.15rem;">🖼️</span>
             </button>
-            <button class="task-btn" onclick="Theme.toggle()" title="Toggle Dark/Light Mode">
-                <span style="font-size:1.15rem;">🌓</span>
-            </button>
         </div>
 
         <div class="taskbar-tray">
@@ -1477,13 +1624,20 @@
     <div class="toast-container" id="toastBox"></div>
 
     <!-- ==========================================================================
-         4. JAVASCRIPT: LOGIC, WATERMARK ENGINE, DRAGGABLE ICONS & AUDIO
+         4. JAVASCRIPT: THEMES, WATERMARK, AUDIO, & OS LOGIC
          ========================================================================== -->
     <script>
         const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec";
 
+        const THEMES_LIST = [
+            { id: 'win11', name: 'Windows 11 Fluent', icon: '🪟', color: '#0078D4', desc: 'Desain modern, rounded, acrylic glass & centered taskbar' },
+            { id: 'win7', name: 'Windows 7 Aero', icon: '💎', color: '#2E86DE', desc: 'Efek kaca tembus pandang Aero Glass & gradien biru klasik' },
+            { id: 'win8', name: 'Windows 8 Metro', icon: '🟦', color: '#68217A', desc: 'Gaya flat metro tile, sharp edge & aksen ungu modern' },
+            { id: 'win97', name: 'Windows 97 / 95 Classic', icon: '💾', color: '#000080', desc: 'Tampilan retro klasik 90-an, tombol bevel 3D & font Tahoma' },
+            { id: 'linux', name: 'Linux Ubuntu Yaru', icon: '🐧', color: '#E95420', desc: 'Aksen oranye khas Ubuntu Linux, dark purple aubergine' }
+        ];
+
         const MODULES = [
-            // Core Operasional BM
             { id: 'kerusakan', title: 'Lapor Kerusakan', sub: 'Input tiket kendala', icon: '🛠️', color: '#EE2737', url: `${BASE_GAS_URL}?page=kerusakan` },
             { id: 'jadwal-kerusakan', title: 'Jadwal Perbaikan', sub: 'Monitoring perbaikan', icon: '📅', color: '#F97316', url: `${BASE_GAS_URL}?page=jadwal-kerusakan` },
             { id: 'checklist-harian-pm', title: 'Checklist Harian', sub: 'Inspeksi sarana gedung', icon: '📋', color: '#10B981', url: `${BASE_GAS_URL}?page=checklist-harian-pm` },
@@ -1492,7 +1646,8 @@
             { id: 'energi-dashboard', title: 'Energi Listrik', sub: 'Monitoring daya & kWh', icon: '⚡', color: '#EAB308', url: `${BASE_GAS_URL}?page=energi-dashboard` },
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
-            // Image Tool & Local Apps
+            // Themes & Tools
+            { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, 7, 8, 97, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
             { id: 'watermark', title: 'Watermark Foto', sub: 'Kompres & Cap Tanggal/Lokasi', icon: '📸', color: '#F97316', action: 'watermark' },
             { id: 'explorer', title: 'File Explorer', sub: 'Buka File HP & PC', icon: '📁', color: '#FDB813', action: 'explorer' },
             { id: 'notepad', title: 'Notepad', sub: 'Catatan Localhost', icon: '📝', color: '#107C41', action: 'notepad' },
@@ -1530,15 +1685,85 @@
 
         const PRIMARY_IDS = [
             'kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm',
-            'watermark', 'explorer', 'notepad', 'bmis',
-            'belfis', 'absensi', 'gemini', 'chatgpt',
-            'maps', 'spreadsheet', 'excel', 'word',
-            'radio', 'youtube', 'chrome', 'gempa', 'dashboard'
+            'theme', 'watermark', 'explorer', 'notepad',
+            'bmis', 'belfis', 'absensi', 'gemini',
+            'chatgpt', 'maps', 'spreadsheet', 'excel',
+            'word', 'radio', 'youtube', 'chrome',
+            'gempa', 'dashboard'
         ];
 
         /**
-         * WATERMARK & IMAGE COMPRESSOR ENGINE
+         * THEME SWITCHER ENGINE
          */
+        const ThemeEngine = {
+            init() {
+                const saved = localStorage.getItem('app_os_theme') || 'win11';
+                this.applyTheme(saved);
+                this.renderThemeCards();
+            },
+            applyTheme(themeId) {
+                document.documentElement.setAttribute('data-theme', themeId);
+                localStorage.setItem('app_os_theme', themeId);
+
+                // Update start logo button for win97
+                const logo = document.getElementById('taskbarStartLogo');
+                const text97 = document.getElementById('startTextWin97');
+                if (themeId === 'win97') {
+                    if (logo) logo.style.display = 'none';
+                    if (text97) text97.style.display = 'inline';
+                } else {
+                    if (logo) logo.style.display = 'grid';
+                    if (text97) text97.style.display = 'none';
+                }
+
+                this.renderThemeCards();
+            },
+            renderThemeCards() {
+                const con = document.getElementById('themeSelectorContainer');
+                if (!con) return;
+                const current = document.documentElement.getAttribute('data-theme') || 'win11';
+
+                con.innerHTML = THEMES_LIST.map(t => `
+                    <div class="theme-card-btn ${t.id === current ? 'active' : ''}" onclick="ThemeEngine.selectTheme('${t.id}')">
+                        <div class="theme-preview-badge" style="background:${t.color};">${t.icon}</div>
+                        <div>
+                            <div style="font-size:0.82rem; font-weight:800;">${t.name}</div>
+                            <div style="font-size:0.68rem; color:var(--text-secondary); line-height:1.2; margin-top:2px;">${t.desc}</div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            selectTheme(themeId) {
+                Sound.click();
+                this.applyTheme(themeId);
+                OS.showToast(`Beralih ke tema ${THEMES_LIST.find(t=>t.id===themeId).name}`);
+            },
+            open() {
+                Sound.click();
+                const win = document.getElementById('themeWindow');
+                const btn = document.getElementById('taskbarThemeBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                if (btn) btn.classList.add('active');
+                OS.bringToFront('themeWindow');
+            },
+            close() {
+                Sound.click();
+                const win = document.getElementById('themeWindow');
+                const btn = document.getElementById('taskbarThemeBtn');
+                win.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            },
+            toggle() {
+                const win = document.getElementById('themeWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            }
+        };
+
         const Watermarker = {
             loadedImg: null,
             originalSize: 0,
@@ -1601,7 +1826,6 @@
                 const canvas = document.getElementById('wmCanvas');
                 const ctx = canvas.getContext('2d');
 
-                // Resize proportionally (Max Width 1200px for small file size)
                 const MAX_WIDTH = 1200;
                 let targetWidth = this.loadedImg.width;
                 let targetHeight = this.loadedImg.height;
@@ -1614,36 +1838,29 @@
                 canvas.width = targetWidth;
                 canvas.height = targetHeight;
 
-                // Draw Base Image
                 ctx.drawImage(this.loadedImg, 0, 0, targetWidth, targetHeight);
 
-                // Watermark Data
                 const name = document.getElementById('wmInputName').value || 'Teknisi BM';
                 const location = document.getElementById('wmInputLocation').value || 'Unit KC Surabaya';
                 const datetime = document.getElementById('wmInputDatetime').value;
 
-                // Watermark Styling Box
-                const scale = targetWidth / 800; // Relative scaling
+                const scale = targetWidth / 800;
                 const padding = 16 * scale;
-                const lineHeight = 22 * scale;
                 const boxWidth = 340 * scale;
                 const boxHeight = 90 * scale;
                 const posX = 16 * scale;
                 const posY = targetHeight - boxHeight - (16 * scale);
 
-                // Dark Translucent Badge
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
                 ctx.beginPath();
                 ctx.roundRect(posX, posY, boxWidth, boxHeight, 8 * scale);
                 ctx.fill();
 
-                // Left Blue Accent Line
                 ctx.fillStyle = '#0078D4';
                 ctx.beginPath();
                 ctx.roundRect(posX, posY, 6 * scale, boxHeight, [8 * scale, 0, 0, 8 * scale]);
                 ctx.fill();
 
-                // Render Watermark Texts
                 ctx.fillStyle = '#FFFFFF';
                 ctx.font = `bold ${14 * scale}px 'Plus Jakarta Sans', sans-serif`;
                 ctx.fillText(`👤 ${name}`, posX + padding, posY + (26 * scale));
@@ -1655,17 +1872,16 @@
                 ctx.font = `600 ${11 * scale}px 'Plus Jakarta Sans', sans-serif`;
                 ctx.fillText(`🕒 ${datetime}`, posX + padding, posY + (72 * scale));
 
-                // Calculate compressed size info
                 canvas.toBlob((blob) => {
                     const originalKB = (this.originalSize / 1024).toFixed(1);
                     const compressedKB = (blob.size / 1024).toFixed(1);
-                    document.getElementById('wmFileInfoText').innerText = `Ukuran Asli: ${originalKB} KB ➔ Terkompresi: ${compressedKB} KB (${targetWidth}x${targetHeight}px)`;
+                    document.getElementById('wmFileInfoText').innerText = `Asli: ${originalKB} KB ➔ Kompres: ${compressedKB} KB`;
                 }, 'image/jpeg', 0.75);
             },
             getGPSLocation() {
                 Sound.click();
                 if (!navigator.geolocation) {
-                    OS.showToast('Geolocation tidak didukung pada browser ini');
+                    OS.showToast('Geolocation tidak didukung pada browser');
                     return;
                 }
                 OS.showToast('Mengambil titik koordinat GPS...');
@@ -1676,7 +1892,7 @@
                     this.redraw();
                     OS.showToast('Koordinat GPS berhasil disematkan');
                 }, () => {
-                    OS.showToast('Izin GPS ditolak atau sinyal lemah');
+                    OS.showToast('Izin GPS ditolak');
                 }, { timeout: 8000 });
             },
             downloadImage() {
@@ -1687,17 +1903,13 @@
                 }
                 const canvas = document.getElementById('wmCanvas');
                 const link = document.createElement('a');
-                const filename = `Doc_BM_${new Date().toISOString().slice(0,10)}_${Date.now().toString().slice(-4)}.jpg`;
-                link.download = filename;
+                link.download = `Doc_BM_${new Date().toISOString().slice(0,10)}_${Date.now().toString().slice(-4)}.jpg`;
                 link.href = canvas.toDataURL('image/jpeg', 0.75);
                 link.click();
-                OS.showToast('Foto terkompresi & watermark berhasil diunduh');
+                OS.showToast('Foto watermark berhasil diunduh');
             }
         };
 
-        /**
-         * FILE EXPLORER (BUKA FILE HP / LAPTOP)
-         */
         const FileExplorer = {
             currentTextContent: '',
             open() {
@@ -1780,9 +1992,6 @@
             }
         };
 
-        /**
-         * STASIUN RADIO STREAMING HTTPS
-         */
         const RADIO_STATIONS = [
             { name: 'Suara Surabaya FM', country: '🇮🇩 Indonesia • Berita & Musik', url: 'https://stream.suarasurabaya.net/stream' },
             { name: 'Prambors Radio', country: '🇮🇩 Indonesia • Hits Anak Muda', url: 'https://masima.rastream.com/masima-pramborsjakarta' },
@@ -1816,14 +2025,14 @@
                 });
 
                 audio.addEventListener('waiting', () => {
-                    document.getElementById('radioStatusText').innerText = 'Menghubungkan stream (Buffering)...';
+                    document.getElementById('radioStatusText').innerText = 'Menghubungkan stream...';
                 });
 
                 audio.addEventListener('error', () => {
                     this.isPlaying = false;
                     document.getElementById('radioMainPlayBtn').innerText = '▶';
                     document.getElementById('radioVisualizer').classList.remove('playing');
-                    document.getElementById('radioStatusText').innerText = 'Gagal memutar (Server offline/blokir)';
+                    document.getElementById('radioStatusText').innerText = 'Gagal memutar stream';
                 });
             },
             renderStations() {
@@ -1913,7 +2122,7 @@
                 return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             },
             getStorageKey() {
-                return this.isMobile() ? 'win_pinned_mobile_pos_v7' : 'win_pinned_desktop_pos_v7';
+                return this.isMobile() ? 'win_pinned_mobile_pos_v8' : 'win_pinned_desktop_pos_v8';
             },
             getPinnedIcons() {
                 const key = this.getStorageKey();
@@ -2127,21 +2336,17 @@
         const Wallpaper = {
             list: [
                 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop&brightness=0.6',
-                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop'
+                'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2564&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2564&auto=format&fit=crop'
             ],
             index: 0,
-            init() {
-                const saved = localStorage.getItem('win_wallpaper');
-                if (saved) document.body.style.backgroundImage = `url('${saved}')`;
-            },
             next() {
                 Sound.click();
                 this.index = (this.index + 1) % this.list.length;
                 const nextUrl = this.list[this.index];
                 document.body.style.backgroundImage = `url('${nextUrl}')`;
-                localStorage.setItem('win_wallpaper', nextUrl);
                 OS.showToast('Wallpaper diperbarui');
             }
         };
@@ -2233,25 +2438,9 @@
             }
         };
 
-        const Theme = {
-            init() {
-                const saved = localStorage.getItem('win_theme') || 'light';
-                document.documentElement.setAttribute('data-theme', saved);
-            },
-            toggle() {
-                Sound.click();
-                const current = document.documentElement.getAttribute('data-theme');
-                const target = current === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', target);
-                localStorage.setItem('win_theme', target);
-                OS.showToast(`Mode ${target === 'dark' ? 'Gelap' : 'Terang'}`);
-            }
-        };
-
         const OS = {
             init() {
-                Theme.init();
-                Wallpaper.init();
+                ThemeEngine.init();
                 Notepad.init();
                 Watermarker.init();
                 GempaAlert.init();
@@ -2264,6 +2453,7 @@
                 
                 WindowManager.makeDraggable('mainWindow', 'mainTitlebar');
                 WindowManager.makeDraggable('watermarkWindow', 'watermarkTitlebar');
+                WindowManager.makeDraggable('themeWindow', 'themeTitlebar');
                 WindowManager.makeDraggable('notepadWindow', 'notepadTitlebar');
                 WindowManager.makeDraggable('explorerWindow', 'explorerTitlebar');
                 WindowManager.makeDraggable('gempaWindow', 'gempaTitlebar');
@@ -2409,7 +2599,7 @@
                 const primary = PRIMARY_IDS.map(id => MODULES.find(m => m.id === id)).filter(Boolean);
 
                 container.innerHTML = primary.map(m => `
-                    <div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
+                    <div class="win-tile" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}">
                         <button class="tile-pin-btn" onclick="OS.pinToDesktop('${m.id}', event)" title="Keluarkan ke Desktop">📌</button>
                         <div class="tile-icon-box" style="background: ${m.color}; color:#fff;">
                             ${m.icon}
@@ -2422,7 +2612,7 @@
             renderStartPinned() {
                 const grid = document.getElementById('startPinnedGrid');
                 grid.innerHTML = MODULES.slice(0, 18).map(m => `
-                    <button class="start-pinned-item" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
+                    <button class="start-pinned-item" onclick="${m.action === 'notepad' ? 'Notepad.open()' : m.action === 'theme' ? 'ThemeEngine.open()' : m.action === 'watermark' ? 'Watermarker.open()' : m.action === 'explorer' ? 'FileExplorer.open()' : m.action === 'gempa' ? 'GempaAlert.open()' : m.action === 'radio' ? 'RadioPlayer.open()' : `OS.openDirect('${m.url}')`}; OS.toggleStart();">
                         <span class="icon">${m.icon}</span>
                         <span class="lbl">${m.title}</span>
                     </button>
@@ -2462,6 +2652,8 @@
                 if (mod) {
                     if (mod.action === 'notepad') {
                         Notepad.open();
+                    } else if (mod.action === 'theme') {
+                        ThemeEngine.open();
                     } else if (mod.action === 'watermark') {
                         Watermarker.open();
                     } else if (mod.action === 'explorer') {
