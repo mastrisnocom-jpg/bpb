@@ -75,7 +75,7 @@
         }
 
         /* ==========================================================================
-           2. MULTI-THEME ENGINE VARIABLES (AUTENTIK 100%)
+           2. MULTI-THEME ENGINE VARIABLES
            ========================================================================== */
         :root, [data-theme="win11"] {
             --sys-font: 'Plus Jakarta Sans', sans-serif;
@@ -165,7 +165,7 @@
             --menu-hover: #E0E0E0;
         }
 
-        /* Windows 95 / 97 Classic Retro */
+        /* Windows 95 Retro */
         [data-theme="win95"] {
             --sys-font: 'Tahoma', 'MS Sans Serif', sans-serif;
             --win-blue: #000080;
@@ -238,7 +238,7 @@
         }
 
         /* ==========================================================================
-           3. DESKTOP WORKSPACE & ABSOLUTE DRAGGABLE ICONS
+           3. DESKTOP WORKSPACE & ICONS
            ========================================================================== */
         .desktop-area {
             flex: 1;
@@ -945,7 +945,148 @@
         }
 
         /* ==========================================================================
-           5. START MENUS (NATIVE OS LOOK & FEEL)
+           5. CUSTOM MENU ENGINE STYLES
+           ========================================================================== */
+        #customMenuWindow { 
+            max-width: 620px; 
+            display: none; 
+        }
+
+        .custom-menu-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .custom-menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .icon-selector-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .icon-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            max-height: 145px;
+            overflow-y: auto;
+            padding: 6px;
+            background: var(--mica-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+        }
+
+        .icon-choice-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            border-radius: 6px;
+            border: 1.5px solid transparent;
+            background: var(--window-bg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-choice-btn:hover {
+            transform: scale(1.1);
+            background: var(--menu-hover);
+        }
+
+        .icon-choice-btn.selected {
+            border-color: var(--win-blue);
+            background: var(--win-blue);
+            box-shadow: 0 0 8px rgba(0, 120, 212, 0.4);
+        }
+
+        .color-choice-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .color-choice-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s ease;
+        }
+
+        .color-choice-dot:hover {
+            transform: scale(1.15);
+        }
+
+        .color-choice-dot.selected {
+            border-color: #FFFFFF;
+            box-shadow: 0 0 0 2px var(--win-blue);
+        }
+
+        .custom-menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .custom-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: var(--mica-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+        }
+
+        .custom-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .custom-badge-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .custom-item-delete-btn {
+            background: transparent;
+            border: none;
+            color: #EE2737;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .custom-item-delete-btn:hover {
+            background: rgba(238, 39, 55, 0.15);
+        }
+
+        /* ==========================================================================
+           6. START MENUS (NATIVE OS LOOK & FEEL)
            ========================================================================== */
         .start-menu {
             position: absolute;
@@ -976,7 +1117,6 @@
             transform: translateX(-50%) translateY(0) scale(1);
         }
 
-        /* Win11 Elements */
         .win11-start-wrap {
             display: flex;
             flex-direction: column;
@@ -1328,7 +1468,7 @@
         }
 
         /* ==========================================================================
-           6. TASKBAR & CONTROLS
+           7. TASKBAR & CONTROLS
            ========================================================================== */
         .win-taskbar {
             height: var(--taskbar-height);
@@ -1629,9 +1769,14 @@
                         <p>Klik 📌 untuk mengeluarkan ikon ke Wallpaper Desktop</p>
                     </div>
 
-                    <div class="win-search-box">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
-                        <input type="text" placeholder="Cari modul, AI, tema..." onkeyup="OS.handleSearch(this.value)">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button class="notepad-btn" style="background:var(--win-blue); color:#fff; border:none; padding:6px 12px;" onclick="CustomMenuEngine.open()">
+                            ➕ Tambah Menu
+                        </button>
+                        <div class="win-search-box">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
+                            <input type="text" placeholder="Cari modul, AI, tema..." onkeyup="OS.handleSearch(this.value)">
+                        </div>
                     </div>
                 </div>
 
@@ -1639,7 +1784,75 @@
             </div>
         </div>
 
-        <!-- 2. Theme Customizer Window -->
+        <!-- 2. Custom Menu Window (Form Tambah Menu Sendiri) -->
+        <div class="win-frame" id="customMenuWindow" style="top: 10%; left: calc(50% - 310px);">
+            <div class="win-titlebar" id="customMenuTitlebar">
+                <div class="win-controls">
+                    <button class="win-control-btn" title="Minimize" onclick="OS.minimizeWindow('customMenuWindow', 'taskbarCustomMenuBtn')">─</button>
+                    <button class="win-control-btn close" title="Tutup" onclick="CustomMenuEngine.close()">✕</button>
+                </div>
+                <div class="win-title-left">
+                    <div class="win-app-logo" style="background:#0284C7;">➕</div>
+                    <span>Pengaturan & Tambah Menu Kustom</span>
+                </div>
+            </div>
+
+            <div class="win-body" style="padding: 1.15rem;">
+                <div class="custom-menu-grid">
+                    
+                    <!-- Kolom Form Tambah -->
+                    <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                        <h4 style="font-size:0.85rem; font-weight:800;">Buat Menu / Shortcut Baru</h4>
+                        
+                        <div class="form-group-win">
+                            <label>1. Nama Menu:</label>
+                            <input type="text" id="customMenuName" placeholder="Contoh: CCTV Gedung / Portal HRD">
+                        </div>
+
+                        <div class="form-group-win">
+                            <label>2. Deskripsi Subtitle (Opsional):</label>
+                            <input type="text" id="customMenuSub" placeholder="Contoh: Monitoring real-time">
+                        </div>
+
+                        <div class="form-group-win">
+                            <label>3. Tautan / Link URL:</label>
+                            <input type="url" id="customMenuUrl" placeholder="https://contoh-link.com">
+                        </div>
+
+                        <div class="icon-selector-wrapper">
+                            <label style="font-size:0.72rem; font-weight:700;">4. Pilihan Icon:</label>
+                            <div class="icon-selector-grid" id="customIconPickerList"></div>
+                        </div>
+
+                        <div class="form-group-win">
+                            <label>5. Warna Tema Ikon:</label>
+                            <div class="color-choice-grid" id="customColorPickerList"></div>
+                        </div>
+
+                        <button class="notepad-btn" style="background:var(--win-blue); color:#fff; border:none; padding:8px; margin-top:0.4rem; justify-content:center;" onclick="CustomMenuEngine.saveMenu()">
+                            💾 Simpan Menu Baru
+                        </button>
+                    </div>
+
+                    <!-- Kolom Daftar Menu Buatan Sendiri -->
+                    <div style="display:flex; flex-direction:column; gap:0.65rem; border-left:1px solid var(--border-subtle); padding-left:0.75rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h4 style="font-size:0.85rem; font-weight:800;">Menu Kustom Anda</h4>
+                            <span id="customMenuCount" style="font-size:0.7rem; color:var(--text-secondary);">0 Menu</span>
+                        </div>
+                        
+                        <div class="custom-menu-list" id="customMenuListContainer">
+                            <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center; padding:1.5rem 0;">
+                                Belum ada menu kustom yang dibuat.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Theme Customizer Window -->
         <div class="win-frame" id="themeWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="themeTitlebar">
                 <div class="win-controls">
@@ -1657,7 +1870,7 @@
             </div>
         </div>
 
-        <!-- 3. Watermark Window -->
+        <!-- 4. Watermark Window -->
         <div class="win-frame" id="watermarkWindow" style="top: 10%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="watermarkTitlebar">
                 <div class="win-controls">
@@ -1712,7 +1925,7 @@
             </div>
         </div>
 
-        <!-- 4. Notepad Window -->
+        <!-- 5. Notepad Window -->
         <div class="win-frame" id="notepadWindow" style="top: 14%; left: calc(50% - 260px);">
             <div class="win-titlebar" id="notepadTitlebar">
                 <div class="win-controls">
@@ -1736,7 +1949,7 @@
             <textarea class="notepad-textarea" id="notepadContent" placeholder="Ketik catatan teknisi di sini..."></textarea>
         </div>
 
-        <!-- 5. File Explorer Window -->
+        <!-- 6. File Explorer Window -->
         <div class="win-frame" id="explorerWindow" style="top: 12%; left: calc(50% - 340px);">
             <div class="win-titlebar" id="explorerTitlebar">
                 <div class="win-controls">
@@ -1769,7 +1982,7 @@
             </div>
         </div>
 
-        <!-- 6. Gempa BMKG Alert Window -->
+        <!-- 7. Gempa BMKG Alert Window -->
         <div class="win-frame" id="gempaWindow" style="top: 16%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="gempaTitlebar">
                 <div class="win-controls">
@@ -1806,7 +2019,7 @@
             </div>
         </div>
 
-        <!-- 7. Radio Online Window -->
+        <!-- 8. Radio Online Window -->
         <div class="win-frame" id="radioWindow" style="top: 18%; left: calc(50% - 240px);">
             <div class="win-titlebar" id="radioTitlebar">
                 <div class="win-controls">
@@ -1849,7 +2062,7 @@
     <!-- START MENU MULTI-OS WRAPPER -->
     <div class="start-menu" id="startMenu">
 
-        <!-- 1. WINDOWS 11 START MENU (CENTERED FLUENT) -->
+        <!-- 1. WINDOWS 11 START MENU -->
         <div class="win11-start-wrap" id="startWin11">
             <div class="start-search-bar">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg>
@@ -1859,7 +2072,7 @@
             <div style="margin-top:0.75rem;">
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:800; padding:0 4px;">
                     <span>Pinned</span>
-                    <button class="notepad-btn" style="padding:2px 8px; font-size:0.68rem;" onclick="OS.showToast('Menampilkan semua modul')">All apps &gt;</button>
+                    <button class="notepad-btn" style="padding:2px 8px; font-size:0.68rem;" onclick="CustomMenuEngine.open(); OS.toggleStart();">➕ Tambah Menu</button>
                 </div>
                 <div class="start-pinned-grid" id="startPinnedGrid" style="margin-top:6px;"></div>
             </div>
@@ -1869,18 +2082,18 @@
                     <span>Recommended</span>
                 </div>
                 <div class="start-recommended-list">
+                    <div class="start-rec-item" onclick="CustomMenuEngine.open(); OS.toggleStart();">
+                        <span style="font-size:1.4rem;">➕</span>
+                        <div class="rec-info">
+                            <h5>Tambah Menu Sendiri</h5>
+                            <p>Buat shortcut web & link kustom</p>
+                        </div>
+                    </div>
                     <div class="start-rec-item" onclick="Watermarker.open(); OS.toggleStart();">
                         <span style="font-size:1.4rem;">📸</span>
                         <div class="rec-info">
                             <h5>Watermark Foto</h5>
                             <p>Kompres & cap tanggal/lokasi/nama</p>
-                        </div>
-                    </div>
-                    <div class="start-rec-item" onclick="ThemeEngine.open(); OS.toggleStart();">
-                        <span style="font-size:1.4rem;">🎨</span>
-                        <div class="rec-info">
-                            <h5>Pilihan Tema OS</h5>
-                            <p>Win 11, XP, 7, 8, 95, Linux</p>
                         </div>
                     </div>
                 </div>
@@ -1896,6 +2109,7 @@
                 </div>
 
                 <div style="display:flex; gap:4px;">
+                    <button class="task-btn" onclick="CustomMenuEngine.open()" title="Tambah Menu">➕</button>
                     <button class="task-btn" onclick="ThemeEngine.open()" title="Pilih Tema">🎨</button>
                     <button class="task-btn" onclick="Wallpaper.next()" title="Ganti Wallpaper">🖼️</button>
                     <button class="task-btn" onclick="OS.showToast('Sistem Siaga', 'info')" title="Power">⏻</button>
@@ -1971,6 +2185,9 @@
             <button class="task-btn active" id="taskbarHubBtn" onclick="OS.toggleWindow('mainWindow', 'taskbarHubBtn')" title="Buka Portal Hub">
                 <span style="font-size:1.15rem;">🏢</span>
             </button>
+            <button class="task-btn" id="taskbarCustomMenuBtn" onclick="CustomMenuEngine.toggle()" title="Tambah Menu Sendiri">
+                <span style="font-size:1.15rem;">➕</span>
+            </button>
             <button class="task-btn" id="taskbarThemeBtn" onclick="ThemeEngine.toggle()" title="Pilihan Tema OS">
                 <span style="font-size:1.15rem;">🎨</span>
             </button>
@@ -2038,6 +2255,7 @@
             { id: 'perencanaan-pm', title: 'Rencana PM', sub: 'Jadwal maintenance', icon: '⚙️', color: '#8B5CF6', url: `${BASE_GAS_URL}?page=perencanaan-pm` },
             
             // Tools
+            { id: 'custom_mgr', title: 'Tambah Menu', sub: 'Buat shortcut kustom', icon: '➕', color: '#0284C7', action: 'custom_mgr' },
             { id: 'theme', title: 'Pilihan Tema OS', sub: 'Win 11, XP, 7, 8, 95, Linux', icon: '🎨', color: '#8B5CF6', action: 'theme' },
             { id: 'watermark', title: 'Watermark Foto', sub: 'Kompres & Cap Tanggal/Lokasi', icon: '📸', color: '#F97316', action: 'watermark' },
             { id: 'explorer', title: 'File Explorer', sub: 'Buka File HP & PC', icon: '📁', color: '#FDB813', action: 'explorer' },
@@ -2074,17 +2292,245 @@
             { id: 'index', title: 'Portal Index', sub: 'Index navigasi', icon: '🗂️', color: '#64748B', url: `${BASE_GAS_URL}?page=index` }
         ];
 
-        const PRIMARY_IDS = [
+        let PRIMARY_IDS = [
             'kerusakan', 'jadwal-kerusakan', 'checklist-harian-pm', 'dashboard-atm',
-            'theme', 'watermark', 'explorer', 'notepad',
-            'bmis', 'belfis', 'absensi', 'gemini',
-            'chatgpt', 'maps', 'spreadsheet', 'excel',
-            'word', 'radio', 'youtube', 'chrome',
-            'gempa', 'dashboard'
+            'custom_mgr', 'theme', 'watermark', 'explorer',
+            'notepad', 'bmis', 'belfis', 'absensi',
+            'gemini', 'chatgpt', 'maps', 'spreadsheet',
+            'excel', 'word', 'radio', 'youtube',
+            'chrome', 'gempa', 'dashboard'
+        ];
+
+        const AVAILABLE_ICONS = [
+            '🌐', '📊', '📈', '🏢', '🏗️', '🔧', '🛠️', '⚡', '☀️', '💧', 
+            '🔒', '📷', '📹', '🚨', '📑', '📂', '💼', '📌', '🖥️', '💻', 
+            '📱', '🖨️', '📡', '🛰️', '🚪', '🔑', '🏷️', '📦', '🗄️', '📋',
+            '🤖', '✨', '🔥', '🛡️', '🎯', '📍', '👥', '📬', '💰', '⭐'
+        ];
+
+        const AVAILABLE_COLORS = [
+            '#0078D4', '#107C41', '#EE2737', '#F97316', '#8B5CF6', 
+            '#0284C7', '#D83B01', '#EAB308', '#EC4899', '#475569'
         ];
 
         /**
-         * THEME ENGINE WITH AUTHENTIC OS MENUS
+         * CUSTOM MENU ENGINE (LOCALSTORAGE INTEGRATION)
+         */
+        const CustomMenuEngine = {
+            storageKey: 'user_custom_modules_data_v1',
+            selectedIcon: '🌐',
+            selectedColor: '#0078D4',
+
+            init() {
+                this.renderPickers();
+                this.loadCustomModules();
+                this.renderCustomList();
+            },
+
+            getStoredMenus() {
+                try {
+                    const raw = localStorage.getItem(this.storageKey);
+                    return raw ? JSON.parse(raw) : [];
+                } catch(e) {
+                    return [];
+                }
+            },
+
+            saveStoredMenus(list) {
+                localStorage.setItem(this.storageKey, JSON.stringify(list));
+            },
+
+            renderPickers() {
+                const iconGrid = document.getElementById('customIconPickerList');
+                if (iconGrid) {
+                    iconGrid.innerHTML = AVAILABLE_ICONS.map((icon, idx) => `
+                        <button type="button" class="icon-choice-btn ${icon === this.selectedIcon ? 'selected' : ''}" 
+                                onclick="CustomMenuEngine.selectIcon('${icon}', this)">
+                            ${icon}
+                        </button>
+                    `).join('');
+                }
+
+                const colorGrid = document.getElementById('customColorPickerList');
+                if (colorGrid) {
+                    colorGrid.innerHTML = AVAILABLE_COLORS.map(color => `
+                        <div class="color-choice-dot ${color === this.selectedColor ? 'selected' : ''}" 
+                             style="background:${color};" 
+                             onclick="CustomMenuEngine.selectColor('${color}', this)"></div>
+                    `).join('');
+                }
+            },
+
+            selectIcon(icon, btn) {
+                Sound.click();
+                this.selectedIcon = icon;
+                document.querySelectorAll('#customIconPickerList .icon-choice-btn').forEach(b => b.classList.remove('selected'));
+                if (btn) btn.classList.add('selected');
+            },
+
+            selectColor(color, el) {
+                Sound.click();
+                this.selectedColor = color;
+                document.querySelectorAll('#customColorPickerList .color-choice-dot').forEach(d => d.classList.remove('selected'));
+                if (el) el.classList.add('selected');
+            },
+
+            loadCustomModules() {
+                const customItems = this.getStoredMenus();
+                customItems.forEach(item => {
+                    if (!MODULES.some(m => m.id === item.id)) {
+                        MODULES.push(item);
+                    }
+                    if (!PRIMARY_IDS.includes(item.id)) {
+                        PRIMARY_IDS.push(item.id);
+                    }
+                });
+            },
+
+            saveMenu() {
+                Sound.click();
+                const nameInput = document.getElementById('customMenuName');
+                const subInput = document.getElementById('customMenuSub');
+                const urlInput = document.getElementById('customMenuUrl');
+
+                const title = nameInput.value.trim();
+                const sub = subInput.value.trim() || 'Menu Kustom Pengguna';
+                let url = urlInput.value.trim();
+
+                if (!title) {
+                    OS.showToast('Nama menu wajib diisi!');
+                    nameInput.focus();
+                    return;
+                }
+
+                if (!url) {
+                    OS.showToast('Link menu wajib diisi!');
+                    urlInput.focus();
+                    return;
+                }
+
+                if (!/^https?:\/\//i.test(url)) {
+                    url = 'https://' + url;
+                }
+
+                const newModule = {
+                    id: 'custom_' + Date.now(),
+                    title: title,
+                    sub: sub,
+                    icon: this.selectedIcon,
+                    color: this.selectedColor,
+                    url: url
+                };
+
+                const currentCustom = this.getStoredMenus();
+                currentCustom.push(newModule);
+                this.saveStoredMenus(currentCustom);
+
+                MODULES.push(newModule);
+                PRIMARY_IDS.push(newModule.id);
+
+                nameInput.value = '';
+                subInput.value = '';
+                urlInput.value = '';
+
+                this.renderCustomList();
+                OS.renderTiles();
+                OS.renderStartPinned();
+                ThemeEngine.renderActiveOSMenu(document.documentElement.getAttribute('data-theme') || 'win11');
+                
+                OS.showToast(`Menu "${title}" berhasil ditambahkan!`);
+            },
+
+            deleteMenu(id) {
+                Sound.click();
+                if (!confirm('Hapus menu kustom ini?')) return;
+
+                let currentCustom = this.getStoredMenus();
+                currentCustom = currentCustom.filter(m => m.id !== id);
+                this.saveStoredMenus(currentCustom);
+
+                const modIdx = MODULES.findIndex(m => m.id === id);
+                if (modIdx !== -1) MODULES.splice(modIdx, 1);
+
+                const primIdx = PRIMARY_IDS.indexOf(id);
+                if (primIdx !== -1) PRIMARY_IDS.splice(primIdx, 1);
+
+                OS.unpinFromDesktop(id);
+
+                this.renderCustomList();
+                OS.renderTiles();
+                OS.renderStartPinned();
+                ThemeEngine.renderActiveOSMenu(document.documentElement.getAttribute('data-theme') || 'win11');
+
+                OS.showToast('Menu kustom berhasil dihapus.');
+            },
+
+            renderCustomList() {
+                const list = document.getElementById('customMenuListContainer');
+                const countLabel = document.getElementById('customMenuCount');
+                const customItems = this.getStoredMenus();
+
+                if (countLabel) countLabel.innerText = `${customItems.length} Menu`;
+                if (!list) return;
+
+                if (customItems.length === 0) {
+                    list.innerHTML = `
+                        <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center; padding:1.5rem 0;">
+                            Belum ada menu kustom yang dibuat.
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = customItems.map(item => `
+                    <div class="custom-item-card">
+                        <div class="custom-item-left">
+                            <div class="custom-badge-icon" style="background:${item.color};">
+                                ${item.icon}
+                            </div>
+                            <div style="text-align:left; overflow:hidden;">
+                                <div style="font-size:0.78rem; font-weight:800; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${item.title}</div>
+                                <div style="font-size:0.65rem; color:var(--text-secondary); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${item.url}</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:4px;">
+                            <button class="notepad-btn" style="padding:3px 6px; font-size:0.7rem;" onclick="OS.openDirect('${item.url}')" title="Test Buka Link">↗</button>
+                            <button class="custom-item-delete-btn" onclick="CustomMenuEngine.deleteMenu('${item.id}')" title="Hapus Menu">🗑</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            open() {
+                Sound.click();
+                const win = document.getElementById('customMenuWindow');
+                const btn = document.getElementById('taskbarCustomMenuBtn');
+                win.style.display = 'flex';
+                win.classList.remove('minimized');
+                if (btn) btn.classList.add('active');
+                OS.bringToFront('customMenuWindow');
+            },
+
+            close() {
+                Sound.click();
+                const win = document.getElementById('customMenuWindow');
+                const btn = document.getElementById('taskbarCustomMenuBtn');
+                win.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            },
+
+            toggle() {
+                const win = document.getElementById('customMenuWindow');
+                if (win.style.display === 'none' || win.classList.contains('minimized')) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            }
+        };
+
+        /**
+         * THEME ENGINE WITH MULTI-OS MENUS
          */
         const ThemeEngine = {
             init() {
@@ -2129,8 +2575,8 @@
                         `).join('');
 
                         right.innerHTML = `
+                            <div class="xp-item" onclick="CustomMenuEngine.open(); OS.toggleStart();"><strong>➕ Tambah Menu</strong></div>
                             <div class="xp-item" onclick="FileExplorer.open(); OS.toggleStart();"><strong>📁 My Documents</strong></div>
-                            <div class="xp-item" onclick="FileExplorer.open(); OS.toggleStart();"><strong>🖼️ My Pictures</strong></div>
                             <div class="xp-item" onclick="RadioPlayer.open(); OS.toggleStart();"><strong>🎵 My Music</strong></div>
                             <div style="border-top:1px solid #ADC9EB; margin:4px 0;"></div>
                             <div class="xp-item" onclick="ThemeEngine.open(); OS.toggleStart();">🎨 Control Panel</div>
@@ -2149,8 +2595,8 @@
                         `).join('');
 
                         right.innerHTML = `
+                            <div class="xp-item" onclick="CustomMenuEngine.open(); OS.toggleStart();">Tambah Menu</div>
                             <div class="xp-item" onclick="FileExplorer.open(); OS.toggleStart();">Documents</div>
-                            <div class="xp-item" onclick="FileExplorer.open(); OS.toggleStart();">Pictures</div>
                             <div class="xp-item" onclick="RadioPlayer.open(); OS.toggleStart();">Music</div>
                             <div style="border-top:1px solid #D0DBE5; margin:4px 0;"></div>
                             <div class="xp-item" onclick="ThemeEngine.open(); OS.toggleStart();">Control Panel</div>
@@ -2176,9 +2622,9 @@
                                 <span>${m.title}</span>
                             </div>
                         `).join('') + `
-                            <div style="border-top:1px solid #808080; margin:4px 0; padding-top:4px; display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="OS.showToast('Shutting Down Windows 95...', 'info'); OS.toggleStart();">
-                                <span>🚪</span>
-                                <span>Shut Down...</span>
+                            <div style="border-top:1px solid #808080; margin:4px 0; padding-top:4px; display:flex; align-items:center; gap:8px; padding:4px 6px; cursor:pointer; font-size:0.75rem; font-weight:700;" onclick="CustomMenuEngine.open(); OS.toggleStart();">
+                                <span>➕</span>
+                                <span>Tambah Menu...</span>
                             </div>
                         `;
                     }
@@ -2917,6 +3363,7 @@
 
         const OS = {
             init() {
+                CustomMenuEngine.init();
                 ThemeEngine.init();
                 Notepad.init();
                 Watermarker.init();
@@ -2929,6 +3376,7 @@
                 this.initBootSplash();
                 
                 WindowManager.makeDraggable('mainWindow', 'mainTitlebar');
+                WindowManager.makeDraggable('customMenuWindow', 'customMenuTitlebar');
                 WindowManager.makeDraggable('watermarkWindow', 'watermarkTitlebar');
                 WindowManager.makeDraggable('themeWindow', 'themeTitlebar');
                 WindowManager.makeDraggable('notepadWindow', 'notepadTitlebar');
@@ -3127,7 +3575,9 @@
                 Sound.click();
                 const mod = MODULES.find(m => m.id === id);
                 if (mod) {
-                    if (mod.action === 'notepad') {
+                    if (mod.action === 'custom_mgr') {
+                        CustomMenuEngine.open();
+                    } else if (mod.action === 'notepad') {
                         Notepad.open();
                     } else if (mod.action === 'theme') {
                         ThemeEngine.open();
