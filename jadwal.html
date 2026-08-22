@@ -427,9 +427,9 @@
                         * Minimal penarikan saldo adalah Rp 10.000
                     </p>
 
-                    <div class="flex items-center justify-between text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
+                    <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
                         <span id="modalMyPointsDetail">0 Poin</span>
-                        <span id="modalCurrentRate">Tarif: Rp 10 / 100 Poin</span>
+                        <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
                     </div>
                 </div>
 
@@ -1120,7 +1120,6 @@
 
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
-
     <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
@@ -1150,7 +1149,7 @@
         let audioCtx = null;
         let cachedMyEarningsData = null;
 
-        // Data Relasi Follow, Notifikasi, Online Presence & Mapping Nama User
+        // Relasi Follow, Notifikasi, Online Presence & Mapping Nama Petugas
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -1160,7 +1159,7 @@
         let presenceChannel = null;
         let userProfilesMap = {};
 
-        // PENGATURAN ANGGARAN & POIN (UPDATE REWARD BARU)
+        // Pengaturan Anggaran, Poin & Penalti Hutang Transparan
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -1169,15 +1168,13 @@
             pointsOnTime: 100,
             pointsProcess: 50,
             pointsLate: 0,
-            pointsExpired: -50,
+            pointsExpired: 50, // Penalti flat 50 poin (dihitung 1x saja per tugas)
             pointsStreak: 200,
-            // ATURAN REWARD BARU
             pointsNewUser: 1000,
             pointsMutual: 500,
             pointsPhoto: 50,
             pointsPerbaikan: 100,
             pointsComment: 10,
-            // ATURAN WD
             adminFeeNonBtn: 2500,
             minWithdrawal: 10000
         };
@@ -1223,7 +1220,6 @@
             return false;
         }
 
-        // PERBAIKAN: Fungsi mengecek keterlambatan secara riil tanpa terpengaruh pergantian hari
         function isCompletedLate(task) {
             if (task.status !== 'Selesai') return false;
             if (!task.completed_at || !task.tanggal || !task.jam_selesai) return false;
@@ -1238,11 +1234,8 @@
             const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
             const compTimeStr = `${compHours}:${compMinutes}`;
 
-            // Terlambat jika baru diselesaikan di hari berikutnya
             if (compDateStr > task.tanggal) return true;
-            // Terlambat jika diselesaikan di hari yang sama tapi melewati jam_selesai
             if (compDateStr === task.tanggal && compTimeStr > task.jam_selesai) return true;
-
             return false;
         }
 
@@ -1357,7 +1350,7 @@
                 <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
                 <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
                 <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
-                <li class="flex items-center justify-between"><span>❌ Expired (Lewat Hari)</span><span class="font-extrabold text-rose-500">${budgetSettings.pointsExpired} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin (1x/tugas)</span></li>
                 <li class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[9.5px] text-amber-600 dark:text-amber-400"><span>💳 Rekening Bank BTN</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">Bebas Biaya Admin</span></li>
             `;
         }
@@ -1397,7 +1390,7 @@
             document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
             document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
             document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
-            document.getElementById('inputPointsExpired').value = budgetSettings.pointsExpired;
+            document.getElementById('inputPointsExpired').value = Math.abs(budgetSettings.pointsExpired);
             document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
             document.getElementById('budgetConfigModal').classList.remove('hidden');
         }
@@ -1416,7 +1409,7 @@
                 pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
                 pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
                 pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
-                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || -50,
+                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || 50,
                 pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200,
                 pointsNewUser: budgetSettings.pointsNewUser, pointsMutual: budgetSettings.pointsMutual, pointsPhoto: budgetSettings.pointsPhoto, pointsPerbaikan: budgetSettings.pointsPerbaikan, pointsComment: budgetSettings.pointsComment
             };
@@ -1426,7 +1419,7 @@
         });
 
         // -----------------------------------------------------------
-        // PERHITUNGAN POIN & REWARD
+        // PERHITUNGAN POIN, REWARD & PENALTI HUTANG 1X
         // -----------------------------------------------------------
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
@@ -1437,14 +1430,25 @@
                 const taskDateStr = t.tanggal;
                 if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
 
+                // Hanya hari kerja (Senin - Jumat)
                 const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) return;
 
                 if (!userEarningsMap[uid]) {
                     userEarningsMap[uid] = {
-                        userId: uid, nama: getUserDisplayName(uid, t.user_email, t.nama), email: t.user_email || '',
-                        dailyCount: {}, activeDates: new Set(), points: 0, eligibleTasks: 0,
-                        earlyBirdBonus: 0, streakBonus: 0, extraBonus: 0, totalEarning: 0,
+                        userId: uid, 
+                        nama: getUserDisplayName(uid, t.user_email, t.nama), 
+                        email: t.user_email || '',
+                        dailyCount: {}, 
+                        activeDates: new Set(), 
+                        points: 0, 
+                        eligibleTasks: 0,
+                        earlyBirdBonus: 0, 
+                        streakBonus: 0, 
+                        extraBonus: 0, 
+                        debtPoints: 0,         // <-- Pencatat hutang penalti
+                        expiredTasksCount: 0,  // <-- Jumlah tugas yang kena penalti
+                        totalEarning: 0,
                         perbaikanCount: {}
                     };
                 }
@@ -1473,11 +1477,13 @@
                         userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
                     }
 
+                    // LOGIKA 3: Early Bird < 06:00
                     if (isCreatedBefore6AM(t)) {
                         userEarningsMap[uid].points += budgetSettings.pointsEarly;
                         userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
                     }
 
+                    // LOGIKA 4: Status Tugas & Penalti Flat 1x per Tugas
                     if (t.status === 'Selesai') {
                         userEarningsMap[uid].points += (isCompletedLate(t) ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
                         userEarningsMap[uid].activeDates.add(taskDateStr);
@@ -1485,7 +1491,9 @@
                         userEarningsMap[uid].points += budgetSettings.pointsProcess;
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
-                        userEarningsMap[uid].points += budgetSettings.pointsExpired;
+                        const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
+                        userEarningsMap[uid].debtPoints += penaltyVal;
+                        userEarningsMap[uid].expiredTasksCount++;
                     }
                 }
             });
@@ -1504,13 +1512,28 @@
                     u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
                 }
 
-                const totalPoints = Math.max(0, u.points + u.streakBonus + u.extraBonus);
-                u.totalPoints = totalPoints;
-                u.totalEarning = Math.round((totalPoints / 100) * budgetSettings.ratePerTask);
+                // Total Bersih = Total Poin Kotor - Hutang Penalti (Tidak boleh di bawah 0)
+                const grossPoints = u.points + u.streakBonus + u.extraBonus;
+                const netPoints = Math.max(0, grossPoints - u.debtPoints);
+
+                u.grossPoints = grossPoints;
+                u.totalPoints = netPoints;
+                u.totalEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
                 totalTeamBudgetUsed += u.totalEarning;
             });
 
-            const myData = userEarningsMap[currentUser?.id] || { totalPoints: budgetSettings.pointsNewUser, points: 0, earlyBirdBonus: 0, streakBonus: 0, eligibleTasks: 0, totalEarning: (budgetSettings.pointsNewUser/100)*budgetSettings.ratePerTask, extraBonus: budgetSettings.pointsNewUser };
+            const myData = userEarningsMap[currentUser?.id] || { 
+                totalPoints: budgetSettings.pointsNewUser, 
+                grossPoints: budgetSettings.pointsNewUser,
+                points: 0, 
+                earlyBirdBonus: 0, 
+                streakBonus: 0, 
+                eligibleTasks: 0, 
+                totalEarning: (budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask, 
+                extraBonus: budgetSettings.pointsNewUser,
+                debtPoints: 0,
+                expiredTasksCount: 0
+            };
             
             document.getElementById('myEarningsBadge').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
 
@@ -1518,7 +1541,7 @@
         }
 
         // -----------------------------------------------------------
-        // FITUR PENARIKAN (WITHDRAWAL) & STATUS TELAH DIBAYAR
+        // FITUR PENARIKAN (WITHDRAWAL) & RIWAYAT STATUS
         // -----------------------------------------------------------
         async function fetchWithdrawalsSupabase() {
             let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
@@ -1696,7 +1719,15 @@
             cachedMyEarningsData = myData;
 
             document.getElementById('modalMyTotalEarnings').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
-            document.getElementById('modalMyPointsDetail').innerText = `${myData.totalPoints || 0} Poin (Login Baru/Mutual: +${myData.extraBonus || 0}, Kerja: +${myData.points || 0})`;
+            
+            const debtDetail = myData.debtPoints > 0 
+                ? `<span class="text-rose-200 font-bold block mt-0.5">⚠️ Hutang Penalti: -${myData.debtPoints} Poin (${myData.expiredTasksCount} tugas expired)</span>` 
+                : '';
+
+            document.getElementById('modalMyPointsDetail').innerHTML = `
+                <span>Total Bersih: <b>${myData.totalPoints || 0} Poin</b> (Kotor: ${myData.grossPoints || 0})</span>
+                ${debtDetail}
+            `;
             document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
 
             const btnWD = document.getElementById('btnWithdrawEarning');
@@ -1748,7 +1779,7 @@
                                         <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${u.nama} ${isMe ? '(Saya)' : ''}</p>
                                         ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
                                     </div>
-                                    <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin &bull; ${u.eligibleTasks} tugas valid</p>
+                                    <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin ${u.debtPoints > 0 ? `(Hutang: -${u.debtPoints})` : ''} &bull; ${u.eligibleTasks} tugas valid</p>
                                 </div>
                             </div>
                             <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Rp ${u.totalEarning.toLocaleString('id-ID')}</span>
@@ -2218,8 +2249,7 @@
                             pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">Terkunci</span>`;
                         } else {
                             statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-500 border border-rose-200">⏱️ Belum Dikerjakan</span>`;
-                            const expSign = budgetSettings.pointsExpired >= 0 ? `+${budgetSettings.pointsExpired}` : `${budgetSettings.pointsExpired}`;
-                            pointRewardBadge = isPastDay ? `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-300">${expSign} Poin</span>` : `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin</span>`;
+                            pointRewardBadge = isPastDay ? `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-300">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>` : `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin</span>`;
                         }
                     }
 
@@ -2605,6 +2635,33 @@
             if (!error) { showToast("5 Tugas dibuat!"); closeAutoGenerateModal(); } else alert("Gagal membuat: " + error.message);
             document.getElementById('btn-process-gen').innerText = "Generate";
         }
+
+        function openEditUserNameModal(targetUserId, currentEmail, currentName) {
+            document.getElementById('edit-user-target-id').value = targetUserId;
+            document.getElementById('edit-user-email-display').value = currentEmail;
+            document.getElementById('edit-user-new-name').value = currentName;
+            document.getElementById('editUserNameModal').classList.remove('hidden');
+        }
+
+        function closeEditUserNameModal() { document.getElementById('editUserNameModal').classList.add('hidden'); }
+
+        document.getElementById('formEditUserName').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const targetUserId = document.getElementById('edit-user-target-id').value;
+            const newName = document.getElementById('edit-user-new-name').value.trim();
+            if (!targetUserId || !newName) return;
+
+            userProfilesMap[targetUserId] = newName;
+            const { error } = await _supabase.from('app_config').upsert({ id: 'user_profiles', config_data: userProfilesMap, updated_at: new Date().toISOString() });
+            if (!error) {
+                showToast("Nama petugas berhasil disimpan!");
+                closeEditUserNameModal();
+                renderTasks();
+                calculateAndRenderEarnings();
+            } else {
+                showToast("Gagal menyimpan nama: " + error.message);
+            }
+        });
 
         function openProfileModal() { document.getElementById('form-profile-modal').classList.remove('hidden'); }
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
