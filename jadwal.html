@@ -1153,7 +1153,7 @@
         let notifiedTaskId = null;
         let audioCtx = null;
         let cachedMyEarningsData = null;
-        let userRanksMap = {}; // Penyimpan peringkat 1, 2, 3 user
+        let userRanksMap = {};
 
         // Relasi Follow, Notifikasi, Online Presence & Mapping Nama Petugas
         let myFollowings = [];
@@ -1174,7 +1174,7 @@
             pointsOnTime: 100,
             pointsProcess: 50,
             pointsLate: 0,
-            pointsExpired: 50, // Penalti flat 50 poin jika belum dikerjakan
+            pointsExpired: 50,
             pointsStreak: 200,
             pointsNewUser: 1000,
             pointsMutual: 500,
@@ -1263,7 +1263,6 @@
             return 'Petugas';
         }
 
-        // FOTO PROFIL DENGAN BORDER PERINGKAT 1, 2, 3
         function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
             const rank = userId ? userRanksMap[userId] : null;
             let rankBorder = "border border-slate-200 dark:border-slate-700";
@@ -1506,7 +1505,6 @@
                         userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
                     }
 
-                    // Logika Status: Tugas Expired yang diselesaikan susulan mendapat 0 poin tapi hutang lunas
                     if (t.status === 'Selesai') {
                         const isLate = isCompletedLate(t);
                         userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
@@ -1515,7 +1513,6 @@
                         userEarningsMap[uid].points += budgetSettings.pointsProcess;
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
-                        // Kena hutang jika masih berstatus 'Belum'
                         const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
                         userEarningsMap[uid].debtPoints += penaltyVal;
                         userEarningsMap[uid].expiredTasksCount++;
@@ -1546,7 +1543,6 @@
                 totalTeamBudgetUsed += u.totalEarning;
             });
 
-            // HITUNG PERINGKAT 1, 2, 3 (LEADERBOARD)
             const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
             userRanksMap = {};
             sortedUsers.forEach((u, index) => {
@@ -2096,10 +2092,7 @@
                 userRow.className = 'flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40';
                 userRow.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="relative flex-shrink-0">
-                            ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
-                            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
-                        </div>
+                        ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
                         <div class="min-w-0">
                             <div class="flex items-center gap-1.5">
                                 <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${u.nama}</p>
@@ -2271,28 +2264,32 @@
                     const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
                     const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
                     
-                    // KETENTUAN BARU: Tugas expired BISA diselesaikan oleh pemiliknya
                     const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
                     const canManage = isSuperAdmin || (isOwner && !isLocked);
                     const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item);
 
                     let statusBadgeHtml = ''; let pointRewardBadge = '';
                     if (isCompleted) {
-                        statusBadgeHtml = isLate ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-300">⚠️ Selesai (${isPastDay ? 'Susulan' : 'Lewat Jam'})</span>` : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-300">✅ Selesai</span>`;
-                        pointRewardBadge = isLate ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin (Lunas)</span>` : `<span class="font-extrabold text-[9.5px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300">+${budgetSettings.pointsOnTime} Poin</span>`;
+                        statusBadgeHtml = isLate 
+                            ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> Selesai (${isPastDay ? 'Susulan' : 'Terlambat'})</span>` 
+                            : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"><i class="fa-solid fa-circle-check text-[9px]"></i> Selesai</span>`;
+                        
+                        pointRewardBadge = isLate 
+                            ? `<span class="font-bold text-[9.5px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">0 Poin (Lunas)</span>` 
+                            : `<span class="font-extrabold text-[9.5px] text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/80 px-2 py-1 rounded-xl border border-emerald-300 dark:border-emerald-800">+${budgetSettings.pointsOnTime} Poin</span>`;
                     } else if (item.status === 'Proses') {
-                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-500 border border-amber-300">⚡ Sedang Dikerjakan</span>`;
-                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-300">+${budgetSettings.pointsProcess} Poin</span>`;
+                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-500 border border-amber-500/30">⚡ Proses</span>`;
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 px-2 py-1 rounded-xl border border-amber-300">+${budgetSettings.pointsProcess} Poin</span>`;
                     } else {
                         if (isTooEarly) {
-                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-300"><i class="fa-solid fa-lock text-[8.5px]"></i> Belum Jamnya (${item.jam_mulai})</span>`;
-                            pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">Terkunci</span>`;
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700"><i class="fa-solid fa-lock text-[8.5px]"></i> Belum Jamnya (${item.jam_mulai})</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 dark:bg-slate-800/60 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">Terkunci</span>`;
                         } else if (isPastDay) {
-                            statusBadgeHtml = `<button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-300 transition shadow-xs"><i class="fa-solid fa-camera text-[9px]"></i> Selesaikan Susulan</button>`;
-                            pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-300">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>`;
+                            statusBadgeHtml = `<button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-300 dark:border-rose-800 transition shadow-xs"><i class="fa-solid fa-camera text-[9px]"></i> Selesaikan Susulan</button>`;
+                            pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/40 px-2 py-1 rounded-xl border border-rose-300 dark:border-rose-800">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>`;
                         } else {
-                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-500 border border-rose-200">⏱️ Belum Dikerjakan</span>`;
-                            pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin</span>`;
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800">⏱️ Belum Dikerjakan</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-300 dark:border-slate-700">0 Poin</span>`;
                         }
                     }
 
@@ -2300,11 +2297,11 @@
                     if (canManage) {
                         taskMenuDropdown = `
                             <div id="task-menu-${item.id}" class="hidden absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
-                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>` : ''}
-                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
-                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
-                                ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-t border-slate-100"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
-                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>` : ''}
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
+                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
+                                ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
+                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
                             </div>
                         `;
                     }
@@ -2312,35 +2309,108 @@
                     let photoEvidenceHtml = '';
                     if (item.foto_sebelum || item.foto_sesudah) {
                         photoEvidenceHtml = `
-                            <div class="grid grid-cols-2 gap-2 my-2">
-                                ${item.foto_sebelum ? `<div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="cursor-pointer group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100"><img src="${item.foto_sebelum}" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200"><span class="absolute bottom-1 left-1 bg-black/70 text-white text-[8px] font-bold px-1.5 py-0.5 rounded">📷 Sebelum</span></div>` : '<div class="h-24 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-[9px] text-slate-400 italic">Tanpa Foto Sebelum</div>'}
-                                ${item.foto_sesudah ? `<div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="cursor-pointer group relative rounded-xl overflow-hidden border border-emerald-300 bg-slate-100"><img src="${item.foto_sesudah}" class="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-200"><span class="absolute bottom-1 left-1 bg-emerald-700/80 text-white text-[8px] font-bold px-1.5 py-0.5 rounded">✅ Sesudah</span></div>` : '<div class="h-24 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-[9px] text-slate-400 italic">Tanpa Foto Sesudah</div>'}
+                            <div class="grid grid-cols-2 gap-2.5 my-3">
+                                ${item.foto_sebelum ? `
+                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs cursor-pointer">
+                                        <img src="${item.foto_sebelum}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg border border-white/10">
+                                            <i class="fa-solid fa-camera text-[8px] text-amber-400"></i> Sebelum
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sebelum</span>
+                                    </div>`
+                                }
+                                ${item.foto_sesudah ? `
+                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-emerald-500/30 shadow-xs cursor-pointer ring-1 ring-emerald-500/20">
+                                        <img src="${item.foto_sesudah}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-emerald-600/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg shadow-xs">
+                                            <i class="fa-solid fa-circle-check text-[8px] text-emerald-200"></i> Sesudah
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sesudah</span>
+                                    </div>`
+                                }
                             </div>
                         `;
                     }
 
                     tasksListHtml += `
-                        <div class="py-2.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
-                            <div class="flex items-center justify-between gap-2 mb-1">
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <span class="font-mono font-bold text-[11px] text-emerald-600"><i class="fa-regular fa-clock mr-1"></i>${item.jam_mulai} - ${item.jam_selesai}</span>
-                                    ${isEarly ? `<span class="text-[8.5px] bg-amber-400/20 text-amber-600 font-extrabold px-1 rounded">🌅 &lt;06:00 (+${budgetSettings.pointsEarly} Poin)</span>` : ''}
+                        <div class="py-3.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
+                            
+                            <!-- Header Waktu & Action Menu -->
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
+                                        <i class="fa-regular fa-clock text-[10px] text-emerald-600 dark:text-emerald-400"></i>
+                                        ${item.jam_mulai} - ${item.jam_selesai}
+                                    </span>
+                                    ${isEarly ? `<span class="inline-flex items-center gap-1 text-[9px] bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold px-2 py-0.5 rounded-full">🌅 &lt;06:00 (+${budgetSettings.pointsEarly})</span>` : ''}
                                 </div>
-                                <div class="relative flex items-center gap-1">
-                                    ${canManage ? `<button onclick="toggleTaskMenu('${item.id}')" class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 flex items-center justify-center text-xs"><i class="fa-solid fa-ellipsis"></i></button>${taskMenuDropdown}` : `<span class="w-5 h-5 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-[9px]"><i class="fa-solid fa-lock text-amber-500"></i></span>`}
+
+                                <div class="relative flex items-center">
+                                    ${canManage ? `
+                                        <button onclick="toggleTaskMenu('${item.id}')" class="w-7 h-7 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                        ${taskMenuDropdown}` : `
+                                        <span class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-[10px]" title="Terkunci">
+                                            <i class="fa-solid fa-lock text-amber-500/80"></i>
+                                        </span>`
+                                    }
                                 </div>
                             </div>
-                            <p class="text-[13px] font-normal text-slate-900 dark:text-slate-100 leading-snug break-words mb-1">${item.tugas}</p>
+
+                            <!-- Judul Tugas / Area -->
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug break-words tracking-tight mb-2">
+                                ${item.tugas}
+                            </h3>
+
+                            <!-- Foto Before / After -->
                             ${photoEvidenceHtml}
-                            ${item.keterangan ? `<div class="p-2 bg-emerald-50/70 rounded-xl border border-emerald-200/60 text-emerald-900 text-[11px] font-medium mb-2 flex items-start gap-1.5"><i class="fa-solid fa-clipboard-check text-emerald-600 mt-0.5 text-xs"></i><div class="min-w-0 flex-1"><span class="font-extrabold block text-[9.5px] text-emerald-700 uppercase">Keterangan Selesai:</span><p class="leading-tight break-words">${item.keterangan}</p></div></div>` : ''}
-                            <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-slate-100/60">
-                                <div class="flex items-center gap-1.5">${statusBadgeHtml}${pointRewardBadge}</div>
-                                <div class="flex items-center gap-3">
-                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-xs font-bold ${isLiked ? 'text-blue-600' : 'text-slate-400 hover:text-blue-500'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i><span>${likesCount}</span></button>
-                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-emerald-500"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots text-sm"></i><span>${commentsCount}</span></button>
-                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="flex items-center text-xs font-bold text-slate-400 hover:text-blue-500"><i class="fa-solid fa-share text-sm"></i></button>
+
+                            <!-- Keterangan Selesai (Style Callout Modern) -->
+                            ${item.keterangan ? `
+                                <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-emerald-500 border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
+                                    <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
+                                        <i class="fa-solid fa-clipboard-check text-xs"></i>
+                                        <span>Keterangan Selesai</span>
+                                    </div>
+                                    <p class="text-slate-700 dark:text-slate-200 text-xs font-medium leading-relaxed break-words">
+                                        ${item.keterangan}
+                                    </p>
+                                </div>` : ''
+                            }
+
+                            <!-- Footer Card (Badge Status, Poin & Interaksi Sosial) -->
+                            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 mt-1">
+                                <div class="flex items-center gap-1.5">
+                                    ${statusBadgeHtml}
+                                    ${pointRewardBadge}
+                                </div>
+
+                                <div class="flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'hover:text-blue-500'}">
+                                        <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
+                                        <span>${likesCount}</span>
+                                    </button>
+
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-emerald-600 dark:hover:text-emerald-400 transition">
+                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots text-sm ${commentsCount > 0 ? 'text-emerald-500' : ''}"></i>
+                                        <span>${commentsCount}</span>
+                                    </button>
+
+                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="w-8 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-blue-500 transition" title="Bagikan">
+                                        <i class="fa-solid fa-share-nodes text-sm"></i>
+                                    </button>
                                 </div>
                             </div>
+
                         </div>
                     `;
                 });
@@ -2354,7 +2424,7 @@
                                 <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-emerald-600 font-bold">${tasksOfUser.length} Tugas</span></div>
                             </div>
                         </div>
-                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">${sampleTask?.peran || 'Divisi'}</span>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Divisi'}</span>
                     </div>
                     <div class="py-1">${tasksListHtml}</div>
                 `;
@@ -2373,12 +2443,12 @@
                     const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item); const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
                     
                     const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50 transition-colors border-b border-slate-200';
+                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800';
                     let roleBadge = item.peran === 'Teknisi' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🛠️ Teknisi</span>` : (item.peran === 'Cleaning' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 text-teal-700 border border-teal-200">🧹 Cleaning</span>` : `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200">📋 Admin</span>`);
 
-                    let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-lg px-2 py-1"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-teal-600 bg-teal-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
+                    let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-teal-600 bg-teal-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
                     
-                    let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
+                    let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-emerald-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
 
                     row.innerHTML = `
                         <td class="p-3 font-mono font-bold text-[10px] text-slate-500">${item.tanggal || '-'}</td>
@@ -2431,12 +2501,12 @@
             comments.forEach(c => {
                 const isMyComment = c.user_id === currentUser.id; const canDelete = isMyComment || isSuperAdmin;
                 const commentEl = document.createElement('div'); const senderName = getUserDisplayName(c.user_id, c.user_email);
-                commentEl.className = `p-2.5 rounded-xl text-xs relative group ${isMyComment ? 'bg-emerald-50 ml-4 border border-emerald-200/60' : 'bg-slate-100 mr-4 border border-slate-200/60'}`;
+                commentEl.className = `p-2.5 rounded-xl text-xs relative group ${isMyComment ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-4 border border-emerald-200/60 dark:border-emerald-800/60' : 'bg-slate-100 dark:bg-slate-800 mr-4 border border-slate-200/60 dark:border-slate-700'}`;
                 let actionIcons = '';
                 if (isMyComment || canDelete) {
                     actionIcons = `<div class="flex items-center gap-1.5">${isMyComment ? `<button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-600 text-[10px]"><i class="fa-solid fa-pen"></i></button>` : ''}${canDelete ? `<button onclick="deleteComment('${c.id}')" class="text-slate-400 hover:text-rose-500 text-[10px]"><i class="fa-solid fa-trash"></i></button>` : ''}</div>`;
                 }
-                commentEl.innerHTML = `<div class="flex items-center justify-between mb-1"><div class="flex items-center gap-1.5"><span class="font-extrabold ${isMyComment ? 'text-emerald-700' : 'text-slate-800'} text-[10px]">${isMyComment ? 'Saya' : senderName}</span><span class="text-[8px] text-slate-400">${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}</span></div>${actionIcons}</div><p class="text-slate-700 leading-snug break-words">${c.comment}</p>`;
+                commentEl.innerHTML = `<div class="flex items-center justify-between mb-1"><div class="flex items-center gap-1.5"><span class="font-extrabold ${isMyComment ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-800 dark:text-slate-100'} text-[10px]">${isMyComment ? 'Saya' : senderName}</span><span class="text-[8px] text-slate-400">${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}</span></div>${actionIcons}</div><p class="text-slate-700 dark:text-slate-200 leading-snug break-words">${c.comment}</p>`;
                 commentList.appendChild(commentEl);
             });
             commentList.scrollTop = commentList.scrollHeight;
@@ -2519,7 +2589,6 @@
             const beforeFileInput = document.getElementById('complete-file-before'); 
             const afterFileInput = document.getElementById('complete-file-after');
 
-            // VALIDASI: Tugas susulan expired WAJIB menyertakan foto & keterangan
             if (isPast) {
                 if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
                 const hasExistingPhoto = !!target.foto_sesudah;
@@ -2583,7 +2652,6 @@
 
             if (newStatus === 'Selesai') { openCompletionNoteModal(target); return; }
             
-            // Mengubah status belum/proses hanya bisa di hari H
             if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
                 showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
                 return;
