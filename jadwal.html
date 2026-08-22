@@ -332,7 +332,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-check text-emerald-500"></i> Keterangan Pekerjaan Selesai
+                    <i class="fa-solid fa-circle-check text-emerald-500"></i> Form Penyelesaian Tugas
                 </h3>
                 <button onclick="closeCompletionNoteModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -345,9 +345,14 @@
                     <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tugas</label>
                     <p id="complete-task-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2 rounded-xl border border-slate-200/60 dark:border-slate-700 leading-snug">-</p>
                 </div>
+
+                <div id="complete-late-warning" class="hidden p-2.5 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] space-y-1">
+                    <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
+                    <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
+                </div>
                 
                 <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan</label>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan <span id="note-required-star" class="text-rose-500 hidden">*</span></label>
                     <textarea id="complete-task-note" rows="2" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
 
@@ -371,7 +376,7 @@
                     <!-- Foto Sesudah (After) -->
                     <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
                         <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">
-                            ✅ Foto Sesudah Dikerjakan (After)
+                            ✅ Foto Sesudah Dikerjakan (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span>
                         </label>
                         <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
                         <div id="complete-after-preview-container" class="hidden pt-1">
@@ -1148,6 +1153,7 @@
         let notifiedTaskId = null;
         let audioCtx = null;
         let cachedMyEarningsData = null;
+        let userRanksMap = {}; // Penyimpan peringkat 1, 2, 3 user
 
         // Relasi Follow, Notifikasi, Online Presence & Mapping Nama Petugas
         let myFollowings = [];
@@ -1168,7 +1174,7 @@
             pointsOnTime: 100,
             pointsProcess: 50,
             pointsLate: 0,
-            pointsExpired: 50, // Penalti flat 50 poin (dihitung 1x saja per tugas)
+            pointsExpired: 50, // Penalti flat 50 poin jika belum dikerjakan
             pointsStreak: 200,
             pointsNewUser: 1000,
             pointsMutual: 500,
@@ -1257,12 +1263,32 @@
             return 'Petugas';
         }
 
-        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9") {
-            if (avatarUrl) {
-                return `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover shadow-sm border border-slate-200 dark:border-slate-700" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
+        // FOTO PROFIL DENGAN BORDER PERINGKAT 1, 2, 3
+        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
+            const rank = userId ? userRanksMap[userId] : null;
+            let rankBorder = "border border-slate-200 dark:border-slate-700";
+            let rankBadge = "";
+
+            if (rank === 1) {
+                rankBorder = "ring-2 ring-amber-400 border-2 border-yellow-300 shadow-md shadow-amber-400/30";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 1">1</span>`;
+            } else if (rank === 2) {
+                rankBorder = "ring-2 ring-slate-300 border-2 border-slate-100 shadow-sm";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-slate-400 to-slate-200 text-slate-950 text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 2">2</span>`;
+            } else if (rank === 3) {
+                rankBorder = "ring-2 ring-amber-700 border-2 border-amber-600 shadow-sm";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-amber-700 to-amber-500 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 3">3</span>`;
             }
-            const initial = (name || 'U').charAt(0).toUpperCase();
-            return `<div class="${sizeClass} rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">${initial}</div>`;
+
+            let avatarInner = '';
+            if (avatarUrl) {
+                avatarInner = `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover ${rankBorder}" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
+            } else {
+                const initial = (name || 'U').charAt(0).toUpperCase();
+                avatarInner = `<div class="${sizeClass} rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-sm ${rankBorder}">${initial}</div>`;
+            }
+
+            return `<div class="relative inline-block flex-shrink-0">${rankBadge}${avatarInner}</div>`;
         }
 
         async function processAndWatermarkImage(file, userName) {
@@ -1351,6 +1377,7 @@
                 <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
                 <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
                 <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin (1x/tugas)</span></li>
+                <li class="flex items-center justify-between text-slate-500 italic"><span>🛠️ Selesai Susulan (Expired)</span><span class="font-bold">0 Poin (Lunas Hutang)</span></li>
                 <li class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[9.5px] text-amber-600 dark:text-amber-400"><span>💳 Rekening Bank BTN</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">Bebas Biaya Admin</span></li>
             `;
         }
@@ -1419,7 +1446,7 @@
         });
 
         // -----------------------------------------------------------
-        // PERHITUNGAN POIN, REWARD & PENALTI HUTANG 1X
+        // PERHITUNGAN POIN, REWARD, HUTANG & LEADERBOARD RANK
         // -----------------------------------------------------------
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
@@ -1430,7 +1457,6 @@
                 const taskDateStr = t.tanggal;
                 if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
 
-                // Hanya hari kerja (Senin - Jumat)
                 const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
                 if (dayOfWeek === 0 || dayOfWeek === 6) return;
 
@@ -1446,8 +1472,8 @@
                         earlyBirdBonus: 0, 
                         streakBonus: 0, 
                         extraBonus: 0, 
-                        debtPoints: 0,         // <-- Pencatat hutang penalti
-                        expiredTasksCount: 0,  // <-- Jumlah tugas yang kena penalti
+                        debtPoints: 0,
+                        expiredTasksCount: 0,
                         totalEarning: 0,
                         perbaikanCount: {}
                     };
@@ -1462,7 +1488,6 @@
                     userEarningsMap[uid].dailyCount[taskDateStr]++;
                     userEarningsMap[uid].eligibleTasks++;
 
-                    // LOGIKA 1: Tag #perbaikan (+100 Koin Maks 5x/hari)
                     const isiTugas = (t.tugas || '').toLowerCase();
                     const isiKet = (t.keterangan || '').toLowerCase();
                     if (isiTugas.includes('#perbaikan') || isiKet.includes('#perbaikan')) {
@@ -1472,25 +1497,25 @@
                         }
                     }
 
-                    // LOGIKA 2: Upload Foto Before & After (+50 Koin)
                     if (t.foto_sebelum && t.foto_sesudah) {
                         userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
                     }
 
-                    // LOGIKA 3: Early Bird < 06:00
                     if (isCreatedBefore6AM(t)) {
                         userEarningsMap[uid].points += budgetSettings.pointsEarly;
                         userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
                     }
 
-                    // LOGIKA 4: Status Tugas & Penalti Flat 1x per Tugas
+                    // Logika Status: Tugas Expired yang diselesaikan susulan mendapat 0 poin tapi hutang lunas
                     if (t.status === 'Selesai') {
-                        userEarningsMap[uid].points += (isCompletedLate(t) ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
+                        const isLate = isCompletedLate(t);
+                        userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Proses') {
                         userEarningsMap[uid].points += budgetSettings.pointsProcess;
                         userEarningsMap[uid].activeDates.add(taskDateStr);
                     } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
+                        // Kena hutang jika masih berstatus 'Belum'
                         const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
                         userEarningsMap[uid].debtPoints += penaltyVal;
                         userEarningsMap[uid].expiredTasksCount++;
@@ -1512,7 +1537,6 @@
                     u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
                 }
 
-                // Total Bersih = Total Poin Kotor - Hutang Penalti (Tidak boleh di bawah 0)
                 const grossPoints = u.points + u.streakBonus + u.extraBonus;
                 const netPoints = Math.max(0, grossPoints - u.debtPoints);
 
@@ -1520,6 +1544,15 @@
                 u.totalPoints = netPoints;
                 u.totalEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
                 totalTeamBudgetUsed += u.totalEarning;
+            });
+
+            // HITUNG PERINGKAT 1, 2, 3 (LEADERBOARD)
+            const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+            userRanksMap = {};
+            sortedUsers.forEach((u, index) => {
+                if (index < 3 && u.totalPoints > 0) {
+                    userRanksMap[u.userId] = index + 1;
+                }
             });
 
             const myData = userEarningsMap[currentUser?.id] || { 
@@ -1769,6 +1802,9 @@
                     userKeys.forEach(uid => {
                         const u = userEarningsMap[uid];
                         const isMe = uid === currentUser?.id;
+                        const rank = userRanksMap[uid];
+                        let rankIcon = rank ? (rank === 1 ? '🥇 ' : (rank === 2 ? '🥈 ' : '🥉 ')) : '';
+
                         const row = document.createElement('div');
                         row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
                         row.innerHTML = `
@@ -1776,7 +1812,7 @@
                                 <div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-1.5">
-                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${u.nama} ${isMe ? '(Saya)' : ''}</p>
+                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
                                         ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
                                     </div>
                                     <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin ${u.debtPoints > 0 ? `(Hutang: -${u.debtPoints})` : ''} &bull; ${u.eligibleTasks} tugas valid</p>
@@ -2061,7 +2097,7 @@
                 userRow.innerHTML = `
                     <div class="flex items-center gap-2.5 min-w-0">
                         <div class="relative flex-shrink-0">
-                            ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8")}
+                            ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
                             <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}" title="${isOnline ? 'Online' : 'Offline'}"></span>
                         </div>
                         <div class="min-w-0">
@@ -2223,6 +2259,7 @@
                 tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
                 const sampleTask = tasksOfUser[0]; const isOnline = !!onlineUsersState[sampleTask?.user_id];
                 const postDate = sampleTask?.tanggal || todayStr; const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
+                const taskUserId = sampleTask?.user_id;
 
                 const fbPostCard = document.createElement('div');
                 fbPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-300 dark:border-slate-800 shadow-sm transition';
@@ -2233,13 +2270,16 @@
                     const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
                     const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
                     const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
-                    const isLocked = (isCompleted || isPastDay || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    
+                    // KETENTUAN BARU: Tugas expired BISA diselesaikan oleh pemiliknya
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
                     const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item);
 
                     let statusBadgeHtml = ''; let pointRewardBadge = '';
                     if (isCompleted) {
-                        statusBadgeHtml = isLate ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-300">⚠️ Selesai</span>` : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-300">✅ Selesai</span>`;
-                        pointRewardBadge = isLate ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">${budgetSettings.pointsLate} Poin</span>` : `<span class="font-extrabold text-[9.5px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300">+${budgetSettings.pointsOnTime} Poin</span>`;
+                        statusBadgeHtml = isLate ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600 border border-amber-300">⚠️ Selesai (${isPastDay ? 'Susulan' : 'Lewat Jam'})</span>` : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-300">✅ Selesai</span>`;
+                        pointRewardBadge = isLate ? `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin (Lunas)</span>` : `<span class="font-extrabold text-[9.5px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-300">+${budgetSettings.pointsOnTime} Poin</span>`;
                     } else if (item.status === 'Proses') {
                         statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-500 border border-amber-300">⚡ Sedang Dikerjakan</span>`;
                         pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-300">+${budgetSettings.pointsProcess} Poin</span>`;
@@ -2247,9 +2287,12 @@
                         if (isTooEarly) {
                             statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-300"><i class="fa-solid fa-lock text-[8.5px]"></i> Belum Jamnya (${item.jam_mulai})</span>`;
                             pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">Terkunci</span>`;
+                        } else if (isPastDay) {
+                            statusBadgeHtml = `<button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-300 transition shadow-xs"><i class="fa-solid fa-camera text-[9px]"></i> Selesaikan Susulan</button>`;
+                            pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-300">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>`;
                         } else {
                             statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-500 border border-rose-200">⏱️ Belum Dikerjakan</span>`;
-                            pointRewardBadge = isPastDay ? `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-300">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>` : `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-300">0 Poin</span>`;
                         }
                     }
 
@@ -2257,10 +2300,10 @@
                     if (canManage) {
                         taskMenuDropdown = `
                             <div id="task-menu-${item.id}" class="hidden absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
-                                <button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>
-                                <button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>
-                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Set: Selesai</button>
-                                <button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-t border-slate-100"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>` : ''}
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
+                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
+                                ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-t border-slate-100"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
                                 ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
                             </div>
                         `;
@@ -2305,10 +2348,7 @@
                 fbPostCard.innerHTML = `
                     <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="relative flex-shrink-0">
-                                ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9")}
-                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}"></span>
-                            </div>
+                            ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
                             <div class="min-w-0">
                                 <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
                                 <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-emerald-600 font-bold">${tasksOfUser.length} Tugas</span></div>
@@ -2322,14 +2362,14 @@
 
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-emerald-50 dark:bg-emerald-950/40 border-y border-emerald-200/80';
-                groupHeader.innerHTML = `<td colspan="8" class="px-3 py-2"><div class="flex items-center justify-between"><span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName}</span><span class="bg-emerald-200/60 text-emerald-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span></div></td>`;
+                groupHeader.innerHTML = `<td colspan="8" class="px-3 py-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2">${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}<span class="font-extrabold text-emerald-900 dark:text-emerald-300 text-xs">${petugasName}</span></div><span class="bg-emerald-200/60 text-emerald-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span></div></td>`;
                 tableBodyDesktop.appendChild(groupHeader);
 
                 tasksOfUser.forEach(item => {
                     const isOwner = (item.user_id === currentUser?.id); const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
                     const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
                     const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
-                    const isLocked = (isCompleted || isPastDay || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
                     const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item); const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
                     
                     const row = document.createElement('tr');
@@ -2434,51 +2474,121 @@
 
         function openCompletionNoteModal(task) {
             if (isTaskNotStartedYet(task) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
-            document.getElementById('complete-task-id').value = task.id; document.getElementById('complete-task-title').innerText = task.tugas || '-'; document.getElementById('complete-task-note').value = task.keterangan || '';
-            document.getElementById('complete-file-before').value = ''; document.getElementById('complete-file-after').value = '';
-            const beforeContainer = document.getElementById('complete-before-preview-container'); const afterContainer = document.getElementById('complete-after-preview-container');
+            document.getElementById('complete-task-id').value = task.id; 
+            document.getElementById('complete-task-title').innerText = task.tugas || '-'; 
+            document.getElementById('complete-task-note').value = task.keterangan || '';
+            document.getElementById('complete-file-before').value = ''; 
+            document.getElementById('complete-file-after').value = '';
+            
+            const isPast = isTaskExpired(task.tanggal);
+            const warningEl = document.getElementById('complete-late-warning');
+            const starPhoto = document.getElementById('photo-required-star');
+            const starNote = document.getElementById('note-required-star');
+
+            if (isPast) {
+                warningEl.classList.remove('hidden');
+                starPhoto.classList.remove('hidden');
+                starNote.classList.remove('hidden');
+            } else {
+                warningEl.classList.add('hidden');
+                starPhoto.classList.add('hidden');
+                starNote.classList.add('hidden');
+            }
+
+            const beforeContainer = document.getElementById('complete-before-preview-container'); 
+            const afterContainer = document.getElementById('complete-after-preview-container');
             if (task.foto_sebelum) { document.getElementById('complete-before-preview').src = task.foto_sebelum; beforeContainer.classList.remove('hidden'); } else beforeContainer.classList.add('hidden');
             if (task.foto_sesudah) { document.getElementById('complete-after-preview').src = task.foto_sesudah; afterContainer.classList.remove('hidden'); } else afterContainer.classList.add('hidden');
-            document.getElementById('completionNoteModal').classList.remove('hidden'); setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
+            
+            document.getElementById('completionNoteModal').classList.remove('hidden'); 
+            setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
         }
 
         function closeCompletionNoteModal() { document.getElementById('completionNoteModal').classList.add('hidden'); renderTasks(); }
 
         document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const taskId = document.getElementById('complete-task-id').value; const target = globalTasks.find(t => t.id == taskId);
+            const taskId = document.getElementById('complete-task-id').value; 
+            const target = globalTasks.find(t => t.id == taskId);
+            if (!target) return;
+
             if (isTaskNotStartedYet(target) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
 
+            const isPast = isTaskExpired(target.tanggal);
             const noteText = document.getElementById('complete-task-note').value.trim();
-            const beforeFileInput = document.getElementById('complete-file-before'); const afterFileInput = document.getElementById('complete-file-after');
-            const btn = document.getElementById('btn-submit-completion'); btn.innerText = "Mengompres & Mengunggah..."; btn.disabled = true;
+            const beforeFileInput = document.getElementById('complete-file-before'); 
+            const afterFileInput = document.getElementById('complete-file-after');
+
+            // VALIDASI: Tugas susulan expired WAJIB menyertakan foto & keterangan
+            if (isPast) {
+                if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
+                const hasExistingPhoto = !!target.foto_sesudah;
+                const hasNewPhoto = afterFileInput && afterFileInput.files && afterFileInput.files.length > 0;
+                if (!hasExistingPhoto && !hasNewPhoto) return alert("Penyelesaian tugas susulan wajib menyertakan Foto Sesudah (After) sebagai bukti!");
+            }
+
+            const btn = document.getElementById('btn-submit-completion'); 
+            btn.innerText = "Mengompres & Mengunggah..."; 
+            btn.disabled = true;
 
             try {
-                let beforePhotoUrl = target?.foto_sebelum || null; let afterPhotoUrl = target?.foto_sesudah || null;
+                let beforePhotoUrl = target?.foto_sebelum || null; 
+                let afterPhotoUrl = target?.foto_sesudah || null;
                 const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email, target?.nama);
 
-                if (beforeFileInput && beforeFileInput.files && beforeFileInput.files[0]) { const compressedBlobBefore = await processAndWatermarkImage(beforeFileInput.files[0], effectiveUserName); beforePhotoUrl = await uploadEvidenceImage(compressedBlobBefore, 'before'); }
-                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) { const compressedBlobAfter = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName); afterPhotoUrl = await uploadEvidenceImage(compressedBlobAfter, 'after'); }
+                if (beforeFileInput && beforeFileInput.files && beforeFileInput.files[0]) { 
+                    const compressedBlobBefore = await processAndWatermarkImage(beforeFileInput.files[0], effectiveUserName); 
+                    beforePhotoUrl = await uploadEvidenceImage(compressedBlobBefore, 'before'); 
+                }
+                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) { 
+                    const compressedBlobAfter = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName); 
+                    afterPhotoUrl = await uploadEvidenceImage(compressedBlobAfter, 'after'); 
+                }
 
-                const updatePayload = { status: 'Selesai', completed_at: new Date().toISOString(), keterangan: noteText, foto_sebelum: beforePhotoUrl, foto_sesudah: afterPhotoUrl };
+                const updatePayload = { 
+                    status: 'Selesai', 
+                    completed_at: new Date().toISOString(), 
+                    keterangan: noteText, 
+                    foto_sebelum: beforePhotoUrl, 
+                    foto_sesudah: afterPhotoUrl 
+                };
+                
                 const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
 
-                if (error) showToast("Gagal menyelesaikan tugas: " + error.message);
-                else {
-                    if (target) { target.status = 'Selesai'; target.completed_at = updatePayload.completed_at; target.keterangan = noteText; target.foto_sebelum = beforePhotoUrl; target.foto_sesudah = afterPhotoUrl; }
-                    closeCompletionNoteModal(); showToast("Tugas Selesai & dokumentasi berhasil disimpan!"); renderTasks();
+                if (error) {
+                    showToast("Gagal menyelesaikan tugas: " + error.message);
+                } else {
+                    target.status = 'Selesai'; 
+                    target.completed_at = updatePayload.completed_at; 
+                    target.keterangan = noteText; 
+                    target.foto_sebelum = beforePhotoUrl; 
+                    target.foto_sesudah = afterPhotoUrl;
+                    
+                    closeCompletionNoteModal(); 
+                    showToast(isPast ? "Tugas susulan diselesaikan (0 Poin, Hutang Lunas)!" : "Tugas Selesai & dokumentasi disimpan!"); 
+                    renderTasks();
                 }
-            } catch (err) { alert("Terjadi kesalahan kompresi/upload foto: " + err.message); } 
-            finally { btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai'; btn.disabled = false; }
+            } catch (err) { 
+                alert("Terjadi kesalahan kompresi/upload foto: " + err.message); 
+            } finally { 
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai'; 
+                btn.disabled = false; 
+            }
         });
 
         async function updateStatus(id, newStatus) {
             const target = globalTasks.find(t => t.id == id); if (!target) return;
             if (target.status === 'Selesai' && !isSuperAdmin && newStatus !== 'Selesai') { showToast("Tugas sudah Selesai dan terkunci!"); renderTasks(); return; }
-            if (isTaskExpired(target.tanggal) && !isSuperAdmin) { showToast("Sudah melewati hari. Status tugas otomatis terkunci!"); renderTasks(); return; }
             if (isTaskNotStartedYet(target) && !isSuperAdmin) { showToast(`🔒 Tugas terkunci! Baru dapat dikerjakan saat jam ${target.jam_mulai}`); renderTasks(); return; }
 
             if (newStatus === 'Selesai') { openCompletionNoteModal(target); return; }
+            
+            // Mengubah status belum/proses hanya bisa di hari H
+            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
+                showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
+                return;
+            }
+
             const { error } = await _supabase.from('jadwal').update({ status: newStatus, completed_at: null }).eq('id', id);
             if (error) showToast("Gagal memperbarui status!"); else { target.status = newStatus; target.completed_at = null; renderTasks(); showToast("Status diperbarui"); }
         }
