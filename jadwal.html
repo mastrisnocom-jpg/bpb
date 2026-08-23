@@ -386,7 +386,7 @@
                 </div>
 
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px] leading-tight">
-                    <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres $\le$ 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
+                    <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres &le; 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
                 </div>
                 
                 <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
@@ -769,34 +769,59 @@
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR -->
-    <div id="commentModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
-            <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
-                <div>
-                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-comments text-emerald-500"></i> Komentar Tugas
-                    </h3>
-                    <p id="commentModalSubtitle" class="text-[9px] text-slate-400 truncate max-w-[240px]">Tugas: -</p>
+    <!-- MODAL KOMENTAR (DESAIN DETAIL MOMEN SOSIAL MEDIA) -->
+    <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-down">
+            
+            <!-- HEADER DETAIL MOMEN -->
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-emerald-600 transition active:scale-90">
+                    <i class="fa-solid fa-chevron-left text-base font-bold"></i>
+                </button>
+                <div class="text-center">
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Momen</h3>
+                    <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
                 </div>
-                <button onclick="closeCommentModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                    <i class="fa-solid fa-xmark text-sm"></i>
+                <div class="w-8"></div>
+            </div>
+
+            <!-- DAFTAR FEED KOMENTAR -->
+            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs"></div>
+
+            <!-- INDIKATOR BALAS / EDIT -->
+            <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span id="replyIndicatorText" class="text-emerald-600 dark:text-emerald-400 font-bold truncate"></span>
+                <button onclick="cancelReplyOrEdit()" class="text-slate-400 hover:text-rose-500 font-bold ml-2">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <div id="commentList" class="flex-1 overflow-y-auto space-y-2 py-2 pr-1 min-h-[140px] max-h-[260px] text-xs"></div>
+            <!-- INPUT BAR BAGIAN BAWAH -->
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-emerald-500 transition">
+                    <input type="text" 
+                           id="inputNewComment" 
+                           onkeydown="if(event.key === 'Enter') sendComment()" 
+                           placeholder="Silakan tulis komentar" 
+                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
+                    
+                    <div class="flex items-center gap-2 text-slate-400 ml-2">
+                        <button type="button" class="hover:text-slate-600 dark:hover:text-slate-200 transition text-sm">
+                            <i class="fa-solid fa-at"></i>
+                        </button>
+                        <button type="button" class="hover:text-slate-600 dark:hover:text-slate-200 transition text-sm">
+                            <i class="fa-regular fa-face-smile"></i>
+                        </button>
+                    </div>
+                </div>
 
-            <div id="editCommentIndicator" class="hidden items-center justify-between bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2.5 py-1 rounded-lg text-[10px] text-amber-800 dark:text-amber-300 mb-1.5">
-                <span class="font-bold"><i class="fa-solid fa-pen mr-1"></i> Edit Komentar</span>
-                <button onclick="cancelEditComment()" class="text-amber-600 hover:text-rose-500 font-extrabold">Batal</button>
-            </div>
-
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 mt-auto">
-                <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500">
-                <button id="btnSendComment" onclick="sendComment()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center">
-                    <i class="fa-solid fa-paper-plane"></i>
+                <button id="btnSendComment" 
+                        onclick="sendComment()" 
+                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
+
         </div>
     </div>
 
@@ -1151,6 +1176,7 @@
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
+        let replyingToUser = null;
         let notifiedTaskId = null;
         let audioCtx = null;
         let cachedMyEarningsData = null;
@@ -1166,7 +1192,7 @@
         let presenceChannel = null;
         let userProfilesMap = {};
 
-        // Pengaturan Anggaran, Poin & Penalti Hutang Transparan
+        // Pengaturan Anggaran, Poin & Penalti Hutang
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -1208,6 +1234,16 @@
                 return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             }
             return dateStr;
+        }
+
+        function formatTimeAgo(isoString) {
+            if (!isoString) return 'Baru saja';
+            const diff = Math.floor((new Date() - new Date(isoString)) / 1000);
+            if (diff < 60) return 'Baru saja';
+            if (diff < 3600) return `${Math.floor(diff / 60)} menit yang lalu`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} jam yang lalu`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)} hari yang lalu`;
+            return new Date(isoString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         }
 
         function isTaskExpired(taskDate) {
@@ -1264,7 +1300,6 @@
             return 'Petugas';
         }
 
-        // FOTO PROFIL DENGAN BORDER PERINGKAT 1, 2, 3
         function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
             const rank = userId ? userRanksMap[userId] : null;
             let rankBorder = "border border-slate-200 dark:border-slate-700";
@@ -1446,9 +1481,6 @@
             else { showToast("Gagal menyimpan: " + error.message); }
         });
 
-        // -----------------------------------------------------------
-        // PERHITUNGAN POIN, REWARD, HUTANG & LEADERBOARD RANK
-        // -----------------------------------------------------------
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -1571,9 +1603,6 @@
             return { userEarningsMap, totalTeamBudgetUsed, myData };
         }
 
-        // -----------------------------------------------------------
-        // FITUR PENARIKAN (WITHDRAWAL) & RIWAYAT STATUS
-        // -----------------------------------------------------------
         async function fetchWithdrawalsSupabase() {
             let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
             const { data, error } = await query;
@@ -2513,8 +2542,6 @@
 
                     tasksListHtml += `
                         <div class="py-3.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
-                            
-                            <!-- Header Waktu & Action Menu -->
                             <div class="flex items-center justify-between gap-2 mb-1.5">
                                 <div class="flex items-center gap-2">
                                     <span class="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
@@ -2537,15 +2564,12 @@
                                 </div>
                             </div>
 
-                            <!-- Judul Tugas / Area -->
                             <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug break-words tracking-tight mb-2">
                                 ${item.tugas}
                             </h3>
 
-                            <!-- Foto Before / After -->
                             ${photoEvidenceHtml}
 
-                            <!-- Keterangan Selesai (Style Callout Modern) -->
                             ${item.keterangan ? `
                                 <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-emerald-500 border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
                                     <div class="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
@@ -2558,7 +2582,6 @@
                                 </div>` : ''
                             }
 
-                            <!-- Footer Card (Badge Status, Poin & Interaksi Sosial) -->
                             <div class="flex items-center justify-between flex-wrap gap-2 pt-2 mt-1">
                                 <div class="flex items-center gap-1.5">
                                     ${statusBadgeHtml}
@@ -2581,7 +2604,6 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     `;
                 });
@@ -2649,61 +2671,184 @@
             else if (data) { task.likes_count = data.likes_count; task.liked_users = data.liked_users; renderTasks(); }
         }
 
+        // ==========================================
+        // FITUR DETAIL MOMEN & KOMENTAR (SOSIAL MEDIA)
+        // ==========================================
         async function openCommentModal(taskId, taskTitle) {
-            activeCommentJadwalId = String(taskId); cancelEditComment(); document.getElementById('commentModalSubtitle').innerText = "Tugas: " + taskTitle;
-            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat komentar...</div>';
+            activeCommentJadwalId = String(taskId);
+            cancelReplyOrEdit();
+            document.getElementById('commentModalSubtitle').innerText = taskTitle;
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat percakapan...</div>';
             document.getElementById('commentModal').classList.remove('hidden');
-            await fetchComments(activeCommentJadwalId); setupCommentsRealtime(activeCommentJadwalId);
+            
+            await fetchComments(activeCommentJadwalId);
+            setupCommentsRealtime(activeCommentJadwalId);
         }
 
-        function closeCommentModal() { activeCommentJadwalId = null; cancelEditComment(); if (commentsSubscription) { _supabase.removeChannel(commentsSubscription); commentsSubscription = null; } document.getElementById('commentModal').classList.add('hidden'); }
+        function closeCommentModal() {
+            activeCommentJadwalId = null;
+            cancelReplyOrEdit();
+            if (commentsSubscription) {
+                _supabase.removeChannel(commentsSubscription);
+                commentsSubscription = null;
+            }
+            document.getElementById('commentModal').classList.add('hidden');
+        }
 
         async function fetchComments(taskId) {
             const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
             const commentList = document.getElementById('commentList');
-            if (error) { commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-4">Gagal memuat: ${error.message}</div>`; return; }
-            const task = globalTasks.find(t => t.id == taskId); if (task) { task.comments_count = data ? data.length : 0; renderTasks(); }
-            if (!data || data.length === 0) { commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-4">Belum ada komentar. Jadilah yang pertama!</div>'; return; }
+            if (error) {
+                commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-6">Gagal memuat: ${error.message}</div>`;
+                return;
+            }
+            const task = globalTasks.find(t => t.id == taskId);
+            if (task) {
+                task.comments_count = data ? data.length : 0;
+                renderTasks();
+            }
+            if (!data || data.length === 0) {
+                commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-10">Belum ada komentar. Jadilah yang pertama!</div>';
+                return;
+            }
             renderCommentList(data);
         }
 
         function renderCommentList(comments) {
-            const commentList = document.getElementById('commentList'); commentList.innerHTML = '';
+            const commentList = document.getElementById('commentList');
+            commentList.innerHTML = '';
+
             comments.forEach(c => {
-                const isMyComment = c.user_id === currentUser.id; const canDelete = isMyComment || isSuperAdmin;
-                const commentEl = document.createElement('div'); const senderName = getUserDisplayName(c.user_id, c.user_email);
-                commentEl.className = `p-2.5 rounded-xl text-xs relative group ${isMyComment ? 'bg-emerald-50 dark:bg-emerald-950/40 ml-4 border border-emerald-200/60 dark:border-emerald-800/60' : 'bg-slate-100 dark:bg-slate-800 mr-4 border border-slate-200/60 dark:border-slate-700'}`;
-                let actionIcons = '';
-                if (isMyComment || canDelete) {
-                    actionIcons = `<div class="flex items-center gap-1.5">${isMyComment ? `<button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-emerald-600 text-[10px]"><i class="fa-solid fa-pen"></i></button>` : ''}${canDelete ? `<button onclick="deleteComment('${c.id}')" class="text-slate-400 hover:text-rose-500 text-[10px]"><i class="fa-solid fa-trash"></i></button>` : ''}</div>`;
+                const isMyComment = c.user_id === currentUser?.id;
+                const senderName = getUserDisplayName(c.user_id, c.user_email);
+                const timeAgo = formatTimeAgo(c.created_at);
+                const userAvatar = c.user_avatar || null;
+                
+                const rank = userRanksMap[c.user_id];
+                let vipBadge = '';
+                if (rank === 1) {
+                    vipBadge = `<span class="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter flex items-center gap-0.5 shadow-2xs"><i class="fa-solid fa-crown text-[7px]"></i> VIP1</span>`;
+                } else if (rank === 2) {
+                    vipBadge = `<span class="bg-gradient-to-r from-amber-500 to-orange-400 text-white text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter flex items-center gap-0.5 shadow-2xs"><i class="fa-solid fa-crown text-[7px]"></i> VIP2</span>`;
+                } else if (rank === 3) {
+                    vipBadge = `<span class="bg-gradient-to-r from-orange-400 to-amber-600 text-white text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter flex items-center gap-0.5 shadow-2xs"><i class="fa-solid fa-crown text-[7px]"></i> VIP3</span>`;
                 }
-                commentEl.innerHTML = `<div class="flex items-center justify-between mb-1"><div class="flex items-center gap-1.5"><span class="font-extrabold ${isMyComment ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-800 dark:text-slate-100'} text-[10px]">${isMyComment ? 'Saya' : senderName}</span><span class="text-[8px] text-slate-400">${c.created_at ? new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}</span></div>${actionIcons}</div><p class="text-slate-700 dark:text-slate-200 leading-snug break-words">${c.comment}</p>`;
-                commentList.appendChild(commentEl);
+
+                const commentItem = document.createElement('div');
+                commentItem.className = 'flex items-start gap-3 text-slate-800 dark:text-slate-100 group';
+
+                commentItem.innerHTML = `
+                    <div class="flex-shrink-0 mt-0.5">
+                        ${renderAvatarHtml(userAvatar, senderName, "w-8 h-8", c.user_id)}
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-extrabold text-[11px] text-slate-600 dark:text-slate-300 leading-none">${senderName}</span>
+                            ${vipBadge}
+                        </div>
+
+                        <p class="text-xs text-slate-800 dark:text-slate-100 font-medium leading-relaxed mt-1 break-words">
+                            ${c.comment}
+                        </p>
+
+                        <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400 font-semibold">
+                            <span>${timeAgo}</span>
+                            <button onclick="startReplyTo('${senderName.replace(/'/g, "\\'")}')" class="hover:text-slate-600 dark:hover:text-slate-200 transition font-bold">
+                                Balas
+                            </button>
+                            ${isMyComment ? `
+                                <button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="opacity-0 group-hover:opacity-100 hover:text-emerald-500 transition">Edit</button>
+                            ` : ''}
+                            ${(isMyComment || isSuperAdmin) ? `
+                                <button onclick="deleteComment('${c.id}')" class="opacity-0 group-hover:opacity-100 hover:text-rose-500 transition">Hapus</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                commentList.appendChild(commentItem);
             });
+
             commentList.scrollTop = commentList.scrollHeight;
         }
 
-        function startEditComment(commentId, commentText) { editingCommentId = commentId; const input = document.getElementById('inputNewComment'); input.value = commentText; input.focus(); document.getElementById('editCommentIndicator').classList.remove('hidden'); document.getElementById('editCommentIndicator').classList.add('flex'); document.getElementById('btnSendComment').innerHTML = '<i class="fa-solid fa-check"></i>'; }
-        function cancelEditComment() { editingCommentId = null; const input = document.getElementById('inputNewComment'); if (input) input.value = ''; const indicator = document.getElementById('editCommentIndicator'); if (indicator) { indicator.classList.add('hidden'); indicator.classList.remove('flex'); } const btn = document.getElementById('btnSendComment'); if (btn) btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>'; }
+        function startReplyTo(userName) {
+            replyingToUser = userName;
+            editingCommentId = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `Membalas <b>@${userName}</b>`;
+            container.classList.remove('hidden');
+            input.value = `Balas ${userName}: `;
+            input.focus();
+        }
+
+        function startEditComment(commentId, commentText) {
+            editingCommentId = commentId;
+            replyingToUser = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `<b>Edit komentar</b>`;
+            container.classList.remove('hidden');
+            input.value = commentText;
+            input.focus();
+        }
+
+        function cancelReplyOrEdit() {
+            editingCommentId = null;
+            replyingToUser = null;
+            document.getElementById('replyIndicatorContainer').classList.add('hidden');
+            const input = document.getElementById('inputNewComment');
+            if (input) input.value = '';
+        }
 
         async function deleteComment(commentId) {
             if (!confirm("Hapus komentar ini?")) return;
             const { error } = await _supabase.from('jadwal_comments').delete().eq('id', commentId);
-            if (error) showToast("Gagal menghapus komentar!"); else { showToast("Komentar dihapus"); if (activeCommentJadwalId) fetchComments(activeCommentJadwalId); }
+            if (error) showToast("Gagal menghapus komentar!");
+            else {
+                showToast("Komentar dihapus");
+                if (activeCommentJadwalId) fetchComments(activeCommentJadwalId);
+            }
         }
 
         async function sendComment() {
-            const input = document.getElementById('inputNewComment'); const commentText = input.value.trim();
+            const input = document.getElementById('inputNewComment');
+            const commentText = input.value.trim();
             if (!commentText || !activeCommentJadwalId) return;
 
             if (editingCommentId) {
                 const { error } = await _supabase.from('jadwal_comments').update({ comment: commentText }).eq('id', editingCommentId);
-                if (!error) { showToast("Komentar diperbarui"); cancelEditComment(); fetchComments(activeCommentJadwalId); } else showToast("Gagal memperbarui komentar!");
+                if (!error) {
+                    showToast("Komentar diperbarui");
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                } else {
+                    showToast("Gagal memperbarui: " + error.message);
+                }
             } else {
                 input.value = '';
-                const { error } = await _supabase.from('jadwal_comments').insert([{ jadwal_id: String(activeCommentJadwalId), user_id: currentUser.id, user_email: currentUser.email, comment: commentText }]);
-                if (error) { showToast("Gagal kirim komentar: " + error.message); input.value = commentText; } 
-                else fetchComments(activeCommentJadwalId);
+                const payload = {
+                    jadwal_id: String(activeCommentJadwalId),
+                    user_id: currentUser.id,
+                    user_email: currentUser.email,
+                    comment: commentText,
+                    user_avatar: getAvatarUrl(currentUser),
+                    created_at: new Date().toISOString()
+                };
+
+                const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+                if (error) {
+                    showToast("Gagal mengirim komentar: " + error.message);
+                    input.value = commentText;
+                } else {
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                }
             }
         }
 
