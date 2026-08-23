@@ -348,7 +348,7 @@
 
                 <div id="complete-late-warning" class="hidden p-2.5 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] space-y-1">
                     <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
-                    <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
+                    <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
                 </div>
                 
                 <div>
@@ -862,7 +862,7 @@
 
     <!-- MODAL: FORM SINGLE TASK -->
     <div id="scheduleModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl animate-slide-down border border-slate-100 dark:border-slate-800 max-h-[90vh] overflow-y-auto">
+        <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 max-h-[90vh] overflow-y-auto animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 id="modalTitle" class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tambah Tugas Baru
@@ -1147,6 +1147,7 @@
         let followNotifyListener = null;
         let appConfigSubscription = null;
         let withdrawalsSubscription = null;
+        let superAdminActivitySubscription = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
@@ -1263,6 +1264,7 @@
             return 'Petugas';
         }
 
+        // FOTO PROFIL DENGAN BORDER PERINGKAT 1, 2, 3
         function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
             const rank = userId ? userRanksMap[userId] : null;
             let rankBorder = "border border-slate-200 dark:border-slate-700";
@@ -1923,6 +1925,7 @@
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener); if (followsSubscription) _supabase.removeChannel(followsSubscription);
             if (followNotifyListener) _supabase.removeChannel(followNotifyListener); if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
             if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription); if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
             await _supabase.auth.signOut(); location.reload();
         }
 
@@ -1957,6 +1960,7 @@
             requestNotificationPermission(); await fetchFollowRelations(); await fetchTasksSupabase(); await fetchWithdrawalsSupabase();
             setupRealtimeListener(); setupGlobalCommentNotificationListener(); setupFollowsRealtime(); setupFollowNotificationListener();
             setupAppConfigRealtime(); setupWithdrawalsRealtime(); setupPresenceSync();
+            setupSuperAdminActivityListener();
         }
 
         function setupPresenceSync() {
@@ -1996,22 +2000,81 @@
         function clearAllNotifications() { notificationsList = []; unreadNotificationsCount = 0; updateNotificationBadge(); renderNotificationsList(); showToast("Notifikasi dibersihkan"); }
 
         function renderNotificationsList() {
-            const listEl = document.getElementById('notificationsList'); listEl.innerHTML = '';
-            if (notificationsList.length === 0) { listEl.innerHTML = `<div class="text-center text-slate-400 py-8"><i class="fa-solid fa-bell-slash text-2xl mb-1.5 opacity-40"></i><p class="text-[11px] font-semibold">Belum ada notifikasi baru.</p></div>`; return; }
+            const listEl = document.getElementById('notificationsList');
+            listEl.innerHTML = '';
+            
+            if (notificationsList.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center text-slate-400 py-8">
+                        <i class="fa-solid fa-bell-slash text-2xl mb-1.5 opacity-40"></i>
+                        <p class="text-[11px] font-semibold">Belum ada notifikasi baru.</p>
+                    </div>`;
+                return;
+            }
 
             notificationsList.forEach((n) => {
                 const item = document.createElement('div');
-                item.className = `p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition`;
-                let iconHtml = n.type === 'comment' 
-                    ? `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] flex-shrink-0"><i class="fa-solid fa-comment"></i></div>`
-                    : `<div class="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-[10px] flex-shrink-0"><i class="fa-solid fa-user-plus"></i></div>`;
+                item.className = 'p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+                
+                let iconBg = 'bg-amber-500';
+                let iconClass = 'fa-bell';
 
-                item.innerHTML = `${iconHtml}<div class="min-w-0 flex-1"><div class="flex items-center justify-between"><p class="text-[10px] font-extrabold text-slate-800 dark:text-slate-100 truncate">${n.title}</p><span class="text-[8px] text-slate-400">${n.time}</span></div><p class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug mt-0.5 line-clamp-2">${n.message}</p></div>`;
+                if (n.type === 'comment') {
+                    iconBg = 'bg-emerald-500';
+                    iconClass = 'fa-comments';
+                } else if (n.type === 'follow') {
+                    iconBg = 'bg-teal-500';
+                    iconClass = 'fa-user-plus';
+                } else if (n.type === 'task_new') {
+                    iconBg = 'bg-blue-500';
+                    iconClass = 'fa-calendar-plus';
+                } else if (n.type === 'task_done') {
+                    iconBg = 'bg-emerald-600';
+                    iconClass = 'fa-circle-check';
+                } else if (n.type === 'task_process') {
+                    iconBg = 'bg-amber-500';
+                    iconClass = 'fa-spinner';
+                } else if (n.type === 'withdraw') {
+                    iconBg = 'bg-rose-500';
+                    iconClass = 'fa-wallet';
+                }
+
+                const iconHtml = `
+                    <div class="w-7 h-7 rounded-xl ${iconBg} text-white flex items-center justify-center text-xs flex-shrink-0 shadow-xs">
+                        <i class="fa-solid ${iconClass}"></i>
+                    </div>
+                `;
+
+                item.innerHTML = `
+                    ${iconHtml}
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-1">
+                            <p class="text-[10px] font-extrabold text-slate-800 dark:text-slate-100 truncate">${n.title}</p>
+                            <span class="text-[8px] text-slate-400 flex-shrink-0">${n.time}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug mt-0.5 line-clamp-2">${n.message}</p>
+                    </div>
+                `;
+
                 item.onclick = () => {
                     closeNotificationsModal();
-                    if (n.type === 'comment' && n.taskId) { const task = globalTasks.find(t => t.id == n.taskId); if (task) openCommentModal(task.id, task.tugas); } 
-                    else if (n.type === 'follow') { openFollowsModal(); }
+                    if (n.taskId) {
+                        const task = globalTasks.find(t => String(t.id) === String(n.taskId));
+                        if (task) {
+                            if (n.type === 'comment') {
+                                openCommentModal(task.id, task.tugas);
+                            } else {
+                                document.getElementById('dateFilter').value = task.tanggal || todayStr;
+                                renderTasks();
+                            }
+                        }
+                    } else if (n.type === 'follow') {
+                        openFollowsModal();
+                    } else if (n.type === 'withdraw') {
+                        openEarningsModal();
+                    }
                 };
+
                 listEl.appendChild(item);
             });
         }
@@ -2057,6 +2120,114 @@
 
             if ("Notification" in window && Notification.permission === "granted") { new Notification("Pengikut Baru! 🎉", { body: `${senderName} mulai mengikuti Anda. Klik untuk follow balik!`, icon: '/icon-192.png' }); }
             setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function triggerAdminNotification(title, message, iconClass = 'fa-bell', iconBg = 'bg-amber-500', targetTaskId = null, notifType = 'admin_activity') {
+            playNotificationChime();
+            const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
+            notificationsList.unshift({
+                type: notifType,
+                title: title,
+                message: message,
+                time: currentTime,
+                taskId: targetTaskId
+            });
+            unreadNotificationsCount++;
+            updateNotificationBadge();
+
+            const toast = document.getElementById('commentNotificationToast');
+            const iconContainer = document.getElementById('notifIconContainer');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifSender = document.getElementById('notifSender');
+            const notifMessage = document.getElementById('notifMessage');
+
+            iconContainer.className = `w-8 h-8 rounded-full ${iconBg} text-white flex items-center justify-center text-sm flex-shrink-0`;
+            notifIcon.className = `fa-solid ${iconClass}`;
+            notifTitle.innerText = 'Log Aktivitas Petugas';
+            notifTitle.className = 'text-[10px] font-extrabold text-amber-500 uppercase tracking-wider';
+            notifSender.innerText = title;
+            notifMessage.innerText = message;
+            notifiedTaskId = targetTaskId;
+            
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: message, icon: '/icon-192.png' });
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function setupSuperAdminActivityListener() {
+            if (!isSuperAdmin) return;
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+
+            superAdminActivitySubscription = _supabase.channel('admin_global_activity')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
+                    const row = payload.new;
+                    if (!row || row.user_id === currentUser.id) return;
+                    const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
+
+                    if (payload.eventType === 'INSERT') {
+                        triggerAdminNotification(
+                            `📝 Jadwal Baru: ${userName}`,
+                            `Menambahkan "${row.tugas}" (${row.jam_mulai} - ${row.jam_selesai})`,
+                            'fa-calendar-plus',
+                            'bg-blue-500',
+                            row.id,
+                            'task_new'
+                        );
+                    } else if (payload.eventType === 'UPDATE') {
+                        if (row.status === 'Selesai' && payload.old.status !== 'Selesai') {
+                            const isLate = isTaskExpired(row.tanggal);
+                            triggerAdminNotification(
+                                `✅ Selesai: ${userName}`,
+                                `${isLate ? '[SUSULAN] ' : ''}"${row.tugas}" telah diselesaikan (${row.keterangan || 'Tanpa catatan'})`,
+                                'fa-circle-check',
+                                'bg-emerald-600',
+                                row.id,
+                                'task_done'
+                            );
+                        } else if (row.status === 'Proses' && payload.old.status !== 'Proses') {
+                            triggerAdminNotification(
+                                `⚡ Sedang Dikerjakan: ${userName}`,
+                                `Mengerjakan tugas: "${row.tugas}"`,
+                                'fa-spinner',
+                                'bg-amber-500',
+                                row.id,
+                                'task_process'
+                            );
+                        }
+                    }
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'penarikan_insentif' }, (payload) => {
+                    const wd = payload.new;
+                    if (!wd || wd.user_id === currentUser.id) return;
+                    triggerAdminNotification(
+                        `💰 Tarik Insentif: ${wd.nama_petugas}`,
+                        `Pengajuan Rp ${Number(wd.nominal).toLocaleString('id-ID')} via ${wd.metode_pembayaran}`,
+                        'fa-wallet',
+                        'bg-rose-500',
+                        null,
+                        'withdraw'
+                    );
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_follows' }, (payload) => {
+                    const fol = payload.new;
+                    if (!fol || fol.follower_id === currentUser.id) return;
+                    const followerName = getUserDisplayName(fol.follower_id, fol.follower_email);
+                    const followingName = getUserDisplayName(fol.following_id, fol.following_email);
+                    triggerAdminNotification(
+                        `🤝 Relasi Petugas`,
+                        `${followerName} mulai mengikuti ${followingName}`,
+                        'fa-user-plus',
+                        'bg-teal-500',
+                        null,
+                        'follow'
+                    );
+                })
+                .subscribe();
         }
 
         async function openFollowsModal() {
