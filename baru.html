@@ -3426,7 +3426,7 @@
         }
 
         // ==========================================================
-        // AI SMART SCHEDULE: AUTO-DISCOVERY & ADAPTIVE FALLBACK
+        // AI SMART SCHEDULE: DIRECT CALL & FALLBACK
         // ==========================================================
         async function generateAiSchedulePreview() {
             const tanggal = document.getElementById('gen-date').value || todayStr; 
@@ -3466,32 +3466,18 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
   {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Rincian penutup hari / evaluasi"}
 ]`;
 
-            // 1. Ambil daftar model yang aktif langsung dari akun API key (Auto-Discovery)
-            let candidateModels = ['gemini-2.5-flash', 'gemini-2.5-pro'];
-            try {
-                const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${userApiKey}`);
-                const listData = await listRes.json();
-                if (listData.models && Array.isArray(listData.models)) {
-                    const availableNames = listData.models
-                        .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
-                        .map(m => m.name.replace('models/', ''));
-                    if (availableNames.length > 0) {
-                        candidateModels = availableNames;
-                    }
-                }
-            } catch (err) {
-                console.warn("Auto-discovery model gagal, menggunakan list default", err);
-            }
-
+            // Model utama yang diminta sistem
+            const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-pro'];
             let parsedTasks = null;
             let lastError = null;
 
-            // 2. Eksekusi generate content dengan model yang tersedia
             for (const modelName of candidateModels) {
                 try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${userApiKey}`, {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(userApiKey)}`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: promptText }] }],
                             generationConfig: {
@@ -3501,13 +3487,13 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                         })
                     });
 
-                    const data = await response.json();
-
-                    if (data.error) {
-                        lastError = data.error.message || "Model error";
+                    if (!response.ok) {
+                        const errBody = await response.json().catch(() => ({}));
+                        lastError = errBody.error?.message || `HTTP error ${response.status}`;
                         continue;
                     }
 
+                    const data = await response.json();
                     let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
                     rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
 
@@ -3529,18 +3515,26 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                 previewTasksData = parsedTasks;
                 renderAiPreviewCards();
 
-                document.getElementById('aiPreviewSection')?.classList.remove('hidden');
+                const previewSection = document.getElementById('aiPreviewSection');
+                if (previewSection) {
+                    previewSection.classList.remove('hidden');
+                    setTimeout(() => {
+                        previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+
                 document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
                 showToast("✨ Jadwal berhasil dibuat oleh Gemini AI!");
 
             } catch (err) {
                 console.error("Gemini Error:", err);
-                alert(`Gagal generate via AI: ${err.message}`);
+                alert(`Gagal generate via AI: ${err.message}\n\nPastikan koneksi internet stabil dan API Key aktif.`);
             } finally {
                 btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
                 btnGen.disabled = false;
             }
         }
+
 
         function renderAiPreviewCards() {
             const container = document.getElementById('aiPreviewList');
