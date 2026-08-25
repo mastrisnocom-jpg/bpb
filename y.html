@@ -1,11 +1,11 @@
-                <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Jadwal Harian & Insentif - M-Ops Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate, Relasi Teman, Feed Jadwal, Like, Komentar, dan Poin Insentif.">
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Mutual Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -45,12 +45,12 @@
         .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #1877f2; border-radius: 10px; }
         .tab-active { color: #1877f2; border-bottom: 3px solid #1877f2; }
         .dark .tab-active { color: #2e89ff; border-bottom: 3px solid #2e89ff; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+<body class="min-h-screen bg-[#f0f2f5] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
@@ -117,8 +117,8 @@
                         <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Insentif
                     </button>
                     <button onclick="openFollowsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
-                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-bell text-xs text-teal-400"></i> Notifikasi Teman</div>
-                        <span id="sideNotifBadge" class="hidden bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-user-group text-xs text-teal-400"></i> Relasi Follow</div>
+                        <span id="sideFriendBadge" class="hidden bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">0</span>
                     </button>
                     
                     <div class="pt-3 border-t border-slate-800 my-2"></div>
@@ -157,46 +157,53 @@
 
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
-            <!-- HEADER -->
+            <!-- HEADER (PERSIS SESUAI GAMBAR) -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
-                <div class="flex items-center justify-between px-3 md:px-5 py-2">
+                <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
                     <div class="flex items-center gap-3">
-                        <button onclick="toggleSidebarMenu()" class="text-slate-900 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
-                            <i class="fa-solid fa-bars text-2xl font-bold"></i>
+                        <button onclick="toggleSidebarMenu()" class="text-slate-800 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
+                            <i class="fa-solid fa-bars text-xl font-bold"></i>
                         </button>
-                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[24px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[22px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
                             binayasa
                         </a>
-                        <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
+                        <span id="superadmin-indicator" class="hidden ml-1 bg-[#1e293b] text-white font-extrabold text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1">
+                            SUPER ADMIN <i class="fa-solid fa-star text-[7px] text-amber-400"></i>
+                        </span>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <button onclick="openTaskModal()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Buat Post / Tugas Baru">
-                            <i class="fa-regular fa-square-plus text-2xl font-bold"></i>
+                    <div class="flex items-center gap-4">
+                        <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
+                            <i class="fa-solid fa-magnifying-glass text-lg font-bold"></i>
                         </button>
-                        <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
-                            <i class="fa-solid fa-magnifying-glass text-xl font-bold"></i>
-                        </button>
-                        <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
-                            <i class="fa-solid fa-comments text-2xl text-slate-900 dark:text-white"></i>
-                            <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
+                        <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative text-slate-800 dark:text-white hover:text-blue-600 transition active:scale-95" title="Chat Global Tim">
+                            <i class="fa-regular fa-comment-dots text-xl"></i>
+                            <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[9px] font-black min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW -->
-                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-2 md:px-6">
-                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda"><i class="fa-solid fa-house"></i></button>
-                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA"><i class="fa-solid fa-clapperboard"></i></button>
-                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif"><i class="fa-solid fa-wallet"></i></button>
-                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
-                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-teal-500 transition active:scale-95 relative" title="Relasi Follow & Notifikasi">
-                        <i class="fa-regular fa-bell"></i>
-                        <span id="headerNotifBadge" class="hidden absolute top-1.5 right-1/4 bg-rose-600 text-white text-[9px] font-black min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
+                <!-- BOTTOM TAB ROW (ICON HEADER SEPERTI GAMBAR) -->
+                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 px-2 md:px-6">
+                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
+                        <i class="fa-solid fa-house text-lg"></i>
                     </button>
-                    <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
-                        <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[11px] font-bold shadow-xs" id="header-user-avatar-btn">
+                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
+                        <i class="fa-solid fa-clapperboard text-lg"></i>
+                    </button>
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
+                        <i class="fa-solid fa-wallet text-lg"></i>
+                    </button>
+                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                    </button>
+                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-teal-500 transition active:scale-95 relative" title="Relasi Follow / Notifikasi Teman">
+                        <i class="fa-regular fa-bell text-lg"></i>
+                        <span id="headerFriendBadge" class="hidden absolute top-1.5 right-1/4 bg-emerald-500 text-white text-[8.5px] font-black min-w-[15px] h-[15px] px-0.5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">0</span>
+                    </button>
+                    <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-1.5 flex justify-center items-center transition active:scale-95" title="Profil Saya">
+                        <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] font-bold shadow-xs" id="header-user-avatar-btn">
                             <i class="fa-solid fa-user text-slate-600 dark:text-slate-300"></i>
                         </div>
                     </button>
@@ -255,7 +262,7 @@
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- INDIKATOR MELIHAT FEED TEMAN -->
+                <!-- INDIKATOR/BANNER MELIHAT FEED TEMAN -->
                 <div id="friendFeedIndicator" class="hidden mx-3.5 md:mx-0 mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
                     <div class="flex items-center gap-2 min-w-0">
                         <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
@@ -271,7 +278,7 @@
                     </button>
                 </div>
 
-                <!-- BARIS INPUT CEPAT (ICON GAMBAR DIHILANGKAN SESUAI REQUEST) -->
+                <!-- BARIS INPUT CEPAT (ICON GAMBAR SEBELAH KANAN TELAH DIHILANGKAN SESUAI REQUEST) -->
                 <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 mb-3 shadow-xs">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
@@ -279,43 +286,55 @@
                         </div>
 
                         <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
-                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa rencana atau target harian Anda?</span>
+                            <span class="text-slate-700 dark:text-slate-300 text-xs md:text-sm font-medium select-none truncate">Apa rencana atau target harian Anda?</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR & INSENTIF DENGAN FORMAT 1k, 2k -->
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (GAYA KOTAK SESUAI GAMBAR) -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
-                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-7 h-7 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-list-check"></i></div>
+                        <!-- TOTAL -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-8 h-8 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-slate-100 dark:border-slate-700">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Total</p>
-                                <p id="totalTaskCount" class="text-sm font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Total</p>
+                                <p id="totalTaskCount" class="text-sm font-black text-slate-800 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-spinner"></i></div>
+                        <!-- PROSES -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-8 h-8 bg-amber-50/60 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-amber-200/60 dark:border-amber-900/50">
+                                <i class="fa-solid fa-spinner"></i>
+                            </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Proses</p>
-                                <p id="inProgressCount" class="text-sm font-extrabold text-amber-500 leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Proses</p>
+                                <p id="inProgressCount" class="text-sm font-black text-amber-600 dark:text-amber-400 leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-circle-check"></i></div>
+                        <!-- SELESAI -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-8 h-8 bg-blue-50/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-blue-200/60 dark:border-blue-900/50">
+                                <i class="fa-solid fa-shield-check"></i>
+                            </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
-                                <p id="completedCount" class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Selesai</p>
+                                <p id="completedCount" class="text-sm font-black text-slate-800 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div onclick="openEarningsModal()" class="bg-gradient-to-tr from-amber-500/10 to-amber-600/20 dark:from-amber-950/40 dark:to-amber-900/20 rounded-xl p-2.5 border border-amber-300 dark:border-amber-700/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
-                            <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-xs shadow-amber-500/30"><i class="fa-solid fa-wallet"></i></div>
+                        <!-- INSENTIF (FORMAT 1k, 2k, DST) -->
+                        <div onclick="openEarningsModal()" class="bg-[#fef9ee] dark:bg-amber-950/30 rounded-2xl p-2.5 border border-amber-200/80 dark:border-amber-800/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
+                            <div class="w-8 h-8 bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
                             <div class="min-w-0">
-                                <p class="text-[8.5px] text-amber-700 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif</p>
-                                <p id="myEarningsBadge" class="text-xs font-extrabold text-amber-800 dark:text-amber-300 leading-tight">Rp 0</p>
+                                <p class="text-[9px] text-amber-800 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif</p>
+                                <p id="myEarningsBadge" class="text-xs font-black text-amber-900 dark:text-amber-200 leading-tight">Rp 0</p>
                             </div>
                         </div>
                     </section>
@@ -356,7 +375,7 @@
         </main>
     </div>
 
-<!-- MODAL CHAT GLOBAL TIM -->
+    <!-- MODAL CHAT GLOBAL TIM -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -396,7 +415,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
+<!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -503,7 +522,7 @@
                     </div>
 
                     <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">
-                        * Minimal penarikan saldo adalah Rp 10.000
+                        * Minimal penarikan saldo adalah Rp 10.000 (10k)
                     </p>
 
                     <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
@@ -570,90 +589,6 @@
         </div>
     </div>
 
-    <!-- MODAL NOTIFIKASI & RELASI TEMAN -->
-    <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-teal-500 text-white flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Notifikasi & Relasi Teman</h3>
-                        <p class="text-[9.5px] text-slate-400">Lihat relasi follow dan update jadwal rekan tim</p>
-                    </div>
-                </div>
-                <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <div id="usersFollowList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
-
-            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-                <button onclick="closeFollowsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL KOMENTAR POSTINGAN (DIPAKAI BERSAMA UNTUK JADWAL SENDIRI & TEMAN) -->
-    <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90">
-                    <i class="fa-solid fa-chevron-left text-base font-bold"></i>
-                </button>
-                <div class="text-center">
-                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi</h3>
-                    <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
-                </div>
-                <div class="w-8"></div>
-            </div>
-
-            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
-
-            <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-                <span id="replyIndicatorText" class="text-blue-600 dark:text-blue-400 font-bold truncate"></span>
-                <button onclick="cancelReplyOrEdit()" class="text-slate-400 hover:text-rose-500 font-bold ml-2">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-blue-500 transition">
-                    <input type="text" 
-                           id="inputNewComment" 
-                           onkeydown="if(event.key === 'Enter') sendComment()" 
-                           placeholder="Silakan tulis komentar..." 
-                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
-                </div>
-
-                <button id="btnSendComment" 
-                        onclick="sendComment()" 
-                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-blue-600 hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TOAST NOTIFIKASI INTERAKTIF -->
-    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-blue-600 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
-        <div class="flex items-start gap-2.5">
-            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
-                <i id="notifIcon" class="fa-solid fa-bell"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-                <div class="flex items-center justify-between">
-                    <p id="notifTitle" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Notifikasi</p>
-                    <span class="text-[8px] text-slate-400">Baru saja</span>
-                </div>
-                <p id="notifSender" class="text-xs font-bold truncate">User</p>
-                <p id="notifMessage" class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 mt-0.5">-</p>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL FORM PENARIKAN -->
     <div id="withdrawModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
@@ -682,7 +617,7 @@
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Jumlah Penarikan (Rp)</label>
                         <input type="number" id="wd-amount" min="10000" step="1000" required oninput="calculateWithdrawFee()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                        <span id="wd-min-info" class="text-[9px] text-slate-400 block mt-0.5">* Minimal Rp 10.000</span>
+                        <span id="wd-min-info" class="text-[9px] text-slate-400 block mt-0.5">* Minimal Rp 10.000 (10k)</span>
                     </div>
 
                     <div>
@@ -873,6 +808,90 @@
                     <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- MODAL RELASI FOLLOW & NOTIFIKASI TEMAN -->
+    <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-teal-500 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Notifikasi Teman & Relasi</h3>
+                        <p class="text-[9.5px] text-slate-400">Peringkat 1, 2, 3 dan relasi mutual follow</p>
+                    </div>
+                </div>
+                <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div id="usersFollowList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeFollowsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFIKASI INTERAKTIF (LONCENG, LIKE, KOMENTAR, JADWAL TEMAN) -->
+    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-blue-600 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
+        <div class="flex items-start gap-2.5">
+            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
+                <i id="notifIcon" class="fa-solid fa-bell"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between">
+                    <p id="notifTitle" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Notifikasi</p>
+                    <span class="text-[8px] text-slate-400">Baru saja</span>
+                </div>
+                <p id="notifSender" class="text-xs font-bold truncate">User</p>
+                <p id="notifMessage" class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 mt-0.5">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KOMENTAR POSTINGAN (DISKUSI JADWAL SAYA & TEMAN) -->
+    <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90">
+                    <i class="fa-solid fa-chevron-left text-base font-bold"></i>
+                </button>
+                <div class="text-center">
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi</h3>
+                    <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
+                </div>
+                <div class="w-8"></div>
+            </div>
+
+            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
+            <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span id="replyIndicatorText" class="text-blue-600 dark:text-blue-400 font-bold truncate"></span>
+                <button onclick="cancelReplyOrEdit()" class="text-slate-400 hover:text-rose-500 font-bold ml-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-blue-500 transition">
+                    <input type="text" 
+                           id="inputNewComment" 
+                           onkeydown="if(event.key === 'Enter') sendComment()" 
+                           placeholder="Silakan tulis komentar..." 
+                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
+                </div>
+
+                <button id="btnSendComment" 
+                        onclick="sendComment()" 
+                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-blue-600 hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1068,7 +1087,7 @@
         </div>
     </div>
 
-    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI -->
+    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI DENGAN PREVIEW & EDITABLE USER -->
     <div id="autoGenerateModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[94vh] md:h-[88vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -1091,6 +1110,7 @@
             <div class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     
+                    <!-- PENGATURAN API KEY -->
                     <div class="p-3 bg-white dark:bg-slate-800/90 border border-purple-200 dark:border-purple-900/60 rounded-2xl shadow-xs space-y-1.5">
                         <div class="flex items-center justify-between">
                             <label class="block text-[10px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider flex items-center gap-1">
@@ -1108,6 +1128,7 @@
                         </div>
                     </div>
 
+                    <!-- FORM PARAMETER MULTI-PROFESI -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tanggal</label>
@@ -1140,6 +1161,7 @@
                         <i class="fa-solid fa-wand-magic-sparkles"></i> 1. Rancang Jadwal dengan AI
                     </button>
 
+                    <!-- DAFTAR PREVIEW & EDIT -->
                     <div id="aiPreviewSection" class="hidden pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider flex items-center gap-1">
@@ -1248,19 +1270,1945 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-task.likes_count = likedUsers.length; 
-            task.liked_users = likedUsers; 
-            renderTasks();
+<script>
+        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
-            if (error) { 
-                showToast("Gagal menyukai: " + error.message); 
-                await fetchTasksSupabase(); 
-            } else if (data) { 
-                task.likes_count = data.likes_count; 
-                task.liked_users = data.liked_users; 
-                renderTasks(); 
+        const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
+        const ADMIN_WA_PHONE = '6282146511484';
+        const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
+
+        let currentUser = null;
+        let globalTasks = [];
+        let globalWithdrawals = [];
+        let editingTaskId = null;
+        let isSuperAdmin = false;
+        let activeExportFormat = 'pdf';
+        let realtimeSubscription = null;
+        let commentsSubscription = null;
+        let globalCommentsListener = null;
+        let followsSubscription = null;
+        let followNotifyListener = null;
+        let appConfigSubscription = null;
+        let withdrawalsSubscription = null;
+        let superAdminActivitySubscription = null;
+        let globalChatSubscription = null;
+        let friendScheduleListener = null;
+        let deleteTargetId = null;
+        let activeCommentJadwalId = null;
+        let editingCommentId = null;
+        let replyingToUser = null;
+        let notifiedTaskId = null;
+        let audioCtx = null;
+        let cachedMyEarningsData = null;
+        let userRanksMap = {};
+
+        // State Navigasi Jadwal Teman & Auto Generate
+        let activeFriendFeedId = null;
+        let activeFriendFeedName = null;
+        let previewTasksData = [];
+
+        // State Chat Global
+        let globalChatMessagesList = [];
+        let unreadGlobalChatCount = 0;
+        let isGlobalChatOpen = false;
+
+        // Relasi Follow, Online Presence & Mapping Profil
+        let myFollowings = [];
+        let myFollowers = [];
+        let mutualFriends = [];
+        let onlineUsersState = {};
+        let presenceChannel = null;
+        let userProfilesMap = {};
+
+        // Pengaturan Anggaran, Poin & Penalti
+        let budgetSettings = {
+            monthlyBudget: 100000,
+            ratePerTask: 10,
+            maxDailyTasks: 5,
+            pointsEarly: 100,
+            pointsOnTime: 100,
+            pointsProcess: 50,
+            pointsLate: 0,
+            pointsExpired: 50,
+            pointsStreak: 200,
+            pointsNewUser: 1000,
+            pointsMutual: 500,
+            pointsPhoto: 50,
+            pointsPerbaikan: 100,
+            pointsComment: 10,
+            adminFeeNonBtn: 2500,
+            minWithdrawal: 10000
+        };
+
+        const localNow = new Date();
+        const yearNow = localNow.getFullYear();
+        const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
+        const dayNow = String(localNow.getDate()).padStart(2, '0');
+        const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
+
+        const colorPalettes = {
+            blue: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a', 950: '#172554' },
+            emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
+            indigo: { 50: '#eef2ff', 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81', 950: '#1e1b4b' },
+            violet: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 900: '#4c1d95', 950: '#2e1065' },
+            rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
+        };
+
+        // Format Nominal ke Satuan Ribuan (1k, 2k, 10.5k dst)
+        function formatRupiahK(amount) {
+            const num = Number(amount) || 0;
+            if (num >= 1000) {
+                const inK = num / 1000;
+                return (inK % 1 === 0 ? inK : inK.toFixed(1)) + 'k';
             }
+            return num.toString();
+        }
+
+        function viewFriendSchedule(targetUserId, targetUserName) {
+            const isMutual = mutualFriends.includes(targetUserId);
+            const isMe = targetUserId === currentUser?.id;
+
+            if (!isMutual && !isMe && !isSuperAdmin) {
+                showToast("🔒 Anda belum saling follow dengan pengguna ini.");
+                return;
+            }
+
+            activeFriendFeedId = targetUserId;
+            activeFriendFeedName = targetUserName;
+
+            closeFollowsModal();
+            if (activeCommentJadwalId) closeCommentModal();
+
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+
+            renderTasks();
+            showToast(`Menampilkan jadwal: ${targetUserName}`);
+        }
+
+        function resetToMyFeed() {
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            goToHomeJadwal();
+        }
+
+        function getDeviceGeminiApiKey() {
+            return localStorage.getItem('user_gemini_api_key') || '';
+        }
+
+        function saveGeminiApiKey(key) {
+            const cleanKey = key.trim();
+            localStorage.setItem('user_gemini_api_key', cleanKey);
+            const inputGen = document.getElementById('userGeminiApiKey');
+            const inputProf = document.getElementById('profileGeminiApiKey');
+            if (inputGen) inputGen.value = cleanKey;
+            if (inputProf) inputProf.value = cleanKey;
+            showToast(cleanKey ? "Kunci API Gemini tersimpan di perangkat!" : "Kunci API dihapus.");
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('userGeminiApiKey');
+            const icon = document.getElementById('toggleKeyIcon');
+            if (!input || !icon) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye text-xs';
+            }
+        }
+
+        function syncApiKeyInputs() {
+            const savedKey = getDeviceGeminiApiKey();
+            const inputGen = document.getElementById('userGeminiApiKey');
+            const inputProf = document.getElementById('profileGeminiApiKey');
+            if (inputGen) inputGen.value = savedKey;
+            if (inputProf) inputProf.value = savedKey;
+        }
+
+        function toggleFilterDrawer() {
+            const drawer = document.getElementById('filterSearchDrawer');
+            if (drawer) drawer.classList.toggle('hidden');
+        }
+
+        function toggleSidebarMenu() {
+            openProfileModal();
+        }
+
+        function setActiveTab(tabId) {
+            const tabs = ['tabHome', 'tabBulk', 'tabWallet', 'tabAuto', 'tabFriends'];
+            tabs.forEach(t => {
+                const el = document.getElementById(t);
+                if (el) {
+                    if (t === tabId) {
+                        el.className = 'flex-1 py-2 flex justify-center items-center text-xl transition active:scale-95 tab-active';
+                    } else {
+                        el.className = 'flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95 relative';
+                    }
+                }
+            });
+        }
+
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr) return '-';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+            return dateStr;
+        }
+
+        function formatTimeAgo(isoString) {
+            if (!isoString) return 'Baru saja';
+            const diff = Math.floor((new Date() - new Date(isoString)) / 1000);
+            if (diff < 60) return 'Baru saja';
+            if (diff < 3600) return `${Math.floor(diff / 60)} menit yang lalu`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} jam yang lalu`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)} hari yang lalu`;
+            return new Date(isoString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        }
+
+        function isTaskExpired(taskDate) {
+            if (!taskDate) return false;
+            return taskDate < todayStr;
+        }
+
+        function isTaskNotStartedYet(task) {
+            if (!task || !task.tanggal) return false;
+            if (task.tanggal > todayStr) return true;
+            if (task.tanggal === todayStr && task.jam_mulai) {
+                const now = new Date();
+                const curHours = String(now.getHours()).padStart(2, '0');
+                const curMinutes = String(now.getMinutes()).padStart(2, '0');
+                return `${curHours}:${curMinutes}` < task.jam_mulai;
+            }
+            return false;
+        }
+
+        function isCompletedLate(task) {
+            if (task.status !== 'Selesai') return false;
+            if (!task.completed_at || !task.tanggal || !task.jam_selesai) return false;
+
+            const compTime = new Date(task.completed_at);
+            const compYear = compTime.getFullYear();
+            const compMonth = String(compTime.getMonth() + 1).padStart(2, '0');
+            const compDay = String(compTime.getDate()).padStart(2, '0');
+            const compDateStr = `${compYear}-${compMonth}-${compDay}`;
+
+            const compHours = String(compTime.getHours()).padStart(2, '0');
+            const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
+            const compTimeStr = `${compHours}:${compMinutes}`;
+
+            if (compDateStr > task.tanggal) return true;
+            if (compDateStr === task.tanggal && compTimeStr > task.jam_selesai) return true;
+            return false;
+        }
+
+        function isCreatedBefore6AM(task) {
+            if (!task.created_at) return false;
+            const createDate = new Date(task.created_at);
+            const hour = createDate.getHours();
+            return (hour < 6) || (hour === 6 && createDate.getMinutes() === 0);
+        }
+
+        function getAvatarUrl(userObj) {
+            return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
+        }
+
+        function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
+            if (userProfilesMap[userId]) return userProfilesMap[userId];
+            if (fallbackName) return fallbackName;
+            if (fallbackEmail) return fallbackEmail.split('@')[0];
+            return 'Pengguna';
+        }
+
+        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
+            const rank = userId ? userRanksMap[userId] : null;
+            let rankBorder = "border border-slate-200 dark:border-slate-700";
+            let rankBadge = "";
+
+            if (rank === 1) {
+                rankBorder = "ring-2 ring-amber-400 border-2 border-yellow-300 shadow-md shadow-amber-400/30";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-amber-500 to-yellow-300 text-slate-950 text-[8.5px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 1">1</span>`;
+            } else if (rank === 2) {
+                rankBorder = "ring-2 ring-slate-300 border-2 border-slate-100 shadow-sm";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-slate-400 to-slate-200 text-slate-950 text-[8.5px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 2">2</span>`;
+            } else if (rank === 3) {
+                rankBorder = "ring-2 ring-amber-700 border-2 border-amber-600 shadow-sm";
+                rankBadge = `<span class="absolute -top-1.5 -left-1.5 bg-gradient-to-tr from-amber-700 to-amber-500 text-white text-[8.5px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm border border-white dark:border-slate-900 z-10" title="Peringkat 3">3</span>`;
+            }
+
+            let avatarInner = '';
+            if (avatarUrl) {
+                avatarInner = `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover ${rankBorder}" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
+            } else {
+                const initial = (name || 'U').charAt(0).toUpperCase();
+                avatarInner = `<div class="${sizeClass} rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-sm ${rankBorder}">${initial}</div>`;
+            }
+
+            return `<div class="relative inline-block flex-shrink-0">${rankBadge}${avatarInner}</div>`;
+        }
+
+        async function processAndWatermarkImage(file, userName) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = async () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width, height = img.height;
+                        const MAX_DIMENSION = 1280;
+                        if (width > height && width > MAX_DIMENSION) { height = Math.round((height * MAX_DIMENSION) / width); width = MAX_DIMENSION; } 
+                        else if (height > MAX_DIMENSION) { width = Math.round((width * MAX_DIMENSION) / height); height = MAX_DIMENSION; }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const now = new Date();
+                        const timeStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        const bannerHeight = Math.max(48, Math.round(height * 0.08));
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.68)'; ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
+                        ctx.fillStyle = '#1877f2'; ctx.fillRect(0, height - bannerHeight, width, 3);
+                        ctx.fillStyle = '#ffffff'; const fontSize = Math.max(12, Math.round(bannerHeight * 0.3)); ctx.font = `bold ${fontSize}px sans-serif`;
+                        ctx.fillText(`👤 Petugas: ${userName} | 🏢 ${UNIT_NAME}`, 14, height - (bannerHeight * 0.55));
+                        ctx.font = `normal ${Math.round(fontSize * 0.85)}px sans-serif`; ctx.fillStyle = '#e2e8f0';
+                        ctx.fillText(`🕒 Waktu: ${timeStr}`, 14, height - (bannerHeight * 0.18));
+
+                        let quality = 0.82, blob = null; const targetMaxBytes = 200 * 1024;
+                        const getBlob = (q) => new Promise((res) => canvas.toBlob((b) => res(b), 'image/jpeg', q));
+                        blob = await getBlob(quality);
+                        while (blob && blob.size > targetMaxBytes && quality > 0.2) { quality -= 0.1; blob = await getBlob(quality); }
+                        resolve(blob);
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+                reader.onerror = (e) => reject(e);
+            });
+        }
+
+        async function uploadEvidenceImage(blob, prefix = 'evidence') {
+            if (!blob) return null;
+            const fileName = `${prefix}_${currentUser.id}_${Date.now()}.jpg`;
+            const filePath = `evidences/${fileName}`;
+            const { error } = await _supabase.storage.from('task-evidences').upload(filePath, blob, { contentType: 'image/jpeg', upsert: true });
+            if (error) throw error;
+            return _supabase.storage.from('task-evidences').getPublicUrl(filePath).data?.publicUrl || null;
+        }
+
+        function showLargeImage(url, title = "Dokumentasi Kerja") {
+            if (!url) return;
+            document.getElementById('previewImageTitle').innerText = title;
+            document.getElementById('previewImageLarge').src = url;
+            document.getElementById('imagePreviewModal').classList.remove('hidden');
+        }
+
+        document.getElementById('complete-file-before')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('complete-before-preview-container');
+            if (file) { document.getElementById('complete-before-preview').src = URL.createObjectURL(file); container.classList.remove('hidden'); } 
+            else { container.classList.add('hidden'); }
+        });
+
+        document.getElementById('complete-file-after')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('complete-after-preview-container');
+            if (file) { document.getElementById('complete-after-preview').src = URL.createObjectURL(file); container.classList.remove('hidden'); } 
+            else { container.classList.add('hidden'); }
+        });
+
+        function renderPointSchemeList() {
+            const list = document.getElementById('pointSchemeList');
+            if (!list) return;
+
+            if (isSuperAdmin) { document.getElementById('btnEditPointScheme')?.classList.remove('hidden'); } 
+            else { document.getElementById('btnEditPointScheme')?.classList.add('hidden'); }
+
+            list.innerHTML = `
+                <li class="flex items-center justify-between text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
+                    <span class="font-bold">🎉 Pendaftar Baru (Akun Google)</span><span class="font-extrabold">+${budgetSettings.pointsNewUser} Poin</span>
+                </li>
+                <li class="flex items-center justify-between"><span>🤝 Mutual Follow Teman</span><span class="font-extrabold text-blue-500">+${budgetSettings.pointsMutual} Poin/Relasi</span></li>
+                <li class="flex items-center justify-between"><span>📷 Upload Foto Kerja (Before/After)</span><span class="font-extrabold text-emerald-500">+${budgetSettings.pointsPhoto} Poin</span></li>
+                <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
+                <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
+                <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin (1x/tugas)</span></li>
+                <li class="flex items-center justify-between text-slate-500 italic"><span>🛠️ Selesai Susulan (Expired)</span><span class="font-bold">0 Poin (Lunas Hutang)</span></li>
+                <li class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[9.5px] text-amber-600 dark:text-amber-400"><span>💳 Rekening Bank BTN</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">Bebas Biaya Admin</span></li>
+            `;
+        }
+
+        async function loadBudgetSettings() {
+            try {
+                const { data, error } = await _supabase.from('app_config').select('*');
+                if (!error && data) {
+                    const budgetRow = data.find(r => r.id === 'budget_settings');
+                    if (budgetRow && budgetRow.config_data) budgetSettings = Object.assign(budgetSettings, budgetRow.config_data);
+                    const profileRow = data.find(r => r.id === 'user_profiles');
+                    if (profileRow && profileRow.config_data) userProfilesMap = profileRow.config_data;
+                }
+            } catch (e) {}
+            renderPointSchemeList();
+        }
+
+        function setupAppConfigRealtime() {
+            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            appConfigSubscription = _supabase.channel('public:app_config')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
+                    if (payload.new && payload.new.id === 'budget_settings') {
+                        budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
+                        renderPointSchemeList(); calculateAndRenderEarnings();
+                    }
+                }).subscribe();
+        }
+
+        function openBudgetConfigModal() {
+            if (!isSuperAdmin) return;
+            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
+            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
+            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+            document.getElementById('inputAdminFeeNonBtn').value = budgetSettings.adminFeeNonBtn || 2500;
+            document.getElementById('inputMinWithdrawal').value = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
+            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
+            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
+            document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
+            document.getElementById('inputPointsExpired').value = Math.abs(budgetSettings.pointsExpired);
+            document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
+            document.getElementById('budgetConfigModal').classList.remove('hidden');
+        }
+
+        function closeBudgetConfigModal() { document.getElementById('budgetConfigModal').classList.add('hidden'); }
+
+        document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const newConfig = {
+                monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
+                ratePerTask: parseInt(document.getElementById('inputRatePerTask').value) || 10,
+                maxDailyTasks: parseInt(document.getElementById('inputMaxDailyTasks').value) || 5,
+                adminFeeNonBtn: parseInt(document.getElementById('inputAdminFeeNonBtn').value) || 2500,
+                minWithdrawal: parseInt(document.getElementById('inputMinWithdrawal').value) || 10000,
+                pointsEarly: parseInt(document.getElementById('inputPointsEarly').value) || 100,
+                pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
+                pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
+                pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
+                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || 50,
+                pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200,
+                pointsNewUser: budgetSettings.pointsNewUser, pointsMutual: budgetSettings.pointsMutual, pointsPhoto: budgetSettings.pointsPhoto, pointsPerbaikan: budgetSettings.pointsPerbaikan, pointsComment: budgetSettings.pointsComment
+            };
+            const { error } = await _supabase.from('app_config').upsert({ id: 'budget_settings', config_data: newConfig, updated_at: new Date().toISOString() });
+            if (!error) { budgetSettings = Object.assign(budgetSettings, newConfig); showToast("Pengaturan disimpan!"); closeBudgetConfigModal(); renderPointSchemeList(); calculateAndRenderEarnings(); } 
+            else { showToast("Gagal menyimpan: " + error.message); }
+        });
+
+        // Penghitungan Insentif Poin dengan Konversi 'k'
+        function calculateAndRenderEarnings() {
+            const currentYearMonth = todayStr.slice(0, 7);
+            const userEarningsMap = {};
+
+            const userWithdrawnMap = {};
+            globalWithdrawals.forEach(w => {
+                if (w.user_id && (w.status === 'Sukses' || w.status === 'Pending')) {
+                    userWithdrawnMap[w.user_id] = (userWithdrawnMap[w.user_id] || 0) + Number(w.nominal || 0);
+                }
+            });
+
+            globalTasks.forEach(t => {
+                const uid = t.user_id;
+                const taskDateStr = t.tanggal;
+                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
+
+                const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+                if (!userEarningsMap[uid]) {
+                    userEarningsMap[uid] = {
+                        userId: uid, 
+                        nama: getUserDisplayName(uid, t.user_email, t.nama), 
+                        email: t.user_email || '',
+                        dailyCount: {}, 
+                        activeDates: new Set(), 
+                        points: 0, 
+                        eligibleTasks: 0,
+                        earlyBirdBonus: 0, 
+                        streakBonus: 0, 
+                        extraBonus: 0, 
+                        debtPoints: 0,
+                        expiredTasksCount: 0,
+                        grossEarning: 0,
+                        totalWithdrawn: 0,
+                        totalEarning: 0,
+                        perbaikanCount: {}
+                    };
+                }
+
+                if (!userEarningsMap[uid].dailyCount[taskDateStr]) {
+                    userEarningsMap[uid].dailyCount[taskDateStr] = 0;
+                    userEarningsMap[uid].perbaikanCount[taskDateStr] = 0;
+                }
+
+                if (userEarningsMap[uid].dailyCount[taskDateStr] < budgetSettings.maxDailyTasks) {
+                    userEarningsMap[uid].dailyCount[taskDateStr]++;
+                    userEarningsMap[uid].eligibleTasks++;
+
+                    const isiTugas = (t.tugas || '').toLowerCase();
+                    const isiKet = (t.keterangan || '').toLowerCase();
+                    if (isiTugas.includes('#perbaikan') || isiKet.includes('#perbaikan')) {
+                        if (userEarningsMap[uid].perbaikanCount[taskDateStr] < 5) {
+                            userEarningsMap[uid].perbaikanCount[taskDateStr]++;
+                            userEarningsMap[uid].extraBonus += budgetSettings.pointsPerbaikan;
+                        }
+                    }
+
+                    if (t.foto_sebelum && t.foto_sesudah) {
+                        userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
+                    }
+
+                    if (isCreatedBefore6AM(t)) {
+                        userEarningsMap[uid].points += budgetSettings.pointsEarly;
+                        userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
+                    }
+
+                    if (t.status === 'Selesai') {
+                        const isLate = isCompletedLate(t);
+                        userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
+                        userEarningsMap[uid].activeDates.add(taskDateStr);
+                    } else if (t.status === 'Proses') {
+                        userEarningsMap[uid].points += budgetSettings.pointsProcess;
+                        userEarningsMap[uid].activeDates.add(taskDateStr);
+                    } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
+                        const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
+                        userEarningsMap[uid].debtPoints += penaltyVal;
+                        userEarningsMap[uid].expiredTasksCount++;
+                    }
+                }
+            });
+
+            let totalTeamBudgetUsed = 0;
+
+            Object.keys(userEarningsMap).forEach(uid => {
+                const u = userEarningsMap[uid];
+                
+                if (uid === currentUser?.id) {
+                    u.extraBonus += budgetSettings.pointsNewUser;
+                    u.extraBonus += (mutualFriends.length * budgetSettings.pointsMutual);
+                }
+
+                if (u.activeDates.size >= 5) {
+                    u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
+                }
+
+                const grossPoints = u.points + u.streakBonus + u.extraBonus;
+                const netPoints = Math.max(0, grossPoints - u.debtPoints);
+
+                u.grossPoints = grossPoints;
+                u.totalPoints = netPoints;
+                u.grossEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
+                u.totalWithdrawn = userWithdrawnMap[uid] || 0;
+                u.totalEarning = Math.max(0, u.grossEarning - u.totalWithdrawn);
+
+                totalTeamBudgetUsed += u.grossEarning;
+            });
+
+            // Urutkan peringkat 1, 2, 3 berdasarkan poin tertinggi
+            const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+            userRanksMap = {};
+            sortedUsers.forEach((u, index) => {
+                if (index < 3 && u.totalPoints > 0) {
+                    userRanksMap[u.userId] = index + 1;
+                }
+            });
+
+            const currentUserId = currentUser?.id;
+            const myWithdrawn = userWithdrawnMap[currentUserId] || 0;
+            const myGross = Math.round((budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask);
+            const myData = userEarningsMap[currentUserId] || { 
+                totalPoints: budgetSettings.pointsNewUser, 
+                grossPoints: budgetSettings.pointsNewUser,
+                points: 0, 
+                earlyBirdBonus: 0, 
+                streakBonus: 0, 
+                eligibleTasks: 0, 
+                grossEarning: myGross,
+                totalWithdrawn: myWithdrawn,
+                totalEarning: Math.max(0, myGross - myWithdrawn), 
+                extraBonus: budgetSettings.pointsNewUser,
+                debtPoints: 0,
+                expiredTasksCount: 0
+            };
+            
+            // Format 1k, 2k, dan seterusnya pada Stat Card
+            document.getElementById('myEarningsBadge').innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
+
+            return { userEarningsMap, totalTeamBudgetUsed, myData };
+        }
+
+        async function fetchWithdrawalsSupabase() {
+            let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
+            const { data, error } = await query;
+            if (!error && data) { 
+                globalWithdrawals = data; 
+                renderWithdrawalsHistory(); 
+                calculateAndRenderEarnings();
+            }
+        }
+
+        function setupWithdrawalsRealtime() {
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription);
+            withdrawalsSubscription = _supabase.channel('public:penarikan_insentif')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { 
+                    await fetchWithdrawalsSupabase(); 
+                })
+                .subscribe();
+        }
+
+        function renderWithdrawalsHistory() {
+            const myListContainer = document.getElementById('myWithdrawalsList');
+            const adminListContainer = document.getElementById('adminWithdrawalsList');
+            const myBadge = document.getElementById('myWithdrawalBadge');
+
+            const myWithdrawals = globalWithdrawals.filter(w => w.user_id === currentUser?.id);
+            if (myBadge) myBadge.innerText = `${myWithdrawals.length} Data`;
+
+            if (myListContainer) {
+                myListContainer.innerHTML = '';
+                if (myWithdrawals.length === 0) myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
+                else {
+                    myWithdrawals.forEach(w => {
+                        let statusColor = 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300';
+                        let statusIcon = 'fa-hourglass-half';
+                        let statusText = w.status;
+
+                        if (w.status === 'Sukses') {
+                            statusColor = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300';
+                            statusIcon = 'fa-check-double';
+                            statusText = 'Telah Dibayar ✅';
+                        } else if (w.status === 'Ditolak') {
+                            statusColor = 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300';
+                            statusIcon = 'fa-xmark';
+                        }
+
+                        const item = document.createElement('div');
+                        item.className = 'p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5';
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-bold">
+                                <span class="text-slate-800 dark:text-white">Rp ${formatRupiahK(w.nominal)} (Rp ${Number(w.nominal).toLocaleString('id-ID')})</span>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] border font-extrabold ${statusColor}">
+                                    <i class="fa-solid ${statusIcon} mr-0.5"></i> ${statusText}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between text-[9px] text-slate-400 mt-1">
+                                <span class="truncate">${w.metode_pembayaran} &bull; ${w.nomor_rekening}</span>
+                                <span>${new Date(w.created_at).toLocaleDateString('id-ID')}</span>
+                            </div>
+                            ${w.biaya_admin > 0 ? `<p class="text-[8.5px] text-rose-500 font-semibold mt-0.5">Biaya Admin: Rp ${formatRupiahK(w.biaya_admin)} &bull; Diterima: Rp ${formatRupiahK(w.total_diterima)}</p>` : `<p class="text-[8.5px] text-emerald-600 font-semibold mt-0.5">Bebas Biaya Admin (BTN)</p>`}
+                        `;
+                        myListContainer.appendChild(item);
+                    });
+                }
+            }
+
+            if (isSuperAdmin && adminListContainer) {
+                adminListContainer.innerHTML = '';
+                if (globalWithdrawals.length === 0) adminListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan.</div>';
+                else {
+                    globalWithdrawals.forEach(w => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 text-[10px] space-y-1 mb-2';
+                        const isPending = w.status === 'Pending';
+                        
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-extrabold">
+                                <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Pengguna'}</span>
+                                <span class="px-1.5 py-0.5 rounded text-[8.5px] ${w.status === 'Sukses' ? 'bg-emerald-500 text-white' : (w.status === 'Ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950')} font-extrabold">${w.status === 'Sukses' ? 'Telah Dibayar ✅' : w.status}</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300"><b>Tujuan:</b> ${w.metode_pembayaran} - ${w.nomor_rekening} a.n <b>${w.nama_pemilik}</b></p>
+                            <div class="flex items-center justify-between text-slate-500">
+                                <span>Nominal: <b>Rp ${formatRupiahK(w.nominal)}</b></span>
+                                <span>Admin: <b class="text-rose-500">Rp ${formatRupiahK(w.biaya_admin)}</b></span>
+                                <span>Bersih: <b class="text-emerald-600">Rp ${formatRupiahK(w.total_diterima)}</b></span>
+                            </div>
+                            ${isPending ? `
+                                <div class="flex gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Sukses')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Setujui & Bayar</button>
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Ditolak')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Tolak</button>
+                                </div>
+                            ` : ''}
+                        `;
+                        adminListContainer.appendChild(item);
+                    });
+                }
+            }
+        }
+
+        async function updateWithdrawalStatus(id, newStatus) {
+            if (!confirm(`Ubah status penarikan ini menjadi ${newStatus}?`)) return;
+            const { error } = await _supabase.from('penarikan_insentif').update({ status: newStatus }).eq('id', id);
+            if (!error) { 
+                showToast(`Status penarikan diubah: ${newStatus}`); 
+                await fetchWithdrawalsSupabase(); 
+                calculateAndRenderEarnings();
+            } else { 
+                showToast(`Gagal: ${error.message}`); 
+            }
+        }
+
+        function openWithdrawModal() {
+            if (!cachedMyEarningsData || cachedMyEarningsData.totalEarning < (budgetSettings.minWithdrawal || 10000)) {
+                return showToast(`Saldo minimal Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
+            }
+            document.getElementById('wd-available-balance').value = `Rp ${formatRupiahK(cachedMyEarningsData.totalEarning)} (Rp ${cachedMyEarningsData.totalEarning.toLocaleString('id-ID')})`;
+            document.getElementById('wd-amount').value = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').max = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').min = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('wd-min-info').innerText = `* Minimal penarikan Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`;
+            document.getElementById('wd-account-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            calculateWithdrawFee();
+            document.getElementById('withdrawModal').classList.remove('hidden');
+        }
+
+        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
+
+        function calculateWithdrawFee() {
+            const method = document.getElementById('wd-method').value;
+            const otherContainer = document.getElementById('wd-other-method-container');
+            if (method === 'LAINNYA') otherContainer.classList.remove('hidden'); else otherContainer.classList.add('hidden');
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            let fee = (method !== 'BANK_BTN') ? (budgetSettings.adminFeeNonBtn || 2500) : 0;
+            const net = Math.max(0, amount - fee);
+            document.getElementById('wd-calc-nominal').innerText = `Rp ${formatRupiahK(amount)} (Rp ${amount.toLocaleString('id-ID')})`;
+            document.getElementById('wd-calc-fee').innerText = fee === 0 ? `Gratis (Rp 0)` : `Rp ${formatRupiahK(fee)}`;
+            document.getElementById('wd-calc-net').innerText = `Rp ${formatRupiahK(net)} (Rp ${net.toLocaleString('id-ID')})`;
+        }
+
+        document.getElementById('formWithdrawRequest').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            if (amount < (budgetSettings.minWithdrawal || 10000)) return alert(`Minimal penarikan adalah Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
+            if (amount > cachedMyEarningsData.totalEarning) return alert(`Jumlah melebihi saldo tersedia!`);
+
+            const methodKey = document.getElementById('wd-method').value;
+            let methodText = document.getElementById('wd-method').options[document.getElementById('wd-method').selectedIndex].text;
+            if (methodKey === 'LAINNYA') {
+                const customName = document.getElementById('wd-other-method-name').value.trim();
+                methodText = customName ? `Lainnya (${customName})` : 'Lainnya';
+            }
+
+            const accountNumber = document.getElementById('wd-account-number').value.trim();
+            const accountName = document.getElementById('wd-account-name').value.trim();
+            let fee = (methodKey === 'BANK_BTN') ? 0 : (budgetSettings.adminFeeNonBtn || 2500);
+            let net = Math.max(0, amount - fee);
+
+            const userName = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name);
+            const btnSubmit = document.getElementById('btnSubmitWithdraw');
+            btnSubmit.innerText = "Memproses...";
+
+            const payload = {
+                user_id: currentUser.id, user_email: currentUser.email, nama_petugas: userName,
+                nominal: amount, biaya_admin: fee, total_diterima: net,
+                metode_pembayaran: methodText, nomor_rekening: accountNumber, nama_pemilik: accountName,
+                status: 'Pending', created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('penarikan_insentif').insert([payload]);
+            if (error) console.error("Gagal simpan penarikan:", error);
+
+            const tanggalKlaim = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const pesanWA = `Halo Admin, saya ingin mengajukan *Penarikan Insentif Poin Kerja*:\n\n👤 *Nama Pengguna:* ${userName}\n📧 *Email:* ${currentUser.email}\n🗓️ *Tanggal Pengajuan:* ${tanggalKlaim}\n\n💳 *Informasi Tujuan:* \n • ${methodText}\n • No: *${accountNumber}*\n • A.N: *${accountName}*\n\n💰 *Rincian:*\n • Nominal: Rp ${amount.toLocaleString('id-ID')} (${formatRupiahK(amount)})\n • Biaya Admin: ${fee === 0 ? 'Gratis' : `Rp ${fee.toLocaleString('id-ID')}`}\n • *Total Diterima:* *Rp ${net.toLocaleString('id-ID')} (${formatRupiahK(net)})*\n\nMohon diproses, terima kasih!`;
+
+            const waUrl = `https://wa.me/${ADMIN_WA_PHONE}?text=${encodeURIComponent(pesanWA)}`;
+            closeWithdrawModal();
+            btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan';
+            showToast("Pengajuan berhasil! Membuka WhatsApp...");
+            window.open(waUrl, '_blank');
+            await fetchWithdrawalsSupabase();
+        });
+
+        function openEarningsModal() {
+            setActiveTab('tabWallet');
+            renderPointSchemeList();
+            const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
+            cachedMyEarningsData = myData;
+
+            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${formatRupiahK(myData.totalEarning)} (Rp ${myData.totalEarning.toLocaleString('id-ID')})`;
+            
+            const debtDetail = myData.debtPoints > 0 
+                ? `<span class="text-rose-200 font-bold block mt-0.5">⚠️ Hutang Penalti: -${myData.debtPoints} Poin (${myData.expiredTasksCount} tugas expired)</span>` 
+                : '';
+
+            document.getElementById('modalMyPointsDetail').innerHTML = `
+                <span>Total Poin: <b>${myData.totalPoints || 0} Poin</b> (Estimasi: Rp ${formatRupiahK(myData.grossEarning)})</span>
+                ${debtDetail}
+            `;
+            document.getElementById('modalMyWithdrawnDetail').innerText = `Total Ditarik: Rp ${formatRupiahK(myData.totalWithdrawn)}`;
+            document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
+
+            const btnWD = document.getElementById('btnWithdrawEarning');
+            const noticeWD = document.getElementById('withdrawNotice');
+            const minWd = budgetSettings.minWithdrawal || 10000;
+
+            if (myData.totalEarning >= minWd) {
+                btnWD.classList.remove('hidden');
+                noticeWD.innerText = `✅ Saldo memenuhi syarat penarikan.`;
+                noticeWD.className = "text-[9.5px] text-emerald-100 font-bold mt-1";
+            } else {
+                btnWD.classList.add('hidden');
+                noticeWD.innerText = `* Minimal penarikan saldo adalah Rp ${formatRupiahK(minWd)} (Kurang Rp ${formatRupiahK(minWd - myData.totalEarning)})`;
+                noticeWD.className = "text-[9px] text-amber-100/90 mt-1 font-medium italic";
+            }
+
+            renderWithdrawalsHistory();
+
+            const adminBudgetCard = document.getElementById('adminTeamBudgetCard');
+            const adminListContainer = document.getElementById('adminTeamListContainer');
+            const adminWdCard = document.getElementById('adminWithdrawalManagementCard');
+
+            if (isSuperAdmin) {
+                adminBudgetCard.classList.remove('hidden');
+                adminListContainer.classList.remove('hidden');
+                if (adminWdCard) adminWdCard.classList.remove('hidden');
+
+                document.getElementById('modalTeamBudgetUsage').innerText = `Rp ${formatRupiahK(totalTeamBudgetUsed)} / Rp ${formatRupiahK(budgetSettings.monthlyBudget)}`;
+                const usagePercent = Math.min(100, Math.round((totalTeamBudgetUsed / budgetSettings.monthlyBudget) * 100));
+                document.getElementById('modalBudgetProgressBar').style.width = `${usagePercent}%`;
+
+                const listEl = document.getElementById('teamEarningsList');
+                listEl.innerHTML = '';
+
+                const userKeys = Object.keys(userEarningsMap);
+                if (userKeys.length === 0) {
+                    listEl.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-4">Belum ada tugas tercatat pada hari kerja di bulan ini.</div>';
+                } else {
+                    userKeys.forEach(uid => {
+                        const u = userEarningsMap[uid];
+                        const isMe = uid === currentUser?.id;
+                        const rank = userRanksMap[uid];
+                        let rankIcon = rank ? (rank === 1 ? '🥇 ' : (rank === 2 ? '🥈 ' : '🥉 ')) : '';
+
+                        const row = document.createElement('div');
+                        row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
+                        row.innerHTML = `
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
+                                        ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                                    </div>
+                                    <p class="text-[9px] text-slate-400">Total: Rp ${formatRupiahK(u.grossEarning)} &bull; Ditarik: Rp ${formatRupiahK(u.totalWithdrawn)}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Sisa: Rp ${formatRupiahK(u.totalEarning)}</span>
+                        `;
+                        listEl.appendChild(row);
+                    });
+                }
+            } else {
+                adminBudgetCard.classList.add('hidden');
+                adminListContainer.classList.add('hidden');
+                if (adminWdCard) adminWdCard.classList.add('hidden');
+            }
+            document.getElementById('earningsModal').classList.remove('hidden');
+        }
+
+        function closeEarningsModal() { 
+            const modal = document.getElementById('earningsModal');
+            if (modal) modal.classList.add('hidden');
+            setActiveTab('tabHome');
+        }
+
+        function goToHomeJadwal() {
+            setActiveTab('tabHome');
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            if (isSuperAdmin) document.getElementById('userFilter').value = 'All';
+            renderTasks();
+            showToast("Menampilkan jadwal Anda");
+        }
+
+        function playNotificationChime() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(587.33, now); osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.35);
+            } catch (e) {}
+        }
+
+        function requestNotificationPermission() { if ("Notification" in window && Notification.permission === "default") { Notification.requestPermission(); } }
+
+        function applyTheme(themeName) {
+            const t = colorPalettes[themeName]; if(!t) return;
+            let root = document.documentElement;
+            root.style.setProperty('--t-50', t[50]); root.style.setProperty('--t-100', t[100]); root.style.setProperty('--t-400', t[400]);
+            root.style.setProperty('--t-500', t[500]); root.style.setProperty('--t-600', t[600]); root.style.setProperty('--t-700', t[700]);
+            root.style.setProperty('--t-900', t[900]); root.style.setProperty('--t-950', t[950]);
+            localStorage.setItem('user-theme', themeName);
+        }
+
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
+                document.documentElement.classList.add('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
+            } else { 
+                document.documentElement.classList.remove('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
+            }
+            const savedColor = localStorage.getItem('user-theme'); if(savedColor) applyTheme(savedColor);
+            document.getElementById('dateFilter').value = todayStr; document.getElementById('input-date').value = todayStr;
+            document.getElementById('bulk-date').value = todayStr; document.getElementById('gen-date').value = todayStr;
+            document.getElementById('exportStartDate').value = todayStr; document.getElementById('exportEndDate').value = todayStr;
+            syncApiKeyInputs();
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) { 
+                document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
+            } else { 
+                document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
+            }
+        }
+
+        let authMode = 'login';
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) { currentUser = session.user; showDashboard(); } 
+            else { setAuthMode('login'); document.getElementById('auth-screen').classList.remove('hidden'); }
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode; document.getElementById('auth-error').classList.add('hidden'); document.getElementById('input-password').value = '';
+            if (mode === 'signup') {
+                document.getElementById('auth-title').innerText = "Daftar Akun Baru"; document.getElementById('btn-action').innerText = "Daftar Sekarang"; document.getElementById('btn-switch').innerText = "Sudah punya akun? Login di sini.";
+            } else {
+                document.getElementById('auth-title').innerText = "Login Dashboard"; document.getElementById('btn-action').innerText = "Masuk Dashboard"; document.getElementById('btn-switch').innerText = "Belum punya akun? Daftar sekarang.";
+            }
+        }
+
+        document.getElementById('btn-switch').onclick = () => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); };
+
+        document.getElementById('btn-action').onclick = async () => {
+            const email = document.getElementById('input-email').value; const password = document.getElementById('input-password').value; const errEl = document.getElementById('auth-error');
+            if (!email || !password) { errEl.innerText = "Email dan Password wajib diisi!"; errEl.classList.remove('hidden'); return; }
+            document.getElementById('btn-action').innerText = "Memproses..."; errEl.classList.add('hidden');
+            if (authMode === 'signup') {
+                const { error } = await _supabase.auth.signUp({ email, password });
+                if (error) { errEl.innerText = error.message; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Daftar Sekarang"; } 
+                else { showToast("Pendaftaran berhasil! Silakan login."); setAuthMode('login'); }
+            } else {
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) { errEl.innerText = "Login gagal. Cek kembali email & sandi Anda."; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Masuk Dashboard"; } 
+                else { currentUser = data.user; showDashboard(); }
+            }
+        };
+
+        async function loginWithGoogle() {
+            const { error } = await _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            if (error) { const errEl = document.getElementById('auth-error'); errEl.innerText = "Gagal masuk menggunakan Google."; errEl.classList.add('hidden'); }
+        }
+
+        async function logout() {
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription); if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener); if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener); if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription); if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+            if (globalChatSubscription) _supabase.removeChannel(globalChatSubscription);
+            if (friendScheduleListener) _supabase.removeChannel(friendScheduleListener);
+            await _supabase.auth.signOut(); location.reload();
+        }
+
+        async function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-dashboard').classList.remove('hidden');
+            
+            await loadBudgetSettings();
+            syncApiKeyInputs();
+
+            const username = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name || currentUser.user_metadata?.name);
+            const avatarUrl = getAvatarUrl(currentUser);
+
+            document.getElementById('user-display-side').innerText = username; 
+            document.getElementById('modal-user-name').innerText = username; 
+            document.getElementById('profile-email-display').innerText = currentUser.email;
+
+            if (avatarUrl) {
+                const userImgHtml = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('user-avatar-placeholder').innerHTML = userImgHtml;
+                document.getElementById('modal-user-avatar').innerHTML = userImgHtml;
+                
+                const headerAvatar = document.getElementById('header-user-avatar-btn');
+                if (headerAvatar) headerAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
+
+                const feedAvatar = document.getElementById('feed-user-avatar-btn');
+                if (feedAvatar) feedAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
+            }
+
+            if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                isSuperAdmin = true;
+                document.getElementById('superadmin-indicator').classList.remove('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.remove('hidden');
+                document.getElementById('profile-superadmin-badge').classList.remove('hidden'); 
+                document.getElementById('userFilter').classList.remove('hidden');
+                document.getElementById('btnSidebarBudget').classList.remove('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.remove('hidden');
+            } else {
+                isSuperAdmin = false;
+                document.getElementById('superadmin-indicator').classList.add('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.add('hidden');
+                document.getElementById('profile-superadmin-badge').classList.add('hidden'); 
+                document.getElementById('userFilter').classList.add('hidden');
+                document.getElementById('btnSidebarBudget').classList.add('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.add('hidden');
+            }
+
+            requestNotificationPermission(); 
+            await fetchFollowRelations(); 
+            await fetchWithdrawalsSupabase();
+            await fetchTasksSupabase(); 
+            setupRealtimeListener(); 
+            setupGlobalCommentNotificationListener(); 
+            setupFollowsRealtime(); 
+            setupFollowNotificationListener();
+            setupFriendScheduleNotificationListener();
+            setupAppConfigRealtime(); 
+            setupWithdrawalsRealtime(); 
+            setupPresenceSync();
+            setupSuperAdminActivityListener();
+            setupGlobalChatRealtime();
+        }
+
+        function setupPresenceSync() {
+            if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            presenceChannel = _supabase.channel('online_users_room', { config: { presence: { key: currentUser.id, }, }, });
+            presenceChannel.on('presence', { event: 'sync' }, () => {
+                const state = presenceChannel.presenceState(); onlineUsersState = {}; Object.keys(state).forEach(userId => { onlineUsersState[userId] = true; });
+                if (!document.getElementById('followsModal').classList.contains('hidden')) renderUsersFollowModal();
+                renderTasks();
+            }).subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await presenceChannel.track({
+                        user_id: currentUser.id, email: currentUser.email, avatar_url: getAvatarUrl(currentUser),
+                        name: getUserDisplayName(currentUser.id, currentUser.email), online_at: new Date().toISOString(),
+                    });
+                }
+            });
+        }
+
+        function updateGlobalChatBadge() {
+            const headerBadge = document.getElementById('headerGlobalChatBadge');
+            const sideBadge = document.getElementById('sideGlobalChatBadge');
+            if (unreadGlobalChatCount > 0) {
+                const countText = unreadGlobalChatCount > 99 ? '99+' : unreadGlobalChatCount;
+                headerBadge.innerText = countText;
+                headerBadge.classList.remove('hidden');
+                if (sideBadge) {
+                    sideBadge.innerText = countText;
+                    sideBadge.classList.remove('hidden');
+                }
+            } else {
+                headerBadge.classList.add('hidden');
+                if (sideBadge) sideBadge.classList.add('hidden');
+            }
+        }
+
+        function updateFriendNotificationBadge() {
+            const headerBadge = document.getElementById('headerFriendBadge');
+            const sideBadge = document.getElementById('sideFriendBadge');
+            const count = mutualFriends.length;
+            if (count > 0) {
+                if (headerBadge) {
+                    headerBadge.innerText = count > 99 ? '99+' : count;
+                    headerBadge.classList.remove('hidden');
+                }
+                if (sideBadge) {
+                    sideBadge.innerText = count > 99 ? '99+' : count;
+                    sideBadge.classList.remove('hidden');
+                }
+            } else {
+                if (headerBadge) headerBadge.classList.add('hidden');
+                if (sideBadge) sideBadge.classList.add('hidden');
+            }
+        }
+
+        async function openGlobalChatModal() {
+            isGlobalChatOpen = true;
+            unreadGlobalChatCount = 0;
+            updateGlobalChatBadge();
+            document.getElementById('globalChatModal').classList.remove('hidden');
+            document.getElementById('globalChatMessages').innerHTML = '<div class="text-center text-slate-400 text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat percakapan global...</div>';
+            await fetchGlobalChatMessages();
+            setTimeout(() => {
+                document.getElementById('inputGlobalChatMessage')?.focus();
+            }, 150);
+        }
+
+        function closeGlobalChatModal() {
+            isGlobalChatOpen = false;
+            document.getElementById('globalChatModal').classList.add('hidden');
+        }
+
+        async function fetchGlobalChatMessages() {
+            const { data, error } = await _supabase
+                .from('global_chat_messages')
+                .select('*')
+                .order('created_at', { ascending: true })
+                .limit(100);
+
+            if (!error && data) {
+                globalChatMessagesList = data;
+                renderGlobalChatMessages();
+            } else if (error) {
+                document.getElementById('globalChatMessages').innerHTML = `<div class="text-center text-rose-500 text-xs py-4">Gagal memuat pesan: ${error.message}</div>`;
+            }
+        }
+
+        function renderGlobalChatMessages() {
+            const container = document.getElementById('globalChatMessages');
+            container.innerHTML = '';
+
+            if (globalChatMessagesList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-10">
+                        <i class="fa-solid fa-comments text-3xl mb-2 opacity-30 text-blue-500"></i>
+                        <p class="text-xs font-bold">Belum ada obrolan di Chat Global.</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Mulai diskusi operasional hari ini!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            globalChatMessagesList.forEach(msg => {
+                const isMe = msg.user_id === currentUser?.id;
+                const senderName = getUserDisplayName(msg.user_id, msg.user_email, msg.sender_name);
+                const timeStr = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
+                const msgItem = document.createElement('div');
+                msgItem.className = `flex items-end gap-2 ${isMe ? 'justify-end' : 'justify-start'}`;
+
+                if (isMe) {
+                    msgItem.innerHTML = `
+                        <div class="flex flex-col items-end max-w-[80%]">
+                            <span class="text-[9px] text-slate-400 font-bold mb-0.5 mr-1">${timeStr}</span>
+                            <div class="bg-blue-600 text-white rounded-2xl rounded-br-xs px-3.5 py-2 shadow-sm break-words text-xs font-medium">
+                                ${msg.message}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const isMutual = mutualFriends.includes(msg.user_id);
+                    msgItem.innerHTML = `
+                        <div class="flex-shrink-0 mb-1 ${isMutual ? 'cursor-pointer' : ''}" ${isMutual ? `onclick="viewFriendSchedule('${msg.user_id}', '${senderName.replace(/'/g, "\\'")}')"` : ''}>
+                            ${renderAvatarHtml(msg.user_avatar, senderName, "w-7 h-7", msg.user_id)}
+                        </div>
+                        <div class="flex flex-col items-start max-w-[80%]">
+                            <div class="flex items-center gap-1.5 mb-0.5 ml-1">
+                                ${isMutual ? `
+                                    <button onclick="viewFriendSchedule('${msg.user_id}', '${senderName.replace(/'/g, "\\'")}')" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5">
+                                        <span>${senderName}</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                    </button>
+                                ` : `
+                                    <span class="text-[10px] font-extrabold text-slate-700 dark:text-slate-300">${senderName}</span>
+                                `}
+                                <span class="text-[8.5px] text-slate-400">${timeStr}</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 rounded-2xl rounded-bl-xs px-3.5 py-2 shadow-sm break-words text-xs font-medium">
+                                ${msg.message}
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(msgItem);
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendGlobalChatMessage() {
+            const input = document.getElementById('inputGlobalChatMessage');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
+
+            input.value = '';
+            const senderName = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name);
+            const avatarUrl = getAvatarUrl(currentUser);
+
+            const payload = {
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                sender_name: senderName,
+                user_avatar: avatarUrl,
+                message: message,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('global_chat_messages').insert([payload]);
+            if (error) {
+                showToast("Gagal mengirim pesan: " + error.message);
+                input.value = message;
+            }
+        }
+
+        function setupGlobalChatRealtime() {
+            if (globalChatSubscription) _supabase.removeChannel(globalChatSubscription);
+            globalChatSubscription = _supabase.channel('public:global_chat_messages')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'global_chat_messages' }, payload => {
+                    const newMsg = payload.new;
+                    globalChatMessagesList.push(newMsg);
+
+                    if (isGlobalChatOpen) {
+                        renderGlobalChatMessages();
+                    } else if (newMsg.user_id !== currentUser?.id) {
+                        unreadGlobalChatCount++;
+                        updateGlobalChatBadge();
+                        playNotificationChime();
+                        showGlobalChatToast(newMsg);
+                    }
+                }).subscribe();
+        }
+
+        function showGlobalChatToast(msg) {
+            const senderName = getUserDisplayName(msg.user_id, msg.user_email, msg.sender_name);
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-comments';
+            document.getElementById('notifTitle').innerText = 'Pesan Chat Global';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = senderName;
+            document.getElementById('notifMessage').innerText = msg.message;
+            notifiedTaskId = null;
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(`Chat Global dari ${senderName}`, { body: msg.message, icon: '/icon-192.png' });
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 5000);
+        }
+
+        async function fetchFollowRelations() {
+            if (!currentUser) return;
+            const { data, error } = await _supabase.from('user_follows').select('*'); if (error || !data) return;
+            myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
+            myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
+            mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
+            updateFriendNotificationBadge();
+        }
+
+        function setupFollowsRealtime() {
+            if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            followsSubscription = _supabase.channel('public:user_follows')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'user_follows' }, async () => {
+                    await fetchFollowRelations(); renderTasks();
+                    if (!document.getElementById('followsModal').classList.contains('hidden')) renderUsersFollowModal();
+                }).subscribe();
+        }
+
+        function setupFollowNotificationListener() {
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
+            followNotifyListener = _supabase.channel('public:user_follows_notify')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_follows' }, payload => {
+                    if (payload.new.following_id === currentUser.id) showFollowNotification(payload.new);
+                }).subscribe();
+        }
+
+        function showFollowNotification(followData) {
+            playNotificationChime();
+            const senderName = getUserDisplayName(followData.follower_id, followData.follower_email);
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-user-plus'; 
+            document.getElementById('notifTitle').innerText = 'Pengikut Baru! 🎉';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = `${senderName} mulai mengikuti Anda`; 
+            document.getElementById('notifMessage').innerText = `Follow balik agar jadwal kegiatan saling terlihat!`;
+            notifiedTaskId = null; 
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") { 
+                new Notification("Pengikut Baru! 🎉", { body: `${senderName} mulai mengikuti Anda. Klik untuk follow balik!`, icon: '/icon-192.png' }); 
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        // Listener Realtime Notifikasi saat Teman Mutual Membuat Jadwal Baru
+        function setupFriendScheduleNotificationListener() {
+            if (friendScheduleListener) _supabase.removeChannel(friendScheduleListener);
+            friendScheduleListener = _supabase.channel('public:jadwal_friend_notify')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal' }, payload => {
+                    const row = payload.new;
+                    if (!row || row.user_id === currentUser?.id) return;
+                    if (mutualFriends.includes(row.user_id)) {
+                        showFriendScheduleNotification(row);
+                    }
+                }).subscribe();
+        }
+
+        function showFriendScheduleNotification(task) {
+            playNotificationChime();
+            const senderName = getUserDisplayName(task.user_id, task.user_email, task.nama);
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-calendar-check'; 
+            document.getElementById('notifTitle').innerText = 'Jadwal Baru Teman 🔔';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = `${senderName}`; 
+            document.getElementById('notifMessage').innerText = `Membuat jadwal: "${task.tugas}" (${task.jam_mulai} - ${task.jam_selesai})`;
+            notifiedTaskId = task.id; 
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") { 
+                new Notification(`Jadwal Baru dari ${senderName}`, { body: `${task.tugas} (${task.jam_mulai} - ${task.jam_selesai})`, icon: '/icon-192.png' }); 
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function triggerAdminNotification(title, message, iconClass = 'fa-bell', iconBg = 'bg-amber-500', targetTaskId = null) {
+            playNotificationChime();
+            const toast = document.getElementById('commentNotificationToast');
+            const iconContainer = document.getElementById('notifIconContainer');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifSender = document.getElementById('notifSender');
+            const notifMessage = document.getElementById('notifMessage');
+
+            iconContainer.className = `w-8 h-8 rounded-full ${iconBg} text-white flex items-center justify-center text-sm flex-shrink-0`;
+            notifIcon.className = `fa-solid ${iconClass}`;
+            notifTitle.innerText = 'Log Aktivitas';
+            notifTitle.className = 'text-[10px] font-extrabold text-amber-500 uppercase tracking-wider';
+            notifSender.innerText = title;
+            notifMessage.innerText = message;
+            notifiedTaskId = targetTaskId;
+            
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: message, icon: '/icon-192.png' });
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function setupSuperAdminActivityListener() {
+            if (!isSuperAdmin) return;
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+
+            superAdminActivitySubscription = _supabase.channel('admin_global_activity')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
+                    const row = payload.new;
+                    if (!row || row.user_id === currentUser.id) return;
+                    const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
+
+                    if (payload.eventType === 'INSERT') {
+                        triggerAdminNotification(
+                            `📝 Jadwal Baru: ${userName}`,
+                            `Menambahkan "${row.tugas}" (${row.jam_mulai} - ${row.jam_selesai})`,
+                            'fa-calendar-plus',
+                            'bg-blue-500',
+                            row.id
+                        );
+                    } else if (payload.eventType === 'UPDATE') {
+                        if (row.status === 'Selesai' && payload.old.status !== 'Selesai') {
+                            const isLate = isTaskExpired(row.tanggal);
+                            triggerAdminNotification(
+                                `✅ Selesai: ${userName}`,
+                                `${isLate ? '[SUSULAN] ' : ''}"${row.tugas}" telah diselesaikan (${row.keterangan || 'Tanpa catatan'})`,
+                                'fa-circle-check',
+                                'bg-emerald-600',
+                                row.id
+                            );
+                        } else if (row.status === 'Proses' && payload.old.status !== 'Proses') {
+                            triggerAdminNotification(
+                                `⚡ Sedang Dikerjakan: ${userName}`,
+                                `Mengerjakan tugas: "${row.tugas}"`,
+                                'fa-spinner',
+                                'bg-amber-500',
+                                row.id
+                            );
+                        }
+                    }
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'penarikan_insentif' }, (payload) => {
+                    const wd = payload.new;
+                    if (!wd || wd.user_id === currentUser.id) return;
+                    triggerAdminNotification(
+                        `💰 Tarik Insentif: ${wd.nama_petugas}`,
+                        `Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
+                        'fa-wallet',
+                        'bg-rose-500'
+                    );
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_follows' }, (payload) => {
+                    const fol = payload.new;
+                    if (!fol || fol.follower_id === currentUser.id) return;
+                    const followerName = getUserDisplayName(fol.follower_id, fol.follower_email);
+                    const followingName = getUserDisplayName(fol.following_id, fol.following_email);
+                    triggerAdminNotification(
+                        `🤝 Relasi Petugas`,
+                        `${followerName} mulai mengikuti ${followingName}`,
+                        'fa-user-plus',
+                        'bg-teal-500'
+                    );
+                })
+                .subscribe();
+        }
+
+        async function openFollowsModal() {
+            setActiveTab('tabFriends');
+            document.getElementById('followsModal').classList.remove('hidden');
+            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
+            await fetchFollowRelations(); renderUsersFollowModal();
+        }
+
+        function closeFollowsModal() { 
+            document.getElementById('followsModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        function renderUsersFollowModal() {
+            const listEl = document.getElementById('usersFollowList'); 
+            listEl.innerHTML = '';
+            const userMap = {};
+            
+            globalTasks.forEach(item => {
+                if (item.user_id && item.user_id !== currentUser.id && item.user_email !== SUPER_ADMIN_EMAIL) {
+                    if (!userMap[item.user_id]) {
+                        userMap[item.user_id] = { 
+                            id: item.user_id, 
+                            email: item.user_email || 'Pengguna', 
+                            nama: getUserDisplayName(item.user_id, item.user_email, item.nama), 
+                            peran: item.peran || 'Personal', 
+                            avatar_url: item.user_avatar || null 
+                        };
+                    }
+                }
+            });
+
+            const users = Object.values(userMap);
+            if (users.length === 0) { 
+                listEl.innerHTML = '<div class="text-center text-slate-400 text-xs py-4">Belum ada user lain terdaftar.</div>'; 
+                return; 
+            }
+
+            users.forEach(u => {
+                const isFollowing = myFollowings.includes(u.id); 
+                const isFollower = myFollowers.includes(u.id); 
+                const isMutual = isFollowing && isFollower; 
+                const isOnline = !!onlineUsersState[u.id];
+
+                let statusBadge = '';
+                let clickableNameHtml = '';
+
+                if (isMutual) { 
+                    statusBadge = `<span class="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">Teman Saling Follow</span>`; 
+                    clickableNameHtml = `
+                        <button type="button" onclick="viewFriendSchedule('${u.id}', '${u.nama.replace(/'/g, "\\'")}')" class="text-left font-extrabold text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                            <span class="truncate">${u.nama}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </button>
+                    `;
+                } else if (isFollower) { 
+                    statusBadge = `<span class="bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[8px] font-bold px-1.5 py-0.5 rounded-full">Mengikuti Anda</span>`; 
+                    clickableNameHtml = `
+                        <p class="text-xs font-extrabold text-slate-500 dark:text-slate-400 truncate cursor-not-allowed" title="Follow balik untuk melihat jadwal">${u.nama}</p>
+                    `;
+                } else {
+                    clickableNameHtml = `
+                        <p class="text-xs font-extrabold text-slate-500 dark:text-slate-400 truncate cursor-not-allowed" title="Belum saling follow">${u.nama}</p>
+                    `;
+                }
+
+                const userRow = document.createElement('div');
+                userRow.className = 'flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/80 shadow-xs';
+                userRow.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        ${isMutual ? `
+                            <div class="cursor-pointer" onclick="viewFriendSchedule('${u.id}', '${u.nama.replace(/'/g, "\\'")}')">
+                                ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
+                            </div>
+                        ` : `
+                            <div>
+                                ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
+                            </div>
+                        `}
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                ${clickableNameHtml}
+                                <span class="text-[9px] font-semibold ${isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">(${isOnline ? 'Online' : 'Offline'})</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                <span class="text-[9px] text-slate-400 truncate">${u.email}</span>${statusBadge}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="toggleFollowUser('${u.id}', '${u.email.replace(/'/g, "\\'")}', ${isFollowing})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition flex items-center gap-1 flex-shrink-0 active:scale-95 ${isFollowing ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-rose-50 hover:text-rose-600' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'}">
+                        ${isFollowing ? '<i class="fa-solid fa-check text-[9px]"></i> Mengikuti' : '<i class="fa-solid fa-user-plus text-[9px]"></i> Follow'}
+                    </button>
+                `;
+                listEl.appendChild(userRow);
+            });
+        }
+
+        async function toggleFollowUser(targetUserId, targetUserEmail, isCurrentlyFollowing) {
+            if (isCurrentlyFollowing) {
+                const { error } = await _supabase.from('user_follows').delete().eq('follower_id', currentUser.id).eq('following_id', targetUserId);
+                if (!error) { showToast("Batal mengikuti"); await fetchFollowRelations(); renderUsersFollowModal(); renderTasks(); }
+            } else {
+                const { error } = await _supabase.from('user_follows').insert([{ follower_id: currentUser.id, following_id: targetUserId, follower_email: currentUser.email, following_email: targetUserEmail }]);
+                if (!error) { showToast("Berhasil follow!"); await fetchFollowRelations(); renderUsersFollowModal(); renderTasks(); } else { showToast("Gagal follow: " + error.message); }
+            }
+        }
+
+        function setupGlobalCommentNotificationListener() {
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
+            globalCommentsListener = _supabase.channel('public:jadwal_comments_global')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments' }, payload => {
+                    const newComment = payload.new; if (newComment.user_id === currentUser.id) return;
+                    const targetTask = globalTasks.find(t => String(t.id) === String(newComment.jadwal_id));
+                    if (targetTask) {
+                        targetTask.comments_count = (targetTask.comments_count || 0) + 1; renderTasks();
+                        if (targetTask.user_id === currentUser.id || mutualFriends.includes(targetTask.user_id)) {
+                            showCommentNotification(newComment, targetTask);
+                        }
+                    }
+                }).subscribe();
+        }
+
+        function showCommentNotification(comment, task) {
+            playNotificationChime();
+            const senderName = getUserDisplayName(comment.user_id, comment.user_email);
+            const toast = document.getElementById('commentNotificationToast');
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIcon').className = 'fa-solid fa-comments'; document.getElementById('notifTitle').innerText = 'Komentar Baru 💬';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifSender').innerText = `${senderName} mengomentari: "${task.tugas}"`; document.getElementById('notifMessage').innerText = `"${comment.comment}"`;
+            notifiedTaskId = task.id; toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") { new Notification(`Komentar baru dari ${senderName}`, { body: `${task.tugas}: "${comment.comment}"`, icon: '/icon-192.png' }); }
+            setTimeout(() => { toast.classList.add('hidden'); }, 5500);
+        }
+
+        function handleNotificationClick() {
+            const toast = document.getElementById('commentNotificationToast'); toast.classList.add('hidden');
+            if (notifiedTaskId) { 
+                const task = globalTasks.find(t => t.id == notifiedTaskId); 
+                if (task) {
+                    if (task.user_id !== currentUser?.id && mutualFriends.includes(task.user_id)) {
+                        viewFriendSchedule(task.user_id, getUserDisplayName(task.user_id, task.user_email, task.nama));
+                    }
+                    openCommentModal(task.id, task.tugas); 
+                }
+            } else { 
+                openGlobalChatModal(); 
+            }
+        }
+
+        function setupRealtimeListener() {
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
+            realtimeSubscription = _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, payload => { handleRealtimeChange(payload); })
+                .subscribe();
+        }
+
+        function handleRealtimeChange(payload) {
+            const { eventType, new: newRow, old: oldRow } = payload;
+            if (!isSuperAdmin && newRow?.user_email === SUPER_ADMIN_EMAIL) return;
+            if (eventType === 'INSERT') { if (!globalTasks.some(t => t.id === newRow.id)) globalTasks.push(newRow); } 
+            else if (eventType === 'UPDATE') { const idx = globalTasks.findIndex(t => t.id === newRow.id); if (idx !== -1) globalTasks[idx] = newRow; else globalTasks.push(newRow); } 
+            else if (eventType === 'DELETE') { globalTasks = globalTasks.filter(t => t.id !== oldRow.id); }
+            if (isSuperAdmin) populateUserFilterDropdown();
+            renderTasks();
+        }
+
+        async function fetchTasksSupabase() {
+            let query = _supabase.from('jadwal').select('*');
+            if (!isSuperAdmin) { query = query.or(`user_email.neq.${SUPER_ADMIN_EMAIL},user_email.is.null`); }
+            const { data, error } = await query.order('jam_mulai', { ascending: true });
+            if (!error && data) { globalTasks = data; if (isSuperAdmin) populateUserFilterDropdown(); renderTasks(); } 
+            else if (error) { console.error("Fetch Tasks Error:", error); renderTasks(); }
+        }
+
+        function populateUserFilterDropdown() {
+            const userFilterSelect = document.getElementById('userFilter'); const currentSelected = userFilterSelect.value; const userMap = {};
+            globalTasks.forEach(item => {
+                const uid = item.user_id; const email = item.user_email || `User (${uid ? uid.slice(-5) : 'unknown'})`; const displayName = getUserDisplayName(uid, email, item.nama);
+                if (!userMap[uid]) userMap[uid] = { name: displayName, count: 0 };
+                userMap[uid].count++;
+            });
+            let optionsHtml = `<option value="All">👥 Filter: Semua User (${globalTasks.length})</option>`;
+            Object.keys(userMap).forEach(uid => { optionsHtml += `<option value="${uid}">👤 ${userMap[uid].name} (${userMap[uid].count})</option>`; });
+            userFilterSelect.innerHTML = optionsHtml; userFilterSelect.value = currentSelected || 'All';
+        }
+
+        function toggleTaskMenu(id) {
+            const menu = document.getElementById(`task-menu-${id}`); if (!menu) return;
+            const isHidden = menu.classList.contains('hidden'); document.querySelectorAll('[id^="task-menu-"]').forEach(el => el.classList.add('hidden'));
+            if (isHidden) menu.classList.remove('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('[id^="task-menu-"]') && !e.target.closest('[onclick^="toggleTaskMenu"]')) { document.querySelectorAll('[id^="task-menu-"]').forEach(el => el.classList.add('hidden')); }
+        });
+
+        function shareSpecificTask(task) {
+            const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
+            const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
+            const ketText = task.keterangan ? `\n📌 Keterangan: ${task.keterangan}` : '';
+            const shareText = `📋 *Jadwal Aktivitas Harian*\n👤 Nama: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Kategori: ${task.peran}\n📝 Kegiatan: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
+            if (navigator.share) { navigator.share({ title: `Jadwal - ${taskName}`, text: shareText, url: window.location.href, }).catch(() => {}); } 
+            else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin!"); }
+        }
+
+        // ==========================================================
+        // RENDER TASKS: BISA LIKE & KOMEN DI JADWAL SENDIRI MAUPUN TEMAN
+        // ==========================================================
+        function renderTasks() {
+            const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); 
+            const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
+            const selectedRole = document.getElementById('roleFilter').value; 
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
+            const selectedUser = document.getElementById('userFilter').value; 
+            const selectedDate = document.getElementById('dateFilter').value;
+
+            // Update Banner Teman
+            const friendIndicator = document.getElementById('friendFeedIndicator');
+            const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
+            if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
+                if (friendIndicator) friendIndicator.classList.remove('hidden');
+                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
+            } else {
+                if (friendIndicator) friendIndicator.classList.add('hidden');
+            }
+
+            tableBodyDesktop.innerHTML = ''; 
+            cardsContainerMobile.innerHTML = '';
+
+            const filteredTasks = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate; 
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
+                
+                let canView = false;
+                if (isSuperAdmin) {
+                    const matchUser = selectedUser === 'All' || item.user_id === selectedUser;
+                    canView = matchUser;
+                } else if (activeFriendFeedId) {
+                    const isMutual = mutualFriends.includes(activeFriendFeedId);
+                    canView = (item.user_id === activeFriendFeedId) && (isMutual || activeFriendFeedId === currentUser?.id);
+                } else {
+                    canView = (item.user_id === currentUser?.id);
+                }
+
+                return matchDate && matchRole && matchStatus && canView;
+            });
+
+            document.getElementById('totalTaskCount').innerText = filteredTasks.length;
+            document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
+            document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
+
+            calculateAndRenderEarnings();
+
+            if (filteredTasks.length === 0) {
+                const emptyMsg = activeFriendFeedId ? `Teman ini belum memiliki jadwal pada tanggal yang dipilih.` : `Anda belum memiliki jadwal pada tanggal yang dipilih.`;
+                tableBodyDesktop.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p><p class="text-[10px] text-slate-400 mt-0.5">Gunakan tombol 'Tambah' atau 'AI Smart Schedule' untuk membuat jadwal baru.</p></td></tr>`;
+                cardsContainerMobile.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 shadow-xs"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p><p class="text-[10px] text-slate-400 mt-0.5">Gunakan tombol 'Tambah' atau 'AI Smart Schedule'.</p></div>`;
+                return;
+            }
+
+            const groupedByUser = {};
+            filteredTasks.forEach(task => {
+                const userKey = getUserDisplayName(task.user_id, task.user_email, task.nama);
+                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
+                groupedByUser[userKey].push(task);
+            });
+
+            Object.keys(groupedByUser).forEach(petugasName => {
+                const tasksOfUser = groupedByUser[petugasName];
+                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
+                const sampleTask = tasksOfUser[0]; 
+                const postDate = sampleTask?.tanggal || todayStr; 
+                const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
+                const taskUserId = sampleTask?.user_id;
+                const isMutual = mutualFriends.includes(taskUserId);
+
+                const feedPostCard = document.createElement('div');
+                feedPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-200 dark:border-slate-800 shadow-xs transition';
+
+                let tasksListHtml = '';
+                tasksOfUser.forEach((item, index) => {
+                    const isOwner = (item.user_id === currentUser?.id);
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; 
+                    const isLiked = likedUsers.includes(currentUser?.id);
+                    const likesCount = item.likes_count || 0; 
+                    const commentsCount = item.comments_count || 0;
+                    const isCompleted = item.status === 'Selesai'; 
+                    const isPastDay = isTaskExpired(item.tanggal); 
+                    const isTooEarly = isTaskNotStartedYet(item);
+                    
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    const isLate = isCompletedLate(item); 
+                    const isEarly = isCreatedBefore6AM(item);
+
+                    let statusBadgeHtml = ''; 
+                    let pointRewardBadge = '';
+                    if (isCompleted) {
+                        statusBadgeHtml = isLate 
+                            ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> Selesai (${isPastDay ? 'Susulan' : 'Terlambat'})</span>` 
+                            : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"><i class="fa-solid fa-circle-check text-[9px]"></i> Selesai</span>`;
+                        
+                        pointRewardBadge = isLate 
+                            ? `<span class="font-bold text-[9.5px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">0 Poin (Lunas)</span>` 
+                            : `<span class="font-extrabold text-[9.5px] text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/80 px-2 py-1 rounded-xl border border-emerald-300 dark:border-emerald-800">+${budgetSettings.pointsOnTime} Poin</span>`;
+                    } else if (item.status === 'Proses') {
+                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-500 border border-amber-500/30">⚡ Proses</span>`;
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 px-2 py-1 rounded-xl border border-amber-300">+${budgetSettings.pointsProcess} Poin</span>`;
+                    } else {
+                        if (isTooEarly) {
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700"><i class="fa-solid fa-lock text-[8.5px]"></i> Belum Jamnya (${item.jam_mulai})</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 dark:bg-slate-800/60 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">Terkunci</span>`;
+                        } else if (isPastDay) {
+                            statusBadgeHtml = `<button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-300 dark:border-rose-800 transition shadow-xs"><i class="fa-solid fa-camera text-[9px]"></i> Selesaikan Susulan</button>`;
+                            pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/40 px-2 py-1 rounded-xl border border-rose-300 dark:border-rose-800">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>`;
+                        } else {
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800">⏱️ Belum Dikerjakan</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-300 dark:border-slate-700">0 Poin</span>`;
+                        }
+                    }
+
+                    let taskMenuDropdown = '';
+                    if (canManage) {
+                        taskMenuDropdown = `
+                            <div id="task-menu-${item.id}" class="hidden absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>` : ''}
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
+                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
+                                ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
+                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
+                            </div>
+                        `;
+                    }
+
+                    let photoEvidenceHtml = '';
+                    if (item.foto_sebelum || item.foto_sesudah) {
+                        photoEvidenceHtml = `
+                            <div class="grid grid-cols-2 gap-2.5 my-3">
+                                ${item.foto_sebelum ? `
+                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs cursor-pointer">
+                                        <img src="${item.foto_sebelum}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg border border-white/10">
+                                            <i class="fa-solid fa-camera text-[8px] text-amber-400"></i> Sebelum
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sebelum</span>
+                                    </div>`
+                                }
+                                ${item.foto_sesudah ? `
+                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-emerald-500/30 shadow-xs cursor-pointer ring-1 ring-emerald-500/20">
+                                        <img src="${item.foto_sesudah}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-emerald-600/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg shadow-xs">
+                                            <i class="fa-solid fa-circle-check text-[8px] text-emerald-200"></i> Sesudah
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sesudah</span>
+                                    </div>`
+                                }
+                            </div>
+                        `;
+                    }
+
+                    tasksListHtml += `
+                        <div class="py-3.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
+                                        <i class="fa-regular fa-clock text-[10px] text-blue-600 dark:text-blue-400"></i>
+                                        ${item.jam_mulai} - ${item.jam_selesai}
+                                    </span>
+                                    ${isEarly ? `<span class="inline-flex items-center gap-1 text-[9px] bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold px-2 py-0.5 rounded-full">🌅 &lt;06:00 (+${budgetSettings.pointsEarly})</span>` : ''}
+                                </div>
+
+                                <div class="relative flex items-center">
+                                    ${canManage ? `
+                                        <button onclick="toggleTaskMenu('${item.id}')" class="w-7 h-7 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                        ${taskMenuDropdown}` : `
+                                        <span class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-[10px]" title="Terkunci">
+                                            <i class="fa-solid fa-lock text-amber-500/80"></i>
+                                        </span>`
+                                    }
+                                </div>
+                            </div>
+
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug break-words tracking-tight mb-2">
+                                ${item.tugas}
+                            </h3>
+
+                            ${photoEvidenceHtml}
+
+                            ${item.keterangan ? `
+                                <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-blue-600 border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
+                                    <div class="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
+                                        <i class="fa-solid fa-clipboard-check text-xs"></i>
+                                        <span>Keterangan Selesai</span>
+                                    </div>
+                                    <p class="text-slate-700 dark:text-slate-200 text-xs font-medium leading-relaxed break-words">
+                                        ${item.keterangan}
+                                    </p>
+                                </div>` : ''
+                            }
+
+                            <!-- INTERAKSI: LIKE & KOMENTAR DI JADWAL SENDIRI MAUPUN TEMAN -->
+                            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 mt-1">
+                                <div class="flex items-center gap-1.5">
+                                    ${statusBadgeHtml}
+                                    ${pointRewardBadge}
+                                </div>
+
+                                <div class="flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition active:scale-95 ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'hover:text-blue-500'}">
+                                        <i class="${isLiked ? 'fa-solid text-blue-600 dark:text-blue-400' : 'fa-regular'} fa-thumbs-up text-sm"></i>
+                                        <span>${likesCount}</span>
+                                    </button>
+
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-blue-600 dark:hover:text-blue-400 transition active:scale-95">
+                                        <i class="${commentsCount > 0 ? 'fa-solid text-blue-600' : 'fa-regular'} fa-comment-dots text-sm"></i>
+                                        <span>${commentsCount}</span>
+                                    </button>
+
+                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="w-8 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-blue-500 transition active:scale-95" title="Bagikan">
+                                        <i class="fa-solid fa-share-nodes text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                feedPostCard.innerHTML = `
+                    <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            ${isMutual ? `
+                                <div class="cursor-pointer" onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')">
+                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
+                                </div>
+                            ` : `
+                                <div>
+                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
+                                </div>
+                            `}
+                            <div class="min-w-0">
+                                ${isMutual ? `
+                                    <button onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')" class="text-left text-xs font-extrabold text-blue-600 dark:text-blue-400 hover:underline leading-none truncate flex items-center gap-1">
+                                        <span>${petugasName}</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8.5px]"></i>
+                                    </button>
+                                ` : `
+                                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
+                                `}
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium">
+                                    <span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-blue-600 font-bold">${tasksOfUser.length} Kegiatan</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Kategori'}</span>
+                    </div>
+                    <div class="py-1">${tasksListHtml}</div>
+                `;
+                cardsContainerMobile.appendChild(feedPostCard);
+
+                const groupHeader = document.createElement('tr');
+                groupHeader.className = 'bg-blue-50 dark:bg-blue-950/40 border-y border-blue-200/80';
+                groupHeader.innerHTML = `
+                    <td colspan="8" class="px-3 py-2">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                ${isMutual ? `
+                                    <div class="cursor-pointer" onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')">
+                                        ${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}
+                                    </div>
+                                    <button onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')" class="font-extrabold text-blue-700 dark:text-blue-300 text-xs hover:underline flex items-center gap-1">
+                                        <span>${petugasName}</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                    </button>
+                                ` : `
+                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}
+                                    <span class="font-extrabold text-blue-900 dark:text-blue-300 text-xs">${petugasName}</span>
+                                `}
+                            </div>
+                            <span class="bg-blue-200/60 text-blue-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Kegiatan</span>
+                        </div>
+                    </td>
+                `;
+                tableBodyDesktop.appendChild(groupHeader);
+
+                tasksOfUser.forEach(item => {
+                    const isOwner = (item.user_id === currentUser?.id); 
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
+                    const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
+                    const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item); 
+                    const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800';
+                    
+                    let roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${item.peran || 'Umum'}</span>`;
+
+                    let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
+                    
+                    let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
+
+                    row.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-[10px] text-slate-500">${item.tanggal || '-'}</td>
+                        <td class="p-3 font-mono font-bold text-[11px]">${item.jam_mulai} - ${item.jam_selesai}${isEarly ? `<span class="ml-1 text-[8px]">🌅</span>` : ''}</td>
+                        <td class="p-3 font-bold text-[11px]">
+                            ${isMutual ? `
+                                <button onclick="viewFriendSchedule('${item.user_id}', '${displayName.replace(/'/g, "\\'")}')" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                                    <span>${displayName}</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                </button>
+                            ` : `
+                                <span>${displayName}</span>
+                            `}
+                        </td>
+                        <td class="p-3">${roleBadge}</td>
+                        <td class="p-3 font-semibold text-[11px]">
+                            <p>${item.tugas}</p>${item.keterangan ? `<p class="text-[10px] text-blue-600 font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
+                            ${(item.foto_sebelum || item.foto_sesudah) ? `<div class="flex gap-2 mt-1.5">${item.foto_sebelum ? `<button onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="text-[9.5px] text-slate-500 hover:text-blue-600 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-image"></i> Sebelum</button>` : ''}${item.foto_sesudah ? `<button onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="text-[9.5px] text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-circle-check"></i> Sesudah</button>` : ''}</div>` : ''}
+                        </td>
+                        <td class="p-3 text-center">${statusCell}</td>
+                        <td class="p-3 text-center"><div class="flex items-center justify-center gap-2.5"><button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-blue-500' : 'text-slate-400'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i><span>${likesCount}</span></button><button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-blue-600' : 'text-slate-400'}"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i><span>${commentsCount}</span></button></div></td>
+                        <td class="p-3 text-center">${actionCell}</td>
+                    `;
+                    tableBodyDesktop.appendChild(row);
+                });
+            });
+        }
+
+        async function toggleLikeTask(taskId) {
+            const task = globalTasks.find(t => String(t.id) === String(taskId)); if (!task) return;
+            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : []; const userIndex = likedUsers.indexOf(currentUser.id);
+            if (userIndex === -1) { likedUsers.push(currentUser.id); } else { likedUsers.splice(userIndex, 1); }
+            task.likes_count = likedUsers.length; task.liked_users = likedUsers; renderTasks();
+            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
+            if (error) { showToast("Gagal menyukai: " + error.message); await fetchTasksSupabase(); } 
+            else if (data) { task.likes_count = data.likes_count; task.liked_users = data.liked_users; renderTasks(); }
         }
 
         async function openCommentModal(taskId, taskTitle) {
@@ -1989,8 +3937,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
         }
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
-        initTheme(); 
-        checkAuth();
+        initTheme(); checkAuth();
 </script>
 </body>
 </html>
