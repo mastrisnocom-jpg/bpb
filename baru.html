@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Operasional & Penarikan Insentif - Personal Super App</title>
+    <title>Jadwal Operasional & Penarikan Insentif - BINAYASA Super App</title>
     
     <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, Proteksi Waktu Nyata, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
         :root {
-            --t-50: #ecfdf5; --t-100: #d1fae5; --t-400: #34d399; --t-500: #10b981; --t-600: #059669; --t-700: #047857; --t-900: #064e3b; --t-950: #022c22;
+            --t-50: #eff6ff; --t-100: #dbeafe; --t-400: #60a5fa; --t-500: #1877f2; --t-600: #166fe5; --t-700: #1d4ed8; --t-900: #1e3a8a; --t-950: #0f172a;
         }
     </style>
 
@@ -35,17 +35,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Klavika:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; }
-        .fb-logo-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .binayasa-logo-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
-        .tab-active { color: #1877f2; border-bottom: 3px solid #1877f2; }
-        .dark .tab-active { color: #2e89ff; border-bottom: 3px solid #2e89ff; }
+        ::-webkit-scrollbar-thumb { background: #1877f2; border-radius: 10px; }
+        .tab-btn { position: relative; display: flex; justify-content: center; align-items: center; }
+        .tab-btn.tab-active { color: #1877f2; }
+        .tab-btn.tab-active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #1877f2;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+        .dark .tab-btn.tab-active { color: #2e89ff; }
+        .dark .tab-btn.tab-active::after { background-color: #2e89ff; }
     </style>
 </head>
 <body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
@@ -53,10 +66,10 @@
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
         <div class="bg-white dark:bg-slate-900 p-6 rounded-[28px] shadow-2xl w-11/12 max-w-xs text-center border border-slate-200 dark:border-slate-800">
-            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-blue-500/30">
-                <i id="auth-icon" class="fa-solid fa-shield-halved"></i>
+            <div class="w-12 h-12 bg-[#1877f2] text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-blue-500/30 font-black">
+                B
             </div>
-            <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">M-Ops Schedule</h2>
+            <h2 id="auth-title" class="text-lg font-black text-slate-900 dark:text-white mb-0.5 tracking-tight">BINAYASA M-Ops</h2>
             <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian & insentif</p>
             
             <div id="form-container" class="space-y-2.5">
@@ -66,7 +79,7 @@
             
             <p id="auth-error" class="text-[10px] text-rose-500 font-bold mt-2.5 hidden">Error message</p>
             
-            <button id="btn-action" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl hover:bg-blue-700 active:scale-95 transition text-xs shadow-md shadow-blue-600/20 mt-4">Masuk</button>
+            <button id="btn-action" class="w-full bg-[#1877f2] text-white font-bold py-2.5 rounded-xl hover:bg-blue-700 active:scale-95 transition text-xs shadow-md shadow-blue-600/20 mt-4">Masuk</button>
             
             <div class="flex items-center my-3 text-[10px] text-slate-400">
                 <div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div><span class="px-2">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
@@ -81,9 +94,9 @@
                 </svg>
                 Masuk dengan Google
             </button>
-            <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-blue-600 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-[#1877f2] transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
             
-            <a href="/" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-400 hover:text-blue-600 text-[10px] font-bold flex items-center justify-center gap-1.5 transition">
+            <a href="/" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-400 hover:text-[#1877f2] text-[10px] font-bold flex items-center justify-center gap-1.5 transition">
                 <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
             </a>
         </div>
@@ -96,11 +109,11 @@
         <aside class="hidden md:flex flex-col w-56 bg-slate-900 text-white fixed top-0 bottom-0 left-0 p-4 z-30 justify-between shadow-xl border-r border-slate-800">
             <div>
                 <div class="flex items-center gap-2 mb-6 px-1">
-                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg font-black tracking-tighter">
-                        f
+                    <div class="w-8 h-8 bg-[#1877f2] rounded-xl flex items-center justify-center text-white text-lg font-black tracking-tighter">
+                        B
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-base tracking-tight leading-none text-blue-500 fb-logo-text">facebook</h3>
+                        <h3 class="font-black text-base tracking-tight leading-none text-[#1877f2] binayasa-logo-text">BINAYASA</h3>
                         <p class="text-[9px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">M-Ops Workspace</p>
                     </div>
                 </div>
@@ -110,37 +123,37 @@
                         <i class="fa-solid fa-house text-xs text-blue-400"></i> Halaman Utama
                     </a>
 
-                    <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-blue-600 text-white transition">
-                        <i class="fa-solid fa-newspaper text-xs"></i> Home Feed Jadwal
+                    <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-[#1877f2] text-white transition">
+                        <i class="fa-solid fa-house text-xs"></i> Home Feed Jadwal
+                    </button>
+
+                    <button onclick="openBulkTextModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <i class="fa-solid fa-clapperboard text-xs text-blue-400"></i> Import Teks WA
                     </button>
 
                     <button onclick="openEarningsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
-                        <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Insentif
+                        <i class="fa-solid fa-store text-xs text-amber-400"></i> Dompet Insentif
                     </button>
 
-                    <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
-                        <i class="fa-solid fa-user-group text-xs text-teal-400"></i> Relasi Follow / Teman
+                    <button onclick="openAutoGenerateModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <i class="fa-solid fa-chart-simple text-xs text-emerald-400"></i> Auto 07-17 Generator
                     </button>
 
                     <button onclick="openNotificationsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
                         <div class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-bell text-xs text-amber-300"></i> Notifikasi
+                            <i class="fa-regular fa-bell text-xs text-amber-300"></i> Notifikasi
                         </div>
                         <span id="sideNotifBadge" class="hidden bg-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                    </button>
+
+                    <button onclick="openFollowsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <i class="fa-solid fa-user-group text-xs text-teal-400"></i> Relasi Follow
                     </button>
                     
                     <div class="pt-3 border-t border-slate-800 my-2"></div>
                     
-                    <button onclick="openTaskModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md mb-2">
+                    <button onclick="openTaskModal()" class="w-full bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md mb-2">
                         <i class="fa-solid fa-plus text-xs"></i> Tambah Single
-                    </button>
-
-                    <button onclick="openBulkTextModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 mb-2">
-                        <i class="fa-solid fa-paste text-xs text-blue-400"></i> Import Teks WA
-                    </button>
-
-                    <button onclick="openAutoGenerateModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-bolt text-xs"></i> Auto 07-17
                     </button>
 
                     <button id="btnSidebarBudget" onclick="openBudgetConfigModal()" class="hidden w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 border border-amber-400/30 mt-2">
@@ -169,82 +182,84 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             
-            <!-- HEADER PERSIS SEPERTI GAMBAR (FACEBOOK STYLE) -->
+            <!-- HEADER PERSIS DENGAN GAMBAR & LOGO BINAYASA -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
-                <!-- TOP BAR -->
+                
+                <!-- TOP BAR (ICON HAMBURGER, BINAYASA, PLUS, SEARCH, MESSENGER) -->
                 <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
-                    <!-- Sisi Kiri: Menu & Logo -->
+                    <!-- Sisi Kiri: Menu & Logo BINAYASA -->
                     <div class="flex items-center gap-2.5">
                         <button onclick="toggleSidebarMenu()" class="w-9 h-9 flex items-center justify-center text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition active:scale-95" title="Menu Sidebar">
                             <i class="fa-solid fa-bars text-xl"></i>
                         </button>
-                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-2xl font-black tracking-tighter text-[#1877f2] dark:text-[#2e89ff] fb-logo-text select-none">
-                            facebook
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-2xl font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] binayasa-logo-text select-none">
+                            BINAYASA
                         </a>
                         <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
                     </div>
 
-                    <!-- Sisi Kanan: Action Buttons (+) (🔍) (💬/🔔 Badge) -->
+                    <!-- Sisi Kanan: Action Buttons (+) (🔍) (💬 Messenger Icon dengan Badge Merah) -->
                     <div class="flex items-center gap-2">
-                        <!-- Tombol Tambah (+) -->
-                        <button onclick="openTaskModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95" title="Tambah Tugas Baru">
+                        <!-- Tombol Tambah (+) Bulat Abu -->
+                        <button onclick="openTaskModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95 shadow-xs" title="Tambah Tugas Baru">
                             <i class="fa-solid fa-plus text-base font-bold"></i>
                         </button>
 
-                        <!-- Tombol Cari / Filter (🔍) -->
-                        <button onclick="toggleFilterDrawer()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95" title="Pencarian & Filter">
+                        <!-- Tombol Cari / Filter (🔍) Bulat Abu -->
+                        <button onclick="toggleFilterDrawer()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95 shadow-xs" title="Pencarian & Filter">
                             <i class="fa-solid fa-magnifying-glass text-sm"></i>
                         </button>
 
-                        <!-- Tombol Notifikasi / Chat Messenger Icon dengan Badge Merah -->
-                        <button onclick="openNotificationsModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center relative transition active:scale-95" title="Pusat Pesan & Notifikasi">
-                            <i class="fa-brands fa-facebook-messenger text-base"></i>
+                        <!-- Tombol Messenger Chat Icon Bulat Abu dengan Notifikasi Badge Merah -->
+                        <button onclick="openNotificationsModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center relative transition active:scale-95 shadow-xs" title="Pusat Pesan & Notifikasi">
+                            <i class="fa-brands fa-facebook-messenger text-base text-slate-900 dark:text-white"></i>
                             <span id="headerNotifBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[9px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW SEPERTI DI GAMBAR -->
+                <!-- BOTTOM TAB ROW (PERSIS DENGAN GAMBAR 2: HOME, VIDEO/IMPORT, STORE/WALLET, CHART, BELL, AVATAR PROFILE) -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-1 md:px-6">
-                    <!-- Tab 1: Home / Feed -->
-                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda Jadwal">
+                    
+                    <!-- Tab 1: Home (Solid House Icon Biru Tebal saat Aktif) -->
+                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-3 tab-btn tab-active text-xl transition active:scale-95" title="Beranda Jadwal">
                         <i class="fa-solid fa-house"></i>
                     </button>
 
-                    <!-- Tab 2: Reels / Video / Import Teks -->
-                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
+                    <!-- Tab 2: Video Clapperboard (Import Teks WA) -->
+                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-3 tab-btn text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
                         <i class="fa-solid fa-clapperboard"></i>
                     </button>
 
-                    <!-- Tab 3: Marketplace / Dompet Insentif -->
-                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-amber-500 transition active:scale-95 relative" title="Dompet Insentif">
+                    <!-- Tab 3: Store / Marketplace (Dompet Insentif Saldo) -->
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-3 tab-btn text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Dompet Insentif">
                         <i class="fa-solid fa-store"></i>
                     </button>
 
-                    <!-- Tab 4: Graph / Auto 07-17 & Budget -->
-                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95" title="Auto Generate 07-17">
-                        <i class="fa-solid fa-chart-column"></i>
+                    <!-- Tab 4: Graph/Chart (Auto 07-17 & Dashboard Statistik) -->
+                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-3 tab-btn text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Auto Generate 07-17">
+                        <i class="fa-solid fa-chart-simple"></i>
                     </button>
 
-                    <!-- Tab 5: Notifikasi Lonceng -->
-                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-teal-500 transition active:scale-95" title="Relasi Follow / Rekan">
+                    <!-- Tab 5: Bell (Pusat Notifikasi & Relasi Rekan) -->
+                    <button onclick="openNotificationsModal()" id="tabBell" class="flex-1 py-3 tab-btn text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Pusat Notifikasi">
                         <i class="fa-regular fa-bell"></i>
                     </button>
 
-                    <!-- Tab 6: Profil Pengguna Bulat -->
-                    <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
-                        <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border-2 border-transparent hover:border-blue-500 flex items-center justify-center text-[11px] font-bold" id="header-user-avatar-btn">
-                            <i class="fa-solid fa-user text-slate-600 dark:text-slate-300"></i>
+                    <!-- Tab 6: Profil Avatar Bulat dengan Border Hijau/Abu Lingkaran -->
+                    <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 tab-btn flex justify-center items-center transition active:scale-95" title="Profil Saya">
+                        <div class="w-7 h-7 rounded-full overflow-hidden bg-emerald-700 text-white border-2 border-emerald-600 dark:border-emerald-500 flex items-center justify-center text-[11px] font-bold shadow-xs" id="header-user-avatar-btn">
+                            <span id="header-avatar-initial">m</span>
                         </div>
                     </button>
                 </div>
 
-                <!-- ACCORDION FILTER DRAWER (TERSEMBUNYI, DIBUKA VIA TOMBOL CARI) -->
+                <!-- ACCORDION FILTER DRAWER (DIBUKA VIA TOMBOL 🔍) -->
                 <div id="filterSearchDrawer" class="hidden bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700/80 p-3 animate-slide-down">
                     <div class="max-w-4xl mx-auto flex flex-col gap-2">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-extrabold uppercase text-slate-500 tracking-wider flex items-center gap-1">
-                                <i class="fa-solid fa-filter text-blue-500"></i> Filter & Rentang Jadwal
+                                <i class="fa-solid fa-filter text-[#1877f2]"></i> Filter & Rentang Jadwal
                             </span>
                             <div class="flex items-center gap-1.5">
                                 <button onclick="toggleTheme()" class="text-xs px-2 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-bold flex items-center gap-1">
@@ -296,7 +311,7 @@
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
                         <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-7 h-7 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0">
+                            <div class="w-7 h-7 bg-blue-50 dark:bg-blue-950/60 text-[#1877f2] rounded-lg flex items-center justify-center text-xs flex-shrink-0">
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
                             <div class="min-w-0">
@@ -367,7 +382,7 @@
             </div>
 
             <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
-                <div>Operational Management System &bull; M-Ops Workspace</div>
+                <div>Operational Management System &bull; BINAYASA M-Ops Workspace</div>
             </footer>
         </main>
     </div>
@@ -500,7 +515,7 @@
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                     <div class="flex items-center justify-between mb-1.5">
                         <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin & Waktu
+                            <i class="fa-solid fa-circle-info text-[#1877f2]"></i> Ketentuan Skema Poin & Waktu
                         </h4>
                         <button id="btnEditPointScheme" onclick="closeEarningsModal(); openBudgetConfigModal();" class="hidden text-[10px] font-extrabold text-amber-500 hover:underline">
                             <i class="fa-solid fa-pen mr-0.5"></i> Edit
@@ -659,7 +674,7 @@
                 </div>
                 <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan Nama</button>
+                    <button type="submit" class="flex-1 bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan Nama</button>
                 </div>
             </form>
         </div>
@@ -753,7 +768,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                    <div class="w-6 h-6 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-xs">
                         <i class="fa-solid fa-bell"></i>
                     </div>
                     <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pusat Notifikasi</h3>
@@ -780,7 +795,7 @@
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
                     <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-group text-blue-600"></i> Relasi Petugas (Mutual Follow)
+                        <i class="fa-solid fa-user-group text-[#1877f2]"></i> Relasi Petugas (Mutual Follow)
                     </h3>
                     <p class="text-[9px] text-slate-400">Hanya jadwal rekan saling follow yang akan muncul</p>
                 </div>
@@ -798,14 +813,14 @@
     </div>
 
     <!-- TOAST NOTIFIKASI INTERAKTIF -->
-    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-blue-600 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
+    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-[#1877f2] text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
-            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
+            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-sm flex-shrink-0">
                 <i id="notifIcon" class="fa-solid fa-bell"></i>
             </div>
             <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
-                    <p id="notifTitle" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Notifikasi</p>
+                    <p id="notifTitle" class="text-[10px] font-extrabold text-[#1877f2] dark:text-blue-400 uppercase tracking-wider">Notifikasi</p>
                     <span class="text-[8px] text-slate-400">Baru saja</span>
                 </div>
                 <p id="notifSender" class="text-xs font-bold truncate">User</p>
@@ -820,7 +835,7 @@
             
             <!-- HEADER DETAIL MOMEN -->
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90">
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-[#1877f2] transition active:scale-90">
                     <i class="fa-solid fa-chevron-left text-base font-bold"></i>
                 </button>
                 <div class="text-center">
@@ -835,7 +850,7 @@
 
             <!-- INDIKATOR BALAS / EDIT -->
             <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-                <span id="replyIndicatorText" class="text-blue-600 dark:text-blue-400 font-bold truncate"></span>
+                <span id="replyIndicatorText" class="text-[#1877f2] dark:text-blue-400 font-bold truncate"></span>
                 <button onclick="cancelReplyOrEdit()" class="text-slate-400 hover:text-rose-500 font-bold ml-2">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -862,7 +877,7 @@
 
                 <button id="btnSendComment" 
                         onclick="sendComment()" 
-                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-blue-600 hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
+                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-[#1877f2] hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
@@ -890,7 +905,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-download text-blue-600"></i> Pilih Rentang Waktu Export
+                    <i class="fa-solid fa-download text-[#1877f2]"></i> Pilih Rentang Waktu Export
                 </h3>
                 <button onclick="closeExportModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -923,7 +938,7 @@
 
             <div class="flex gap-2 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="closeExportModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                <button onclick="processExportExecution()" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                <button onclick="processExportExecution()" class="flex-[2] bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-file-export"></i> Unduh Laporan
                 </button>
             </div>
@@ -935,7 +950,7 @@
         <div id="modalCard" class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 max-h-[90vh] overflow-y-auto animate-slide-down">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 id="modalTitle" class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-blue-600"></span> Tambah Tugas Baru
+                    <span class="w-2 h-2 rounded-full bg-[#1877f2]"></span> Tambah Tugas Baru
                 </h3>
                 <button onclick="toggleModal(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -981,7 +996,7 @@
 
                 <div class="flex gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" id="btn-save-task" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">Simpan</button>
+                    <button type="submit" id="btn-save-task" class="flex-[2] bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">Simpan</button>
                 </div>
             </form>
         </div>
@@ -992,7 +1007,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
             <div class="flex justify-between items-center pb-2 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-paste text-blue-600"></i> Import Banyak via Teks
+                    <i class="fa-solid fa-clapperboard text-[#1877f2]"></i> Import Banyak via Teks
                 </h3>
                 <button onclick="closeBulkTextModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -1027,7 +1042,7 @@
 
             <div class="flex gap-2 mt-3">
                 <button onclick="closeBulkTextModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs">Simpan Semua</button>
+                <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs">Simpan Semua</button>
             </div>
         </div>
     </div>
@@ -1037,7 +1052,7 @@
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800">
             <div class="flex justify-between items-center pb-2 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-amber-500"></i> Auto Generate (07.00-17.00)
+                    <i class="fa-solid fa-chart-simple text-amber-500"></i> Auto Generate (07.00-17.00)
                 </h3>
                 <button onclick="closeAutoGenerateModal()" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -1078,7 +1093,7 @@
 
             <div class="flex gap-2 mt-4">
                 <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs">Generate</button>
+                <button onclick="processAutoGenerate()" id="btn-process-gen" class="flex-[2] bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs">Generate</button>
             </div>
         </div>
     </div>
@@ -1114,13 +1129,13 @@
                     <h3 class="text-xs font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
                     <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">SUPER ADMIN</span>
                 </div>
-                <p class="text-[10px] font-bold text-blue-600 dark:text-blue-400" id="profile-email-display">email@domain.com</p>
+                <p class="text-[10px] font-bold text-[#1877f2] dark:text-blue-400" id="profile-email-display">email@domain.com</p>
             </div>
 
             <div class="mb-4">
                 <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider text-center mb-2">Tema Aplikasi</h4>
                 <div class="grid grid-cols-5 gap-2">
-                    <button onclick="applyTheme('blue')" class="w-7 h-7 rounded-full bg-[#3b82f6] shadow-sm border border-white dark:border-slate-800"></button>
+                    <button onclick="applyTheme('blue')" class="w-7 h-7 rounded-full bg-[#1877f2] shadow-sm border border-white dark:border-slate-800"></button>
                     <button onclick="applyTheme('emerald')" class="w-7 h-7 rounded-full bg-[#10b981] shadow-sm border border-white dark:border-slate-800"></button>
                     <button onclick="applyTheme('indigo')" class="w-7 h-7 rounded-full bg-[#6366f1] shadow-sm border border-white dark:border-slate-800"></button>
                     <button onclick="applyTheme('violet')" class="w-7 h-7 rounded-full bg-[#8b5cf6] shadow-sm border border-white dark:border-slate-800"></button>
@@ -1212,7 +1227,7 @@
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
 
         const colorPalettes = {
-            blue: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a', 950: '#172554' },
+            blue: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#1877f2', 600: '#166fe5', 700: '#1d4ed8', 900: '#1e3a8a', 950: '#0f172a' },
             emerald: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b', 950: '#022c22' },
             indigo: { 50: '#eef2ff', 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81', 950: '#1e1b4b' },
             violet: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 900: '#4c1d95', 950: '#2e1065' },
@@ -1229,14 +1244,16 @@
         }
 
         function setActiveTab(tabId) {
-            const tabs = ['tabHome', 'tabBulk', 'tabWallet', 'tabAuto', 'tabFriends'];
+            const tabs = ['tabHome', 'tabBulk', 'tabWallet', 'tabAuto', 'tabBell', 'tabProfile'];
             tabs.forEach(t => {
                 const el = document.getElementById(t);
                 if (el) {
                     if (t === tabId) {
-                        el.className = 'flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active';
+                        el.classList.add('tab-active');
+                        el.classList.remove('text-slate-500', 'dark:text-slate-400');
                     } else {
-                        el.className = 'flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95';
+                        el.classList.remove('tab-active');
+                        if (t !== 'tabProfile') el.classList.add('text-slate-500', 'dark:text-slate-400');
                     }
                 }
             });
@@ -1334,10 +1351,10 @@
 
             let avatarInner = '';
             if (avatarUrl) {
-                avatarInner = `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover ${rankBorder}" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
+                avatarInner = `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover ${rankBorder}" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-emerald-700 text-white flex items-center justify-center text-xs font-bold\\'><i class=\\'fa-solid fa-user\\'></i></div>'">`;
             } else {
-                const initial = (name || 'U').charAt(0).toUpperCase();
-                avatarInner = `<div class="${sizeClass} rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-sm ${rankBorder}">${initial}</div>`;
+                const initial = (name || 'M').charAt(0).toLowerCase();
+                avatarInner = `<div class="${sizeClass} rounded-full bg-emerald-700 text-white flex items-center justify-center text-xs font-bold shadow-sm ${rankBorder}">${initial}</div>`;
             }
 
             return `<div class="relative inline-block flex-shrink-0">${rankBadge}${avatarInner}</div>`;
@@ -1420,10 +1437,10 @@
             else { document.getElementById('btnEditPointScheme')?.classList.add('hidden'); }
 
             list.innerHTML = `
-                <li class="flex items-center justify-between text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
+                <li class="flex items-center justify-between text-[#1877f2] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
                     <span class="font-bold">🎉 Pendaftar Baru (Akun Google)</span><span class="font-extrabold">+${budgetSettings.pointsNewUser} Poin</span>
                 </li>
-                <li class="flex items-center justify-between"><span>🤝 Mutual Follow Teman</span><span class="font-extrabold text-blue-500">+${budgetSettings.pointsMutual} Poin/Relasi</span></li>
+                <li class="flex items-center justify-between"><span>🤝 Mutual Follow Teman</span><span class="font-extrabold text-[#1877f2]">+${budgetSettings.pointsMutual} Poin/Relasi</span></li>
                 <li class="flex items-center justify-between"><span>📷 Upload Foto Kerja (Before/After)</span><span class="font-extrabold text-emerald-500">+${budgetSettings.pointsPhoto} Poin</span></li>
                 <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
                 <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
@@ -1853,7 +1870,7 @@
                         row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
                         row.innerHTML = `
                             <div class="flex items-center gap-2 min-w-0">
-                                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
+                                <div class="w-6 h-6 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-1.5">
                                         <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
@@ -1995,6 +2012,10 @@
                 document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
                 const headerAvatar = document.getElementById('header-user-avatar-btn');
                 if (headerAvatar) headerAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                const initial = (username || 'M').charAt(0).toLowerCase();
+                const headerInitial = document.getElementById('header-avatar-initial');
+                if (headerInitial) headerInitial.innerText = initial;
             }
 
             if (currentUser.email === SUPER_ADMIN_EMAIL) {
@@ -2044,10 +2065,14 @@
         }
 
         function openNotificationsModal() {
+            setActiveTab('tabBell');
             document.getElementById('notificationsModal').classList.remove('hidden'); renderNotificationsList(); unreadNotificationsCount = 0; updateNotificationBadge();
         }
 
-        function closeNotificationsModal() { document.getElementById('notificationsModal').classList.add('hidden'); }
+        function closeNotificationsModal() { 
+            document.getElementById('notificationsModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
 
         function clearAllNotifications() { notificationsList = []; unreadNotificationsCount = 0; updateNotificationBadge(); renderNotificationsList(); showToast("Notifikasi dibersihkan"); }
 
@@ -2068,7 +2093,7 @@
                 const item = document.createElement('div');
                 item.className = 'p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition';
                 
-                let iconBg = 'bg-blue-600';
+                let iconBg = 'bg-[#1877f2]';
                 let iconClass = 'fa-bell';
 
                 if (n.type === 'comment') {
@@ -2166,7 +2191,7 @@
             const toast = document.getElementById('commentNotificationToast');
             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-user-plus'; document.getElementById('notifTitle').innerText = 'Pengikut Baru! 🎉';
-            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-[#1877f2] dark:text-blue-400 uppercase tracking-wider';
             document.getElementById('notifSender').innerText = `${senderName} mulai mengikuti Anda`; document.getElementById('notifMessage').innerText = `Follow balik agar jadwal kerja operasional saling terlihat!`;
             notifiedTaskId = null; toast.classList.remove('hidden');
 
@@ -2283,7 +2308,6 @@
         }
 
         async function openFollowsModal() {
-            setActiveTab('tabFriends');
             document.getElementById('followsModal').classList.remove('hidden');
             document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat daftar petugas...</div>';
             await fetchFollowRelations(); renderUsersFollowModal();
@@ -2291,7 +2315,6 @@
 
         function closeFollowsModal() { 
             document.getElementById('followsModal').classList.add('hidden'); 
-            setActiveTab('tabHome');
         }
 
         function renderUsersFollowModal() {
@@ -2330,7 +2353,7 @@
                             </div>
                         </div>
                     </div>
-                    <button onclick="toggleFollowUser('${u.id}', '${u.email.replace(/'/g, "\\'")}', ${isFollowing})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition flex items-center gap-1 flex-shrink-0 ${isFollowing ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-rose-50 hover:text-rose-600' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'}">
+                    <button onclick="toggleFollowUser('${u.id}', '${u.email.replace(/'/g, "\\'")}', ${isFollowing})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition flex items-center gap-1 flex-shrink-0 ${isFollowing ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-rose-50 hover:text-rose-600' : 'bg-[#1877f2] hover:bg-blue-700 text-white shadow-sm'}">
                         ${isFollowing ? '<i class="fa-solid fa-check text-[9px]"></i> Mengikuti' : '<i class="fa-solid fa-user-plus text-[9px]"></i> Follow'}
                     </button>
                 `;
@@ -2369,9 +2392,9 @@
             unreadNotificationsCount++; updateNotificationBadge();
 
             const toast = document.getElementById('commentNotificationToast');
-            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0';
+            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-comments'; document.getElementById('notifTitle').innerText = 'Komentar Baru';
-            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
+            document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-[#1877f2] dark:text-blue-400 uppercase tracking-wider';
             document.getElementById('notifSender').innerText = `${senderName} mengomentari: "${task.tugas}"`; document.getElementById('notifMessage').innerText = `"${comment.comment}"`;
             notifiedTaskId = task.id; toast.classList.remove('hidden');
 
@@ -2571,8 +2594,8 @@
                         <div class="py-3.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
                             <div class="flex items-center justify-between gap-2 mb-1.5">
                                 <div class="flex items-center gap-2">
-                                    <span class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
-                                        <i class="fa-regular fa-clock text-[10px] text-blue-600 dark:text-blue-400"></i>
+                                    <span class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/60 text-[#1877f2] dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
+                                        <i class="fa-regular fa-clock text-[10px] text-[#1877f2] dark:text-blue-400"></i>
                                         ${item.jam_mulai} - ${item.jam_selesai}
                                     </span>
                                     ${isEarly ? `<span class="inline-flex items-center gap-1 text-[9px] bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold px-2 py-0.5 rounded-full">🌅 &lt;06:00 (+${budgetSettings.pointsEarly})</span>` : ''}
@@ -2598,8 +2621,8 @@
                             ${photoEvidenceHtml}
 
                             ${item.keterangan ? `
-                                <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-blue-600 border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
-                                    <div class="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
+                                <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-[#1877f2] border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
+                                    <div class="flex items-center gap-1.5 text-[#1877f2] dark:text-blue-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
                                         <i class="fa-solid fa-clipboard-check text-xs"></i>
                                         <span>Keterangan Selesai</span>
                                     </div>
@@ -2616,13 +2639,13 @@
                                 </div>
 
                                 <div class="flex items-center gap-1 text-slate-400 dark:text-slate-500">
-                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition ${isLiked ? 'text-blue-600 dark:text-blue-400' : 'hover:text-blue-500'}">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition ${isLiked ? 'text-[#1877f2] dark:text-blue-400' : 'hover:text-blue-500'}">
                                         <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
                                         <span>${likesCount}</span>
                                     </button>
 
-                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots text-sm ${commentsCount > 0 ? 'text-blue-600' : ''}"></i>
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-[#1877f2] dark:hover:text-blue-400 transition">
+                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots text-sm ${commentsCount > 0 ? 'text-[#1877f2]' : ''}"></i>
                                         <span>${commentsCount}</span>
                                     </button>
 
@@ -2641,7 +2664,7 @@
                             ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
                             <div class="min-w-0">
                                 <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
-                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-blue-600 font-bold">${tasksOfUser.length} Tugas</span></div>
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-[#1877f2] font-bold">${tasksOfUser.length} Tugas</span></div>
                             </div>
                         </div>
                         <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Divisi'}</span>
@@ -2676,11 +2699,11 @@
                         <td class="p-3 font-bold text-[11px]">${displayName}</td>
                         <td class="p-3">${roleBadge}</td>
                         <td class="p-3 font-semibold text-[11px]">
-                            <p>${item.tugas}</p>${item.keterangan ? `<p class="text-[10px] text-blue-600 font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
+                            <p>${item.tugas}</p>${item.keterangan ? `<p class="text-[10px] text-[#1877f2] font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
                             ${(item.foto_sebelum || item.foto_sesudah) ? `<div class="flex gap-2 mt-1.5">${item.foto_sebelum ? `<button onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="text-[9.5px] text-slate-500 hover:text-blue-600 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-image"></i> Sebelum</button>` : ''}${item.foto_sesudah ? `<button onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="text-[9.5px] text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-circle-check"></i> Sesudah</button>` : ''}</div>` : ''}
                         </td>
                         <td class="p-3 text-center">${statusCell}</td>
-                        <td class="p-3 text-center"><div class="flex items-center justify-center gap-2.5"><button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-blue-500' : 'text-slate-400'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i><span>${likesCount}</span></button><button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-blue-600' : 'text-slate-400'}"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i><span>${commentsCount}</span></button></div></td>
+                        <td class="p-3 text-center"><div class="flex items-center justify-center gap-2.5"><button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-blue-500' : 'text-slate-400'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i><span>${likesCount}</span></button><button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-[#1877f2]' : 'text-slate-400'}"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i><span>${commentsCount}</span></button></div></td>
                         <td class="p-3 text-center">${actionCell}</td>
                     `;
                     tableBodyDesktop.appendChild(row);
