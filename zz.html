@@ -3398,69 +3398,60 @@
         }
 
         function setupSuperAdminActivityListener() {
-            if (!isSuperAdmin) return;
-            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+    if (!isSuperAdmin) return;
+    if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
 
-            superAdminActivitySubscription = _supabase.channel('admin_global_activity')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
-                    const row = payload.new;
-                    if (!row || row.user_id === currentUser.id) return;
-                    const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
+    superAdminActivitySubscription = _supabase.channel('admin_global_activity')
+        // Listener Pendaftar Baru & Perubahan Status Approval
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, async (payload) => {
+            await fetchPendingApprovals();
+            if (payload.eventType === 'INSERT' && payload.new.status_approval === 'pending') {
+                triggerAdminNotification(
+                    `👤 User Baru: ${payload.new.nama || payload.new.email}`,
+                    `Menunggu persetujuan aktivasi akun.`,
+                    'fa-user-clock',
+                    'bg-amber-500'
+                );
+            }
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
+            const row = payload.new;
+            if (!row || row.user_id === currentUser.id) return;
+            const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
 
-                    if (payload.eventType === 'INSERT') {
-                        triggerAdminNotification(
-                            `📝 Jadwal Baru: ${userName}`,
-                            `Menambahkan "${row.tugas}" (${row.jam_mulai} - ${row.jam_selesai})`,
-                            'fa-calendar-plus',
-                            'bg-blue-500',
-                            row.id
-                        );
-                    } else if (payload.eventType === 'UPDATE') {
-                        if (row.status === 'Selesai' && payload.old.status !== 'Selesai') {
-                            const isLate = isTaskExpired(row.tanggal);
-                            triggerAdminNotification(
-                                `✅ Selesai: ${userName}`,
-                                `${isLate ? '[SUSULAN] ' : ''}"${row.tugas}" telah diselesaikan (${row.keterangan || 'Tanpa catatan'})`,
-                                'fa-circle-check',
-                                'bg-emerald-600',
-                                row.id
-                            );
-                        } else if (row.status === 'Proses' && payload.old.status !== 'Proses') {
-                            triggerAdminNotification(
-                                `⚡ Sedang Dikerjakan: ${userName}`,
-                                `Mengerjakan tugas: "${row.tugas}"`,
-                                'fa-spinner',
-                                'bg-amber-500',
-                                row.id
-                            );
-                        }
-                    }
-                })
-           
- .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'penarikan_insentif' }, (payload) => {
-                    const wd = payload.new;
-                    if (!wd || wd.user_id === currentUser.id) return;
+            if (payload.eventType === 'INSERT') {
+                triggerAdminNotification(
+                    `📝 Jadwal Baru: ${userName}`,
+                    `Menambahkan "${row.tugas}" (${row.jam_mulai} - ${row.jam_selesai})`,
+                    'fa-calendar-plus',
+                    'bg-blue-500',
+                    row.id
+                );
+            } else if (payload.eventType === 'UPDATE') {
+                if (row.status === 'Selesai' && payload.old.status !== 'Selesai') {
+                    const isLate = isTaskExpired(row.tanggal);
                     triggerAdminNotification(
-                        `💰 Tarik Insentif: ${wd.nama_petugas}`,
-                        `Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
-                        'fa-wallet',
-                        'bg-rose-500'
+                        `✅ Selesai: ${userName}`,
+                        `${isLate ? '[SUSULAN] ' : ''}"${row.tugas}" telah diselesaikan (${row.keterangan || 'Tanpa catatan'})`,
+                        'fa-circle-check',
+                        'bg-emerald-600',
+                        row.id
                     );
-                })
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_follows' }, (payload) => {
-                    const fol = payload.new;
-                    if (!fol || fol.follower_id === currentUser.id) return;
-                    const followerName = getUserDisplayName(fol.follower_id, fol.follower_email);
-                    const followingName = getUserDisplayName(fol.following_id, fol.following_email);
-                    triggerAdminNotification(
-                        `🤝 Relasi Petugas`,
-                        `${followerName} mulai mengikuti ${followingName}`,
-                        'fa-user-plus',
-                        'bg-teal-500'
-                    );
-                })
-                .subscribe();
-        }
+                }
+            }
+        })
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'penarikan_insentif' }, (payload) => {
+            const wd = payload.new;
+            if (!wd || wd.user_id === currentUser.id) return;
+            triggerAdminNotification(
+                `💰 Tarik Insentif: ${wd.nama_petugas}`,
+                `Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
+                'fa-wallet',
+                'bg-rose-500'
+            );
+        })
+        .subscribe();
+}
 
         async function openFollowsModal() {
             setActiveTab('tabFriends');
