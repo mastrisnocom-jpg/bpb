@@ -1198,70 +1198,155 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & TEMA -->
-    <div id="form-profile-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full md:max-w-sm h-auto md:h-auto md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-solid fa-user-gear"></i>
+       <!-- MODAL PROFIL & PREFERENSI (CORPORATE ID CARD MODERN) -->
+    <div id="form-profile-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md max-h-[94vh] md:max-h-[90vh] md:rounded-[32px] rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden border border-slate-200/80 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            
+            <!-- HEADER MODAL -->
+            <div class="px-5 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-base shadow-md shadow-blue-500/20">
+                        <i class="fa-solid fa-id-badge"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Profil & Preferensi</h3>
-                        <p class="text-[9.5px] text-slate-400">Pengaturan akun pengguna</p>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Profil Pegawai & Preferensi</h3>
+                        <p class="text-[10px] text-slate-400 font-medium">M-Ops Corporate Workspace</p>
                     </div>
                 </div>
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition active:scale-90">
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
 
-            <div class="p-4 bg-slate-50/50 dark:bg-slate-950/40 space-y-3.5">
-                <div class="text-center pb-1">
-                    <div class="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-2xl font-bold shadow-md mx-auto mb-2 border-2 border-white dark:border-slate-800" id="modal-user-avatar">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
+            <!-- BODY SCROLLABLE -->
+            <div class="p-4 md:p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40 text-xs">
+                
+                <!-- CORPORATE ID CARD -->
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-4 text-white shadow-lg border border-slate-700/60">
+                    <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-blue-500/10 blur-2xl pointer-events-none"></div>
+                    <div class="absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-indigo-500/10 blur-2xl pointer-events-none"></div>
 
-                    <div class="flex items-center justify-center gap-1.5">
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
-                        <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">SUPER ADMIN</span>
+                    <div class="flex items-start justify-between relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="relative">
+                                <div class="w-16 h-16 rounded-2xl overflow-hidden bg-slate-700 border-2 border-white/20 flex items-center justify-center text-2xl font-bold shadow-md" id="modal-user-avatar">
+                                    <i class="fa-solid fa-user text-slate-300"></i>
+                                </div>
+                                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900" title="Online Status"></span>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <h4 class="text-sm font-black text-white leading-tight tracking-tight" id="modal-user-name">Pengguna</h4>
+                                    <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">SUPER ADMIN</span>
+                                </div>
+                                <p class="text-[11px] font-medium text-slate-300 flex items-center gap-1 mt-0.5" id="profile-email-display">
+                                    <i class="fa-regular fa-envelope text-[10px] text-blue-400"></i> email@domain.com
+                                </p>
+                                <span class="inline-flex items-center gap-1 mt-1.5 bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded-full text-[9px] font-bold">
+                                    <i class="fa-solid fa-circle-check text-[8px] text-blue-400"></i> Akun Terverifikasi BPB
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-xs font-bold text-blue-600 dark:text-blue-400 mt-0.5" id="profile-email-display">email@domain.com</p>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1">
+                <!-- INFORMASI KREDENSIAL & IDENTITAS PEGAWAI (NIP, WA, ALAMAT) -->
+                <div class="bg-white dark:bg-slate-800/90 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2.5">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 pb-2">
+                        <h4 class="text-[10.5px] font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-address-card text-blue-600 dark:text-blue-400"></i> Detail Pegawai
+                        </h4>
+                        <button type="button" onclick="toggleEditProfileFields()" id="btnToggleEditProfile" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data
+                        </button>
+                    </div>
+
+                    <!-- NIP -->
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <i class="fa-solid fa-id-card text-xs text-blue-500 w-4 text-center"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">NIP / ID</span>
+                        </div>
+                        <span id="display-profile-nip" class="font-mono font-extrabold text-slate-800 dark:text-slate-200 text-xs">BPB-202601</span>
+                        <input type="text" id="input-profile-nip" class="hidden w-1/2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 text-right" placeholder="Masukkan NIP">
+                    </div>
+
+                    <!-- NO WHATSAPP -->
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <i class="fa-brands fa-whatsapp text-xs text-emerald-500 w-4 text-center"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">WhatsApp</span>
+                        </div>
+                        <span id="display-profile-phone" class="font-mono font-extrabold text-slate-800 dark:text-slate-200 text-xs">+62 821-4651-1484</span>
+                        <input type="tel" id="input-profile-phone" class="hidden w-1/2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 text-right" placeholder="08xxxxxxxxxx">
+                    </div>
+
+                    <!-- ALAMAT & UNIT PENUGASAN -->
+                    <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 space-y-1">
+                        <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                            <i class="fa-solid fa-building-shield text-xs text-amber-500 w-4 text-center"></i>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">Unit & Alamat Kantor</span>
+                        </div>
+                        <p id="display-profile-address" class="text-xs font-bold text-slate-800 dark:text-slate-200 leading-snug pl-6">
+                            PT. Binayasa Putrabatara &bull; Unit BSN KC Surabaya, Jawa Timur
+                        </p>
+                        <textarea id="input-profile-address" rows="2" class="hidden w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 mt-1" placeholder="Masukkan alamat lengkap"></textarea>
+                    </div>
+
+                    <!-- TOMBOL SIMPAN KE SUPABASE -->
+                    <button id="btnSaveProfileDetails" onclick="saveProfileCorporateDetails()" class="hidden w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition active:scale-95 shadow-md flex items-center justify-center gap-1.5 mt-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai
+                    </button>
+                </div>
+
+                <!-- GOOGLE GEMINI AI KEY -->
+                <div class="bg-white dark:bg-slate-800/90 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <label class="block text-[9.5px] font-extrabold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
-                            <i class="fa-solid fa-key text-amber-500 mr-0.5"></i> Kunci Gemini AI Device
+                        <label class="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-key text-amber-500"></i> Kunci Gemini AI Device
                         </label>
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[8.5px] text-blue-500 hover:underline">Dapatkan Key</a>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[9px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5">
+                            Dapatkan Key <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                        </a>
                     </div>
-                    <input type="password" id="profileGeminiApiKey" placeholder="AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
-                </div>
-
-                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-                    <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider text-center mb-2.5">Pilihan Tema Warna</h4>
-                    <div class="grid grid-cols-5 gap-2.5 justify-items-center">
-                        <button onclick="applyTheme('blue')" class="w-8 h-8 rounded-full bg-[#3b82f6] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
-                        <button onclick="applyTheme('emerald')" class="w-8 h-8 rounded-full bg-[#10b981] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
-                        <button onclick="applyTheme('indigo')" class="w-8 h-8 rounded-full bg-[#6366f1] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
-                        <button onclick="applyTheme('violet')" class="w-8 h-8 rounded-full bg-[#8b5cf6] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
-                        <button onclick="applyTheme('rose')" class="w-8 h-8 rounded-full bg-[#f43f5e] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                    <div class="relative flex items-center">
+                        <input type="password" id="profileGeminiApiKey" placeholder="AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 pr-8 text-xs font-mono text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 shadow-xs">
+                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-2 pt-1">
-                    <a href="/" class="w-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-bold py-2.5 rounded-xl text-xs hover:bg-blue-100 dark:hover:bg-blue-900/50 flex items-center justify-center gap-1.5 transition active:scale-95">
-                        <i class="fa-solid fa-house text-xs"></i> Kembali ke Menu Utama
-                    </a>
-                    <div class="flex gap-2">
-                        <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
-                        <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-bold py-2.5 rounded-xl text-xs hover:bg-rose-100 flex items-center justify-center gap-1.5 active:scale-95 transition"><i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar</button>
+                <!-- PREFERENSI TEMA WARNA -->
+                <div class="bg-white dark:bg-slate-800/90 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <h4 class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-3">Pilihan Tema Warna</h4>
+                    <div class="flex items-center justify-center gap-3">
+                        <button onclick="applyTheme('blue')" title="Corporate Blue" class="w-8 h-8 rounded-full bg-[#3b82f6] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-blue-500 active:scale-90 transition"></button>
+                        <button onclick="applyTheme('emerald')" title="Emerald Green" class="w-8 h-8 rounded-full bg-[#10b981] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-emerald-500 active:scale-90 transition"></button>
+                        <button onclick="applyTheme('indigo')" title="Indigo Modern" class="w-8 h-8 rounded-full bg-[#6366f1] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-indigo-500 active:scale-90 transition"></button>
+                        <button onclick="applyTheme('violet')" title="Royal Violet" class="w-8 h-8 rounded-full bg-[#8b5cf6] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-violet-500 active:scale-90 transition"></button>
+                        <button onclick="applyTheme('rose')" title="Executive Rose" class="w-8 h-8 rounded-full bg-[#f43f5e] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-rose-500 active:scale-90 transition"></button>
                     </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER MODAL -->
+            <div class="p-3.5 md:p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+                <a href="/" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition active:scale-98">
+                    <i class="fa-solid fa-house text-blue-600 dark:text-blue-400 text-xs"></i> Kembali ke Menu Utama
+                </a>
+                <div class="flex items-center gap-2">
+                    <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+                    <button onclick="logout()" class="flex-1 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 text-rose-600 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition">
+                        <i class="fa-solid fa-right-from-bracket text-[11px]"></i> Keluar
+                    </button>
                 </div>
             </div>
+
         </div>
     </div>
+
 
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
@@ -3947,107 +4032,104 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
         initTheme(); checkAuth();
-  let isEditingProfile = false;
+          let isEditingProfile = false;
 
-function toggleEditProfileFields() {
-    isEditingProfile = !isEditingProfile;
-    const btnToggle = document.getElementById('btnToggleEditProfile');
-    const btnSave = document.getElementById('btnSaveProfileDetails');
+        function toggleEditProfileFields() {
+            isEditingProfile = !isEditingProfile;
+            const btnToggle = document.getElementById('btnToggleEditProfile');
+            const btnSave = document.getElementById('btnSaveProfileDetails');
 
-    const nipDisplay = document.getElementById('display-profile-nip');
-    const nipInput = document.getElementById('input-profile-nip');
-    const phoneDisplay = document.getElementById('display-profile-phone');
-    const phoneInput = document.getElementById('input-profile-phone');
-    const addressDisplay = document.getElementById('display-profile-address');
-    const addressInput = document.getElementById('input-profile-address');
+            const nipDisplay = document.getElementById('display-profile-nip');
+            const nipInput = document.getElementById('input-profile-nip');
+            const phoneDisplay = document.getElementById('display-profile-phone');
+            const phoneInput = document.getElementById('input-profile-phone');
+            const addressDisplay = document.getElementById('display-profile-address');
+            const addressInput = document.getElementById('input-profile-address');
 
-    if (isEditingProfile) {
-        btnToggle.innerHTML = '<i class="fa-solid fa-xmark text-[9px]"></i> Batal';
-        btnSave.classList.remove('hidden');
+            if (isEditingProfile) {
+                btnToggle.innerHTML = '<i class="fa-solid fa-xmark text-[9px]"></i> Batal';
+                btnSave.classList.remove('hidden');
 
-        nipInput.value = nipDisplay.innerText.trim();
-        phoneInput.value = phoneDisplay.innerText.trim();
-        addressInput.value = addressDisplay.innerText.trim();
+                nipInput.value = nipDisplay.innerText.trim();
+                phoneInput.value = phoneDisplay.innerText.trim();
+                addressInput.value = addressDisplay.innerText.trim();
 
-        nipDisplay.classList.add('hidden');
-        nipInput.classList.remove('hidden');
-        phoneDisplay.classList.add('hidden');
-        phoneInput.classList.remove('hidden');
-        addressDisplay.classList.add('hidden');
-        addressInput.classList.remove('hidden');
-    } else {
-        btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data';
-        btnSave.classList.add('hidden');
+                nipDisplay.classList.add('hidden');
+                nipInput.classList.remove('hidden');
+                phoneDisplay.classList.add('hidden');
+                phoneInput.classList.remove('hidden');
+                addressDisplay.classList.add('hidden');
+                addressInput.classList.remove('hidden');
+            } else {
+                btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data';
+                btnSave.classList.add('hidden');
 
-        nipDisplay.classList.remove('hidden');
-        nipInput.classList.add('hidden');
-        phoneDisplay.classList.remove('hidden');
-        phoneInput.classList.add('hidden');
-        addressDisplay.classList.remove('hidden');
-        addressInput.classList.add('hidden');
-    }
-}
-
-// Ambil Data Profil dari Supabase
-async function loadProfileCorporateDetails() {
-    if (!currentUser) return;
-    try {
-        const { data, error } = await _supabase
-            .from('profiles')
-            .select('nip, no_wa, alamat, nama')
-            .eq('id', currentUser.id)
-            .single();
-
-        if (data && !error) {
-            document.getElementById('display-profile-nip').innerText = data.nip || 'BPB-202601';
-            document.getElementById('display-profile-phone').innerText = data.no_wa || '+6282146511484';
-            document.getElementById('display-profile-address').innerText = data.alamat || 'PT. Binayasa Putrabatara • Unit BSN KC Surabaya';
+                nipDisplay.classList.remove('hidden');
+                nipInput.classList.add('hidden');
+                phoneDisplay.classList.remove('hidden');
+                phoneInput.classList.add('hidden');
+                addressDisplay.classList.remove('hidden');
+                addressInput.classList.add('hidden');
+            }
         }
-    } catch (e) {
-        console.error("Gagal load profil:", e);
-    }
-}
 
-// Simpan Perubahan Profil ke Supabase
-async function saveProfileCorporateDetails() {
-    if (!currentUser) return;
-    const newNip = document.getElementById('input-profile-nip').value.trim() || '-';
-    const newPhone = document.getElementById('input-profile-phone').value.trim() || '-';
-    const newAddress = document.getElementById('input-profile-address').value.trim() || '-';
-    const btnSave = document.getElementById('btnSaveProfileDetails');
+        async function loadProfileCorporateDetails() {
+            if (!currentUser) return;
+            try {
+                const { data, error } = await _supabase
+                    .from('profiles')
+                    .select('nip, no_wa, alamat, nama')
+                    .eq('id', currentUser.id)
+                    .single();
 
-    btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-    btnSave.disabled = true;
+                if (data && !error) {
+                    if (data.nip) document.getElementById('display-profile-nip').innerText = data.nip;
+                    if (data.no_wa) document.getElementById('display-profile-phone').innerText = data.no_wa;
+                    if (data.alamat) document.getElementById('display-profile-address').innerText = data.alamat;
+                }
+            } catch (e) {
+                console.error("Gagal memuat profil Supabase:", e);
+            }
+        }
 
-    const { error } = await _supabase.from('profiles').upsert({
-        id: currentUser.id,
-        email: currentUser.email,
-        nip: newNip,
-        no_wa: newPhone,
-        alamat: newAddress,
-        updated_at: new Date().toISOString()
-    });
+        async function saveProfileCorporateDetails() {
+            if (!currentUser) return;
+            const newNip = document.getElementById('input-profile-nip').value.trim() || '-';
+            const newPhone = document.getElementById('input-profile-phone').value.trim() || '-';
+            const newAddress = document.getElementById('input-profile-address').value.trim() || '-';
+            const btnSave = document.getElementById('btnSaveProfileDetails');
 
-    if (!error) {
-        document.getElementById('display-profile-nip').innerText = newNip;
-        document.getElementById('display-profile-phone').innerText = newPhone;
-        document.getElementById('display-profile-address').innerText = newAddress;
-        toggleEditProfileFields();
-        showToast("✅ Data pegawai berhasil diperbarui!");
-    } else {
-        showToast("Gagal menyimpan data: " + error.message);
-    }
+            btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btnSave.disabled = true;
 
-    btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai';
-    btnSave.disabled = false;
-}
+            const { error } = await _supabase.from('profiles').upsert({
+                id: currentUser.id,
+                email: currentUser.email,
+                nip: newNip,
+                no_wa: newPhone,
+                alamat: newAddress,
+                updated_at: new Date().toISOString()
+            });
 
-// Update fungsi openProfileModal agar otomatis memuat data Supabase
-function openProfileModal() { 
-    syncApiKeyInputs();
-    loadProfileCorporateDetails();
-    document.getElementById('form-profile-modal').classList.remove('hidden'); 
-}
+            if (!error) {
+                document.getElementById('display-profile-nip').innerText = newNip;
+                document.getElementById('display-profile-phone').innerText = newPhone;
+                document.getElementById('display-profile-address').innerText = newAddress;
+                toggleEditProfileFields();
+                showToast("✅ Data pegawai berhasil diperbarui di Supabase!");
+            } else {
+                showToast("Gagal menyimpan ke Supabase: " + error.message);
+            }
+
+            btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai';
+            btnSave.disabled = false;
+        }
+
+        function openProfileModal() { 
+            syncApiKeyInputs();
+            loadProfileCorporateDetails();
+            document.getElementById('form-profile-modal').classList.remove('hidden'); 
+        }
 
 </script>
 </body>
