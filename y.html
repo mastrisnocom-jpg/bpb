@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+          <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -97,14 +97,10 @@
                 Masuk dengan Google
             </button>
             <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-blue-600 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
-            
-            <a href="/" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-400 hover:text-blue-600 text-[10px] font-bold flex items-center justify-center gap-1.5 transition">
-                <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
-            </a>
         </div>
     </div>
 
-    <!-- PENDING APPROVAL SCREEN (USER MENUNGGU APPROVAL SUPER ADMIN) -->
+    <!-- PENDING APPROVAL SCREEN -->
     <div id="pending-approval-screen" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[110] flex flex-col items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-900 p-6 rounded-[28px] shadow-2xl w-full max-w-sm text-center border border-slate-200 dark:border-slate-800 animate-slide-up">
             <div class="w-16 h-16 bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 rounded-3xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-sm">
@@ -131,9 +127,6 @@
                 </div>
 
                 <nav class="space-y-1">
-                    <a href="/" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/50 hover:bg-slate-800 text-slate-200 transition mb-1">
-                        <i class="fa-solid fa-house text-xs text-blue-400"></i> Halaman Utama
-                    </a>
                     <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-blue-600 text-white transition">
                         <i class="fa-solid fa-newspaper text-xs"></i> Home Feed Jadwal
                     </button>
@@ -215,7 +208,7 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW (IKON LONCENG TERPUSAT) -->
+                <!-- BOTTOM TAB ROW -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 px-2 md:px-6">
                     <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
                         <i class="fa-solid fa-house text-lg"></i>
@@ -296,7 +289,7 @@
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- INDIKATOR MELIHAT FEED TEMAN (1-WAY FOLLOW) -->
+                <!-- INDIKATOR MELIHAT FEED TEMAN -->
                 <div id="friendFeedIndicator" class="hidden mx-3.5 md:mx-0 mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
                     <div class="flex items-center gap-2 min-w-0">
                         <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
@@ -325,11 +318,9 @@
                     </div>
                 </div>
 
-                <!-- STORIES / DOKUMENTASI TERBARU (1-WAY FOLLOW) -->
+                <!-- STORIES / DOKUMENTASI TERBARU -->
                 <div class="px-3.5 md:px-0 mb-3.5">
-                    <div id="storiesContainer" class="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
-                        <!-- Story Cards render via JS -->
-                    </div>
+                    <div id="storiesContainer" class="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar snap-x"></div>
                 </div>
 
                 <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
@@ -411,16 +402,12 @@
         </main>
     </div>
 
-    <!-- MODAL FULLSCREEN STORY VIEWER (DENGAN BADGE MENGIKUTI, FLOATING LOVE & LIVE COMMENTS OVERLAY) -->
+    <!-- MODAL FULLSCREEN STORY VIEWER -->
     <div id="storyViewerModal" class="fixed inset-0 bg-black z-[140] hidden flex flex-col justify-between select-none">
-        
-        <!-- TOP BAR -->
         <div class="p-3.5 z-20 bg-gradient-to-b from-black/85 via-black/40 to-transparent">
-            <!-- Progress Bar -->
             <div class="w-full bg-white/30 h-1 rounded-full overflow-hidden mb-3">
                 <div id="storyProgressBar" class="bg-white h-full w-0 transition-all duration-100 ease-linear"></div>
             </div>
-
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <div id="storyViewerAvatar" class="w-9 h-9 rounded-full overflow-hidden border border-white/40 flex-shrink-0"></div>
@@ -434,7 +421,6 @@
                         <p id="storyViewerTime" class="text-[9.5px] text-white/75 font-medium mt-0.5">Baru saja</p>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-3">
                     <button onclick="closeStoryViewer()" class="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white transition">
                         <i class="fa-solid fa-xmark text-xl font-bold"></i>
@@ -443,42 +429,25 @@
             </div>
         </div>
 
-        <!-- MAIN MEDIA CONTAINER -->
         <div class="relative flex-1 flex items-center justify-center overflow-hidden bg-black" ondblclick="triggerStoryLoveAnimation(event)" onclick="handleStoryTap(event)">
             <img id="storyViewerImage" src="" class="w-full h-full object-contain max-h-[82vh]">
-            
-            <!-- Floating Heart Overlay Animation -->
             <div id="storyFloatingHeartsContainer" class="absolute inset-0 pointer-events-none z-30 flex items-center justify-center"></div>
-
-            <!-- Live Streaming Overlay Comments (Muncul di layar gambar seperti live) -->
             <div id="storyLiveCommentsOverlay" class="absolute bottom-20 left-4 max-w-[78%] max-h-48 overflow-y-auto no-scrollbar pointer-events-none z-20 space-y-2 flex flex-col justify-end"></div>
-
-            <!-- Touch Control Navigation Zones -->
             <div class="absolute inset-y-0 left-0 w-1/4 z-10" onclick="prevStory(event)"></div>
             <div class="absolute inset-y-0 right-0 w-1/4 z-10" onclick="nextStory(event)"></div>
-
-            <!-- Watermark Judul Tugas -->
             <div class="absolute bottom-4 left-4 right-4 z-15 pointer-events-none bg-black/40 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
                 <p id="storyViewerTaskTitle" class="text-white text-xs font-black leading-snug line-clamp-2 drop-shadow-sm"></p>
                 <p id="storyViewerSubTitle" class="text-[10px] text-slate-300 font-semibold mt-0.5"></p>
             </div>
         </div>
 
-        <!-- BOTTOM ACTION BAR -->
         <div class="p-3.5 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-center gap-2.5">
             <button onclick="shareActiveStory()" class="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 active:scale-90 transition" title="Bagikan">
                 <i class="fa-solid fa-repeat text-sm"></i>
             </button>
-
             <div class="flex-1 bg-white/15 border border-white/20 rounded-full px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-white">
-                <input type="text" 
-                       id="inputStoryReply" 
-                       onkeydown="if(event.key === 'Enter') sendStoryReply()" 
-                       placeholder="Kirim komentar live..." 
-                       class="w-full bg-transparent border-none text-xs text-white placeholder-white/60 focus:outline-none">
+                <input type="text" id="inputStoryReply" onkeydown="if(event.key === 'Enter') sendStoryReply()" placeholder="Kirim komentar live..." class="w-full bg-transparent border-none text-xs text-white placeholder-white/60 focus:outline-none">
             </div>
-
-            <!-- Quick Reactions -->
             <div class="flex items-center gap-1.5 flex-shrink-0">
                 <button onclick="triggerStoryLoveAnimation(event)" class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-sm active:scale-125 transition" title="Beri Love">
                     <i class="fa-solid fa-heart"></i>
@@ -493,7 +462,7 @@
         </div>
     </div>
 
-    <!-- MODAL PERSETUJUAN USER (SUPER ADMIN ONLY) -->
+    <!-- MODAL PERSETUJUAN USER -->
     <div id="userApprovalModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[90vh] md:h-[80vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -510,18 +479,14 @@
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
-
-            <div id="pendingUsersList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40">
-                <!-- Data pendaftar via JS -->
-            </div>
-
+            <div id="pendingUsersList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="closeApprovalModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PUSAT NOTIFIKASI & RELASI TEMAN (TERPUSAT) -->
+    <!-- MODAL PUSAT NOTIFIKASI & RELASI -->
     <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -539,7 +504,6 @@
                 </button>
             </div>
 
-            <!-- TABS DALAM MODAL NOTIFIKASI -->
             <div class="flex border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold">
                 <button onclick="switchNotifTab('feed')" id="btnTabNotifFeed" class="flex-1 py-2.5 text-center text-blue-600 border-b-2 border-blue-600 transition">
                     <i class="fa-solid fa-bolt mr-1"></i> Notifikasi Aktivitas
@@ -549,12 +513,10 @@
                 </button>
             </div>
 
-            <!-- TAB 1: LOG NOTIFIKASI AKTIVITAS -->
             <div id="tabContentNotifFeed" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                 <div id="notificationsFeedList" class="space-y-2"></div>
             </div>
 
-            <!-- TAB 2: DAFTAR USER UNTUK FOLLOW -->
             <div id="tabContentNotifUsers" class="hidden flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                 <div id="usersFollowList" class="space-y-2"></div>
             </div>
@@ -565,7 +527,7 @@
         </div>
     </div>
 
-    <!-- MODAL CHAT GLOBAL TIM -->
+    <!-- MODAL CHAT GLOBAL -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -584,28 +546,19 @@
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
-
             <div id="globalChatMessages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
-
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                 <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
-                    <input type="text" 
-                           id="inputGlobalChatMessage" 
-                           onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" 
-                           placeholder="Ketik pesan untuk seluruh tim..." 
-                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
+                    <input type="text" id="inputGlobalChatMessage" onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" placeholder="Ketik pesan untuk seluruh tim..." class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
                 </div>
-
-                <button id="btnSendGlobalChat" 
-                        onclick="sendGlobalChatMessage()" 
-                        class="w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
+                <button onclick="sendGlobalChatMessage()" class="w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
+ <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -1509,8 +1462,8 @@
         let isGlobalChatOpen = false;
 
         // 1-Way Follow List
-        let myFollowings = []; // Orang yang saya ikuti
-        let myFollowers = [];  // Orang yang mengikuti saya
+        let myFollowings = [];
+        let myFollowers = [];
         let userProfilesMap = {};
 
         // Variabel Controller Story Viewer Fullscreen
@@ -1812,7 +1765,7 @@
             else { container.classList.add('hidden'); }
         });
 
-    // ==========================================================
+ // ==========================================================
         // RENDER STORIES (1-WAY FOLLOW & REAKSI LIVE)
         // ==========================================================
         function renderStoriesBar() {
@@ -2274,357 +2227,6 @@
                 openFollowsModal();
             }
         }
-
-        // ==========================================================
-        // MANAJEMEN ANGGARAN & INSENTIF POIN
-        // ==========================================================
-        function renderPointSchemeList() {
-            const list = document.getElementById('pointSchemeList');
-            if (!list) return;
-
-            if (isSuperAdmin) { document.getElementById('btnEditPointScheme')?.classList.remove('hidden'); } 
-            else { document.getElementById('btnEditPointScheme')?.classList.add('hidden'); }
-
-            list.innerHTML = `
-                <li class="flex items-center justify-between text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
-                    <span class="font-bold">🎉 Pendaftar Baru</span><span class="font-extrabold">+${budgetSettings.pointsNewUser} Poin</span>
-                </li>
-                <li class="flex items-center justify-between"><span>🤝 Mengikuti Relasi Rekan</span><span class="font-extrabold text-blue-500">+${budgetSettings.pointsMutual} Poin</span></li>
-                <li class="flex items-center justify-between"><span>📷 Upload Foto Kerja (Before/After)</span><span class="font-extrabold text-emerald-500">+${budgetSettings.pointsPhoto} Poin</span></li>
-                <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
-                <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
-                <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
-                <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin</span></li>
-                <li class="flex items-center justify-between text-slate-500 italic"><span>🛠️ Selesai Susulan (Expired)</span><span class="font-bold">0 Poin (Lunas Hutang)</span></li>
-            `;
-        }
-
-        async function loadBudgetSettings() {
-            try {
-                const { data, error } = await _supabase.from('app_config').select('*');
-                if (!error && data) {
-                    const budgetRow = data.find(r => r.id === 'budget_settings');
-                    if (budgetRow && budgetRow.config_data) budgetSettings = Object.assign(budgetSettings, budgetRow.config_data);
-                    const profileRow = data.find(r => r.id === 'user_profiles');
-                    if (profileRow && profileRow.config_data) userProfilesMap = profileRow.config_data;
-                }
-            } catch (e) {}
-            renderPointSchemeList();
-        }
-
-        function setupAppConfigRealtime() {
-            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
-            appConfigSubscription = _supabase.channel('public:app_config')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
-                    if (payload.new && payload.new.id === 'budget_settings') {
-                        budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
-                        renderPointSchemeList(); calculateAndRenderEarnings();
-                    }
-                }).subscribe();
-        }
-
-        function openBudgetConfigModal() {
-            if (!isSuperAdmin) return;
-            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
-            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
-            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
-            document.getElementById('inputAdminFeeNonBtn').value = budgetSettings.adminFeeNonBtn || 2500;
-            document.getElementById('inputMinWithdrawal').value = budgetSettings.minWithdrawal || 10000;
-            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
-            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
-            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
-            document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
-            document.getElementById('inputPointsExpired').value = Math.abs(budgetSettings.pointsExpired);
-            document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
-            document.getElementById('budgetConfigModal').classList.remove('hidden');
-        }
-
-        function closeBudgetConfigModal() { document.getElementById('budgetConfigModal').classList.add('hidden'); }
-
-        document.getElementById('formBudgetConfig')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const newConfig = {
-                monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
-                ratePerTask: parseInt(document.getElementById('inputRatePerTask').value) || 10,
-                maxDailyTasks: parseInt(document.getElementById('inputMaxDailyTasks').value) || 5,
-                adminFeeNonBtn: parseInt(document.getElementById('inputAdminFeeNonBtn').value) || 2500,
-                minWithdrawal: parseInt(document.getElementById('inputMinWithdrawal').value) || 10000,
-                pointsEarly: parseInt(document.getElementById('inputPointsEarly').value) || 100,
-                pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
-                pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
-                pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
-                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || 50,
-                pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200,
-                pointsNewUser: budgetSettings.pointsNewUser, pointsMutual: budgetSettings.pointsMutual, pointsPhoto: budgetSettings.pointsPhoto, pointsPerbaikan: budgetSettings.pointsPerbaikan, pointsComment: budgetSettings.pointsComment
-            };
-            const { error } = await _supabase.from('app_config').upsert({ id: 'budget_settings', config_data: newConfig, updated_at: new Date().toISOString() });
-            if (!error) { budgetSettings = Object.assign(budgetSettings, newConfig); showToast("Pengaturan disimpan!"); closeBudgetConfigModal(); renderPointSchemeList(); calculateAndRenderEarnings(); } 
-            else { showToast("Gagal menyimpan: " + error.message); }
-        });
-
-        function calculateAndRenderEarnings() {
-            const currentYearMonth = todayStr.slice(0, 7);
-            const userEarningsMap = {};
-
-            const userWithdrawnMap = {};
-            globalWithdrawals.forEach(w => {
-                if (w.user_id && (w.status === 'Sukses' || w.status === 'Pending')) {
-                    userWithdrawnMap[w.user_id] = (userWithdrawnMap[w.user_id] || 0) + Number(w.nominal || 0);
-                }
-            });
-
-            globalTasks.forEach(t => {
-                const uid = t.user_id;
-                const taskDateStr = t.tanggal;
-                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
-
-                const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) return;
-
-                if (!userEarningsMap[uid]) {
-                    userEarningsMap[uid] = {
-                        userId: uid, 
-                        nama: getUserDisplayName(uid, t.user_email, t.nama), 
-                        email: t.user_email || '',
-                        dailyCount: {}, 
-                        activeDates: new Set(), 
-                        points: 0, 
-                        eligibleTasks: 0,
-                        earlyBirdBonus: 0, 
-                        streakBonus: 0, 
-                        extraBonus: 0, 
-                        debtPoints: 0,
-                        expiredTasksCount: 0,
-                        grossEarning: 0,
-                        totalWithdrawn: 0,
-                        totalEarning: 0,
-                        perbaikanCount: {}
-                    };
-                }
-
-                if (!userEarningsMap[uid].dailyCount[taskDateStr]) {
-                    userEarningsMap[uid].dailyCount[taskDateStr] = 0;
-                    userEarningsMap[uid].perbaikanCount[taskDateStr] = 0;
-                }
-
-                if (userEarningsMap[uid].dailyCount[taskDateStr] < budgetSettings.maxDailyTasks) {
-                    userEarningsMap[uid].dailyCount[taskDateStr]++;
-                    userEarningsMap[uid].eligibleTasks++;
-
-                    const isiTugas = (t.tugas || '').toLowerCase();
-                    const isiKet = (t.keterangan || '').toLowerCase();
-                    if (isiTugas.includes('#perbaikan') || isiKet.includes('#perbaikan')) {
-                        if (userEarningsMap[uid].perbaikanCount[taskDateStr] < 5) {
-                            userEarningsMap[uid].perbaikanCount[taskDateStr]++;
-                            userEarningsMap[uid].extraBonus += budgetSettings.pointsPerbaikan;
-                        }
-                    }
-
-                    if (t.foto_sebelum && t.foto_sesudah) {
-                        userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
-                    }
-
-                    if (isCreatedBefore6AM(t)) {
-                        userEarningsMap[uid].points += budgetSettings.pointsEarly;
-                        userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
-                    }
-
-                    if (t.status === 'Selesai') {
-                        const isLate = isCompletedLate(t);
-                        userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
-                        userEarningsMap[uid].activeDates.add(taskDateStr);
-                    } else if (t.status === 'Proses') {
-                        userEarningsMap[uid].points += budgetSettings.pointsProcess;
-                        userEarningsMap[uid].activeDates.add(taskDateStr);
-                    } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
-                        const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
-                        userEarningsMap[uid].debtPoints += penaltyVal;
-                        userEarningsMap[uid].expiredTasksCount++;
-                    }
-                }
-            });
-
-            let totalTeamBudgetUsed = 0;
-
-            Object.keys(userEarningsMap).forEach(uid => {
-                const u = userEarningsMap[uid];
-                
-                if (uid === currentUser?.id) {
-                    u.extraBonus += budgetSettings.pointsNewUser;
-                    u.extraBonus += (myFollowings.length * budgetSettings.pointsMutual);
-                }
-
-                if (u.activeDates.size >= 5) {
-                    u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
-                }
-
-                const grossPoints = u.points + u.streakBonus + u.extraBonus;
-                const netPoints = Math.max(0, grossPoints - u.debtPoints);
-
-                u.grossPoints = grossPoints;
-                u.totalPoints = netPoints;
-                u.grossEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
-                u.totalWithdrawn = userWithdrawnMap[uid] || 0;
-                u.totalEarning = Math.max(0, u.grossEarning - u.totalWithdrawn);
-
-                totalTeamBudgetUsed += u.grossEarning;
-            });
-
-            const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
-            userRanksMap = {};
-            sortedUsers.forEach((u, index) => {
-                if (index < 3 && u.totalPoints > 0) {
-                    userRanksMap[u.userId] = index + 1;
-                }
-            });
-
-            const currentUserId = currentUser?.id;
-            const myWithdrawn = userWithdrawnMap[currentUserId] || 0;
-            const myGross = Math.round((budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask);
-            const myData = userEarningsMap[currentUserId] || { 
-                totalPoints: budgetSettings.pointsNewUser, 
-                grossPoints: budgetSettings.pointsNewUser,
-                points: 0, 
-                earlyBirdBonus: 0, 
-                streakBonus: 0, 
-                eligibleTasks: 0, 
-                grossEarning: myGross,
-                totalWithdrawn: myWithdrawn,
-                totalEarning: Math.max(0, myGross - myWithdrawn), 
-                extraBonus: budgetSettings.pointsNewUser,
-                debtPoints: 0,
-                expiredTasksCount: 0
-            };
-            
-            const badgeEl = document.getElementById('myEarningsBadge');
-            if (badgeEl) badgeEl.innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
-
-            return { userEarningsMap, totalTeamBudgetUsed, myData };
-        }
-
-        async function fetchWithdrawalsSupabase() {
-            let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
-            const { data, error } = await query;
-            if (!error && data) { 
-                globalWithdrawals = data; 
-                renderWithdrawalsHistory(); 
-                calculateAndRenderEarnings();
-            }
-        }
-
-        function setupWithdrawalsRealtime() {
-            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription);
-            withdrawalsSubscription = _supabase.channel('public:penarikan_insentif')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { 
-                    await fetchWithdrawalsSupabase(); 
-                })
-                .subscribe();
-        }
-
-        function renderWithdrawalsHistory() {
-            const myListContainer = document.getElementById('myWithdrawalsList');
-            const myBadge = document.getElementById('myWithdrawalBadge');
-            const myWithdrawals = globalWithdrawals.filter(w => w.user_id === currentUser?.id);
-            if (myBadge) myBadge.innerText = `${myWithdrawals.length} Data`;
-
-            if (myListContainer) {
-                myListContainer.innerHTML = '';
-                if (myWithdrawals.length === 0) myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
-                else {
-                    myWithdrawals.forEach(w => {
-                        let statusColor = w.status === 'Sukses' ? 'bg-emerald-100 text-emerald-800' : (w.status === 'Ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800');
-                        const item = document.createElement('div');
-                        item.className = 'p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5';
-                        item.innerHTML = `
-                            <div class="flex items-center justify-between font-bold">
-                                <span>Rp ${formatRupiahK(w.nominal)}</span>
-                                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold ${statusColor}">${w.status}</span>
-                            </div>
-                            <div class="flex items-center justify-between text-[9px] text-slate-400 mt-1">
-                                <span>${w.metode_pembayaran}</span>
-                                <span>${new Date(w.created_at).toLocaleDateString('id-ID')}</span>
-                            </div>
-                        `;
-                        myListContainer.appendChild(item);
-                    });
-                }
-            }
-        }
-
-        function openEarningsModal() {
-            setActiveTab('tabWallet');
-            renderPointSchemeList();
-            const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
-            cachedMyEarningsData = myData;
-
-            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
-            document.getElementById('modalMyPointsDetail').innerHTML = `<span>Total Poin: <b>${myData.totalPoints || 0} Poin</b></span>`;
-            document.getElementById('modalMyWithdrawnDetail').innerText = `Total Ditarik: Rp ${formatRupiahK(myData.totalWithdrawn)}`;
-            document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
-
-            const btnWD = document.getElementById('btnWithdrawEarning');
-            const minWd = budgetSettings.minWithdrawal || 10000;
-            if (myData.totalEarning >= minWd) btnWD.classList.remove('hidden');
-            else btnWD.classList.add('hidden');
-
-            renderWithdrawalsHistory();
-            document.getElementById('earningsModal').classList.remove('hidden');
-        }
-
-        function closeEarningsModal() { 
-            document.getElementById('earningsModal').classList.add('hidden');
-            setActiveTab('tabHome');
-        }
-
-        function openWithdrawModal() {
-            if (!cachedMyEarningsData || cachedMyEarningsData.totalEarning < (budgetSettings.minWithdrawal || 10000)) {
-                return showToast(`Saldo minimal Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
-            }
-            document.getElementById('wd-available-balance').value = `Rp ${formatRupiahK(cachedMyEarningsData.totalEarning)}`;
-            document.getElementById('wd-amount').value = cachedMyEarningsData.totalEarning;
-            document.getElementById('wd-account-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
-            calculateWithdrawFee();
-            document.getElementById('withdrawModal').classList.remove('hidden');
-        }
-
-        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
-
-        function calculateWithdrawFee() {
-            const method = document.getElementById('wd-method').value;
-            const otherContainer = document.getElementById('wd-other-method-container');
-            if (method === 'LAINNYA') otherContainer.classList.remove('hidden'); else otherContainer.classList.add('hidden');
-            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
-            let fee = (method !== 'BANK_BTN') ? (budgetSettings.adminFeeNonBtn || 2500) : 0;
-            const net = Math.max(0, amount - fee);
-            document.getElementById('wd-calc-nominal').innerText = `Rp ${formatRupiahK(amount)}`;
-            document.getElementById('wd-calc-fee').innerText = fee === 0 ? `Gratis (Rp 0)` : `Rp ${formatRupiahK(fee)}`;
-            document.getElementById('wd-calc-net').innerText = `Rp ${formatRupiahK(net)}`;
-        }
-
-        document.getElementById('formWithdrawRequest')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
-            const methodKey = document.getElementById('wd-method').value;
-            let methodText = document.getElementById('wd-method').options[document.getElementById('wd-method').selectedIndex].text;
-            const accountNumber = document.getElementById('wd-account-number').value.trim();
-            const accountName = document.getElementById('wd-account-name').value.trim();
-            let fee = (methodKey === 'BANK_BTN') ? 0 : (budgetSettings.adminFeeNonBtn || 2500);
-            let net = Math.max(0, amount - fee);
-            const userName = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name);
-
-            const payload = {
-                user_id: currentUser.id, user_email: currentUser.email, nama_petugas: userName,
-                nominal: amount, biaya_admin: fee, total_diterima: net,
-                metode_pembayaran: methodText, nomor_rekening: accountNumber, nama_pemilik: accountName,
-                status: 'Pending', created_at: new Date().toISOString()
-            };
-
-            await _supabase.from('penarikan_insentif').insert([payload]);
-            const pesanWA = `Halo Admin, saya ingin mengajukan Penarikan Insentif:\n👤 Nama: ${userName}\n💰 Nominal: Rp ${amount.toLocaleString('id-ID')}\n💳 Tujuan: ${methodText} - ${accountNumber} a.n ${accountName}`;
-            window.open(`https://wa.me/${ADMIN_WA_PHONE}?text=${encodeURIComponent(pesanWA)}`, '_blank');
-            closeWithdrawModal();
-            fetchWithdrawalsSupabase();
-        });
 
         // ==========================================================
         // 1. OTENTIKASI & APPROVAL SUPER ADMIN
@@ -3502,7 +3104,6 @@
                 if (!error) {
                     showToast("Tugas ditambahkan!");
                     toggleModal(false);
-                    // Notifikasi otomatis ke seluruh Followers
                     notifyMyFollowers(
                         'schedule_new',
                         'Jadwal Baru 📅',
@@ -3682,9 +3283,20 @@
             const avatarUrl = getAvatarUrl(currentUser);
 
             const bulkPayload = previewTasksData.map(t => ({
-                user_id: currentUser.id, user_email: currentUser.email, tanggal, nama, peran: role,
-                tugas: t.tugas.trim(), jam_mulai: t.jam_mulai, jam_selesai: t.jam_selesai,
-                status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0, created_at: nowIso, user_avatar: avatarUrl
+                user_id: currentUser.id, 
+                user_email: currentUser.email, 
+                tanggal, 
+                nama, 
+                peran: role,
+                tugas: t.tugas.trim(), 
+                jam_mulai: t.jam_mulai, 
+                jam_selesai: t.jam_selesai,
+                status: 'Belum', 
+                likes_count: 0, 
+                liked_users: [], 
+                comments_count: 0, 
+                created_at: nowIso, 
+                user_avatar: avatarUrl
             }));
 
             const { error } = await _supabase.from('jadwal').insert(bulkPayload);
@@ -3757,7 +3369,6 @@
                 closeCompletionNoteModal(); 
                 showToast("Tugas Selesai & dokumentasi tersimpan!"); 
                 
-                // Notifikasi Tugas Selesai ke Followers
                 notifyMyFollowers(
                     'task_completed',
                     'Tugas Selesai ✅',
