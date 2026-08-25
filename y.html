@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+                <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -293,14 +293,14 @@
                     </div>
                 </div>
 
-                <!-- STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 2) -->
+                <!-- STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 1) -->
                 <div class="px-3.5 md:px-0 mb-3.5">
                     <div id="storiesContainer" class="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
                         <!-- Story Cards otomatis dirender via JavaScript -->
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (SESUAI GAMBAR 1) -->
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
                         <div class="bg-white dark:bg-slate-900 rounded-[22px] p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
@@ -379,7 +379,88 @@
         </main>
     </div>
 
-<!-- MODAL CHAT GLOBAL TIM -->
+    <!-- MODAL FULLSCREEN STORY VIEWER (SESUAI GAMBAR NO 2) -->
+    <div id="storyViewerModal" class="fixed inset-0 bg-black z-[140] hidden flex flex-col justify-between select-none">
+        
+        <!-- TOP BAR (PROGRESS BAR & USER INFO) -->
+        <div class="p-3.5 z-20 bg-gradient-to-b from-black/85 via-black/40 to-transparent">
+            <!-- Progress Bar -->
+            <div class="w-full bg-white/30 h-1 rounded-full overflow-hidden mb-3">
+                <div id="storyProgressBar" class="bg-white h-full w-0 transition-all duration-100 ease-linear"></div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div id="storyViewerAvatar" class="w-9 h-9 rounded-full overflow-hidden border border-white/40 flex-shrink-0">
+                        <!-- Avatar via JS -->
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <h4 id="storyViewerName" class="text-white text-xs font-black tracking-tight drop-shadow-md">Nama User</h4>
+                            <span class="bg-slate-800/80 text-white/90 text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/20">
+                                <i class="fa-solid fa-shield-halved text-[8px] mr-0.5"></i> Berlangganan
+                            </span>
+                        </div>
+                        <p id="storyViewerTime" class="text-[9.5px] text-white/75 font-medium mt-0.5">Baru saja</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="closeStoryViewer()" class="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white transition">
+                        <i class="fa-solid fa-chevron-down text-lg"></i>
+                    </button>
+                    <button onclick="closeStoryViewer()" class="w-8 h-8 flex items-center justify-center text-white/80 hover:text-white transition">
+                        <i class="fa-solid fa-xmark text-xl font-bold"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN MEDIA CONTAINER -->
+        <div class="relative flex-1 flex items-center justify-center overflow-hidden bg-black" onclick="handleStoryTap(event)">
+            <img id="storyViewerImage" src="" class="w-full h-full object-contain max-h-[82vh]">
+            
+            <!-- Touch Control Navigation Zones -->
+            <div class="absolute inset-y-0 left-0 w-1/3 z-10" onclick="prevStory(event)"></div>
+            <div class="absolute inset-y-0 right-0 w-1/3 z-10" onclick="nextStory(event)"></div>
+
+            <!-- Watermark Judul Tugas & Informasi Petugas -->
+            <div class="absolute bottom-4 left-4 right-4 z-15 pointer-events-none bg-black/40 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
+                <p id="storyViewerTaskTitle" class="text-white text-xs font-black leading-snug line-clamp-2 drop-shadow-sm"></p>
+                <p id="storyViewerSubTitle" class="text-[10px] text-slate-300 font-semibold mt-0.5"></p>
+            </div>
+        </div>
+
+        <!-- BOTTOM ACTION BAR (SESUAI GAMBAR NO 2) -->
+        <div class="p-3.5 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-center gap-2.5">
+            <button onclick="shareActiveStory()" class="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 active:scale-90 transition" title="Bagikan">
+                <i class="fa-solid fa-repeat text-sm"></i>
+            </button>
+
+            <div class="flex-1 bg-white/15 border border-white/20 rounded-full px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-white">
+                <input type="text" 
+                       id="inputStoryReply" 
+                       onkeydown="if(event.key === 'Enter') sendStoryReply()" 
+                       placeholder="Kirim pesan..." 
+                       class="w-full bg-transparent border-none text-xs text-white placeholder-white/60 focus:outline-none">
+            </div>
+
+            <!-- Quick Reactions -->
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button onclick="sendStoryReaction('❤️')" class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-sm active:scale-125 transition">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <button onclick="sendStoryReaction('👍')" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm active:scale-125 transition">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                </button>
+                <button onclick="sendStoryReaction('😂')" class="w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm active:scale-125 transition">
+                    <i class="fa-solid fa-face-laugh-squint"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHAT GLOBAL TIM -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -637,7 +718,7 @@
                             <option value="EWALLET_GOPAY">📱 GoPay (E-Wallet)</option>
                             <option value="EWALLET_OVO">📱 OVO (E-Wallet)</option>
                             <option value="EWALLET_SHOPEEPAY">📱 ShopeePay (E-Wallet)</option>
-                            <option value="EWALLET_LINKAJA">📱 LinkAja (E-Wallet)</option>
+                            <option value="EWALLET_LINKAJA">📱 LinkAJA (E-Wallet)</option>
                             <option value="LAINNYA">💳 Bank / E-Wallet Lainnya</option>
                         </select>
                     </div>
@@ -1191,7 +1272,7 @@
         </div>
     </div>
 
-    <!-- MODAL PREVIEW FOTO BESAR -->
+    <!-- MODAL PREVIEW FOTO BESAR STANDAR -->
     <div id="imagePreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[130] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4" onclick="this.classList.add('hidden')">
         <div class="relative w-full md:max-w-lg bg-white dark:bg-slate-900 md:rounded-[32px] rounded-t-[28px] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
             <div class="px-4 py-3.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
@@ -1396,6 +1477,12 @@
         let onlineUsersState = {};
         let presenceChannel = null;
         let userProfilesMap = {};
+
+        // Variabel Controller Story Viewer Fullscreen
+        let activeStoriesList = [];
+        let currentStoryIndex = 0;
+        let storyProgressTimer = null;
+        const STORY_DURATION_MS = 6000;
 
         let budgetSettings = {
             monthlyBudget: 100000,
@@ -1696,7 +1783,7 @@
         });
 
         // ==========================================================
-        // RENDER STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 2)
+        // RENDER STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 1 & 2)
         // ==========================================================
         function renderStoriesBar() {
             const container = document.getElementById('storiesContainer');
@@ -1708,6 +1795,7 @@
                 globalTasks.forEach(t => { if(t.user_id) allowedUserIds.add(t.user_id); });
             }
 
+            // Kumpulkan foto After terbaru dari setiap user
             const latestPhotosByUser = {};
             globalTasks.forEach(task => {
                 if (allowedUserIds.has(task.user_id) && task.foto_sesudah) {
@@ -1716,20 +1804,24 @@
                     
                     if (!existing || taskTime > existing.time) {
                         latestPhotosByUser[task.user_id] = {
+                            taskId: task.id,
                             userId: task.user_id,
                             userName: getUserDisplayName(task.user_id, task.user_email, task.nama),
                             userAvatar: task.user_avatar || (task.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null),
                             photoUrl: task.foto_sesudah,
                             taskTitle: task.tugas,
-                            time: taskTime
+                            peran: task.peran || 'Petugas',
+                            time: taskTime,
+                            isoDate: task.completed_at || task.created_at
                         };
                     }
                 }
             });
 
-            const storyList = Object.values(latestPhotosByUser);
+            // Urutkan dari upload paling mutakhir
+            activeStoriesList = Object.values(latestPhotosByUser).sort((a, b) => b.time - a.time);
 
-            if (storyList.length === 0) {
+            if (activeStoriesList.length === 0) {
                 container.innerHTML = `
                     <div class="w-full py-3.5 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 text-xs text-center flex items-center justify-center gap-2 shadow-xs">
                         <i class="fa-solid fa-camera text-slate-400"></i> Belum ada foto dokumentasi selesai hari ini dari Anda maupun rekan.
@@ -1738,18 +1830,13 @@
                 return;
             }
 
-            storyList.forEach(story => {
+            activeStoriesList.forEach((story, index) => {
                 const isMe = story.userId === currentUser?.id;
                 const card = document.createElement('div');
-                card.className = 'relative flex-shrink-0 w-32 md:w-36 h-56 rounded-[24px] overflow-hidden bg-slate-800 shadow-md cursor-pointer group transition duration-300 hover:scale-[1.02] snap-start border border-slate-200/60 dark:border-slate-800';
+                card.className = 'relative flex-shrink-0 w-32 md:w-36 h-56 rounded-[24px] overflow-hidden bg-slate-900 shadow-md cursor-pointer group transition duration-300 hover:scale-[1.02] snap-start border border-slate-200/60 dark:border-slate-800';
                 
-                card.onclick = () => {
-                    if (isMe) {
-                        resetToMyFeed();
-                    } else {
-                        viewFriendSchedule(story.userId, story.userName);
-                    }
-                };
+                // Klik story card langsung membuka Full Screen Story Viewer
+                card.onclick = () => openStoryViewer(index);
 
                 const avatarSrc = story.userAvatar || '';
                 const avatarHtml = avatarSrc 
@@ -1780,6 +1867,134 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // ==========================================================
+        // KONTROL STORY VIEWER FULLSCREEN (GAMBAR 2)
+        // ==========================================================
+        function openStoryViewer(index) {
+            if (!activeStoriesList[index]) return;
+            currentStoryIndex = index;
+            document.getElementById('storyViewerModal').classList.remove('hidden');
+            showStoryContent(currentStoryIndex);
+        }
+
+        function showStoryContent(index) {
+            clearInterval(storyProgressTimer);
+            const story = activeStoriesList[index];
+            if (!story) return closeStoryViewer();
+
+            document.getElementById('storyViewerImage').src = story.photoUrl;
+            document.getElementById('storyViewerName').innerText = story.userName;
+            document.getElementById('storyViewerTaskTitle').innerText = story.taskTitle;
+            document.getElementById('storyViewerSubTitle').innerText = `👤 ${story.peran} &bull; ${formatTimeAgo(story.isoDate)}`;
+            document.getElementById('storyViewerTime').innerText = formatTimeAgo(story.isoDate);
+            
+            const avatarContainer = document.getElementById('storyViewerAvatar');
+            if (story.userAvatar) {
+                avatarContainer.innerHTML = `<img src="${story.userAvatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarContainer.innerHTML = `<div class="w-full h-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">${story.userName.charAt(0).toUpperCase()}</div>`;
+            }
+
+            // Animasi Progress Bar
+            const progressBar = document.getElementById('storyProgressBar');
+            progressBar.style.width = '0%';
+            let elapsed = 0;
+            const interval = 50;
+
+            storyProgressTimer = setInterval(() => {
+                elapsed += interval;
+                const progress = (elapsed / STORY_DURATION_MS) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                if (elapsed >= STORY_DURATION_MS) {
+                    clearInterval(storyProgressTimer);
+                    nextStory();
+                }
+            }, interval);
+        }
+
+        function nextStory(e) {
+            if (e) e.stopPropagation();
+            if (currentStoryIndex < activeStoriesList.length - 1) {
+                currentStoryIndex++;
+                showStoryContent(currentStoryIndex);
+            } else {
+                closeStoryViewer();
+            }
+        }
+
+        function prevStory(e) {
+            if (e) e.stopPropagation();
+            if (currentStoryIndex > 0) {
+                currentStoryIndex--;
+                showStoryContent(currentStoryIndex);
+            }
+        }
+
+        function handleStoryTap(e) {
+            // Jika klik tengah: pause / resume timer
+            if (storyProgressTimer) {
+                clearInterval(storyProgressTimer);
+                storyProgressTimer = null;
+            } else {
+                showStoryContent(currentStoryIndex);
+            }
+        }
+
+        function closeStoryViewer() {
+            clearInterval(storyProgressTimer);
+            document.getElementById('storyViewerModal').classList.add('hidden');
+            const input = document.getElementById('inputStoryReply');
+            if (input) input.value = '';
+        }
+
+        async function sendStoryReply() {
+            const input = document.getElementById('inputStoryReply');
+            const msg = input.value.trim();
+            if (!msg || !activeStoriesList[currentStoryIndex]) return;
+
+            const currentStory = activeStoriesList[currentStoryIndex];
+            input.value = '';
+            
+            const payload = {
+                jadwal_id: String(currentStory.taskId),
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                comment: `Membalas dokumentasi: "${msg}"`,
+                user_avatar: getAvatarUrl(currentUser),
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+            if (!error) {
+                showToast(`Pesan terkirim ke ${currentStory.userName}!`);
+            } else {
+                showToast("Gagal mengirim balasan.");
+            }
+        }
+
+        async function sendStoryReaction(emoji) {
+            const currentStory = activeStoriesList[currentStoryIndex];
+            if (!currentStory) return;
+            toggleLikeTask(currentStory.taskId);
+            showToast(`Mengirim ${emoji} ke ${currentStory.userName}`);
+        }
+
+        function shareActiveStory() {
+            const currentStory = activeStoriesList[currentStoryIndex];
+            if (!currentStory) return;
+            if (navigator.share) {
+                navigator.share({
+                    title: `Dokumentasi Kerja - ${currentStory.userName}`,
+                    text: `Lihat hasil dokumentasi kerja: ${currentStory.taskTitle}`,
+                    url: currentStory.photoUrl
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(currentStory.photoUrl);
+                showToast("Tautan dokumentasi disalin!");
+            }
         }
 
         function renderPointSchemeList() {
@@ -3041,7 +3256,7 @@
         }
 
         // ==========================================================
-        // RENDER TASKS DENGAN STORIES & FEED HORIZONTAL
+        // RENDER TASKS (FEED VIEW & TABEL)
         // ==========================================================
         function renderTasks() {
             renderStoriesBar();
@@ -3161,7 +3376,7 @@
 
             Object.keys(groupedByUser).forEach(uid => {
                 const tasksOfUser = groupedByUser[uid];
-                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
+tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
                 const sampleTask = tasksOfUser[0]; 
                 const petugasName = getUserDisplayName(sampleTask.user_id, sampleTask.user_email, sampleTask.nama);
                 const postDate = sampleTask?.tanggal || todayStr; 
