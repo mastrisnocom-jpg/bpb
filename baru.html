@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -169,11 +169,10 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             
-            <!-- HEADER (FACEBOOK STYLE DENGAN CHAT GLOBAL DI POJOK KANAN ATAS) -->
+            <!-- HEADER PERSIS SEPERTI GAMBAR (FACEBOOK STYLE DENGAN CHAT GLOBAL DI KANAN ATAS) -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
                 <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
-                    <!-- Sisi Kiri: Menu & Logo -->
                     <div class="flex items-center gap-2.5">
                         <button onclick="toggleSidebarMenu()" class="w-9 h-9 flex items-center justify-center text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition active:scale-95" title="Menu Sidebar">
                             <i class="fa-solid fa-bars text-xl"></i>
@@ -184,7 +183,6 @@
                         <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
                     </div>
 
-                    <!-- Sisi Kanan: Action Buttons (+) (🔍) (💬 CHAT GLOBAL REALTIME) -->
                     <div class="flex items-center gap-2">
                         <!-- Tombol Tambah (+) -->
                         <button onclick="openTaskModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95" title="Tambah Tugas Baru">
@@ -196,7 +194,7 @@
                             <i class="fa-solid fa-magnifying-glass text-sm"></i>
                         </button>
 
-                        <!-- TOMBOL CHAT GLOBAL REALTIME DENGAN BADGE -->
+                        <!-- Tombol Chat Messenger Icon (MEMBUKA CHAT GLOBAL TIM) -->
                         <button onclick="openGlobalChatModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white hover:text-blue-600 rounded-full flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
                             <i class="fa-brands fa-facebook-messenger text-base text-blue-600"></i>
                             <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-blue-600 text-white text-[9px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
@@ -206,32 +204,21 @@
 
                 <!-- BOTTOM TAB ROW -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-1 md:px-6">
-                    <!-- Tab 1: Home / Feed -->
                     <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda Jadwal">
                         <i class="fa-solid fa-house"></i>
                     </button>
-
-                    <!-- Tab 2: Reels / Video / Import Teks -->
                     <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
                         <i class="fa-solid fa-clapperboard"></i>
                     </button>
-
-                    <!-- Tab 3: Marketplace / Dompet Insentif -->
                     <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-amber-500 transition active:scale-95 relative" title="Dompet Insentif">
                         <i class="fa-solid fa-store"></i>
                     </button>
-
-                    <!-- Tab 4: Graph / Auto 07-17 & Budget -->
                     <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95" title="Auto Generate 07-17">
                         <i class="fa-solid fa-chart-column"></i>
                     </button>
-
-                    <!-- Tab 5: Notifikasi Lonceng -->
                     <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-teal-500 transition active:scale-95" title="Relasi Follow / Rekan">
                         <i class="fa-regular fa-bell"></i>
                     </button>
-
-                    <!-- Tab 6: Profil Pengguna Bulat -->
                     <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
                         <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border-2 border-transparent hover:border-blue-500 flex items-center justify-center text-[11px] font-bold" id="header-user-avatar-btn">
                             <i class="fa-solid fa-user text-slate-600 dark:text-slate-300"></i>
@@ -292,7 +279,7 @@
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
+                <!-- STATUS BAR & REWARD -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
                         <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
@@ -337,9 +324,9 @@
                     </section>
                 </div>
 
-                <!-- CONTAINER JADWAL -->
+                <!-- DAFTAR JADWAL -->
                 <section>
-                    <!-- TAMPILAN DESKTOP (TABEL) -->
+                    <!-- DESKTOP -->
                     <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden mx-3.5 md:mx-0">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -360,7 +347,7 @@
                         </div>
                     </div>
 
-                    <!-- TAMPILAN MOBILE FB FEED -->
+                    <!-- MOBILE -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
@@ -372,11 +359,10 @@
         </main>
     </div>
 
-    <!-- MODAL CHAT GLOBAL TIM (TERHUBUNG KE IKON POJOK KANAN ATAS) -->
+    <!-- MODAL CHAT GLOBAL TIM -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-down">
             
-            <!-- HEADER CHAT GLOBAL -->
             <div class="px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
@@ -394,10 +380,8 @@
                 </button>
             </div>
 
-            <!-- CONTAINER PESAN CHAT -->
             <div id="globalChatMessages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
 
-            <!-- INPUT BAR CHAT GLOBAL -->
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                 <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
                     <input type="text" 
@@ -446,13 +430,11 @@
                     <textarea id="complete-task-note" rows="2" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
                 </div>
 
-                <!-- FORM UPLOAD FOTO DOKUMENTASI DI BAWAH KETERANGAN -->
                 <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
                     <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
                         <i class="fa-solid fa-camera mr-1"></i> Upload Dokumentasi Foto Kerja
                     </p>
 
-                    <!-- Foto Sebelum (Before) -->
                     <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
                         <label class="block text-[9.5px] font-extrabold text-slate-600 dark:text-slate-300">
                             📷 Foto Sebelum Dikerjakan (Before)
@@ -463,7 +445,6 @@
                         </div>
                     </div>
 
-                    <!-- Foto Sesudah (After) -->
                     <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
                         <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">
                             ✅ Foto Sesudah Dikerjakan (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span>
@@ -508,7 +489,6 @@
             </div>
 
             <div class="space-y-3 flex-1 overflow-y-auto pr-1 text-xs">
-                <!-- KARTU SALDO + TOMBOL TARIK -->
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
                     <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya (Bulan Ini)</p>
                     <div class="flex items-end justify-between mt-1">
@@ -528,7 +508,6 @@
                     </div>
                 </div>
 
-                <!-- SECTION HISTORI PENARIKAN SAYA -->
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
@@ -541,7 +520,6 @@
                     </div>
                 </div>
 
-                <!-- KETENTUAN SKEMA POIN -->
                 <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200/60 dark:border-slate-800">
                     <div class="flex items-center justify-between mb-1.5">
                         <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
@@ -554,7 +532,6 @@
                     <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
                 </div>
 
-                <!-- ADMIN: KELOLA PENARIKAN SELURUH TIM -->
                 <div id="adminWithdrawalManagementCard" class="hidden p-3 bg-rose-50/50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-800">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-[10px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1">
@@ -566,7 +543,6 @@
                     </div>
                 </div>
 
-                <!-- ADMIN: BUDGET USAGE -->
                 <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
                     <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
                         <span>Total Realisasi Tim (Admin)</span>
@@ -577,7 +553,6 @@
                     </div>
                 </div>
 
-                <!-- ADMIN: RINCIAN ANGGARAN TIM -->
                 <div id="adminTeamListContainer" class="hidden">
                     <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
                     <div id="teamEarningsList" class="space-y-1.5"></div>
@@ -648,7 +623,6 @@
                     <input type="text" id="wd-account-name" required placeholder="Nama sesuai buku tabungan / akun" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
                 </div>
 
-                <!-- RINCIAN BIAYA & ADMIN -->
                 <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
                     <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
                         <span>Nominal Tarik:</span>
@@ -740,7 +714,6 @@
                     </div>
                 </div>
 
-                <!-- SETTING ATURAN PENARIKAN & ADMIN NON-BTN -->
                 <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
                     <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Aturan Penarikan & Fee Admin</label>
                     <div class="grid grid-cols-2 gap-2">
@@ -833,7 +806,7 @@
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR PADA POSTINGAN -->
+    <!-- MODAL KOMENTAR POSTINGAN -->
     <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-down">
             
@@ -1149,7 +1122,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <script>
+   <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1195,7 +1168,7 @@
         let presenceChannel = null;
         let userProfilesMap = {};
 
-        // Pengaturan Anggaran, Poin & Penalti Hutang
+        // Pengaturan Anggaran, Poin & Penalti
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -3234,4 +3207,15 @@
                 calculateAndRenderEarnings();
             } else {
                 showToast("Gagal menyimpan nama: " + error.message);
-Sorry, something went wrong. Please try your request again.
+            }
+        });
+
+        function openProfileModal() { 
+            document.getElementById('form-profile-modal').classList.remove('hidden'); 
+        }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
+
+        initTheme(); checkAuth();
+    </script>
+</body>
+</html>
