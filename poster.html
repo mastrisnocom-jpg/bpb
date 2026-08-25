@@ -2,80 +2,116 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Converter & Upscaler Banner Spanduk 4m x 1m</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Banner Upscaler & Converter 4m x 1m - Mobile & Desktop</title>
     <style>
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: #151d2e;
+            --card-inner: #0d1424;
+            --border-color: #26334d;
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #0b0f19;
-            color: #e2e8f0;
-            padding: 24px 16px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .wrapper {
-            max-width: 1200px;
+            max-width: 1240px;
             width: 100%;
         }
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            padding: 0 8px;
         }
 
         header h1 {
-            font-size: 26px;
+            font-size: clamp(20px, 4vw, 28px);
             font-weight: 800;
-            color: #38bdf8;
-            letter-spacing: 0.5px;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
         header p {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: clamp(12px, 2.5vw, 14px);
+            margin-top: 6px;
         }
 
-        /* Panel Grid */
+        /* Responsive Grid: 1 Kolom di HP, 2 Kolom di Desktop */
         .main-grid {
             display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 24px;
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
 
-        @media (max-width: 900px) {
+        @media (min-width: 900px) {
+            body {
+                padding: 24px 20px;
+            }
             .main-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 380px 1fr;
+                gap: 24px;
             }
         }
 
-        /* Form Konfigurasi */
         .card {
-            background: #1e293b;
-            border: 1px solid #334155;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        @media (min-width: 600px) {
+            .card {
+                padding: 20px;
+                border-radius: 16px;
+            }
         }
 
         .card-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            color: #f8fafc;
-            margin-bottom: 16px;
+            color: #ffffff;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid #334155;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
+        }
+
+        .badge-mode {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .form-group {
@@ -84,28 +120,131 @@
 
         label {
             display: block;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             color: #cbd5e1;
             margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
+        .input-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
         input[type="text"], select, input[type="file"] {
             width: 100%;
-            background: #0f172a;
-            border: 1px solid #475569;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
             color: #ffffff;
             padding: 10px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 13px;
             outline: none;
             transition: 0.2s border;
         }
 
         input[type="text"]:focus, select:focus {
-            border-color: #38bdf8;
+            border-color: var(--primary);
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .mode-btn {
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            line-height: 1.2;
+        }
+
+        .mode-btn.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-inner);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .toggle-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155;
+            transition: .3s;
+            border-radius: 22px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        #textSettingsArea {
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 14px;
+            display: none;
         }
 
         .btn-convert {
@@ -113,115 +252,119 @@
             background: linear-gradient(135deg, #0284c7, #2563eb);
             color: #ffffff;
             border: none;
-            padding: 12px;
+            padding: 13px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         }
 
-        .btn-convert:hover {
-            background: linear-gradient(135deg, #0369a1, #1d4ed8);
-            transform: translateY(-1px);
+        .btn-convert:active {
+            transform: scale(0.98);
         }
 
         .btn-convert:disabled {
-            background: #475569;
+            background: #334155;
+            color: #64748b;
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
         }
 
-        /* Progress Bar */
         .progress-box {
             display: none;
-            margin-top: 15px;
-            background: #0f172a;
+            margin-top: 12px;
+            background: var(--card-inner);
             border-radius: 8px;
-            padding: 12px;
-            border: 1px solid #334155;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
         }
 
         .progress-bar-bg {
             background: #334155;
-            height: 8px;
-            border-radius: 4px;
+            height: 6px;
+            border-radius: 3px;
             overflow: hidden;
             margin-top: 6px;
         }
 
         .progress-bar-fill {
-            background: #38bdf8;
+            background: var(--primary);
             height: 100%;
             width: 0%;
             transition: width 0.1s ease;
         }
 
         .progress-text {
-            font-size: 12px;
-            color: #94a3b8;
+            font-size: 11px;
+            color: var(--text-muted);
             display: flex;
             justify-content: space-between;
         }
 
-        /* Bagian Preview & Hasil Konversi */
         .results-area {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .stats-badge-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        @media (min-width: 500px) {
+            .stats-badge-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .stat-item {
-            background: #0f172a;
-            padding: 10px 14px;
+            background: var(--card-inner);
+            padding: 10px 12px;
             border-radius: 8px;
-            border: 1px solid #334155;
+            border: 1px solid var(--border-color);
         }
 
         .stat-item span {
-            font-size: 11px;
-            color: #94a3b8;
+            font-size: 10px;
+            color: var(--text-muted);
             display: block;
+            margin-bottom: 2px;
         }
 
         .stat-item strong {
-            font-size: 13px;
-            color: #38bdf8;
+            font-size: 12px;
+            color: var(--primary);
             font-weight: 700;
+            word-break: break-word;
         }
 
-        /* Banner Box Preview */
         .preview-wrapper {
             background: #020617;
-            padding: 16px;
+            padding: 12px 8px;
             border-radius: 10px;
-            border: 1px dashed #475569;
+            border: 1px dashed var(--border-color);
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             text-align: center;
         }
 
         .banner-preview-box {
             width: 100%;
-            max-width: 800px;
-            height: 200px; /* Rasio 4:1 */
-            margin: 0 auto;
+            min-width: 280px;
+            aspect-ratio: 4 / 1;
             position: relative;
-            background: #0f172a;
+            background: #090d16;
             border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto;
         }
 
         #previewCanvas {
@@ -233,20 +376,27 @@
 
         .placeholder-text {
             color: #64748b;
-            font-size: 13px;
+            font-size: 12px;
+            padding: 12px;
+            line-height: 1.4;
         }
 
-        /* Action Buttons */
         .action-row {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        @media (min-width: 480px) {
+            .action-row {
+                flex-direction: row;
+            }
         }
 
         .btn-action {
             flex: 1;
-            min-width: 180px;
-            padding: 12px 16px;
+            padding: 12px 14px;
             border-radius: 8px;
             font-size: 13px;
             font-weight: 700;
@@ -256,12 +406,13 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             border: none;
+            transition: 0.2s;
         }
 
         .btn-download {
-            background: #10b981;
+            background: var(--success);
             color: #ffffff;
         }
         .btn-download:hover { background: #059669; }
@@ -277,56 +428,82 @@
 
 <div class="wrapper">
     <header>
-        <h1>Banner Converter & Upscaler 4m × 1m</h1>
-        <p>Konversi foto ke ukuran spanduk siap cetak tanpa pecah dengan filter penajaman digital</p>
+        <h1>Banner Converter 4m × 1m</h1>
+        <p>Tampilan Responsif (HP & Desktop) • Upscaler Anti Blur • Ukuran Cetak 400 × 100 cm</p>
     </header>
 
     <div class="main-grid">
         <!-- Form Pengaturan -->
         <div class="card">
-            <div class="card-title">1. Pengaturan & Upload</div>
+            <div class="card-title">
+                <span>1. Konfigurasi</span>
+                <span class="badge-mode" id="modeIndicator">Gambar Penuh (4:1)</span>
+            </div>
             
             <div class="form-group">
-                <label>Pilih File Foto</label>
+                <label>Upload Foto / Desain</label>
                 <input type="file" id="fileInput" accept="image/*">
+                <div class="input-desc">JPG, PNG, atau WEBP. Otomatis di-upscale tajam.</div>
             </div>
 
             <div class="form-group">
-                <label>Kualitas / Target DPI Cetak</label>
+                <label>Mode Penempatan Gambar</label>
+                <div class="mode-selector">
+                    <button type="button" class="mode-btn active" data-fit="fill">Penuh (4:1)</button>
+                    <button type="button" class="mode-btn" data-fit="contain">Fit + Blur</button>
+                    <button type="button" class="mode-btn" data-fit="stretch">Stretch Pas</button>
+                    <button type="button" class="mode-btn" data-fit="split">Split Kiri</button>
+                </div>
+            </div>
+
+            <!-- Toggle Tambah Teks -->
+            <div class="toggle-container" id="textToggleBox">
+                <div>
+                    <div class="toggle-label">Tambahkan Teks / Overlay?</div>
+                    <div class="input-desc">Matikan jika banner sudah ada teks lengkap</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="enableTextCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Input Teks -->
+            <div id="textSettingsArea">
+                <div class="form-group">
+                    <label>Label Kategori</label>
+                    <input type="text" id="tagInput" value="LAYANAN PRIMA">
+                </div>
+                <div class="form-group">
+                    <label>Judul Utama</label>
+                    <input type="text" id="titleInput" value="SELAMAT DATANG DI ACARA RESMI">
+                </div>
+                <div class="form-group">
+                    <label>Keterangan Sub-Judul</label>
+                    <input type="text" id="descInput" value="Mewujudkan Pelayanan Profesional dan Terpercaya">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Resolusi Target Cetak</label>
                 <select id="dpiSelect">
-                    <option value="100" selected>100 DPI (Standar Spanduk Outdoor - 15.750 x 3.937 px)</option>
-                    <option value="150">150 DPI (High Quality Indoor - 23.622 x 5.906 px)</option>
-                    <option value="72">72 DPI (Web / Fast Preview - 11.340 x 2.835 px)</option>
+                    <option value="100" selected>100 DPI (Standar Cetak: 15.750 × 3.937 px)</option>
+                    <option value="150">150 DPI (Ultra HD Cetak: 23.622 × 5.906 px)</option>
+                    <option value="72">72 DPI (Preview Cepat: 11.340 × 2.835 px)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Mode Penajaman (Sharpening)</label>
+                <label>Filter Penajaman (Anti-Blur)</label>
                 <select id="sharpenSelect">
-                    <option value="medium" selected>Sedang (Optimal untuk Foto Manusia)</option>
-                    <option value="high">Tinggi (Maksimal untuk Tulisan & Garis)</option>
-                    <option value="none">Tanpa Filter (Asli)</option>
+                    <option value="adaptive" selected>Adaptif Cerdas (Otomatis)</option>
+                    <option value="high">Tinggi (Maksimal untuk teks)</option>
+                    <option value="none">Tanpa Filter</option>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Label Kategori</label>
-                <input type="text" id="tagInput" value="LAYANAN PRIMA">
-            </div>
+            <button class="btn-convert" id="convertBtn" disabled>Mulai Upscale & Konversi</button>
 
-            <div class="form-group">
-                <label>Judul Utama</label>
-                <input type="text" id="titleInput" value="SELAMAT DATANG DI ACARA RESMI">
-            </div>
-
-            <div class="form-group">
-                <label>Keterangan / Sub-Judul</label>
-                <input type="text" id="descInput" value="Mewujudkan Pelayanan Profesional, Modern, dan Terpercaya">
-            </div>
-
-            <button class="btn-convert" id="convertBtn" disabled>Mulai Konversi Spanduk</button>
-
-            <!-- Progress Box -->
             <div class="progress-box" id="progressBox">
                 <div class="progress-text">
                     <span id="progressStatus">Memproses gambar...</span>
@@ -338,45 +515,49 @@
             </div>
         </div>
 
-        <!-- Area Hasil Konversi -->
+        <!-- Hasil Konversi -->
         <div class="results-area">
             <div class="card">
-                <div class="card-title">2. Spesifikasi Hasil Konversi (Cetak 400 × 100 cm)</div>
+                <div class="card-title">
+                    <span>2. Info Spanduk Cetak</span>
+                </div>
                 <div class="stats-badge-grid">
                     <div class="stat-item">
-                        <span>Dimensi Fisik</span>
-                        <strong>4.0 m × 1.0 m</strong>
+                        <span>Ukuran Fisik</span>
+                        <strong>4.0m × 1.0m</strong>
                     </div>
                     <div class="stat-item">
-                        <span>Rasio Kanvas</span>
-                        <strong>4 : 1 (Landscape)</strong>
+                        <span>Rasio</span>
+                        <strong>4:1 (Banner)</strong>
                     </div>
                     <div class="stat-item">
-                        <span>Resolusi Pixel</span>
+                        <span>Resolusi</span>
                         <strong id="resDisplay">15.750 × 3.937 px</strong>
                     </div>
                     <div class="stat-item">
-                        <span>Status Mesin</span>
-                        <strong id="statusDisplay" style="color:#10b981;">Siap Proses</strong>
+                        <span>Status</span>
+                        <strong id="statusDisplay" style="color:#10b981;">Siap Diproses</strong>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">3. Hasil Render & Preview Spanduk</div>
+                <div class="card-title">
+                    <span>3. Hasil Render Spanduk (4:1)</span>
+                </div>
                 <div class="preview-wrapper">
                     <div class="banner-preview-box">
                         <canvas id="previewCanvas"></canvas>
-                        <span id="placeholderTxt" class="placeholder-text">Unggah foto dan klik tombol "Mulai Konversi"</span>
+                        <span id="placeholderTxt" class="placeholder-text">Upload foto di atas lalu klik "Mulai Upscale & Konversi" untuk melihat hasil.</span>
                     </div>
                 </div>
 
-                <div class="action-row" style="margin-top: 16px;">
+                <div class="action-row">
                     <a id="downloadBtn" class="btn-action btn-download" style="display: none;">
-                        💾 Download Hasil Cetak (PNG Full-HD)
+                        💾 Download Hasil (PNG)
                     </a>
                     <button id="printBtn" class="btn-action btn-print" style="display: none;" onclick="window.print()">
-                        🖨️ Cetak / Simpan PDF Spanduk
+                        🖨️ Cetak / PDF
                     </button>
                 </div>
             </div>
@@ -401,12 +582,33 @@
     const printBtn = document.getElementById('printBtn');
     const resDisplay = document.getElementById('resDisplay');
 
+    const enableTextCheck = document.getElementById('enableTextCheck');
+    const textSettingsArea = document.getElementById('textSettingsArea');
+    const modeIndicator = document.getElementById('modeIndicator');
+
+    let currentFitMode = 'fill';
     let loadedImg = null;
 
-    // Hitung resolusi saat opsi DPI diubah
+    enableTextCheck.addEventListener('change', () => {
+        if (enableTextCheck.checked) {
+            textSettingsArea.style.display = 'block';
+            modeIndicator.textContent = 'Gambar + Teks';
+        } else {
+            textSettingsArea.style.display = 'none';
+            modeIndicator.textContent = 'Gambar Penuh (4:1)';
+        }
+    });
+
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentFitMode = this.dataset.fit;
+        });
+    });
+
     dpiSelect.addEventListener('change', () => {
         const dpi = parseInt(dpiSelect.value);
-        // 4 meter = 157.48 inch, 1 meter = 39.37 inch
         const pxW = Math.round(157.48 * dpi);
         const pxH = Math.round(39.37 * dpi);
         resDisplay.textContent = `${pxW.toLocaleString()} × ${pxH.toLocaleString()} px`;
@@ -420,7 +622,8 @@
                 loadedImg = new Image();
                 loadedImg.onload = function() {
                     convertBtn.disabled = false;
-                    convertBtn.textContent = 'Mulai Konversi Spanduk';
+                    convertBtn.textContent = 'Mulai Upscale & Konversi';
+                    document.getElementById('statusDisplay').textContent = `${loadedImg.width} × ${loadedImg.height} px`;
                 };
                 loadedImg.src = evt.target.result;
             };
@@ -428,121 +631,122 @@
         }
     });
 
-    // Jalankan Proses Konversi
     convertBtn.addEventListener('click', async () => {
         if (!loadedImg) return;
 
-        // Tampilkan progress
         progressBox.style.display = 'block';
         convertBtn.disabled = true;
-        updateProgress(20, 'Menyiapkan layout 4m x 1m...');
-
-        await sleep(150);
-
-        // Resolusi kanvas preview internal (skala tajam)
-        const canvasW = 3200;
-        const canvasH = 800;
-        previewCanvas.width = canvasW;
-        previewCanvas.height = canvasH;
-
-        updateProgress(45, 'Menerapkan render resolusi tinggi...');
-        await sleep(150);
-
-        // 1. Background dasar gelap
-        ctx.fillStyle = "#0b172c";
-        ctx.fillRect(0, 0, canvasW, canvasH);
-
-        // 2. Gambar dan Upscale Foto di Sisi Kiri
-        const imgTargetW = canvasW * 0.38;
-        const imgTargetH = canvasH;
-        
-        // Hitung rasio aspek foto agar tidak gepeng
-        const scale = Math.max(imgTargetW / loadedImg.width, imgTargetH / loadedImg.height);
-        const nw = loadedImg.width * scale;
-        const nh = loadedImg.height * scale;
-        const nx = (imgTargetW - nw) / 2;
-        const ny = 0; // Mulai dari atas
-
-        // Aktifkan interpolasi mulus
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(loadedImg, nx, ny, nw, nh);
-
-        // 3. Filter Penajaman (Sharpening / Unsharp Mask)
-        updateProgress(70, 'Mengoptimalkan ketajaman dan kontras...');
-        await sleep(150);
-
-        const sharpenMode = sharpenSelect.value;
-        if (sharpenMode !== 'none') {
-            applySharpenFilter(ctx, 0, 0, imgTargetW, imgTargetH, sharpenMode === 'high' ? 0.35 : 0.20);
-        }
-
-        // 4. Overlay Gradasi Elegan
-        const grad = ctx.createLinearGradient(imgTargetW * 0.5, 0, canvasW, 0);
-        grad.addColorStop(0, "rgba(11, 23, 44, 0.0)");
-        grad.addColorStop(0.2, "rgba(11, 23, 44, 0.85)");
-        grad.addColorStop(0.5, "rgba(11, 23, 44, 0.98)");
-        grad.addColorStop(1, "rgba(11, 23, 44, 1.0)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvasW, canvasH);
-
-        // 5. Render Teks & Tipografi Spanduk
-        updateProgress(85, 'Menyusun tipografi dan elemen spanduk...');
+        updateProgress(15, 'Menyiapkan canvas 4m x 1m...');
         await sleep(100);
 
-        const tagText = document.getElementById('tagInput').value;
-        const titleText = document.getElementById('titleInput').value;
-        const descText = document.getElementById('descInput').value;
+        const targetW = 3200;
+        const targetH = 800;
+        previewCanvas.width = targetW;
+        previewCanvas.height = targetH;
 
-        const textLeft = canvasW * 0.38;
+        updateProgress(40, 'Memproses upscaling definisi tinggi...');
+        await sleep(150);
 
-        // Badge Kategori Emas
-        if (tagText.trim() !== '') {
-            ctx.fillStyle = "#c5a059";
-            const badgeW = ctx.measureText(tagText).width + 80;
-            ctx.beginPath();
-            ctx.roundRect(textLeft, 160, Math.max(badgeW, 160), 40, 6);
-            ctx.fill();
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = "#090d16";
+        ctx.fillRect(0, 0, targetW, targetH);
 
-            ctx.font = "bold 20px 'Segoe UI', Arial, sans-serif";
-            ctx.fillStyle = "#0b172c";
-            ctx.fillText(tagText.toUpperCase(), textLeft + 20, 187);
+        if (currentFitMode === 'fill') {
+            const scale = Math.max(targetW / loadedImg.width, targetH / loadedImg.height);
+            const w = loadedImg.width * scale;
+            const h = loadedImg.height * scale;
+            const x = (targetW - w) / 2;
+            const y = (targetH - h) / 2;
+            ctx.drawImage(loadedImg, x, y, w, h);
+        } else if (currentFitMode === 'stretch') {
+            ctx.drawImage(loadedImg, 0, 0, targetW, targetH);
+        } else if (currentFitMode === 'contain') {
+            ctx.save();
+            ctx.filter = 'blur(20px) brightness(0.5)';
+            ctx.drawImage(loadedImg, -50, -50, targetW + 100, targetH + 100);
+            ctx.restore();
+
+            const scale = Math.min(targetW / loadedImg.width, targetH / loadedImg.height);
+            const w = loadedImg.width * scale;
+            const h = loadedImg.height * scale;
+            const x = (targetW - w) / 2;
+            const y = (targetH - h) / 2;
+            ctx.drawImage(loadedImg, x, y, w, h);
+        } else if (currentFitMode === 'split') {
+            const imgTargetW = targetW * 0.38;
+            const scale = Math.max(imgTargetW / loadedImg.width, targetH / loadedImg.height);
+            const w = loadedImg.width * scale;
+            const h = loadedImg.height * scale;
+            const x = (imgTargetW - w) / 2;
+            const y = 0;
+            ctx.drawImage(loadedImg, x, y, w, h);
+
+            const grad = ctx.createLinearGradient(imgTargetW * 0.5, 0, targetW, 0);
+            grad.addColorStop(0, "rgba(9, 13, 22, 0.0)");
+            grad.addColorStop(0.2, "rgba(9, 13, 22, 0.85)");
+            grad.addColorStop(0.5, "rgba(9, 13, 22, 0.98)");
+            grad.addColorStop(1, "rgba(9, 13, 22, 1.0)");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, targetW, targetH);
         }
 
-        // Judul Utama
-        ctx.font = "800 64px 'Segoe UI', Arial, sans-serif";
-        ctx.fillStyle = "#ffffff";
-        ctx.fillText(titleText, textLeft, 290);
+        updateProgress(70, 'Menerapkan filter anti-blur...');
+        await sleep(150);
 
-        // Keterangan Sub-Judul
-        ctx.font = "300 28px 'Segoe UI', Arial, sans-serif";
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillText(descText, textLeft, 350);
+        const sharpen = sharpenSelect.value;
+        if (sharpen !== 'none') {
+            const strength = sharpen === 'high' ? 0.35 : 0.20;
+            applySharpenFilter(ctx, 0, 0, targetW, targetH, strength);
+        }
 
-        // Ornamen Kanan (Tanggal/Tahun)
-        ctx.strokeStyle = "rgba(197, 160, 89, 0.4)";
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(canvasW - 420, 200);
-        ctx.lineTo(canvasW - 420, 360);
-        ctx.stroke();
+        if (enableTextCheck.checked) {
+            updateProgress(85, 'Menyematkan tipografi...');
+            await sleep(100);
 
-        ctx.font = "bold 36px 'Segoe UI', Arial, sans-serif";
-        ctx.fillStyle = "#c5a059";
-        ctx.fillText("TAHUN 2026", canvasW - 380, 260);
+            const tagText = document.getElementById('tagInput').value;
+            const titleText = document.getElementById('titleInput').value;
+            const descText = document.getElementById('descInput').value;
 
-        ctx.font = "400 24px 'Segoe UI', Arial, sans-serif";
-        ctx.fillStyle = "#94a3b8";
-        ctx.fillText("Indonesia • Resmi", canvasW - 380, 310);
+            if (currentFitMode !== 'split') {
+                const textGrad = ctx.createLinearGradient(0, targetH * 0.4, 0, targetH);
+                textGrad.addColorStop(0, "rgba(0, 0, 0, 0.0)");
+                textGrad.addColorStop(1, "rgba(0, 0, 0, 0.85)");
+                ctx.fillStyle = textGrad;
+                ctx.fillRect(0, targetH * 0.3, targetW, targetH * 0.7);
+            }
 
-        // Selesai
-        updateProgress(100, 'Konversi Selesai!');
+            const textLeft = currentFitMode === 'split' ? targetW * 0.38 : 100;
+
+            if (tagText.trim() !== '') {
+                ctx.fillStyle = "#c5a059";
+                ctx.beginPath();
+                ctx.roundRect(textLeft, currentFitMode === 'split' ? 160 : 420, 200, 44, 6);
+                ctx.fill();
+
+                ctx.font = "bold 20px -apple-system, sans-serif";
+                ctx.fillStyle = "#090d16";
+                ctx.fillText(tagText.toUpperCase(), textLeft + 20, currentFitMode === 'split' ? 190 : 450);
+            }
+
+            ctx.font = "800 58px -apple-system, sans-serif";
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = "rgba(0,0,0,0.8)";
+            ctx.shadowBlur = 10;
+            ctx.fillText(titleText, textLeft, currentFitMode === 'split' ? 290 : 540);
+
+            ctx.font = "300 28px -apple-system, sans-serif";
+            ctx.fillStyle = "#e2e8f0";
+            ctx.fillText(descText, textLeft, currentFitMode === 'split' ? 350 : 600);
+            ctx.shadowBlur = 0;
+        }
+
+        updateProgress(100, 'Selesai! Gambar siap diunduh.');
         placeholderTxt.style.display = 'none';
 
-        // Siapkan Tombol Download
         const dataUrl = previewCanvas.toDataURL('image/png', 1.0);
         downloadBtn.href = dataUrl;
-        downloadBtn.download = `Spanduk_4mx1m_Hasil_Konversi_${Date.now()}.png`;
+        downloadBtn.download = `Spanduk_4mx1m_HD_${Date.now()}.png`;
         downloadBtn.style.display = 'inline-flex';
         printBtn.style.display = 'inline-flex';
 
@@ -559,7 +763,6 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Filter Penajaman Kernel Matriks Konvolusi
     function applySharpenFilter(context, x, y, w, h, strength) {
         const imgData = context.getImageData(x, y, w, h);
         const data = imgData.data;
@@ -574,7 +777,6 @@
                 const left = copy[i + c - 4];
                 const right = copy[i + c + 4];
 
-                // Kernel Laplasian Sharpening
                 const laplace = (4 * center) - (up + down + left + right);
                 data[i + c] = Math.min(255, Math.max(0, center + (laplace * strength)));
             }
