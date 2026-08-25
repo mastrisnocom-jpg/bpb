@@ -2322,30 +2322,23 @@
         }
 
         function updateFriendNotificationBadge() {
-    const headerBadge = document.getElementById('headerFriendBadge');
-    const sideBadge = document.getElementById('sideFriendBadge');
-    const totalMutual = mutualFriends.length;
-
-    // Ambil jumlah teman yang sudah pernah dilihat dari memori browser
-    const lastSeenCount = parseInt(localStorage.getItem('last_seen_friends_count') || '0', 10);
-    const unreadCount = Math.max(0, totalMutual - lastSeenCount);
-
-    if (unreadCount > 0) {
-        const countText = unreadCount > 99 ? '99+' : unreadCount;
-        if (headerBadge) {
-            headerBadge.innerText = countText;
-            headerBadge.classList.remove('hidden');
+            const headerBadge = document.getElementById('headerFriendBadge');
+            const sideBadge = document.getElementById('sideFriendBadge');
+            const count = mutualFriends.length;
+            if (count > 0) {
+                if (headerBadge) {
+                    headerBadge.innerText = count > 99 ? '99+' : count;
+                    headerBadge.classList.remove('hidden');
+                }
+                if (sideBadge) {
+                    sideBadge.innerText = count > 99 ? '99+' : count;
+                    sideBadge.classList.remove('hidden');
+                }
+            } else {
+                if (headerBadge) headerBadge.classList.add('hidden');
+                if (sideBadge) sideBadge.classList.add('hidden');
+            }
         }
-        if (sideBadge) {
-            sideBadge.innerText = countText;
-            sideBadge.classList.remove('hidden');
-        }
-    } else {
-        if (headerBadge) headerBadge.classList.add('hidden');
-        if (sideBadge) sideBadge.classList.add('hidden');
-    }
-}
-
 
         async function openGlobalChatModal() {
             isGlobalChatOpen = true;
@@ -2502,20 +2495,13 @@
         }
 
         async function fetchFollowRelations() {
-    if (!currentUser) return;
-    const { data, error } = await _supabase.from('user_follows').select('*'); 
-    if (error || !data) return;
-    myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
-    myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
-    mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
-    
-    // Update badge hanya jika modal lonceng sedang tertutup
-    const isModalOpen = !document.getElementById('followsModal').classList.contains('hidden');
-    if (!isModalOpen) {
-        updateFriendNotificationBadge();
-    }
-}
-
+            if (!currentUser) return;
+            const { data, error } = await _supabase.from('user_follows').select('*'); if (error || !data) return;
+            myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
+            myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
+            mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
+            updateFriendNotificationBadge();
+        }
 
         function setupFollowsRealtime() {
             if (followsSubscription) _supabase.removeChannel(followsSubscription);
@@ -2674,31 +2660,12 @@
                 .subscribe();
         }
 
-                async function openFollowsModal() {
+        async function openFollowsModal() {
             setActiveTab('tabFriends');
-
-            // Simpan riwayat bahwa lonceng sudah dilihat agar tidak muncul lagi saat refresh
-            localStorage.setItem('last_seen_friends_count', mutualFriends.length.toString());
-
-            // Sembunyikan badge
-            const headerBadge = document.getElementById('headerFriendBadge');
-            const sideBadge = document.getElementById('sideFriendBadge');
-            if (headerBadge) headerBadge.classList.add('hidden');
-            if (sideBadge) sideBadge.classList.add('hidden');
-
             document.getElementById('followsModal').classList.remove('hidden');
             document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
-            await fetchFollowRelations(); 
-            renderUsersFollowModal();
+            await fetchFollowRelations(); renderUsersFollowModal();
         }
-
-
-    document.getElementById('followsModal').classList.remove('hidden');
-    document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
-    await fetchFollowRelations(); 
-    renderUsersFollowModal();
-}
-
 
         function closeFollowsModal() { 
             document.getElementById('followsModal').classList.add('hidden'); 
