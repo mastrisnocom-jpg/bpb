@@ -144,7 +144,7 @@
 
                     <button onclick="openEarningsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
                         <svg class="w-4 h-4 fill-current text-amber-400" viewBox="0 0 24 24">
-                            <path d="M21.9 8.2l-1.5-4.5A2 2 0 0 0 18.5 2h-13a2 2 0 0 0-1.9 1.7L2.1 8.2a3 3 0 0 0 2.9 3.8h.2A3 3 0 0 0 8 9.5a3 3 0 0 0 5.6 0 3 3 0 0 0 5.6 0 3 3 0 0 0 2.7 2.5h.2a3 3 0 0 0 2.8-3.8zM4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6c-.3.1-.7.1-1 .1a3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3 1.4c-.3 0-.7 0-1-.1z"/>
+                            <path d="M21.9 8.2l-1.5-4.5A2 2 0 0 0 18.5 2h-13a2 2 0 0 0-1.9 1.7L2.1 8.2a3 3 0 0 0 2.9 3.8h.2A3 3 0 0 0 8 9.5a3 3 0 0 0 5.6 0 3 3 0 0 0 5.6 0 3 3 0 0 0 2.7 2.5h.2a3 3 0 0 0 2.8-3.8zM4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6c-.3.1-.7.1-1 .1a3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4c-.3 0-.7 0-1-.1z"/>
                         </svg>
                         Dompet Insentif
                     </button>
@@ -202,10 +202,9 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             
-            <!-- HEADER PERSIS DENGAN GAMBAR (IKON TEPAT & LOGO BINAYASA) -->
+            <!-- HEADER -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 
-                <!-- TOP BAR -->
                 <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
                     <div class="flex items-center gap-2.5">
                         <button onclick="toggleSidebarMenu()" class="w-9 h-9 flex items-center justify-center text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition active:scale-95" title="Menu Sidebar">
@@ -240,7 +239,6 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW (HOME, VIDEO/IMPORT, STORE/WALLET, CHART, BELL, AVATAR "m") -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-1 md:px-6">
                     <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-3 fb-tab-btn tab-active text-xl transition active:scale-95" title="Beranda Jadwal">
                         <i class="fa-solid fa-house"></i>
@@ -254,7 +252,7 @@
 
                     <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-3 fb-tab-btn text-xl text-slate-600 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Dompet Insentif">
                         <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                            <path d="M21.9 8.2l-1.5-4.5A2 2 0 0 0 18.5 2h-13a2 2 0 0 0-1.9 1.7L2.1 8.2a3 3 0 0 0 2.9 3.8h.2A3 3 0 0 0 8 9.5a3 3 0 0 0 5.6 0 3 3 0 0 0 5.6 0 3 3 0 0 0 2.7 2.5h.2a3 3 0 0 0 2.8-3.8zM4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6c-.3.1-.7.1-1 .1a3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3 1.4c-.3 0-.7 0-1-.1z"/>
+                            <path d="M21.9 8.2l-1.5-4.5A2 2 0 0 0 18.5 2h-13a2 2 0 0 0-1.9 1.7L2.1 8.2a3 3 0 0 0 2.9 3.8h.2A3 3 0 0 0 8 9.5a3 3 0 0 0 5.6 0 3 3 0 0 0 5.6 0 3 3 0 0 0 2.7 2.5h.2a3 3 0 0 0 2.8-3.8zM4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6c-.3.1-.7.1-1 .1a3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4 3.9 3.9 0 0 1-3-1.4 3.9 3.9 0 0 1-3 1.4c-.3 0-.7 0-1-.1z"/>
                         </svg>
                     </button>
 
@@ -671,233 +669,6 @@
         </div>
     </div>
 
-    <!-- MODAL FORM PENARIKAN -->
-    <div id="withdrawModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[92] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-1.5">
-                    <i class="fa-brands fa-whatsapp text-emerald-500 text-base"></i>
-                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Form Penarikan Insentif</h3>
-                </div>
-                <button onclick="closeWithdrawModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <form id="formWithdrawRequest" class="space-y-2.5 text-xs overflow-y-auto pr-1 flex-1">
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Saldo Siap Tarik</label>
-                    <input type="text" id="wd-available-balance" disabled class="w-full bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Jumlah Penarikan (Rp)</label>
-                    <input type="number" id="wd-amount" min="10000" step="1000" required oninput="calculateWithdrawFee()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                    <span id="wd-min-info" class="text-[9px] text-slate-400 block mt-0.5">* Minimal Rp 10.000</span>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tujuan Bank / E-Wallet</label>
-                    <select id="wd-method" required onchange="calculateWithdrawFee()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                        <option value="BANK_BTN">🏦 Bank BTN (Gratis Admin Rp 0)</option>
-                        <option value="BANK_BCA">🏦 Bank BCA</option>
-                        <option value="BANK_BRI">🏦 Bank BRI</option>
-                        <option value="BANK_MANDIRI">🏦 Bank Mandiri</option>
-                        <option value="BANK_BNI">🏦 Bank BNI</option>
-                        <option value="BANK_BSI">🏦 Bank Syariah Indonesia (BSI)</option>
-                        <option value="EWALLET_DANA">📱 DANA (E-Wallet)</option>
-                        <option value="EWALLET_GOPAY">📱 GoPay (E-Wallet)</option>
-                        <option value="EWALLET_OVO">📱 OVO (E-Wallet)</option>
-                        <option value="EWALLET_SHOPEEPAY">📱 ShopeePay (E-Wallet)</option>
-                        <option value="EWALLET_LINKAJA">📱 LinkAja (E-Wallet)</option>
-                        <option value="LAINNYA">💳 Bank / E-Wallet Lainnya</option>
-                    </select>
-                </div>
-
-                <div id="wd-other-method-container" class="hidden">
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Bank/E-Wallet Lainnya</label>
-                    <input type="text" id="wd-other-method-name" placeholder="Contoh: Bank Jatim / Seabank" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nomor Rekening / No. HP E-Wallet</label>
-                    <input type="text" id="wd-account-number" required placeholder="Contoh: 001234567890 / 08123456789" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500 font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Pemilik Rekening / Akun</label>
-                    <input type="text" id="wd-account-name" required placeholder="Nama sesuai buku tabungan / akun" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
-                    <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
-                        <span>Nominal Tarik:</span>
-                        <span id="wd-calc-nominal" class="font-bold text-slate-800 dark:text-white">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
-                        <span>Biaya Admin:</span>
-                        <span id="wd-calc-fee" class="font-bold text-rose-500">Rp 0</span>
-                    </div>
-                    <div class="flex justify-between text-xs font-extrabold pt-1 border-t border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400">
-                        <span>Total Bersih Diterima:</span>
-                        <span id="wd-calc-net">Rp 0</span>
-                    </div>
-                </div>
-
-                <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[9.5px] leading-snug">
-                    <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484). Kirimkan bukti screenshot dashboard melalui chat!
-                </div>
-
-                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" id="btnSubmitWithdraw" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL EDIT NAMA USER (SUPER ADMIN) -->
-    <div id="editUserNameModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[95] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-xs p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down">
-            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
-                <h3 class="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-user-pen text-amber-500"></i> Edit Nama Petugas
-                </h3>
-                <button onclick="closeEditUserNameModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-            <form id="formEditUserName" class="space-y-3 text-xs">
-                <input type="hidden" id="edit-user-target-id">
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Email User</label>
-                    <input type="text" id="edit-user-email-display" disabled class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-500">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan Petugas</label>
-                    <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
-                    <i class="fa-solid fa-circle-check mr-1"></i> Setelah disimpan, nama ini akan otomatis terisi saat user menambahkan tugas baru.
-                </div>
-                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="flex-1 bg-[#1877f2] hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition">Simpan Nama</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL SETTING ANGGARAN, SKEMA POIN & PENARIKAN (SUPER ADMIN) -->
-    <div id="budgetConfigModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[90] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 animate-slide-down flex flex-col max-h-[90vh]">
-            <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-1.5">
-                    <i class="fa-solid fa-coins text-amber-500"></i>
-                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pengaturan Anggaran & Penarikan</h3>
-                </div>
-                <button onclick="closeBudgetConfigModal()" class="text-slate-400 hover:text-slate-600">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <form id="formBudgetConfig" class="space-y-3 text-xs overflow-y-auto pr-1 flex-1">
-                <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Total Anggaran Bulanan (Rp)</label>
-                    <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tarif / 100 Poin (Rp)</label>
-                        <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Max Tugas/Hari</label>
-                        <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
-                    <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Aturan Penarikan & Fee Admin</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Biaya Admin Non-BTN (Rp)</span>
-                            <input type="number" id="inputAdminFeeNonBtn" min="0" step="500" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Minimal Penarikan (Rp)</span>
-                            <input type="number" id="inputMinWithdrawal" min="1000" step="1000" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
-                    <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Penyesuaian Nilai Poin</label>
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🌅 Buat &lt;06:00</span>
-                            <input type="number" id="inputPointsEarly" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">✅ Selesai Tepat Jam</span>
-                            <input type="number" id="inputPointsOnTime" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚡ Status Proses</span>
-                            <input type="number" id="inputPointsProcess" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚠️ Selesai Lewat Jam</span>
-                            <input type="number" id="inputPointsLate" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">❌ Expired (Lewat Hari)</span>
-                            <input type="number" id="inputPointsExpired" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                        <div>
-                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🔥 Streak 5 Hari</span>
-                            <input type="number" id="inputPointsStreak" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button type="button" onclick="closeBudgetConfigModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2 rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl text-xs transition">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL PUSAT NOTIFIKASI -->
-    <div id="notificationsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-4 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
-            <div class="flex justify-between items-center pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Pusat Notifikasi</h3>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="clearAllNotifications()" class="text-[10px] text-rose-500 hover:underline font-bold">Bersihkan</button>
-                    <button onclick="closeNotificationsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                        <i class="fa-solid fa-xmark text-sm"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div id="notificationsList" class="flex-1 overflow-y-auto space-y-2 py-1 pr-1 min-h-[160px] max-h-[320px] text-xs"></div>
-
-            <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 mt-auto text-center">
-                <button onclick="closeNotificationsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs">Tutup</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL RELASI FOLLOW -->
     <div id="followsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
@@ -1131,7 +902,7 @@
         }
 
         // ====================================================
-        // GLOBAL CHAT TIM
+        // GLOBAL CHAT TIM (MESSENGER POPUP)
         // ====================================================
         async function openGlobalChatModal() {
             document.getElementById('globalChatModal').classList.remove('hidden');
@@ -1278,6 +1049,1311 @@
                 if (sideBadge) sideBadge.classList.add('hidden');
             }
         }
+
+        // ====================================================
+        // WATERMARK & DOKUMENTASI SELESAI
+        // ====================================================
+        async function processAndWatermarkImage(file, userName) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = async () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width, height = img.height;
+                        const MAX_DIMENSION = 1280;
+                        if (width > height && width > MAX_DIMENSION) { height = Math.round((height * MAX_DIMENSION) / width); width = MAX_DIMENSION; } 
+                        else if (height > MAX_DIMENSION) { width = Math.round((width * MAX_DIMENSION) / height); height = MAX_DIMENSION; }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const now = new Date();
+                        const timeStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        const bannerHeight = Math.max(48, Math.round(height * 0.08));
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.68)'; ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
+                        ctx.fillStyle = '#1877f2'; ctx.fillRect(0, height - bannerHeight, width, 3);
+                        ctx.fillStyle = '#ffffff'; const fontSize = Math.max(12, Math.round(bannerHeight * 0.3)); ctx.font = `bold ${fontSize}px sans-serif`;
+                        ctx.fillText(`👤 Petugas: ${userName} | 🏢 ${UNIT_NAME}`, 14, height - (bannerHeight * 0.55));
+                        ctx.font = `normal ${Math.round(fontSize * 0.85)}px sans-serif`; ctx.fillStyle = '#e2e8f0';
+                        ctx.fillText(`🕒 Waktu: ${timeStr}`, 14, height - (bannerHeight * 0.18));
+
+                        let quality = 0.82, blob = null; const targetMaxBytes = 200 * 1024;
+                        const getBlob = (q) => new Promise((res) => canvas.toBlob((b) => res(b), 'image/jpeg', q));
+                        blob = await getBlob(quality);
+                        while (blob && blob.size > targetMaxBytes && quality > 0.2) { quality -= 0.1; blob = await getBlob(quality); }
+                        resolve(blob);
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+                reader.onerror = (e) => reject(e);
+            });
+        }
+
+        async function uploadEvidenceImage(blob, prefix = 'evidence') {
+            if (!blob) return null;
+            const fileName = `${prefix}_${currentUser.id}_${Date.now()}.jpg`;
+            const filePath = `evidences/${fileName}`;
+            const { error } = await _supabase.storage.from('task-evidences').upload(filePath, blob, { contentType: 'image/jpeg', upsert: true });
+            if (error) throw error;
+            return _supabase.storage.from('task-evidences').getPublicUrl(filePath).data?.publicUrl || null;
+        }
+
+        function showLargeImage(url, title = "Dokumentasi Kerja") {
+            if (!url) return;
+            document.getElementById('previewImageTitle').innerText = title;
+            document.getElementById('previewImageLarge').src = url;
+            document.getElementById('imagePreviewModal').classList.remove('hidden');
+        }
+
+        function renderPointSchemeList() {
+            const list = document.getElementById('pointSchemeList');
+            if (!list) return;
+
+            if (isSuperAdmin) { document.getElementById('btnEditPointScheme')?.classList.remove('hidden'); } 
+            else { document.getElementById('btnEditPointScheme')?.classList.add('hidden'); }
+
+            list.innerHTML = `
+                <li class="flex items-center justify-between text-[#1877f2] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
+                    <span class="font-bold">🎉 Pendaftar Baru (Akun Google)</span><span class="font-extrabold">+${budgetSettings.pointsNewUser} Poin</span>
+                </li>
+                <li class="flex items-center justify-between"><span>🤝 Mutual Follow Teman</span><span class="font-extrabold text-[#1877f2]">+${budgetSettings.pointsMutual} Poin/Relasi</span></li>
+                <li class="flex items-center justify-between"><span>📷 Upload Foto Kerja (Before/After)</span><span class="font-extrabold text-emerald-500">+${budgetSettings.pointsPhoto} Poin</span></li>
+                <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
+                <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
+                <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin (1x/tugas)</span></li>
+                <li class="flex items-center justify-between text-slate-500 italic"><span>🛠️ Selesai Susulan (Expired)</span><span class="font-bold">0 Poin (Lunas Hutang)</span></li>
+                <li class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[9.5px] text-amber-600 dark:text-amber-400"><span>💳 Rekening Bank BTN</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">Bebas Biaya Admin</span></li>
+            `;
+        }
+
+        async function loadBudgetSettings() {
+            try {
+                const { data, error } = await _supabase.from('app_config').select('*');
+                if (!error && data) {
+                    const budgetRow = data.find(r => r.id === 'budget_settings');
+                    if (budgetRow && budgetRow.config_data) budgetSettings = Object.assign(budgetSettings, budgetRow.config_data);
+                    const profileRow = data.find(r => r.id === 'user_profiles');
+                    if (profileRow && profileRow.config_data) userProfilesMap = profileRow.config_data;
+                }
+            } catch (e) {}
+            renderPointSchemeList();
+        }
+
+        function setupAppConfigRealtime() {
+            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            appConfigSubscription = _supabase.channel('public:app_config')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
+                    if (payload.new && payload.new.id === 'budget_settings') {
+                        budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
+                        renderPointSchemeList(); calculateAndRenderEarnings();
+                    }
+                }).subscribe();
+        }
+
+        function openBudgetConfigModal() {
+            if (!isSuperAdmin) return;
+            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
+            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
+            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+            document.getElementById('inputAdminFeeNonBtn').value = budgetSettings.adminFeeNonBtn || 2500;
+            document.getElementById('inputMinWithdrawal').value = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
+            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
+            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
+            document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
+            document.getElementById('inputPointsExpired').value = Math.abs(budgetSettings.pointsExpired);
+            document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
+            document.getElementById('budgetConfigModal').classList.remove('hidden');
+        }
+
+        function closeBudgetConfigModal() { document.getElementById('budgetConfigModal').classList.add('hidden'); }
+
+        document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const newConfig = {
+                monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
+                ratePerTask: parseInt(document.getElementById('inputRatePerTask').value) || 10,
+                maxDailyTasks: parseInt(document.getElementById('inputMaxDailyTasks').value) || 5,
+                adminFeeNonBtn: parseInt(document.getElementById('inputAdminFeeNonBtn').value) || 2500,
+                minWithdrawal: parseInt(document.getElementById('inputMinWithdrawal').value) || 10000,
+                pointsEarly: parseInt(document.getElementById('inputPointsEarly').value) || 100,
+                pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
+                pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
+                pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
+                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || 50,
+                pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200,
+                pointsNewUser: budgetSettings.pointsNewUser, pointsMutual: budgetSettings.pointsMutual, pointsPhoto: budgetSettings.pointsPhoto, pointsPerbaikan: budgetSettings.pointsPerbaikan, pointsComment: budgetSettings.pointsComment
+            };
+            const { error } = await _supabase.from('app_config').upsert({ id: 'budget_settings', config_data: newConfig, updated_at: new Date().toISOString() });
+            if (!error) { budgetSettings = Object.assign(budgetSettings, newConfig); showToast("Pengaturan disimpan!"); closeBudgetConfigModal(); renderPointSchemeList(); calculateAndRenderEarnings(); } 
+            else { showToast("Gagal menyimpan: " + error.message); }
+        });
+
+        function calculateAndRenderEarnings() {
+            const currentYearMonth = todayStr.slice(0, 7);
+            const userEarningsMap = {};
+
+            globalTasks.forEach(t => {
+                const uid = t.user_id;
+                const taskDateStr = t.tanggal;
+                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
+
+                const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+                if (!userEarningsMap[uid]) {
+                    userEarningsMap[uid] = {
+                        userId: uid, 
+                        nama: getUserDisplayName(uid, t.user_email, t.nama), 
+                        email: t.user_email || '',
+                        dailyCount: {}, 
+                        activeDates: new Set(), 
+                        points: 0, 
+                        eligibleTasks: 0,
+                        earlyBirdBonus: 0, 
+                        streakBonus: 0, 
+                        extraBonus: 0, 
+                        debtPoints: 0,
+                        expiredTasksCount: 0,
+                        totalEarning: 0,
+                        perbaikanCount: {}
+                    };
+                }
+
+                if (!userEarningsMap[uid].dailyCount[taskDateStr]) {
+                    userEarningsMap[uid].dailyCount[taskDateStr] = 0;
+                    userEarningsMap[uid].perbaikanCount[taskDateStr] = 0;
+                }
+
+                if (userEarningsMap[uid].dailyCount[taskDateStr] < budgetSettings.maxDailyTasks) {
+                    userEarningsMap[uid].dailyCount[taskDateStr]++;
+                    userEarningsMap[uid].eligibleTasks++;
+
+                    const isiTugas = (t.tugas || '').toLowerCase();
+                    const isiKet = (t.keterangan || '').toLowerCase();
+                    if (isiTugas.includes('#perbaikan') || isiKet.includes('#perbaikan')) {
+                        if (userEarningsMap[uid].perbaikanCount[taskDateStr] < 5) {
+                            userEarningsMap[uid].perbaikanCount[taskDateStr]++;
+                            userEarningsMap[uid].extraBonus += budgetSettings.pointsPerbaikan;
+                        }
+                    }
+
+                    if (t.foto_sebelum && t.foto_sesudah) {
+                        userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
+                    }
+
+                    if (isCreatedBefore6AM(t)) {
+                        userEarningsMap[uid].points += budgetSettings.pointsEarly;
+                        userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
+                    }
+
+                    if (t.status === 'Selesai') {
+                        const isLate = isCompletedLate(t);
+                        userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
+                        userEarningsMap[uid].activeDates.add(taskDateStr);
+                    } else if (t.status === 'Proses') {
+                        userEarningsMap[uid].points += budgetSettings.pointsProcess;
+                        userEarningsMap[uid].activeDates.add(taskDateStr);
+                    } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
+                        const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
+                        userEarningsMap[uid].debtPoints += penaltyVal;
+                        userEarningsMap[uid].expiredTasksCount++;
+                    }
+                }
+            });
+
+            let totalTeamBudgetUsed = 0;
+
+            Object.keys(userEarningsMap).forEach(uid => {
+                const u = userEarningsMap[uid];
+                
+                if (uid === currentUser?.id) {
+                    u.extraBonus += budgetSettings.pointsNewUser;
+                    u.extraBonus += (mutualFriends.length * budgetSettings.pointsMutual);
+                }
+
+                if (u.activeDates.size >= 5) {
+                    u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
+                }
+
+                const grossPoints = u.points + u.streakBonus + u.extraBonus;
+                const netPoints = Math.max(0, grossPoints - u.debtPoints);
+
+                u.grossPoints = grossPoints;
+                u.totalPoints = netPoints;
+                u.totalEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
+                totalTeamBudgetUsed += u.totalEarning;
+            });
+
+            const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+            userRanksMap = {};
+            sortedUsers.forEach((u, index) => {
+                if (index < 3 && u.totalPoints > 0) {
+                    userRanksMap[u.userId] = index + 1;
+                }
+            });
+
+            const myData = userEarningsMap[currentUser?.id] || { 
+                totalPoints: budgetSettings.pointsNewUser, 
+                grossPoints: budgetSettings.pointsNewUser,
+                points: 0, 
+                earlyBirdBonus: 0, 
+                streakBonus: 0, 
+                eligibleTasks: 0, 
+                totalEarning: (budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask, 
+                extraBonus: budgetSettings.pointsNewUser,
+                debtPoints: 0,
+                expiredTasksCount: 0
+            };
+            
+            document.getElementById('myEarningsBadge').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
+
+            return { userEarningsMap, totalTeamBudgetUsed, myData };
+        }
+
+        async function fetchWithdrawalsSupabase() {
+            let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
+            const { data, error } = await query;
+            if (!error && data) { globalWithdrawals = data; renderWithdrawalsHistory(); }
+        }
+
+        function setupWithdrawalsRealtime() {
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription);
+            withdrawalsSubscription = _supabase.channel('public:penarikan_insentif')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { await fetchWithdrawalsSupabase(); })
+                .subscribe();
+        }
+
+        function renderWithdrawalsHistory() {
+            const myListContainer = document.getElementById('myWithdrawalsList');
+            const adminListContainer = document.getElementById('adminWithdrawalsList');
+            const myBadge = document.getElementById('myWithdrawalBadge');
+
+            const myWithdrawals = globalWithdrawals.filter(w => w.user_id === currentUser?.id);
+            if (myBadge) myBadge.innerText = `${myWithdrawals.length} Data`;
+
+            if (myListContainer) {
+                myListContainer.innerHTML = '';
+                if (myWithdrawals.length === 0) myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
+                else {
+                    myWithdrawals.forEach(w => {
+                        let statusColor = 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300';
+                        let statusIcon = 'fa-hourglass-half';
+                        let statusText = w.status;
+
+                        if (w.status === 'Sukses') {
+                            statusColor = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300';
+                            statusIcon = 'fa-check-double';
+                            statusText = 'Telah Dibayar ✅';
+                        } else if (w.status === 'Ditolak') {
+                            statusColor = 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300';
+                            statusIcon = 'fa-xmark';
+                        }
+
+                        const item = document.createElement('div');
+                        item.className = 'p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5';
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-bold">
+                                <span class="text-slate-800 dark:text-white">Rp ${Number(w.nominal).toLocaleString('id-ID')}</span>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] border font-extrabold ${statusColor}">
+                                    <i class="fa-solid ${statusIcon} mr-0.5"></i> ${statusText}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between text-[9px] text-slate-400 mt-1">
+                                <span class="truncate">${w.metode_pembayaran} &bull; ${w.nomor_rekening}</span>
+                                <span>${new Date(w.created_at).toLocaleDateString('id-ID')}</span>
+                            </div>
+                            ${w.biaya_admin > 0 ? `<p class="text-[8.5px] text-rose-500 font-semibold mt-0.5">Biaya Admin: Rp ${Number(w.biaya_admin).toLocaleString('id-ID')} &bull; Diterima: Rp ${Number(w.total_diterima).toLocaleString('id-ID')}</p>` : `<p class="text-[8.5px] text-emerald-600 font-semibold mt-0.5">Bebas Biaya Admin (BTN)</p>`}
+                        `;
+                        myListContainer.appendChild(item);
+                    });
+                }
+            }
+
+            if (isSuperAdmin && adminListContainer) {
+                adminListContainer.innerHTML = '';
+                if (globalWithdrawals.length === 0) adminListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan.</div>';
+                else {
+                    globalWithdrawals.forEach(w => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 text-[10px] space-y-1 mb-2';
+                        const isPending = w.status === 'Pending';
+                        
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-extrabold">
+                                <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Petugas'}</span>
+                                <span class="px-1.5 py-0.5 rounded text-[8.5px] ${w.status === 'Sukses' ? 'bg-emerald-500 text-white' : (w.status === 'Ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950')} font-extrabold">${w.status === 'Sukses' ? 'Telah Dibayar ✅' : w.status}</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300"><b>Tujuan:</b> ${w.metode_pembayaran} - ${w.nomor_rekening} a.n <b>${w.nama_pemilik}</b></p>
+                            <div class="flex items-center justify-between text-slate-500">
+                                <span>Nominal: <b>Rp ${Number(w.nominal).toLocaleString('id-ID')}</b></span>
+                                <span>Admin: <b class="text-rose-500">Rp ${Number(w.biaya_admin).toLocaleString('id-ID')}</b></span>
+                                <span>Bersih: <b class="text-emerald-600">Rp ${Number(w.total_diterima).toLocaleString('id-ID')}</b></span>
+                            </div>
+                            ${isPending ? `
+                                <div class="flex gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Sukses')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Setujui & Bayar</button>
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Ditolak')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Tolak</button>
+                                </div>
+                            ` : ''}
+                        `;
+                        adminListContainer.appendChild(item);
+                    });
+                }
+            }
+        }
+
+        async function updateWithdrawalStatus(id, newStatus) {
+            if (!confirm(`Ubah status penarikan ini menjadi ${newStatus}?`)) return;
+            const { error } = await _supabase.from('penarikan_insentif').update({ status: newStatus }).eq('id', id);
+            if (!error) { showToast(`Status penarikan diubah: ${newStatus}`); fetchWithdrawalsSupabase(); } 
+            else { showToast(`Gagal: ${error.message}`); }
+        }
+
+        function openWithdrawModal() {
+            if (!cachedMyEarningsData || cachedMyEarningsData.totalEarning < (budgetSettings.minWithdrawal || 10000)) {
+                return showToast(`Saldo minimal Rp ${(budgetSettings.minWithdrawal || 10000).toLocaleString('id-ID')}`);
+            }
+            document.getElementById('wd-available-balance').value = `Rp ${cachedMyEarningsData.totalEarning.toLocaleString('id-ID')}`;
+            document.getElementById('wd-amount').value = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').max = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').min = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('wd-min-info').innerText = `* Minimal penarikan Rp ${(budgetSettings.minWithdrawal || 10000).toLocaleString('id-ID')}`;
+            document.getElementById('wd-account-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            calculateWithdrawFee();
+            document.getElementById('withdrawModal').classList.remove('hidden');
+        }
+
+        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
+
+        function calculateWithdrawFee() {
+            const method = document.getElementById('wd-method').value;
+            const otherContainer = document.getElementById('wd-other-method-container');
+            if (method === 'LAINNYA') otherContainer.classList.remove('hidden'); else otherContainer.classList.add('hidden');
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            let fee = (method !== 'BANK_BTN') ? (budgetSettings.adminFeeNonBtn || 2500) : 0;
+            const net = Math.max(0, amount - fee);
+            document.getElementById('wd-calc-nominal').innerText = `Rp ${amount.toLocaleString('id-ID')}`;
+            document.getElementById('wd-calc-fee').innerText = fee === 0 ? `Gratis (Rp 0)` : `Rp ${fee.toLocaleString('id-ID')}`;
+            document.getElementById('wd-calc-net').innerText = `Rp ${net.toLocaleString('id-ID')}`;
+        }
+
+        document.getElementById('formWithdrawRequest').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            if (amount < (budgetSettings.minWithdrawal || 10000)) return alert(`Minimal penarikan adalah Rp ${(budgetSettings.minWithdrawal || 10000).toLocaleString('id-ID')}`);
+            if (amount > cachedMyEarningsData.totalEarning) return alert(`Jumlah melebihi saldo tersedia!`);
+
+            const methodKey = document.getElementById('wd-method').value;
+            let methodText = document.getElementById('wd-method').options[document.getElementById('wd-method').selectedIndex].text;
+            if (methodKey === 'LAINNYA') {
+                const customName = document.getElementById('wd-other-method-name').value.trim();
+                methodText = customName ? `Lainnya (${customName})` : 'Lainnya';
+            }
+
+            const accountNumber = document.getElementById('wd-account-number').value.trim();
+            const accountName = document.getElementById('wd-account-name').value.trim();
+            let fee = (methodKey === 'BANK_BTN') ? 0 : (budgetSettings.adminFeeNonBtn || 2500);
+            let net = Math.max(0, amount - fee);
+
+            const userName = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name);
+            const btnSubmit = document.getElementById('btnSubmitWithdraw');
+            btnSubmit.innerText = "Memproses...";
+
+            const payload = {
+                user_id: currentUser.id, user_email: currentUser.email, nama_petugas: userName,
+                nominal: amount, biaya_admin: fee, total_diterima: net,
+                metode_pembayaran: methodText, nomor_rekening: accountNumber, nama_pemilik: accountName,
+                status: 'Pending', created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('penarikan_insentif').insert([payload]);
+            if (error) console.error("Gagal simpan penarikan:", error);
+
+            const tanggalKlaim = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const pesanWA = `Halo Admin, saya ingin mengajukan *Penarikan Insentif Poin Kerja*:\n\n👤 *Nama Petugas:* ${userName}\n📧 *Email:* ${currentUser.email}\n🗓️ *Tanggal Pengajuan:* ${tanggalKlaim}\n\n💳 *Informasi Tujuan:* \n • ${methodText}\n • No: *${accountNumber}*\n • A.N: *${accountName}*\n\n💰 *Rincian:*\n • Nominal: Rp ${amount.toLocaleString('id-ID')}\n • Biaya Admin: ${fee === 0 ? 'Gratis' : `Rp ${fee.toLocaleString('id-ID')}`}\n • *Total Diterima:* *Rp ${net.toLocaleString('id-ID')}*\n\nMohon diproses, terima kasih!`;
+
+            const waUrl = `https://wa.me/${ADMIN_WA_PHONE}?text=${encodeURIComponent(pesanWA)}`;
+            closeWithdrawModal();
+            btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan';
+            showToast("Pengajuan berhasil! Membuka WhatsApp...");
+            window.open(waUrl, '_blank');
+            await fetchWithdrawalsSupabase();
+        });
+
+        function openEarningsModal() {
+            setActiveTab('tabWallet');
+            renderPointSchemeList();
+            const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
+            cachedMyEarningsData = myData;
+
+            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${myData.totalEarning.toLocaleString('id-ID')}`;
+            
+            const debtDetail = myData.debtPoints > 0 
+                ? `<span class="text-rose-200 font-bold block mt-0.5">⚠️ Hutang Penalti: -${myData.debtPoints} Poin (${myData.expiredTasksCount} tugas expired)</span>` 
+                : '';
+
+            document.getElementById('modalMyPointsDetail').innerHTML = `
+                <span>Total Bersih: <b>${myData.totalPoints || 0} Poin</b> (Kotor: ${myData.grossPoints || 0})</span>
+                ${debtDetail}
+            `;
+            document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
+
+            const btnWD = document.getElementById('btnWithdrawEarning');
+            const noticeWD = document.getElementById('withdrawNotice');
+            const minWd = budgetSettings.minWithdrawal || 10000;
+
+            if (myData.totalEarning >= minWd) {
+                btnWD.classList.remove('hidden');
+                noticeWD.innerText = `✅ Saldo memenuhi syarat penarikan.`;
+                noticeWD.className = "text-[9.5px] text-emerald-100 font-bold mt-1";
+            } else {
+                btnWD.classList.add('hidden');
+                noticeWD.innerText = `* Minimal penarikan saldo adalah Rp ${minWd.toLocaleString('id-ID')} (Kurang Rp ${(minWd - myData.totalEarning).toLocaleString('id-ID')})`;
+                noticeWD.className = "text-[9px] text-amber-100/90 mt-1 font-medium italic";
+            }
+
+            renderWithdrawalsHistory();
+
+            const adminBudgetCard = document.getElementById('adminTeamBudgetCard');
+            const adminListContainer = document.getElementById('adminTeamListContainer');
+            const adminWdCard = document.getElementById('adminWithdrawalManagementCard');
+
+            if (isSuperAdmin) {
+                adminBudgetCard.classList.remove('hidden');
+                adminListContainer.classList.remove('hidden');
+                if (adminWdCard) adminWdCard.classList.remove('hidden');
+
+                document.getElementById('modalTeamBudgetUsage').innerText = `Rp ${totalTeamBudgetUsed.toLocaleString('id-ID')} / Rp ${budgetSettings.monthlyBudget.toLocaleString('id-ID')}`;
+                const usagePercent = Math.min(100, Math.round((totalTeamBudgetUsed / budgetSettings.monthlyBudget) * 100));
+                document.getElementById('modalBudgetProgressBar').style.width = `${usagePercent}%`;
+
+                const listEl = document.getElementById('teamEarningsList');
+                listEl.innerHTML = '';
+
+                const userKeys = Object.keys(userEarningsMap);
+                if (userKeys.length === 0) {
+                    listEl.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-4">Belum ada tugas tercatat pada hari kerja di bulan ini.</div>';
+                } else {
+                    userKeys.forEach(uid => {
+                        const u = userEarningsMap[uid];
+                        const isMe = uid === currentUser?.id;
+                        const rank = userRanksMap[uid];
+                        let rankIcon = rank ? (rank === 1 ? '🥇 ' : (rank === 2 ? '🥈 ' : '🥉 ')) : '';
+
+                        const row = document.createElement('div');
+                        row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
+                        row.innerHTML = `
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="w-6 h-6 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
+                                        ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                                    </div>
+                                    <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin ${u.debtPoints > 0 ? `(Hutang: -${u.debtPoints})` : ''} &bull; ${u.eligibleTasks} tugas valid</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Rp ${u.totalEarning.toLocaleString('id-ID')}</span>
+                        `;
+                        listEl.appendChild(row);
+                    });
+                }
+            } else {
+                adminBudgetCard.classList.add('hidden');
+                adminListContainer.classList.add('hidden');
+                if (adminWdCard) adminWdCard.classList.add('hidden');
+            }
+            document.getElementById('earningsModal').classList.remove('hidden');
+        }
+
+        function closeEarningsModal() { 
+            document.getElementById('earningsModal').classList.add('hidden');
+            setActiveTab('tabHome');
+        }
+
+        function goToHomeJadwal() {
+            setActiveTab('tabHome');
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            if (isSuperAdmin) document.getElementById('userFilter').value = 'All';
+            renderTasks();
+            showToast("Menampilkan beranda feed jadwal");
+        }
+
+        function playNotificationChime() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(587.33, now); osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.35);
+            } catch (e) {}
+        }
+
+        function requestNotificationPermission() { if ("Notification" in window && Notification.permission === "default") { Notification.requestPermission(); } }
+
+        function applyTheme(themeName) {
+            const t = colorPalettes[themeName]; if(!t) return;
+            let root = document.documentElement;
+            root.style.setProperty('--t-50', t[50]); root.style.setProperty('--t-100', t[100]); root.style.setProperty('--t-400', t[400]);
+            root.style.setProperty('--t-500', t[500]); root.style.setProperty('--t-600', t[600]); root.style.setProperty('--t-700', t[700]);
+            root.style.setProperty('--t-900', t[900]); root.style.setProperty('--t-950', t[950]);
+            localStorage.setItem('user-theme', themeName);
+        }
+
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
+                document.documentElement.classList.add('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
+            } else { 
+                document.documentElement.classList.remove('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
+            }
+            const savedColor = localStorage.getItem('user-theme'); if(savedColor) applyTheme(savedColor);
+            document.getElementById('dateFilter').value = todayStr; document.getElementById('input-date').value = todayStr;
+            document.getElementById('bulk-date').value = todayStr; document.getElementById('gen-date').value = todayStr;
+            document.getElementById('exportStartDate').value = todayStr; document.getElementById('exportEndDate').value = todayStr;
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) { 
+                document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
+            } else { 
+                document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
+            }
+        }
+
+        let authMode = 'login';
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) { currentUser = session.user; showDashboard(); } 
+            else { setAuthMode('login'); document.getElementById('auth-screen').classList.remove('hidden'); }
+        }
+
+        function setAuthMode(mode) {
+            authMode = mode; document.getElementById('auth-error').classList.add('hidden'); document.getElementById('input-password').value = '';
+            if (mode === 'signup') {
+                document.getElementById('auth-title').innerText = "Daftar Akun Baru"; document.getElementById('btn-action').innerText = "Daftar Sekarang"; document.getElementById('btn-switch').innerText = "Sudah punya akun? Login di sini.";
+            } else {
+                document.getElementById('auth-title').innerText = "Login Dashboard"; document.getElementById('btn-action').innerText = "Masuk Dashboard"; document.getElementById('btn-switch').innerText = "Belum punya akun? Daftar sekarang.";
+            }
+        }
+
+        document.getElementById('btn-switch').onclick = () => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); };
+
+        document.getElementById('btn-action').onclick = async () => {
+            const email = document.getElementById('input-email').value; const password = document.getElementById('input-password').value; const errEl = document.getElementById('auth-error');
+            if (!email || !password) { errEl.innerText = "Email dan Password wajib diisi!"; errEl.classList.remove('hidden'); return; }
+            document.getElementById('btn-action').innerText = "Memproses..."; errEl.classList.add('hidden');
+            if (authMode === 'signup') {
+                const { error } = await _supabase.auth.signUp({ email, password });
+                if (error) { errEl.innerText = error.message; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Daftar Sekarang"; } 
+                else { showToast("Pendaftaran berhasil! Silakan login."); setAuthMode('login'); }
+            } else {
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) { errEl.innerText = "Login gagal. Cek kembali email & sandi Anda."; errEl.classList.remove('hidden'); document.getElementById('btn-action').innerText = "Masuk Dashboard"; } 
+                else { currentUser = data.user; showDashboard(); }
+            }
+        };
+
+        async function loginWithGoogle() {
+            const { error } = await _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+            if (error) { const errEl = document.getElementById('auth-error'); errEl.innerText = "Gagal masuk menggunakan Google."; errEl.classList.add('hidden'); }
+        }
+
+        async function logout() {
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription); 
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener); 
+            if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener); 
+            if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription); 
+            if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+            if (globalChatSubscription) _supabase.removeChannel(globalChatSubscription);
+            await _supabase.auth.signOut(); 
+            location.reload();
+        }
+
+        async function showDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-dashboard').classList.remove('hidden');
+            
+            await loadBudgetSettings();
+
+            const username = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name || currentUser.user_metadata?.name);
+            const avatarUrl = getAvatarUrl(currentUser);
+            const firstInitial = (username || 'm').charAt(0).toLowerCase();
+
+            document.getElementById('user-display-side').innerText = username; 
+            document.getElementById('modal-user-name').innerText = username; 
+            document.getElementById('profile-email-display').innerText = currentUser.email;
+
+            const sideInitialEl = document.getElementById('side-avatar-initial');
+            if (sideInitialEl) sideInitialEl.innerText = firstInitial;
+
+            if (avatarUrl) {
+                document.getElementById('user-avatar-placeholder').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                const headerAvatar = document.getElementById('header-user-avatar-btn');
+                if (headerAvatar) headerAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                const headerInitial = document.getElementById('header-avatar-initial');
+                if (headerInitial) headerInitial.innerText = firstInitial;
+            }
+
+            if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                isSuperAdmin = true;
+                document.getElementById('superadmin-indicator').classList.remove('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.remove('hidden');
+                document.getElementById('profile-superadmin-badge').classList.remove('hidden'); 
+                document.getElementById('userFilter').classList.remove('hidden');
+                document.getElementById('btnSidebarBudget').classList.remove('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.remove('hidden');
+            } else {
+                isSuperAdmin = false;
+                document.getElementById('superadmin-indicator').classList.add('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.add('hidden');
+                document.getElementById('profile-superadmin-badge').classList.add('hidden'); 
+                document.getElementById('userFilter').classList.add('hidden');
+                document.getElementById('btnSidebarBudget').classList.add('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.add('hidden');
+            }
+
+            requestNotificationPermission(); 
+            await fetchFollowRelations(); 
+            await fetchTasksSupabase(); 
+            await fetchWithdrawalsSupabase();
+            
+            setupRealtimeListener(); 
+            setupGlobalCommentNotificationListener(); 
+            setupFollowsRealtime(); 
+            setupFollowNotificationListener();
+            setupAppConfigRealtime(); 
+            setupWithdrawalsRealtime(); 
+            setupPresenceSync();
+            setupSuperAdminActivityListener();
+            setupGlobalChatRealtime();
+        }
+
+        function setupPresenceSync() {
+            if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            presenceChannel = _supabase.channel('online_users_room', { config: { presence: { key: currentUser.id, }, }, });
+            presenceChannel.on('presence', { event: 'sync' }, () => {
+                const state = presenceChannel.presenceState(); onlineUsersState = {}; Object.keys(state).forEach(userId => { onlineUsersState[userId] = true; });
+                if (!document.getElementById('followsModal').classList.contains('hidden')) renderUsersFollowModal();
+                renderTasks();
+            }).subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await presenceChannel.track({
+                        user_id: currentUser.id, email: currentUser.email, avatar_url: getAvatarUrl(currentUser),
+                        name: getUserDisplayName(currentUser.id, currentUser.email), online_at: new Date().toISOString(),
+                    });
+                }
+            });
+        }
+
+        function updateNotificationBadge() {
+            const tabDot = document.getElementById('tabNotifDot');
+            const sideBadge = document.getElementById('sideNotifBadge');
+            if (unreadNotificationsCount > 0) {
+                const countText = unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount;
+                if (tabDot) tabDot.classList.remove('hidden');
+                if (sideBadge) { sideBadge.innerText = countText; sideBadge.classList.remove('hidden'); }
+            } else {
+                if (tabDot) tabDot.classList.add('hidden');
+                if (sideBadge) sideBadge.classList.add('hidden');
+            }
+        }
+
+        function openNotificationsModal() {
+            setActiveTab('tabBell');
+            document.getElementById('notificationsModal').classList.remove('hidden'); 
+            renderNotificationsList(); 
+            unreadNotificationsCount = 0; 
+            updateNotificationBadge();
+        }
+
+        function closeNotificationsModal() { 
+            document.getElementById('notificationsModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        function clearAllNotifications() { notificationsList = []; unreadNotificationsCount = 0; updateNotificationBadge(); renderNotificationsList(); showToast("Notifikasi dibersihkan"); }
+
+        function renderNotificationsList() {
+            const listEl = document.getElementById('notificationsList');
+            listEl.innerHTML = '';
+            
+            if (notificationsList.length === 0) {
+                listEl.innerHTML = `
+                    <div class="text-center text-slate-400 py-8">
+                        <i class="fa-solid fa-bell-slash text-2xl mb-1.5 opacity-40"></i>
+                        <p class="text-[11px] font-semibold">Belum ada notifikasi baru.</p>
+                    </div>`;
+                return;
+            }
+
+            notificationsList.forEach((n) => {
+                const item = document.createElement('div');
+                item.className = 'p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-start gap-2.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+                
+                let iconBg = 'bg-[#1877f2]';
+                let iconClass = 'fa-bell';
+
+                if (n.type === 'comment') {
+                    iconBg = 'bg-emerald-500';
+                    iconClass = 'fa-comments';
+                } else if (n.type === 'follow') {
+                    iconBg = 'bg-teal-500';
+                    iconClass = 'fa-user-plus';
+                } else if (n.type === 'task_new') {
+                    iconBg = 'bg-blue-500';
+                    iconClass = 'fa-calendar-plus';
+                } else if (n.type === 'task_done') {
+                    iconBg = 'bg-emerald-600';
+                    iconClass = 'fa-circle-check';
+                } else if (n.type === 'task_process') {
+                    iconBg = 'bg-amber-500';
+                    iconClass = 'fa-spinner';
+                } else if (n.type === 'withdraw') {
+                    iconBg = 'bg-rose-500';
+                    iconClass = 'fa-wallet';
+                }
+
+                const iconHtml = `
+                    <div class="w-7 h-7 rounded-xl ${iconBg} text-white flex items-center justify-center text-xs flex-shrink-0 shadow-xs">
+                        <i class="fa-solid ${iconClass}"></i>
+                    </div>
+                `;
+
+                item.innerHTML = `
+                    ${iconHtml}
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-1">
+                            <p class="text-[10px] font-extrabold text-slate-800 dark:text-slate-100 truncate">${n.title}</p>
+                            <span class="text-[8px] text-slate-400 flex-shrink-0">${n.time}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug mt-0.5 line-clamp-2">${n.message}</p>
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    closeNotificationsModal();
+                    if (n.taskId) {
+                        const task = globalTasks.find(t => String(t.id) === String(n.taskId));
+                        if (task) {
+                            if (n.type === 'comment') {
+                                openCommentModal(task.id, task.tugas);
+                            } else {
+                                document.getElementById('dateFilter').value = task.tanggal || todayStr;
+                                renderTasks();
+                            }
+                        }
+                    } else if (n.type === 'follow') {
+                        openFollowsModal();
+                    } else if (n.type === 'withdraw') {
+                        openEarningsModal();
+                    }
+                };
+
+                listEl.appendChild(item);
+            });
+        }
+
+        async function fetchFollowRelations() {
+            if (!currentUser) return;
+            const { data, error } = await _supabase.from('user_follows').select('*'); if (error || !data) return;
+            myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
+            myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
+            mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
+        }
+
+        function setupFollowsRealtime() {
+            if (followsSubscription) _supabase.removeChannel(followsSubscription);
+            followsSubscription = _supabase.channel('public:user_follows')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'user_follows' }, async () => {
+                    await fetchFollowRelations(); renderTasks();
+                    if (!document.getElementById('followsModal').classList.contains('hidden')) renderUsersFollowModal();
+                }).subscribe();
+        }
+
+        function setupFollowNotificationListener() {
+            if (followNotifyListener) _supabase.removeChannel(followNotifyListener);
+            followNotifyListener = _supabase.channel('public:user_follows_notify')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_follows' }, payload => {
+                    if (payload.new.following_id === currentUser.id) showFollowNotification(payload.new);
+                }).subscribe();
+        }
+
+        function showFollowNotification(followData) {
+            playNotificationChime();
+            const senderName = getUserDisplayName(followData.follower_id, followData.follower_email);
+            const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            notificationsList.unshift({ type: 'follow', title: 'Pengikut Baru! 🎉', message: `${senderName} mulai mengikuti Anda. Follow balik untuk saling melihat jadwal!`, time: currentTime, sender: senderName });
+            unreadNotificationsCount++; updateNotificationBadge();
+
+            if ("Notification" in window && Notification.permission === "granted") { new Notification("Pengikut Baru! 🎉", { body: `${senderName} mulai mengikuti Anda. Klik untuk follow balik!`, icon: '/icon-192.png' }); }
+        }
+
+        function setupSuperAdminActivityListener() {
+            if (!isSuperAdmin) return;
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+
+            superAdminActivitySubscription = _supabase.channel('admin_global_activity')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
+                    const row = payload.new;
+                    if (!row || row.user_id === currentUser.id) return;
+                    const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
+
+                    if (payload.eventType === 'INSERT') {
+                        showToast(`📝 Jadwal Baru (${userName}): "${row.tugas}"`);
+                    } else if (payload.eventType === 'UPDATE' && row.status === 'Selesai' && payload.old.status !== 'Selesai') {
+                        showToast(`✅ Selesai (${userName}): "${row.tugas}"`);
+                    }
+                }).subscribe();
+        }
+
+        async function openFollowsModal() {
+            document.getElementById('followsModal').classList.remove('hidden');
+            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat daftar petugas...</div>';
+            await fetchFollowRelations(); renderUsersFollowModal();
+        }
+
+        function closeFollowsModal() { 
+            document.getElementById('followsModal').classList.add('hidden'); 
+        }
+
+        function renderUsersFollowModal() {
+            const listEl = document.getElementById('usersFollowList'); listEl.innerHTML = '';
+            const userMap = {};
+            globalTasks.forEach(item => {
+                if (item.user_id && item.user_id !== currentUser.id && item.user_email !== SUPER_ADMIN_EMAIL) {
+                    if (!userMap[item.user_id]) {
+                        userMap[item.user_id] = { id: item.user_id, email: item.user_email || 'Petugas', nama: getUserDisplayName(item.user_id, item.user_email, item.nama), peran: item.peran || 'Operasional', avatar_url: item.user_avatar || null };
+                    }
+                }
+            });
+
+            const users = Object.values(userMap);
+            if (users.length === 0) { listEl.innerHTML = '<div class="text-center text-slate-400 text-xs py-4">Belum ada user lain terdaftar.</div>'; return; }
+
+            users.forEach(u => {
+                const isFollowing = myFollowings.includes(u.id); const isFollower = myFollowers.includes(u.id); const isMutual = isFollowing && isFollower; const isOnline = !!onlineUsersState[u.id];
+
+                let statusBadge = '';
+                if (isMutual) { statusBadge = `<span class="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">Teman Saling Follow</span>`; } 
+                else if (isFollower) { statusBadge = `<span class="bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[8px] font-bold px-1.5 py-0.5 rounded-full">Mengikuti Anda</span>`; }
+
+                const userRow = document.createElement('div');
+                userRow.className = 'flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40';
+                userRow.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        ${renderAvatarHtml(u.avatar_url, u.nama, "w-8 h-8", u.id)}
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <p class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${u.nama}</p>
+                                <span class="text-[9px] font-semibold ${isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">(${isOnline ? 'Online' : 'Offline'})</span>
+                            </div>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                <span class="text-[9px] text-slate-400 truncate">${u.email}</span>${statusBadge}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="toggleFollowUser('${u.id}', '${u.email.replace(/'/g, "\\'")}', ${isFollowing})" class="px-3 py-1.5 rounded-xl text-[10px] font-bold transition flex items-center gap-1 flex-shrink-0 ${isFollowing ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-rose-50 hover:text-rose-600' : 'bg-[#1877f2] hover:bg-blue-700 text-white shadow-xs'}">
+                        ${isFollowing ? '<i class="fa-solid fa-check text-[9px]"></i> Mengikuti' : '<i class="fa-solid fa-user-plus text-[9px]"></i> Follow'}
+                    </button>
+                `;
+                listEl.appendChild(userRow);
+            });
+        }
+
+        async function toggleFollowUser(targetUserId, targetUserEmail, isCurrentlyFollowing) {
+            if (isCurrentlyFollowing) {
+                const { error } = await _supabase.from('user_follows').delete().eq('follower_id', currentUser.id).eq('following_id', targetUserId);
+                if (!error) { showToast("Batal mengikuti"); await fetchFollowRelations(); renderUsersFollowModal(); renderTasks(); }
+            } else {
+                const { error } = await _supabase.from('user_follows').insert([{ follower_id: currentUser.id, following_id: targetUserId, follower_email: currentUser.email, following_email: targetUserEmail }]);
+                if (!error) { showToast("Berhasil follow!"); await fetchFollowRelations(); renderUsersFollowModal(); renderTasks(); } else { showToast("Gagal follow: " + error.message); }
+            }
+        }
+
+        function setupGlobalCommentNotificationListener() {
+            if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener);
+            globalCommentsListener = _supabase.channel('public:jadwal_comments_global')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments' }, payload => {
+                    const newComment = payload.new; 
+                    if (newComment.jadwal_id === 'GLOBAL_CHAT_BINAYASA') return;
+                    if (newComment.user_id === currentUser.id) return;
+                    const targetTask = globalTasks.find(t => String(t.id) === String(newComment.jadwal_id));
+                    if (targetTask) {
+                        targetTask.comments_count = (targetTask.comments_count || 0) + 1; renderTasks();
+                    }
+                }).subscribe();
+        }
+
+        function setupRealtimeListener() {
+            if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription);
+            realtimeSubscription = _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, payload => { handleRealtimeChange(payload); })
+                .subscribe();
+        }
+
+        function handleRealtimeChange(payload) {
+            const { eventType, new: newRow, old: oldRow } = payload;
+            if (!isSuperAdmin && newRow?.user_email === SUPER_ADMIN_EMAIL) return;
+            if (eventType === 'INSERT') { if (!globalTasks.some(t => t.id === newRow.id)) globalTasks.push(newRow); } 
+            else if (eventType === 'UPDATE') { const idx = globalTasks.findIndex(t => t.id === newRow.id); if (idx !== -1) globalTasks[idx] = newRow; else globalTasks.push(newRow); } 
+            else if (eventType === 'DELETE') { globalTasks = globalTasks.filter(t => t.id !== oldRow.id); }
+            if (isSuperAdmin) populateUserFilterDropdown();
+            renderTasks();
+        }
+
+        async function fetchTasksSupabase() {
+            let query = _supabase.from('jadwal').select('*');
+            if (!isSuperAdmin) { query = query.or(`user_email.neq.${SUPER_ADMIN_EMAIL},user_email.is.null`); }
+            const { data, error } = await query.order('jam_mulai', { ascending: true });
+            if (!error && data) { globalTasks = data; if (isSuperAdmin) populateUserFilterDropdown(); renderTasks(); } 
+            else if (error) { console.error("Fetch Tasks Error:", error); renderTasks(); }
+        }
+
+        function populateUserFilterDropdown() {
+            const userFilterSelect = document.getElementById('userFilter'); const currentSelected = userFilterSelect.value; const userMap = {};
+            globalTasks.forEach(item => {
+                const uid = item.user_id; const email = item.user_email || `User (${uid ? uid.slice(-5) : 'unknown'})`; const displayName = getUserDisplayName(uid, email, item.nama);
+                if (!userMap[uid]) userMap[uid] = { name: displayName, count: 0 };
+                userMap[uid].count++;
+            });
+            let optionsHtml = `<option value="All">👥 Filter: Semua User (${globalTasks.length})</option>`;
+            Object.keys(userMap).forEach(uid => { optionsHtml += `<option value="${uid}">👤 ${userMap[uid].name} (${userMap[uid].count})</option>`; });
+            userFilterSelect.innerHTML = optionsHtml; userFilterSelect.value = currentSelected || 'All';
+        }
+
+        function toggleTaskMenu(id) {
+            const menu = document.getElementById(`task-menu-${id}`); if (!menu) return;
+            const isHidden = menu.classList.contains('hidden'); document.querySelectorAll('[id^="task-menu-"]').forEach(el => el.classList.add('hidden'));
+            if (isHidden) menu.classList.remove('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('[id^="task-menu-"]') && !e.target.closest('[onclick^="toggleTaskMenu"]')) { document.querySelectorAll('[id^="task-menu-"]').forEach(el => el.classList.add('hidden')); }
+        });
+
+        function shareSpecificTask(task) {
+            const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
+            const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
+            const ketText = task.keterangan ? `\n📌 Keterangan: ${task.keterangan}` : '';
+            const shareText = `📋 *Jadwal Kerja Operasional*\n🏢 Unit: ${UNIT_NAME}\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
+            if (navigator.share) { navigator.share({ title: `Jadwal Kerja - ${taskName}`, text: shareText, url: window.location.href, }).catch(() => {}); } 
+            else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin ke clipboard!"); }
+        }
+
+        function renderTasks() {
+            const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
+            const selectedRole = document.getElementById('roleFilter').value; const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
+            const selectedUser = document.getElementById('userFilter').value; const selectedDate = document.getElementById('dateFilter').value;
+
+            tableBodyDesktop.innerHTML = ''; cardsContainerMobile.innerHTML = '';
+
+            const filteredTasks = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate; const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; const matchUser = !isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser;
+                const isMine = item.user_id === currentUser?.id; const isMutualFriend = mutualFriends.includes(item.user_id); const canView = isSuperAdmin || isMine || isMutualFriend;
+                return matchDate && matchRole && matchStatus && matchUser && canView;
+            });
+
+            document.getElementById('totalTaskCount').innerText = filteredTasks.length;
+            document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
+            document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
+
+            calculateAndRenderEarnings();
+
+            if (filteredTasks.length === 0) {
+                tableBodyDesktop.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400"><i class="fa-solid fa-user-group text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">Tidak ada jadwal.</p><p class="text-[10px] text-slate-400 mt-0.5">Pastikan Anda saling follow (Mutual) untuk melihat jadwal rekan.</p></td></tr>`;
+                cardsContainerMobile.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 shadow-xs"><i class="fa-solid fa-newspaper text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">Belum ada postingan jadwal.</p><p class="text-[10px] text-slate-400 mt-0.5">Hanya muncul jika sudah saling follow.</p></div>`;
+                return;
+            }
+
+            const groupedByUser = {};
+            filteredTasks.forEach(task => {
+                const userKey = getUserDisplayName(task.user_id, task.user_email, task.nama);
+                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
+                groupedByUser[userKey].push(task);
+            });
+
+            Object.keys(groupedByUser).forEach(petugasName => {
+                const tasksOfUser = groupedByUser[petugasName];
+                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
+                const sampleTask = tasksOfUser[0]; const isOnline = !!onlineUsersState[sampleTask?.user_id];
+                const postDate = sampleTask?.tanggal || todayStr; const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
+                const taskUserId = sampleTask?.user_id;
+
+                const fbPostCard = document.createElement('div');
+                fbPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-200 dark:border-slate-800 shadow-xs transition';
+
+                let tasksListHtml = '';
+                tasksOfUser.forEach((item, index) => {
+                    const isOwner = (item.user_id === currentUser?.id);
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
+                    const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
+                    const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
+                    
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item);
+
+                    let statusBadgeHtml = ''; let pointRewardBadge = '';
+                    if (isCompleted) {
+                        statusBadgeHtml = isLate 
+                            ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> Selesai (${isPastDay ? 'Susulan' : 'Terlambat'})</span>` 
+                            : `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30"><i class="fa-solid fa-circle-check text-[9px]"></i> Selesai</span>`;
+                        
+                        pointRewardBadge = isLate 
+                            ? `<span class="font-bold text-[9.5px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">0 Poin (Lunas)</span>` 
+                            : `<span class="font-extrabold text-[9.5px] text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/80 px-2 py-1 rounded-xl border border-emerald-300 dark:border-emerald-800">+${budgetSettings.pointsOnTime} Poin</span>`;
+                    } else if (item.status === 'Proses') {
+                        statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-amber-500/10 text-amber-500 border border-amber-500/30">⚡ Proses</span>`;
+                        pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-amber-500 bg-amber-50 px-2 py-1 rounded-xl border border-amber-300">+${budgetSettings.pointsProcess} Poin</span>`;
+                    } else {
+                        if (isTooEarly) {
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700"><i class="fa-solid fa-lock text-[8.5px]"></i> Belum Jamnya (${item.jam_mulai})</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9px] text-slate-400 bg-slate-50 dark:bg-slate-800/60 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-700">Terkunci</span>`;
+                        } else if (isPastDay) {
+                            statusBadgeHtml = `<button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-300 dark:border-rose-800 transition shadow-xs"><i class="fa-solid fa-camera text-[9px]"></i> Selesaikan Susulan</button>`;
+                            pointRewardBadge = `<span class="font-extrabold text-[9.5px] text-rose-500 bg-rose-50 dark:bg-rose-950/40 px-2 py-1 rounded-xl border border-rose-300 dark:border-rose-800">-${Math.abs(budgetSettings.pointsExpired)} Hutang</span>`;
+                        } else {
+                            statusBadgeHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-rose-50 dark:bg-rose-950/40 text-rose-500 border border-rose-200 dark:border-rose-800">⏱️ Belum Dikerjakan</span>`;
+                            pointRewardBadge = `<span class="font-bold text-[9.5px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-xl border border-slate-300 dark:border-slate-700">0 Poin</span>`;
+                        }
+                    }
+
+                    let taskMenuDropdown = '';
+                    if (canManage) {
+                        taskMenuDropdown = `
+                            <div id="task-menu-${item.id}" class="hidden absolute right-0 top-6 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500 text-xs"></i> Set: Belum</button>` : ''}
+                                ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
+                                <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
+                                ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
+                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
+                            </div>
+                        `;
+                    }
+
+                    let photoEvidenceHtml = '';
+                    if (item.foto_sebelum || item.foto_sesudah) {
+                        photoEvidenceHtml = `
+                            <div class="grid grid-cols-2 gap-2.5 my-3">
+                                ${item.foto_sebelum ? `
+                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-xs cursor-pointer">
+                                        <img src="${item.foto_sebelum}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg border border-white/10">
+                                            <i class="fa-solid fa-camera text-[8px] text-amber-400"></i> Sebelum
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sebelum</span>
+                                    </div>`
+                                }
+                                ${item.foto_sesudah ? `
+                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-emerald-500/30 shadow-xs cursor-pointer ring-1 ring-emerald-500/20">
+                                        <img src="${item.foto_sesudah}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent"></div>
+                                        <span class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-emerald-600/90 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-lg shadow-xs">
+                                            <i class="fa-solid fa-circle-check text-[8px] text-emerald-200"></i> Sesudah
+                                        </span>
+                                    </div>` : `
+                                    <div class="aspect-[4/3] rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-[10px] text-slate-400 gap-1 bg-slate-50/50 dark:bg-slate-800/30">
+                                        <i class="fa-regular fa-image text-base opacity-40"></i>
+                                        <span>Tanpa Foto Sesudah</span>
+                                    </div>`
+                                }
+                            </div>
+                        `;
+                    }
+
+                    tasksListHtml += `
+                        <div class="py-3.5 ${index !== tasksOfUser.length - 1 ? 'border-b border-slate-100 dark:border-slate-800/80' : ''}">
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/60 text-[#1877f2] dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-tight">
+                                        <i class="fa-regular fa-clock text-[10px] text-[#1877f2] dark:text-blue-400"></i>
+                                        ${item.jam_mulai} - ${item.jam_selesai}
+                                    </span>
+                                    ${isEarly ? `<span class="inline-flex items-center gap-1 text-[9px] bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold px-2 py-0.5 rounded-full">🌅 &lt;06:00 (+${budgetSettings.pointsEarly})</span>` : ''}
+                                </div>
+
+                                <div class="relative flex items-center">
+                                    ${canManage ? `
+                                        <button onclick="toggleTaskMenu('${item.id}')" class="w-7 h-7 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center justify-center text-xs transition">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                        ${taskMenuDropdown}` : `
+                                        <span class="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-[10px]" title="Terkunci">
+                                            <i class="fa-solid fa-lock text-amber-500/80"></i>
+                                        </span>`
+                                    }
+                                </div>
+                            </div>
+
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug break-words tracking-tight mb-2">
+                                ${item.tugas}
+                            </h3>
+
+                            ${photoEvidenceHtml}
+
+                            ${item.keterangan ? `
+                                <div class="my-2.5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 border-l-4 border-[#1877f2] border border-slate-200/60 dark:border-slate-700/60 shadow-xs">
+                                    <div class="flex items-center gap-1.5 text-[#1877f2] dark:text-blue-400 text-[10px] font-extrabold uppercase tracking-wider mb-1">
+                                        <i class="fa-solid fa-clipboard-check text-xs"></i>
+                                        <span>Keterangan Selesai</span>
+                                    </div>
+                                    <p class="text-slate-700 dark:text-slate-200 text-xs font-medium leading-relaxed break-words">
+                                        ${item.keterangan}
+                                    </p>
+                                </div>` : ''
+                            }
+
+                            <div class="flex items-center justify-between flex-wrap gap-2 pt-2 mt-1">
+                                <div class="flex items-center gap-1.5">
+                                    ${statusBadgeHtml}
+                                    ${pointRewardBadge}
+                                </div>
+
+                                <div class="flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition ${isLiked ? 'text-[#1877f2] dark:text-blue-400' : 'hover:text-blue-500'}">
+                                        <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up text-sm"></i>
+                                        <span>${likesCount}</span>
+                                    </button>
+
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-[#1877f2] dark:hover:text-blue-400 transition">
+                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots text-sm ${commentsCount > 0 ? 'text-[#1877f2]' : ''}"></i>
+                                        <span>${commentsCount}</span>
+                                    </button>
+
+                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="w-8 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold hover:text-blue-500 transition" title="Bagikan">
+                                        <i class="fa-solid fa-share-nodes text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                fbPostCard.innerHTML = `
+                    <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-[#1877f2] font-bold">${tasksOfUser.length} Tugas</span></div>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Divisi'}</span>
+                    </div>
+                    <div class="py-1">${tasksListHtml}</div>
+                `;
+                cardsContainerMobile.appendChild(fbPostCard);
+
+                const groupHeader = document.createElement('tr');
+                groupHeader.className = 'bg-blue-50 dark:bg-blue-950/40 border-y border-blue-200/80';
+                groupHeader.innerHTML = `<td colspan="8" class="px-3 py-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2">${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}<span class="font-extrabold text-blue-900 dark:text-blue-300 text-xs">${petugasName}</span></div><span class="bg-blue-200/60 text-blue-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span></div></td>`;
+                tableBodyDesktop.appendChild(groupHeader);
+
+                tasksOfUser.forEach(item => {
+                    const isOwner = (item.user_id === currentUser?.id); const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
+                    const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
+                    const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
+                    const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item); const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800';
+                    let roleBadge = item.peran === 'Teknisi' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">🛠️ Teknisi</span>` : (item.peran === 'Cleaning' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 text-teal-700 border border-teal-200">🧹 Cleaning</span>` : `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200">📋 Admin</span>`);
+
+                    let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
+                    
+                    let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
+
+                    row.innerHTML = `
+                        <td class="p-3 font-mono font-bold text-[10px] text-slate-500">${item.tanggal || '-'}</td>
+                        <td class="p-3 font-mono font-bold text-[11px]">${item.jam_mulai} - ${item.jam_selesai}${isEarly ? `<span class="ml-1 text-[8px]">🌅</span>` : ''}</td>
+                        <td class="p-3 font-bold text-[11px]">${displayName}</td>
+                        <td class="p-3">${roleBadge}</td>
+                        <td class="p-3 font-semibold text-[11px]">
+                            <p>${item.tugas}</p>${item.keterangan ? `<p class="text-[10px] text-[#1877f2] font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
+                            ${(item.foto_sebelum || item.foto_sesudah) ? `<div class="flex gap-2 mt-1.5">${item.foto_sebelum ? `<button onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="text-[9.5px] text-slate-500 hover:text-blue-600 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-image"></i> Sebelum</button>` : ''}${item.foto_sesudah ? `<button onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="text-[9.5px] text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-circle-check"></i> Sesudah</button>` : ''}</div>` : ''}
+                        </td>
+                        <td class="p-3 text-center">${statusCell}</td>
+                        <td class="p-3 text-center"><div class="flex items-center justify-center gap-2.5"><button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-blue-500' : 'text-slate-400'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i><span>${likesCount}</span></button><button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-[#1877f2]' : 'text-slate-400'}"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i><span>${commentsCount}</span></button></div></td>
+                        <td class="p-3 text-center">${actionCell}</td>
+                    `;
+                    tableBodyDesktop.appendChild(row);
+                });
+            });
+        }
+
+        async function toggleLikeTask(taskId) {
+            const task = globalTasks.find(t => String(t.id) === String(taskId)); if (!task) return;
+            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : []; const userIndex = likedUsers.indexOf(currentUser.id);
+            if (userIndex === -1) { likedUsers.push(currentUser.id); } else { likedUsers.splice(userIndex, 1); }
+            task.likes_count = likedUsers.length; task.liked_users = likedUsers; renderTasks();
+            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
+            if (error) { showToast("Gagal menyukai: " + error.message); await fetchTasksSupabase(); } 
+            else if (data) { task.likes_count = data.likes_count; task.liked_users = data.liked_users; renderTasks(); }
+        }
+
+        function openTaskModal() {
+            editingTaskId = null; document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            document.getElementById('modalTitle').innerText = "Tambah Tugas Baru"; document.getElementById('btn-save-task').innerText = "Simpan"; toggleModal(true);
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('scheduleModal');
+            if (show) modal.classList.remove('hidden'); 
+            else { modal.classList.add('hidden'); document.getElementById('scheduleForm').reset(); editingTaskId = null; }
+        }
+
+        function openBulkTextModal() { 
+            setActiveTab('tabBulk');
+            document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('bulkTextModal').classList.remove('hidden'); 
+        }
+        function closeBulkTextModal() { 
+            document.getElementById('bulkTextModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        function openAutoGenerateModal() { 
+            setActiveTab('tabAuto');
+            document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('autoGenerateModal').classList.remove('hidden'); 
+        }
+        function closeAutoGenerateModal() { 
+            document.getElementById('autoGenerateModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        function openExportModal(format) { activeExportFormat = format; document.getElementById('exportModal').classList.remove('hidden'); }
+        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+        function handleExportRangeChange() { const container = document.getElementById('customDateRangeContainer'); if (document.getElementById('exportRangeType').value === 'custom') container.classList.remove('hidden'); else container.classList.add('hidden'); }
+
+        function openProfileModal() { 
+            document.getElementById('form-profile-modal').classList.remove('hidden'); 
+        }
+
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
         initTheme(); 
         checkAuth();
