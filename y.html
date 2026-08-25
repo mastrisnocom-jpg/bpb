@@ -3947,6 +3947,108 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
         function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
         initTheme(); checkAuth();
+  let isEditingProfile = false;
+
+function toggleEditProfileFields() {
+    isEditingProfile = !isEditingProfile;
+    const btnToggle = document.getElementById('btnToggleEditProfile');
+    const btnSave = document.getElementById('btnSaveProfileDetails');
+
+    const nipDisplay = document.getElementById('display-profile-nip');
+    const nipInput = document.getElementById('input-profile-nip');
+    const phoneDisplay = document.getElementById('display-profile-phone');
+    const phoneInput = document.getElementById('input-profile-phone');
+    const addressDisplay = document.getElementById('display-profile-address');
+    const addressInput = document.getElementById('input-profile-address');
+
+    if (isEditingProfile) {
+        btnToggle.innerHTML = '<i class="fa-solid fa-xmark text-[9px]"></i> Batal';
+        btnSave.classList.remove('hidden');
+
+        nipInput.value = nipDisplay.innerText.trim();
+        phoneInput.value = phoneDisplay.innerText.trim();
+        addressInput.value = addressDisplay.innerText.trim();
+
+        nipDisplay.classList.add('hidden');
+        nipInput.classList.remove('hidden');
+        phoneDisplay.classList.add('hidden');
+        phoneInput.classList.remove('hidden');
+        addressDisplay.classList.add('hidden');
+        addressInput.classList.remove('hidden');
+    } else {
+        btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data';
+        btnSave.classList.add('hidden');
+
+        nipDisplay.classList.remove('hidden');
+        nipInput.classList.add('hidden');
+        phoneDisplay.classList.remove('hidden');
+        phoneInput.classList.add('hidden');
+        addressDisplay.classList.remove('hidden');
+        addressInput.classList.add('hidden');
+    }
+}
+
+// Ambil Data Profil dari Supabase
+async function loadProfileCorporateDetails() {
+    if (!currentUser) return;
+    try {
+        const { data, error } = await _supabase
+            .from('profiles')
+            .select('nip, no_wa, alamat, nama')
+            .eq('id', currentUser.id)
+            .single();
+
+        if (data && !error) {
+            document.getElementById('display-profile-nip').innerText = data.nip || 'BPB-202601';
+            document.getElementById('display-profile-phone').innerText = data.no_wa || '+6282146511484';
+            document.getElementById('display-profile-address').innerText = data.alamat || 'PT. Binayasa Putrabatara • Unit BSN KC Surabaya';
+        }
+    } catch (e) {
+        console.error("Gagal load profil:", e);
+    }
+}
+
+// Simpan Perubahan Profil ke Supabase
+async function saveProfileCorporateDetails() {
+    if (!currentUser) return;
+    const newNip = document.getElementById('input-profile-nip').value.trim() || '-';
+    const newPhone = document.getElementById('input-profile-phone').value.trim() || '-';
+    const newAddress = document.getElementById('input-profile-address').value.trim() || '-';
+    const btnSave = document.getElementById('btnSaveProfileDetails');
+
+    btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+    btnSave.disabled = true;
+
+    const { error } = await _supabase.from('profiles').upsert({
+        id: currentUser.id,
+        email: currentUser.email,
+        nip: newNip,
+        no_wa: newPhone,
+        alamat: newAddress,
+        updated_at: new Date().toISOString()
+    });
+
+    if (!error) {
+        document.getElementById('display-profile-nip').innerText = newNip;
+        document.getElementById('display-profile-phone').innerText = newPhone;
+        document.getElementById('display-profile-address').innerText = newAddress;
+        toggleEditProfileFields();
+        showToast("✅ Data pegawai berhasil diperbarui!");
+    } else {
+        showToast("Gagal menyimpan data: " + error.message);
+    }
+
+    btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai';
+    btnSave.disabled = false;
+}
+
+// Update fungsi openProfileModal agar otomatis memuat data Supabase
+function openProfileModal() { 
+    syncApiKeyInputs();
+    loadProfileCorporateDetails();
+    document.getElementById('form-profile-modal').classList.remove('hidden'); 
+}
+
 </script>
 </body>
 </html>
