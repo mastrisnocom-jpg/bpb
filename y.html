@@ -2509,7 +2509,7 @@
     myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
     mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
     
-    // Hanya tampilkan badge jika modal relasi sedang tertutup
+    // Update badge hanya jika modal lonceng sedang tertutup
     const isModalOpen = !document.getElementById('followsModal').classList.contains('hidden');
     if (!isModalOpen) {
         updateFriendNotificationBadge();
@@ -2676,12 +2676,21 @@
 
         async function openFollowsModal() {
     setActiveTab('tabFriends');
-    
-    // Sembunyikan badge angka saat lonceng dibuka
+
+    // Simpan riwayat bahwa lonceng sudah dilihat agar tidak muncul lagi saat refresh
+    localStorage.setItem('last_seen_friends_count', mutualFriends.length.toString());
+
+    // Sembunyikan badge
     const headerBadge = document.getElementById('headerFriendBadge');
     const sideBadge = document.getElementById('sideFriendBadge');
     if (headerBadge) headerBadge.classList.add('hidden');
     if (sideBadge) sideBadge.classList.add('hidden');
+
+    document.getElementById('followsModal').classList.remove('hidden');
+    document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
+    await fetchFollowRelations(); 
+    renderUsersFollowModal();
+}
 
     document.getElementById('followsModal').classList.remove('hidden');
     document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
