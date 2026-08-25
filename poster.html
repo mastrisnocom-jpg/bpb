@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Banner Upscaler & Converter 4m x 1m - Mobile & Desktop</title>
+    <title>Banner & Poster Upscaler Siap Cetak</title>
     <style>
         :root {
             --bg-dark: #090d16;
@@ -22,7 +22,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -44,14 +44,12 @@
         header {
             text-align: center;
             margin-bottom: 20px;
-            padding: 0 8px;
         }
 
         header h1 {
             font-size: clamp(20px, 4vw, 28px);
             font-weight: 800;
             color: var(--primary);
-            letter-spacing: -0.5px;
             line-height: 1.2;
         }
 
@@ -61,7 +59,6 @@
             margin-top: 6px;
         }
 
-        /* Responsive Grid: 1 Kolom di HP, 2 Kolom di Desktop */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -69,13 +66,8 @@
         }
 
         @media (min-width: 900px) {
-            body {
-                padding: 24px 20px;
-            }
-            .main-grid {
-                grid-template-columns: 380px 1fr;
-                gap: 24px;
-            }
+            body { padding: 24px 20px; }
+            .main-grid { grid-template-columns: 380px 1fr; gap: 24px; }
         }
 
         .card {
@@ -84,13 +76,6 @@
             border-radius: 12px;
             padding: 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-
-        @media (min-width: 600px) {
-            .card {
-                padding: 20px;
-                border-radius: 16px;
-            }
         }
 
         .card-title {
@@ -144,7 +129,6 @@
             border-radius: 8px;
             font-size: 13px;
             outline: none;
-            transition: 0.2s border;
         }
 
         input[type="text"]:focus, select:focus {
@@ -168,7 +152,6 @@
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
-            line-height: 1.2;
         }
 
         .mode-btn.active {
@@ -203,11 +186,7 @@
             flex-shrink: 0;
         }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input { opacity: 0; width: 0; height: 0; }
 
         .slider {
             position: absolute;
@@ -230,13 +209,8 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
         #textSettingsArea {
             background: var(--card-inner);
@@ -258,18 +232,12 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-        }
-
-        .btn-convert:active {
-            transform: scale(0.98);
         }
 
         .btn-convert:disabled {
             background: #334155;
             color: #64748b;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
         .progress-box {
@@ -316,9 +284,7 @@
         }
 
         @media (min-width: 500px) {
-            .stats-badge-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .stats-badge-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
         .stat-item {
@@ -339,7 +305,6 @@
             font-size: 12px;
             color: var(--primary);
             font-weight: 700;
-            word-break: break-word;
         }
 
         .preview-wrapper {
@@ -347,20 +312,16 @@
             padding: 12px 8px;
             border-radius: 10px;
             border: 1px dashed var(--border-color);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             text-align: center;
         }
 
         .banner-preview-box {
             width: 100%;
-            min-width: 280px;
-            aspect-ratio: 4 / 1;
+            max-height: 420px;
             position: relative;
             background: #090d16;
             border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -368,8 +329,8 @@
         }
 
         #previewCanvas {
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 400px;
             object-fit: contain;
             display: block;
         }
@@ -377,8 +338,7 @@
         .placeholder-text {
             color: #64748b;
             font-size: 12px;
-            padding: 12px;
-            line-height: 1.4;
+            padding: 20px;
         }
 
         .action-row {
@@ -389,9 +349,7 @@
         }
 
         @media (min-width: 480px) {
-            .action-row {
-                flex-direction: row;
-            }
+            .action-row { flex-direction: row; }
         }
 
         .btn-action {
@@ -406,61 +364,63 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
             border: none;
-            transition: 0.2s;
         }
 
-        .btn-download {
-            background: var(--success);
-            color: #ffffff;
-        }
-        .btn-download:hover { background: #059669; }
-
-        .btn-print {
-            background: #6366f1;
-            color: #ffffff;
-        }
-        .btn-print:hover { background: #4f46e5; }
+        .btn-download { background: var(--success); color: #ffffff; }
+        .btn-print { background: #6366f1; color: #ffffff; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <header>
-        <h1>Banner Converter 4m × 1m</h1>
-        <p>Tampilan Responsif (HP & Desktop) • Upscaler Anti Blur • Ukuran Cetak 400 × 100 cm</p>
+        <h1>Banner & Poster Upscaler Siap Cetak</h1>
+        <p>Pilih Ukuran Cetak • Resolusi Ultra-HD • Bebas Blur & Tidak Terpotong</p>
     </header>
 
     <div class="main-grid">
         <!-- Form Pengaturan -->
         <div class="card">
             <div class="card-title">
-                <span>1. Konfigurasi</span>
-                <span class="badge-mode" id="modeIndicator">Gambar Penuh (4:1)</span>
+                <span>1. Konfigurasi Cetak</span>
+                <span class="badge-mode" id="modeIndicator">Gambar Utuh (Fit)</span>
             </div>
             
             <div class="form-group">
-                <label>Upload Foto / Desain</label>
+                <label>Upload Gambar / Banner</label>
                 <input type="file" id="fileInput" accept="image/*">
-                <div class="input-desc">JPG, PNG, atau WEBP. Otomatis di-upscale tajam.</div>
+            </div>
+
+            <!-- PILIHAN UKURAN LENGKAP -->
+            <div class="form-group">
+                <label>Pilih Ukuran Media Cetak</label>
+                <select id="sizePresetSelect">
+                    <option value="400x100" data-ratio="4" selected>Spanduk 4.0m × 1.0m (4:1 Landscape)</option>
+                    <option value="300x100" data-ratio="3">Spanduk 3.0m × 1.0m (3:1 Landscape)</option>
+                    <option value="200x100" data-ratio="2">Spanduk 2.0m × 1.0m (2:1 Landscape - Pas Desain Anda)</option>
+                    <option value="100x100" data-ratio="1">Kotak 1.0m × 1.0m (1:1 Persegi)</option>
+                    <option value="60x160" data-ratio="0.375">X-Banner 60cm × 160cm (Vertical Stand)</option>
+                    <option value="A3" data-ratio="0.707">Poster A3 / A2 / A4 (Vertical Standard)</option>
+                    <option value="original" data-ratio="0">Ikuti Rasio Asli Gambar (Upscale Tajam Saja)</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label>Mode Penempatan Gambar</label>
+                <label>Penyesuaian Bentuk Gambar</label>
                 <div class="mode-selector">
-                    <button type="button" class="mode-btn active" data-fit="fill">Penuh (4:1)</button>
-                    <button type="button" class="mode-btn" data-fit="contain">Fit + Blur</button>
-                    <button type="button" class="mode-btn" data-fit="stretch">Stretch Pas</button>
-                    <button type="button" class="mode-btn" data-fit="split">Split Kiri</button>
+                    <button type="button" class="mode-btn active" data-fit="fit_expand">Utuh + Sisi Latar</button>
+                    <button type="button" class="mode-btn" data-fit="fit_blur">Utuh + Sisi Blur</button>
+                    <button type="button" class="mode-btn" data-fit="fill">Potong Penuh (Crop)</button>
+                    <button type="button" class="mode-btn" data-fit="stretch">Stretch Paksa</button>
                 </div>
             </div>
 
             <!-- Toggle Tambah Teks -->
             <div class="toggle-container" id="textToggleBox">
                 <div>
-                    <div class="toggle-label">Tambahkan Teks / Overlay?</div>
-                    <div class="input-desc">Matikan jika banner sudah ada teks lengkap</div>
+                    <div class="toggle-label">Tambahkan Teks Tambahan?</div>
+                    <div class="input-desc">Matikan jika banner sudah lengkap</div>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="enableTextCheck">
@@ -472,33 +432,20 @@
             <div id="textSettingsArea">
                 <div class="form-group">
                     <label>Label Kategori</label>
-                    <input type="text" id="tagInput" value="LAYANAN PRIMA">
+                    <input type="text" id="tagInput" value="INFO PENDAFTARAN">
                 </div>
                 <div class="form-group">
                     <label>Judul Utama</label>
-                    <input type="text" id="titleInput" value="SELAMAT DATANG DI ACARA RESMI">
-                </div>
-                <div class="form-group">
-                    <label>Keterangan Sub-Judul</label>
-                    <input type="text" id="descInput" value="Mewujudkan Pelayanan Profesional dan Terpercaya">
+                    <input type="text" id="titleInput" value="PROGRAM BIMBEL UNGGULAN">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Resolusi Target Cetak</label>
+                <label>Kualitas DPI (Kepadatan Cetak)</label>
                 <select id="dpiSelect">
-                    <option value="100" selected>100 DPI (Standar Cetak: 15.750 × 3.937 px)</option>
-                    <option value="150">150 DPI (Ultra HD Cetak: 23.622 × 5.906 px)</option>
-                    <option value="72">72 DPI (Preview Cepat: 11.340 × 2.835 px)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Filter Penajaman (Anti-Blur)</label>
-                <select id="sharpenSelect">
-                    <option value="adaptive" selected>Adaptif Cerdas (Otomatis)</option>
-                    <option value="high">Tinggi (Maksimal untuk teks)</option>
-                    <option value="none">Tanpa Filter</option>
+                    <option value="150" selected>150 DPI (Ultra Tajam Tanpa Blur)</option>
+                    <option value="100">100 DPI (Standar Cetak Outdoor)</option>
+                    <option value="72">72 DPI (Preview Cepat)</option>
                 </select>
             </div>
 
@@ -506,7 +453,7 @@
 
             <div class="progress-box" id="progressBox">
                 <div class="progress-text">
-                    <span id="progressStatus">Memproses gambar...</span>
+                    <span id="progressStatus">Memproses...</span>
                     <span id="progressPercent">0%</span>
                 </div>
                 <div class="progress-bar-bg">
@@ -519,23 +466,23 @@
         <div class="results-area">
             <div class="card">
                 <div class="card-title">
-                    <span>2. Info Spanduk Cetak</span>
+                    <span>2. Spesifikasi Output Cetak</span>
                 </div>
                 <div class="stats-badge-grid">
                     <div class="stat-item">
                         <span>Ukuran Fisik</span>
-                        <strong>4.0m × 1.0m</strong>
+                        <strong id="dimDisplay">4.0m × 1.0m</strong>
                     </div>
                     <div class="stat-item">
                         <span>Rasio</span>
-                        <strong>4:1 (Banner)</strong>
+                        <strong id="ratioDisplay">4:1</strong>
                     </div>
                     <div class="stat-item">
-                        <span>Resolusi</span>
-                        <strong id="resDisplay">15.750 × 3.937 px</strong>
+                        <span>Resolusi Master</span>
+                        <strong id="resDisplay">23.622 × 5.906 px</strong>
                     </div>
                     <div class="stat-item">
-                        <span>Status</span>
+                        <span>Status Gambar</span>
                         <strong id="statusDisplay" style="color:#10b981;">Siap Diproses</strong>
                     </div>
                 </div>
@@ -543,19 +490,19 @@
 
             <div class="card">
                 <div class="card-title">
-                    <span>3. Hasil Render Spanduk (4:1)</span>
+                    <span>3. Hasil Render Siap Cetak</span>
                 </div>
                 <div class="preview-wrapper">
                     <div class="banner-preview-box">
                         <canvas id="previewCanvas"></canvas>
-                        <span id="placeholderTxt" class="placeholder-text">Upload foto di atas lalu klik "Mulai Upscale & Konversi" untuk melihat hasil.</span>
+                        <span id="placeholderTxt" class="placeholder-text">Upload gambar lalu klik tombol "Mulai Upscale & Konversi"</span>
                     </div>
                 </div>
 
                 <div class="action-row">
-                    <a id="downloadBtn" class="btn-action btn-download" style="display: none;">
-                        💾 Download Hasil (PNG)
-                    </a>
+                    <button id="downloadBtn" class="btn-action btn-download" style="display: none;">
+                        💾 Download Hasil HD (PNG Master)
+                    </button>
                     <button id="printBtn" class="btn-action btn-print" style="display: none;" onclick="window.print()">
                         🖨️ Cetak / PDF
                     </button>
@@ -567,9 +514,9 @@
 
 <script>
     const fileInput = document.getElementById('fileInput');
+    const sizePresetSelect = document.getElementById('sizePresetSelect');
     const convertBtn = document.getElementById('convertBtn');
     const dpiSelect = document.getElementById('dpiSelect');
-    const sharpenSelect = document.getElementById('sharpenSelect');
     const previewCanvas = document.getElementById('previewCanvas');
     const ctx = previewCanvas.getContext('2d');
     const placeholderTxt = document.getElementById('placeholderTxt');
@@ -580,23 +527,20 @@
     const progressPercent = document.getElementById('progressPercent');
     const downloadBtn = document.getElementById('downloadBtn');
     const printBtn = document.getElementById('printBtn');
+    
+    const dimDisplay = document.getElementById('dimDisplay');
+    const ratioDisplay = document.getElementById('ratioDisplay');
     const resDisplay = document.getElementById('resDisplay');
+    const statusDisplay = document.getElementById('statusDisplay');
 
     const enableTextCheck = document.getElementById('enableTextCheck');
     const textSettingsArea = document.getElementById('textSettingsArea');
-    const modeIndicator = document.getElementById('modeIndicator');
 
-    let currentFitMode = 'fill';
+    let currentFitMode = 'fit_expand';
     let loadedImg = null;
 
     enableTextCheck.addEventListener('change', () => {
-        if (enableTextCheck.checked) {
-            textSettingsArea.style.display = 'block';
-            modeIndicator.textContent = 'Gambar + Teks';
-        } else {
-            textSettingsArea.style.display = 'none';
-            modeIndicator.textContent = 'Gambar Penuh (4:1)';
-        }
+        textSettingsArea.style.display = enableTextCheck.checked ? 'block' : 'none';
     });
 
     document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -607,12 +551,37 @@
         });
     });
 
-    dpiSelect.addEventListener('change', () => {
+    function calculateResolution() {
+        const val = sizePresetSelect.value;
         const dpi = parseInt(dpiSelect.value);
-        const pxW = Math.round(157.48 * dpi);
-        const pxH = Math.round(39.37 * dpi);
+        let w_cm = 400, h_cm = 100, labelDim = "4.0m × 1.0m", labelRatio = "4:1";
+
+        if (val === '400x100') { w_cm = 400; h_cm = 100; labelDim = "4.0m × 1.0m"; labelRatio = "4:1"; }
+        else if (val === '300x100') { w_cm = 300; h_cm = 100; labelDim = "3.0m × 1.0m"; labelRatio = "3:1"; }
+        else if (val === '200x100') { w_cm = 200; h_cm = 100; labelDim = "2.0m × 1.0m"; labelRatio = "2:1"; }
+        else if (val === '100x100') { w_cm = 100; h_cm = 100; labelDim = "1.0m × 1.0m"; labelRatio = "1:1"; }
+        else if (val === '60x160') { w_cm = 60; h_cm = 160; labelDim = "60cm × 160cm"; labelRatio = "0.375:1"; }
+        else if (val === 'A3') { w_cm = 29.7; h_cm = 42.0; labelDim = "A3 (29.7 × 42cm)"; labelRatio = "1:1.41"; }
+        else if (val === 'original' && loadedImg) {
+            const aspect = loadedImg.width / loadedImg.height;
+            w_cm = Math.round(100 * aspect);
+            h_cm = 100;
+            labelDim = `${(w_cm/100).toFixed(1)}m × 1.0m`;
+            labelRatio = `${aspect.toFixed(2)}:1`;
+        }
+
+        const pxW = Math.round((w_cm / 2.54) * dpi);
+        const pxH = Math.round((h_cm / 2.54) * dpi);
+
+        dimDisplay.textContent = labelDim;
+        ratioDisplay.textContent = labelRatio;
         resDisplay.textContent = `${pxW.toLocaleString()} × ${pxH.toLocaleString()} px`;
-    });
+
+        return { pxW, pxH, w_cm, h_cm };
+    }
+
+    sizePresetSelect.addEventListener('change', calculateResolution);
+    dpiSelect.addEventListener('change', calculateResolution);
 
     fileInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -622,8 +591,8 @@
                 loadedImg = new Image();
                 loadedImg.onload = function() {
                     convertBtn.disabled = false;
-                    convertBtn.textContent = 'Mulai Upscale & Konversi';
-                    document.getElementById('statusDisplay').textContent = `${loadedImg.width} × ${loadedImg.height} px`;
+                    statusDisplay.textContent = `${loadedImg.width} × ${loadedImg.height} px`;
+                    calculateResolution();
                 };
                 loadedImg.src = evt.target.result;
             };
@@ -636,119 +605,127 @@
 
         progressBox.style.display = 'block';
         convertBtn.disabled = true;
-        updateProgress(15, 'Menyiapkan canvas 4m x 1m...');
+        updateProgress(20, 'Menghitung resolusi fisik cetak...');
         await sleep(100);
 
-        const targetW = 3200;
-        const targetH = 800;
-        previewCanvas.width = targetW;
-        previewCanvas.height = targetH;
+        const { pxW, pxH } = calculateResolution();
 
-        updateProgress(40, 'Memproses upscaling definisi tinggi...');
-        await sleep(150);
+        // Kanvas render tajam (dibatasi 3600px pada sisi panjang agar HP tidak crash)
+        const maxDim = 3600;
+        let renderW = pxW;
+        let renderH = pxH;
+
+        if (renderW > maxDim || renderH > maxDim) {
+            if (renderW > renderH) {
+                renderH = Math.round((maxDim / renderW) * renderH);
+                renderW = maxDim;
+            } else {
+                renderW = Math.round((maxDim / renderH) * renderW);
+                renderH = maxDim;
+            }
+        }
+
+        previewCanvas.width = renderW;
+        previewCanvas.height = renderH;
+
+        updateProgress(45, 'Merender gambar anti-pecah...');
+        await sleep(100);
 
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
-        ctx.fillStyle = "#090d16";
-        ctx.fillRect(0, 0, targetW, targetH);
 
-        if (currentFitMode === 'fill') {
-            const scale = Math.max(targetW / loadedImg.width, targetH / loadedImg.height);
+        // Background
+        ctx.fillStyle = "#090d16";
+        ctx.fillRect(0, 0, renderW, renderH);
+
+        // Algoritma Penempatan Gambar
+        if (currentFitMode === 'fit_expand') {
+            // Background warna dominan gambar
+            ctx.drawImage(loadedImg, 0, 0, 1, 1);
+            const edgeColor = ctx.getImageData(0, 0, 1, 1).data;
+            ctx.fillStyle = `rgb(${edgeColor[0]}, ${edgeColor[1]}, ${edgeColor[2]})`;
+            ctx.fillRect(0, 0, renderW, renderH);
+
+            // Gambar utuh di tengah tanpa terpotong teksnya
+            const scale = Math.min(renderW / loadedImg.width, renderH / loadedImg.height);
             const w = loadedImg.width * scale;
             const h = loadedImg.height * scale;
-            const x = (targetW - w) / 2;
-            const y = (targetH - h) / 2;
+            const x = (renderW - w) / 2;
+            const y = (renderH - h) / 2;
             ctx.drawImage(loadedImg, x, y, w, h);
-        } else if (currentFitMode === 'stretch') {
-            ctx.drawImage(loadedImg, 0, 0, targetW, targetH);
-        } else if (currentFitMode === 'contain') {
+
+        } else if (currentFitMode === 'fit_blur') {
+            // Latar blur dari gambar asli
             ctx.save();
-            ctx.filter = 'blur(20px) brightness(0.5)';
-            ctx.drawImage(loadedImg, -50, -50, targetW + 100, targetH + 100);
+            ctx.filter = 'blur(30px) brightness(0.6)';
+            ctx.drawImage(loadedImg, -50, -50, renderW + 100, renderH + 100);
             ctx.restore();
 
-            const scale = Math.min(targetW / loadedImg.width, targetH / loadedImg.height);
+            // Gambar tajam utuh di tengah
+            const scale = Math.min(renderW / loadedImg.width, renderH / loadedImg.height);
             const w = loadedImg.width * scale;
             const h = loadedImg.height * scale;
-            const x = (targetW - w) / 2;
-            const y = (targetH - h) / 2;
+            const x = (renderW - w) / 2;
+            const y = (renderH - h) / 2;
             ctx.drawImage(loadedImg, x, y, w, h);
-        } else if (currentFitMode === 'split') {
-            const imgTargetW = targetW * 0.38;
-            const scale = Math.max(imgTargetW / loadedImg.width, targetH / loadedImg.height);
+
+        } else if (currentFitMode === 'fill') {
+            // Penuh (Crop jika rasio berbeda)
+            const scale = Math.max(renderW / loadedImg.width, renderH / loadedImg.height);
             const w = loadedImg.width * scale;
             const h = loadedImg.height * scale;
-            const x = (imgTargetW - w) / 2;
-            const y = 0;
+            const x = (renderW - w) / 2;
+            const y = (renderH - h) / 2;
             ctx.drawImage(loadedImg, x, y, w, h);
 
-            const grad = ctx.createLinearGradient(imgTargetW * 0.5, 0, targetW, 0);
-            grad.addColorStop(0, "rgba(9, 13, 22, 0.0)");
-            grad.addColorStop(0.2, "rgba(9, 13, 22, 0.85)");
-            grad.addColorStop(0.5, "rgba(9, 13, 22, 0.98)");
-            grad.addColorStop(1, "rgba(9, 13, 22, 1.0)");
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, targetW, targetH);
+        } else if (currentFitMode === 'stretch') {
+            // Stretch paksa
+            ctx.drawImage(loadedImg, 0, 0, renderW, renderH);
         }
 
-        updateProgress(70, 'Menerapkan filter anti-blur...');
-        await sleep(150);
+        // Terapkan Filter Penajaman (Sharpening)
+        updateProgress(75, 'Menerapkan filter penajaman digital...');
+        await sleep(100);
+        applySharpenFilter(ctx, 0, 0, renderW, renderH, 0.22);
 
-        const sharpen = sharpenSelect.value;
-        if (sharpen !== 'none') {
-            const strength = sharpen === 'high' ? 0.35 : 0.20;
-            applySharpenFilter(ctx, 0, 0, targetW, targetH, strength);
-        }
-
+        // Tambah teks jika diaktifkan
         if (enableTextCheck.checked) {
-            updateProgress(85, 'Menyematkan tipografi...');
-            await sleep(100);
-
+            updateProgress(88, 'Menambahkan layer teks...');
             const tagText = document.getElementById('tagInput').value;
             const titleText = document.getElementById('titleInput').value;
-            const descText = document.getElementById('descInput').value;
 
-            if (currentFitMode !== 'split') {
-                const textGrad = ctx.createLinearGradient(0, targetH * 0.4, 0, targetH);
-                textGrad.addColorStop(0, "rgba(0, 0, 0, 0.0)");
-                textGrad.addColorStop(1, "rgba(0, 0, 0, 0.85)");
-                ctx.fillStyle = textGrad;
-                ctx.fillRect(0, targetH * 0.3, targetW, targetH * 0.7);
+            ctx.fillStyle = "rgba(0,0,0,0.6)";
+            ctx.fillRect(0, renderH - 120, renderW, 120);
+
+            if (tagText) {
+                ctx.fillStyle = "#f59e0b";
+                ctx.font = "bold 20px sans-serif";
+                ctx.fillText(tagText.toUpperCase(), 40, renderH - 70);
             }
-
-            const textLeft = currentFitMode === 'split' ? targetW * 0.38 : 100;
-
-            if (tagText.trim() !== '') {
-                ctx.fillStyle = "#c5a059";
-                ctx.beginPath();
-                ctx.roundRect(textLeft, currentFitMode === 'split' ? 160 : 420, 200, 44, 6);
-                ctx.fill();
-
-                ctx.font = "bold 20px -apple-system, sans-serif";
-                ctx.fillStyle = "#090d16";
-                ctx.fillText(tagText.toUpperCase(), textLeft + 20, currentFitMode === 'split' ? 190 : 450);
+            if (titleText) {
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 34px sans-serif";
+                ctx.fillText(titleText, 40, renderH - 28);
             }
-
-            ctx.font = "800 58px -apple-system, sans-serif";
-            ctx.fillStyle = "#ffffff";
-            ctx.shadowColor = "rgba(0,0,0,0.8)";
-            ctx.shadowBlur = 10;
-            ctx.fillText(titleText, textLeft, currentFitMode === 'split' ? 290 : 540);
-
-            ctx.font = "300 28px -apple-system, sans-serif";
-            ctx.fillStyle = "#e2e8f0";
-            ctx.fillText(descText, textLeft, currentFitMode === 'split' ? 350 : 600);
-            ctx.shadowBlur = 0;
         }
 
-        updateProgress(100, 'Selesai! Gambar siap diunduh.');
+        updateProgress(100, 'Selesai! File Master Siap Diunduh.');
         placeholderTxt.style.display = 'none';
 
-        const dataUrl = previewCanvas.toDataURL('image/png', 1.0);
-        downloadBtn.href = dataUrl;
-        downloadBtn.download = `Spanduk_4mx1m_HD_${Date.now()}.png`;
-        downloadBtn.style.display = 'inline-flex';
-        printBtn.style.display = 'inline-flex';
+        // Setup Download via Blob
+        previewCanvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            downloadBtn.onclick = function() {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Cetak_${sizePresetSelect.value}_${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            downloadBtn.style.display = 'inline-flex';
+            printBtn.style.display = 'inline-flex';
+        }, 'image/png');
 
         convertBtn.disabled = false;
     });
@@ -759,9 +736,7 @@
         progressStatus.textContent = text;
     }
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
     function applySharpenFilter(context, x, y, w, h, strength) {
         const imgData = context.getImageData(x, y, w, h);
