@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Operasional & Penarikan Insentif - Binayasa Super App</title>
+    <title>Sistem Manajemen Jadwal Harian & Insentif - M-Ops Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan AI Auto Generate, Chat Global, Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, Proteksi Waktu Nyata, dan Dokumentasi Before-After - PT Binayasa Putrabatara.">
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Mutual Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -59,7 +59,7 @@
                 B
             </div>
             <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">Binayasa M-Ops</h2>
-            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian & insentif</p>
+            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Kelola jadwal aktivitas harian & produktivitas</p>
             
             <div id="form-container" class="space-y-2.5">
                 <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-blue-500 transition">
@@ -142,7 +142,7 @@
                     </button>
 
                     <button onclick="openAutoGenerateModal()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:opacity-95 text-white font-bold py-2.5 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> AI Auto Schedule
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> AI Smart Schedule
                     </button>
 
                     <button id="btnSidebarBudget" onclick="openBudgetConfigModal()" class="hidden w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 border border-amber-400/30 mt-2">
@@ -246,10 +246,13 @@
                             <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
 
                             <select id="roleFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
-                                <option value="All">🔍 Semua Divisi</option>
+                                <option value="All">🔍 Semua Kategori</option>
+                                <option value="Masyarakat Umum / Personal">👤 Personal / Umum</option>
+                                <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                                <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
                                 <option value="Teknisi">🛠️ Teknisi</option>
-                                <option value="Cleaning">🧹 Cleaning</option>
-                                <option value="Admin Teknik">📋 Admin Teknik</option>
+                                <option value="Cleaning">🧹 Cleaning Service</option>
+                                <option value="Admin Teknik">📋 Admin</option>
                             </select>
 
                             <select id="statusFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
@@ -286,7 +289,7 @@
                         </div>
 
                         <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
-                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa rencana atau tugas operasional Anda?</span>
+                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa rencana atau target harian Anda?</span>
                         </div>
 
                         <button onclick="openTaskModal()" class="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition active:scale-95 flex-shrink-0" title="Upload Dokumentasi">
@@ -350,8 +353,8 @@
                                     <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
                                         <th class="p-3">Tanggal</th>
                                         <th class="p-3">Waktu</th>
-                                        <th class="p-3">Petugas</th>
-                                        <th class="p-3">Divisi</th>
+                                        <th class="p-3">Nama Pengguna</th>
+                                        <th class="p-3">Kategori</th>
                                         <th class="p-3">Detail Tugas & Dokumentasi</th>
                                         <th class="p-3">Status</th>
                                         <th class="p-3 text-center">Interaksi</th>
@@ -387,7 +390,7 @@
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
                             Chat Global Tim <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                         </h3>
-                        <p class="text-[9.5px] text-slate-400">Diskusi & koordinasi operasional seluruh rekan</p>
+                        <p class="text-[9.5px] text-slate-400">Diskusi & koordinasi seluruh rekan</p>
                     </div>
                 </div>
                 <button onclick="closeGlobalChatModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
@@ -503,7 +506,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Dompet Insentif Pribadi</h3>
-                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja operasional (Senin - Jumat)</p>
+                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja harian (Senin - Jumat)</p>
                     </div>
                 </div>
                 <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
@@ -669,7 +672,7 @@
                     </div>
 
                     <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[9.5px] leading-snug">
-                        <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484). Kirimkan bukti screenshot dashboard melalui chat!
+                        <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484).
                     </div>
                 </div>
 
@@ -708,7 +711,7 @@
                     <input type="text" id="edit-user-email-display" disabled class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan Petugas</label>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan</label>
                     <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                 </div>
                 <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
@@ -862,7 +865,7 @@
                     <i class="fa-solid fa-chevron-left text-base font-bold"></i>
                 </button>
                 <div class="text-center">
-                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi Tugas</h3>
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi</h3>
                     <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
                 </div>
                 <div class="w-8"></div>
@@ -973,7 +976,7 @@
                     </div>
                     <div>
                         <h3 id="modalTitle" class="text-sm font-extrabold text-slate-900 dark:text-white">Tambah Tugas Baru</h3>
-                        <p class="text-[9.5px] text-slate-400">Jadwal kegiatan kerja operasional</p>
+                        <p class="text-[9.5px] text-slate-400">Jadwal kegiatan aktivitas</p>
                     </div>
                 </div>
                 <button onclick="toggleModal(false)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
@@ -984,27 +987,30 @@
             <form id="scheduleForm" class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Tanggal Kerja</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Tanggal</label>
                         <input type="date" id="input-date" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Nama Petugas</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Nama Pengguna / Petugas</label>
                         <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Divisi / Peran</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Kategori / Peran</label>
                         <select id="input-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                            <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                            <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                            <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
                             <option value="Teknisi">🛠️ Teknisi</option>
                             <option value="Cleaning">🧹 Cleaning Service</option>
-                            <option value="Admin Teknik">📋 Admin Teknik</option>
+                            <option value="Admin Teknik">📋 Admin</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Detail Tugas / Area</label>
-                        <input type="text" id="input-task" required placeholder="Contoh: Maintenance AC Lantai 2" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Detail Tugas / Aktivitas</label>
+                        <input type="text" id="input-task" required placeholder="Contoh: Kuliah Jam 09:00 / Perbaikan AC / Buka Toko" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2.5">
@@ -1049,27 +1055,30 @@
             <div class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal Kerja</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal</label>
                         <input type="date" id="bulk-date" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Petugas</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Pengguna</label>
                         <input type="text" id="bulk-name" placeholder="Contoh: FIKRI" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Divisi / Peran</label>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Kategori / Peran</label>
                         <select id="bulk-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                            <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                            <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                            <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
                             <option value="Teknisi">🛠️ Teknisi</option>
                             <option value="Cleaning">🧹 Cleaning Service</option>
-                            <option value="Admin Teknik">📋 Admin Teknik</option>
+                            <option value="Admin Teknik">📋 Admin</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal Chat</label>
-                        <textarea id="bulk-text-area" rows="6" placeholder="19.08.2026:&#10;05.30-07-00:Daily All area dusting&#10;08.00-11-00:pemasangan tissu&#10;12.00.14.00- Buang sampah" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
+                        <textarea id="bulk-text-area" rows="6" placeholder="05.30-07-00: Belanja kebutuhan pasar&#10;08.00-11-00: Kuliah Algoritma&#10;12.00-14.00: Buka toko & cek stok" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
                     </div>
                 </div>
 
@@ -1081,11 +1090,10 @@
         </div>
     </div>
 
-    <!-- MODAL: AUTO GENERATE AI (DENGAN PREVIEW & EDIT SEBELUM SIMPAN) -->
+    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI DENGAN PREVIEW & EDITABLE USER -->
     <div id="autoGenerateModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[94vh] md:h-[88vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             
-            <!-- Header Modal -->
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-600 text-white flex items-center justify-center text-sm shadow-md">
@@ -1093,9 +1101,9 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                            AI Smart Schedule Preview
+                            AI Smart Schedule Multi-Profesi
                         </h3>
-                        <p class="text-[9.5px] text-slate-400">Generate, tinjau, dan edit tugas sebelum disimpan</p>
+                        <p class="text-[9.5px] text-slate-400">Generate, tinjau, dan edit jadwal sebelum disimpan</p>
                     </div>
                 </div>
                 <button onclick="closeAutoGenerateModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
@@ -1106,7 +1114,7 @@
             <div class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     
-                    <!-- KARTU PENGATURAN API KEY -->
+                    <!-- PENGATURAN API KEY -->
                     <div class="p-3 bg-white dark:bg-slate-800/90 border border-purple-200 dark:border-purple-900/60 rounded-2xl shadow-xs space-y-1.5">
                         <div class="flex items-center justify-between">
                             <label class="block text-[10px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider flex items-center gap-1">
@@ -1122,43 +1130,42 @@
                                 <i id="toggleKeyIcon" class="fa-solid fa-eye text-xs"></i>
                             </button>
                         </div>
-                        <p class="text-[8.5px] text-slate-400">
-                            <i class="fa-solid fa-shield-halved text-emerald-500 mr-0.5"></i> Kunci tersimpan aman di browser/HP Anda saja.
-                        </p>
                     </div>
 
-                    <!-- PARAMETER FORM -->
+                    <!-- FORM PARAMETER MULTI-PROFESI -->
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tanggal Kerja</label>
-                            <input type="date" id="gen-date" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tanggal</label>
+                            <input type="date" id="gen-date" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Divisi / Peran</label>
-                            <select id="gen-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
-                                <option value="Teknisi">🛠️ Teknisi (AC, Listrik, Plumbing, Genset)</option>
-                                <option value="Cleaning">🧹 Cleaning Service (Lobby, Toilet, Kaca)</option>
-                                <option value="Admin Teknik">📋 Admin Teknik (Inventaris, Checklist, Rekap)</option>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Kategori / Profesi</label>
+                            <select id="gen-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                                <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                                <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                                <option value="Pedagang / UMKM">🏪 Pedagang / Wirausaha / UMKM</option>
+                                <option value="Teknisi">🛠️ Teknisi Gedung & Perbaikan</option>
+                                <option value="Cleaning">🧹 Cleaning Service & Kebersihan</option>
+                                <option value="Admin Teknik">📋 Admin & Staf Perkantoran</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Petugas</label>
-                        <input type="text" id="gen-name" placeholder="Contoh: Budi Santoso" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Pengguna</label>
+                        <input type="text" id="gen-name" placeholder="Contoh: Budi Santoso / Toko Berkah" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Fokus Tugas / Catatan Tambahan (Opsional)</label>
-                        <input type="text" id="gen-focus" placeholder="Contoh: Fokus perbaikan AC server & general check genset" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Aktivitas Utama / Target Spesifik (Opsional)</label>
+                        <input type="text" id="gen-focus" placeholder="Contoh: Ada kuliah jam 10, belanja stok pasar, atau olahraga" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white">
                     </div>
 
-                    <!-- TOMBOL GENERATE PREVIEW -->
                     <button type="button" onclick="generateAiSchedulePreview()" id="btn-process-gen" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:opacity-95 text-white font-bold py-2.5 rounded-xl text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> 1. Rancang Jadwal dengan AI
                     </button>
 
-                    <!-- SECTION PREVIEW DAN EDIT -->
+                    <!-- DAFTAR PREVIEW & EDIT -->
                     <div id="aiPreviewSection" class="hidden pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider flex items-center gap-1">
@@ -1174,7 +1181,6 @@
 
                 </div>
 
-                <!-- Footer Action -->
                 <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
                     <button onclick="saveAllAiTasks()" id="btn-save-ai-tasks" class="hidden flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
@@ -1231,7 +1237,6 @@
                     <p class="text-xs font-bold text-blue-600 dark:text-blue-400 mt-0.5" id="profile-email-display">email@domain.com</p>
                 </div>
 
-                <!-- PENGATURAN API KEY DI PROFIL -->
                 <div class="bg-white dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1">
                     <div class="flex items-center justify-between">
                         <label class="block text-[9.5px] font-extrabold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
@@ -1302,7 +1307,7 @@
         let cachedMyEarningsData = null;
         let userRanksMap = {};
 
-        // State AI Schedule Generator Editable Preview
+        // State AI Schedule Multi-Profesi Preview
         let previewTasksData = [];
 
         // State Chat Global
@@ -1484,7 +1489,7 @@
             if (userProfilesMap[userId]) return userProfilesMap[userId];
             if (fallbackName) return fallbackName;
             if (fallbackEmail) return fallbackEmail.split('@')[0];
-            return 'Petugas';
+            return 'Pengguna';
         }
 
         function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
@@ -1883,7 +1888,7 @@
                         
                         item.innerHTML = `
                             <div class="flex items-center justify-between font-extrabold">
-                                <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Petugas'}</span>
+                                <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Pengguna'}</span>
                                 <span class="px-1.5 py-0.5 rounded text-[8.5px] ${w.status === 'Sukses' ? 'bg-emerald-500 text-white' : (w.status === 'Ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950')} font-extrabold">${w.status === 'Sukses' ? 'Telah Dibayar ✅' : w.status}</span>
                             </div>
                             <p class="text-slate-600 dark:text-slate-300"><b>Tujuan:</b> ${w.metode_pembayaran} - ${w.nomor_rekening} a.n <b>${w.nama_pemilik}</b></p>
@@ -1978,7 +1983,7 @@
             if (error) console.error("Gagal simpan penarikan:", error);
 
             const tanggalKlaim = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            const pesanWA = `Halo Admin, saya ingin mengajukan *Penarikan Insentif Poin Kerja*:\n\n👤 *Nama Petugas:* ${userName}\n📧 *Email:* ${currentUser.email}\n🗓️ *Tanggal Pengajuan:* ${tanggalKlaim}\n\n💳 *Informasi Tujuan:* \n • ${methodText}\n • No: *${accountNumber}*\n • A.N: *${accountName}*\n\n💰 *Rincian:*\n • Nominal: Rp ${amount.toLocaleString('id-ID')}\n • Biaya Admin: ${fee === 0 ? 'Gratis' : `Rp ${fee.toLocaleString('id-ID')}`}\n • *Total Diterima:* *Rp ${net.toLocaleString('id-ID')}*\n\nMohon diproses, terima kasih!`;
+            const pesanWA = `Halo Admin, saya ingin mengajukan *Penarikan Insentif Poin Kerja*:\n\n👤 *Nama Pengguna:* ${userName}\n📧 *Email:* ${currentUser.email}\n🗓️ *Tanggal Pengajuan:* ${tanggalKlaim}\n\n💳 *Informasi Tujuan:* \n • ${methodText}\n • No: *${accountNumber}*\n • A.N: *${accountName}*\n\n💰 *Rincian:*\n • Nominal: Rp ${amount.toLocaleString('id-ID')}\n • Biaya Admin: ${fee === 0 ? 'Gratis' : `Rp ${fee.toLocaleString('id-ID')}`}\n • *Total Diterima:* *Rp ${net.toLocaleString('id-ID')}*\n\nMohon diproses, terima kasih!`;
 
             const waUrl = `https://wa.me/${ADMIN_WA_PHONE}?text=${encodeURIComponent(pesanWA)}`;
             closeWithdrawModal();
@@ -2057,7 +2062,7 @@
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-1.5">
                                         <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
-                                        ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                                        ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
                                     </div>
                                     <p class="text-[9px] text-slate-400">Total: Rp ${u.grossEarning.toLocaleString('id-ID')} &bull; Ditarik: Rp ${u.totalWithdrawn.toLocaleString('id-ID')}</p>
                                 </div>
@@ -2319,7 +2324,7 @@
                     <div class="text-center text-slate-400 py-10">
                         <i class="fa-solid fa-comments text-3xl mb-2 opacity-30 text-blue-500"></i>
                         <p class="text-xs font-bold">Belum ada obrolan di Chat Global.</p>
-                        <p class="text-[10px] text-slate-400 mt-0.5">Sapa rekan tim dan mulai diskusi operasional hari ini!</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Mulai diskusi operasional hari ini!</p>
                     </div>
                 `;
                 return;
@@ -2456,7 +2461,7 @@
             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-user-plus'; document.getElementById('notifTitle').innerText = 'Pengikut Baru! 🎉';
             document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
-            document.getElementById('notifSender').innerText = `${senderName} mulai mengikuti Anda`; document.getElementById('notifMessage').innerText = `Follow balik agar jadwal kerja operasional saling terlihat!`;
+            document.getElementById('notifSender').innerText = `${senderName} mulai mengikuti Anda`; document.getElementById('notifMessage').innerText = `Follow balik agar jadwal kegiatan saling terlihat!`;
             notifiedTaskId = null; toast.classList.remove('hidden');
 
             if ("Notification" in window && Notification.permission === "granted") { new Notification("Pengikut Baru! 🎉", { body: `${senderName} mulai mengikuti Anda. Klik untuk follow balik!`, icon: '/icon-192.png' }); }
@@ -2474,7 +2479,7 @@
 
             iconContainer.className = `w-8 h-8 rounded-full ${iconBg} text-white flex items-center justify-center text-sm flex-shrink-0`;
             notifIcon.className = `fa-solid ${iconClass}`;
-            notifTitle.innerText = 'Log Aktivitas Petugas';
+            notifTitle.innerText = 'Log Aktivitas';
             notifTitle.className = 'text-[10px] font-extrabold text-amber-500 uppercase tracking-wider';
             notifSender.innerText = title;
             notifMessage.innerText = message;
@@ -2555,7 +2560,7 @@
         async function openFollowsModal() {
             setActiveTab('tabFriends');
             document.getElementById('followsModal').classList.remove('hidden');
-            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar petugas...</div>';
+            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
             await fetchFollowRelations(); renderUsersFollowModal();
         }
 
@@ -2570,7 +2575,7 @@
             globalTasks.forEach(item => {
                 if (item.user_id && item.user_id !== currentUser.id && item.user_email !== SUPER_ADMIN_EMAIL) {
                     if (!userMap[item.user_id]) {
-                        userMap[item.user_id] = { id: item.user_id, email: item.user_email || 'Petugas', nama: getUserDisplayName(item.user_id, item.user_email, item.nama), peran: item.peran || 'Operasional', avatar_url: item.user_avatar || null };
+                        userMap[item.user_id] = { id: item.user_id, email: item.user_email || 'Pengguna', nama: getUserDisplayName(item.user_id, item.user_email, item.nama), peran: item.peran || 'Personal', avatar_url: item.user_avatar || null };
                     }
                 }
             });
@@ -2706,9 +2711,9 @@
             const taskName = getUserDisplayName(task.user_id, task.user_email, task.nama);
             const statusText = task.status === 'Selesai' ? '✅ Selesai' : (task.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum');
             const ketText = task.keterangan ? `\n📌 Keterangan: ${task.keterangan}` : '';
-            const shareText = `📋 *Jadwal Kerja Operasional*\n🏢 Unit: ${UNIT_NAME}\n👤 Petugas: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Divisi: ${task.peran}\n📝 Tugas: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
-            if (navigator.share) { navigator.share({ title: `Jadwal Kerja - ${taskName}`, text: shareText, url: window.location.href, }).catch(() => {}); } 
-            else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin ke clipboard!"); }
+            const shareText = `📋 *Jadwal Aktivitas Harian*\n👤 Nama: ${taskName}\n🗓️ Tanggal: ${formatTanggalIndo(task.tanggal || todayStr)}\n⏰ Waktu: ${task.jam_mulai} - ${task.jam_selesai}\n📌 Kategori: ${task.peran}\n📝 Kegiatan: ${task.tugas}${ketText}\n⚡ Status: ${statusText}`;
+            if (navigator.share) { navigator.share({ title: `Jadwal - ${taskName}`, text: shareText, url: window.location.href, }).catch(() => {}); } 
+            else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin!"); }
         }
 
         function renderTasks() {
@@ -2911,10 +2916,10 @@
                             ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
                             <div class="min-w-0">
                                 <h4 class="text-xs font-extrabold text-slate-900 dark:text-white leading-none truncate">${petugasName}</h4>
-                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-blue-600 font-bold">${tasksOfUser.length} Tugas</span></div>
+                                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mt-1 font-medium"><span>${formatTanggalIndo(postDate)}</span><span>&bull;</span><span class="text-blue-600 font-bold">${tasksOfUser.length} Kegiatan</span></div>
                             </div>
                         </div>
-                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Divisi'}</span>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">${sampleTask?.peran || 'Kategori'}</span>
                     </div>
                     <div class="py-1">${tasksListHtml}</div>
                 `;
@@ -2922,7 +2927,7 @@
 
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-blue-50 dark:bg-blue-950/40 border-y border-blue-200/80';
-                groupHeader.innerHTML = `<td colspan="8" class="px-3 py-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2">${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}<span class="font-extrabold text-blue-900 dark:text-blue-300 text-xs">${petugasName}</span></div><span class="bg-blue-200/60 text-blue-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Tugas</span></div></td>`;
+                groupHeader.innerHTML = `<td colspan="8" class="px-3 py-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2">${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}<span class="font-extrabold text-blue-900 dark:text-blue-300 text-xs">${petugasName}</span></div><span class="bg-blue-200/60 text-blue-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Kegiatan</span></div></td>`;
                 tableBodyDesktop.appendChild(groupHeader);
 
                 tasksOfUser.forEach(item => {
@@ -2934,7 +2939,8 @@
                     
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800';
-                    let roleBadge = item.peran === 'Teknisi' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">🛠️ Teknisi</span>` : (item.peran === 'Cleaning' ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-50 text-teal-700 border border-teal-200">🧹 Cleaning</span>` : `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200">📋 Admin</span>`);
+                    
+                    let roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${item.peran || 'Umum'}</span>`;
 
                     let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
                     
@@ -3304,7 +3310,7 @@
 
         function generateCSVFile(tasks, labelRange) {
             const grouped = {}; tasks.forEach(t => { const key = getUserDisplayName(t.user_id, t.user_email, t.nama); if (!grouped[key]) grouped[key] = []; grouped[key].push(t); });
-            let csvContent = "data:text/csv;charset=utf-8,PETUGAS,TANGGAL,JAM MULAI,JAM SELESAI,DIVISI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
+            let csvContent = "data:text/csv;charset=utf-8,PENGGUNA,TANGGAL,JAM MULAI,JAM SELESAI,KATEGORI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
             Object.keys(grouped).forEach(namaPetugas => {
                 grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai)).forEach(t => {
                     csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
@@ -3315,7 +3321,7 @@
 
         function generatePDFFile(tasks, labelRange) {
             const { jsPDF } = window.jspdf; const doc = new jsPDF();
-            doc.setFont("Helvetica", "bold"); doc.setFontSize(13); doc.text(`LAPORAN JADWAL OPERASIONAL`, 14, 16); doc.setFontSize(10); doc.text(`UNIT: ${UNIT_NAME}`, 14, 22);
+            doc.setFont("Helvetica", "bold"); doc.setFontSize(13); doc.text(`LAPORAN JADWAL AKTIVITAS`, 14, 16); doc.setFontSize(10); doc.text(`UNIT / WORKSPACE: ${UNIT_NAME}`, 14, 22);
             doc.setFont("Helvetica", "normal"); doc.setFontSize(8.5); doc.text(`Rentang: ${labelRange}`, 14, 28);
             
             const grouped = {}; tasks.forEach(t => { const key = getUserDisplayName(t.user_id, t.user_email, t.nama); if (!grouped[key]) grouped[key] = []; grouped[key].push(t); });
@@ -3323,10 +3329,10 @@
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas]; list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
-                tableRows.push([{ content: `PETUGAS: ${namaPetugas.toUpperCase()} - ${list.length} Tugas`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
+                tableRows.push([{ content: `PENGGUNA: ${namaPetugas.toUpperCase()} - ${list.length} Kegiatan`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
                 list.forEach(item => { tableRows.push([globalNo++, formatTanggalIndo(item.tanggal || todayStr), `${item.jam_mulai} - ${item.jam_selesai}`, getUserDisplayName(item.user_id, item.user_email, item.nama), item.peran, item.tugas + (item.keterangan ? `\n(Ket: ${item.keterangan})` : ''), item.status]); });
             });
-            doc.autoTable({ startY: 35, head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Divisi', 'Detail Tugas & Keterangan', 'Status']], body: tableRows, headStyles: { fillColor: [24, 119, 242] }, styles: { fontSize: 8 } });
+            doc.autoTable({ startY: 35, head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Kategori', 'Detail Tugas & Keterangan', 'Status']], body: tableRows, headStyles: { fillColor: [24, 119, 242] }, styles: { fontSize: 8 } });
             doc.save(`Laporan_Jadwal.pdf`); showToast("Berhasil mengekspor PDF!");
         }
 
@@ -3420,7 +3426,7 @@
         }
 
         // ==========================================================
-        // FITUR AI SMART SCHEDULE DENGAN PREVIEW & EDITABLE USER
+        // AI SMART SCHEDULE: GENERATE, PREVIEW & EDITABLE USER
         // ==========================================================
         async function generateAiSchedulePreview() {
             const tanggal = document.getElementById('gen-date').value || todayStr; 
@@ -3430,78 +3436,74 @@
             const userApiKey = getDeviceGeminiApiKey();
             const btnGen = document.getElementById('btn-process-gen');
 
-            if (!name) return alert("Silakan isi nama petugas terlebih dahulu!");
+            if (!name) return alert("Silakan isi nama pengguna terlebih dahulu!");
 
-            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang...';
+            if (!userApiKey || userApiKey.trim().length < 20) {
+                return alert("⚠️ Google Gemini API Key belum diisi!\n\nSilakan klik 'Ambil Key Gratis' di bagian atas modal, buat key di Google AI Studio, lalu tempel di kolom API Key.");
+            }
+
+            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang jadwal...';
             btnGen.disabled = true;
 
-            const promptText = `Kamu adalah koordinator operasional fasilitas gedung profesional di PT Binayasa Putrabatara (Unit: ${UNIT_NAME}).
-Rancang 5 pembagian slot tugas kerja harian yang realistis, spesifik, dan runut untuk divisi "${role}" dari jam 07:00 hingga 17:00 pada tanggal ${tanggal}.
-${focus ? `Instruksi / Catatan Tambahan: "${focus}".` : ''}
+            const promptText = `Kamu adalah asisten perencana aktivitas & produktivitas harian yang sangat fleksibel dan cerdas.
+Buatlah rancangan jadwal kegiatan harian yang SANGAT REALISTIS, PRAKTIS, dan SPESIFIK untuk seorang "${role}" bernama "${name}" pada tanggal ${tanggal}.
+${focus ? `Target / Catatan Tambahan Pengguna: "${focus}".` : ''}
 
-Format Waktu Acuan:
-- Slot 1 (07:00 - 09:00): Persiapan alat & briefing / check pagi
-- Slot 2 (09:00 - 12:00): Pekerjaan lapangan utama
-- Slot 3 (12:00 - 13:00): Ishoma & Standby Gedung
-- Slot 4 (13:00 - 15:30): Lanjutan tugas & perbaikan (#perbaikan jika relevan)
-- Slot 5 (15:30 - 17:00): Closing checklist, housekeeping, & laporan
+Panduan Penyesuaian Berdasarkan Peran:
+- Mahasiswa / Pelajar: Campurkan aktivitas kuliah, review materi/tugas, istirahat, organisasi, dan pengembangan diri.
+- Pedagang / Toko / UMKM: Masukkan pembukaan toko, cek stok barang, melayani pelanggan, pencatatan kas/penjualan, dan closing toko.
+- Masyarakat Umum / Personal: Fokus pada rutinitas harian seimbang (pekerjaan/hobi/keluarga, istirahat, belanja harian, urusan personal).
+- Teknisi / Kebersihan / Gedung: Sertakan persiapan alat, cek unit/fasilitas, pengerjaan utama, dan closing report (gunakan tag #perbaikan jika relevan).
 
-WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa \`\`\`json atau \`\`\`):
+Buat 5 pembagian slot waktu harian yang berurutan dari pagi hingga sore/malam secara logis.
+
+WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lain dan tanpa blok markdown seperti \`\`\`json:
 [
-  {"jam_mulai": "07:00", "jam_selesai": "09:00", "tugas": "Rincian tugas 1"},
-  {"jam_mulai": "09:00", "jam_selesai": "12:00", "tugas": "Rincian tugas 2"},
-  {"jam_mulai": "12:00", "jam_selesai": "13:00", "tugas": "Istirahat, Ishoma & Standby Gedung"},
-  {"jam_mulai": "13:00", "jam_selesai": "15:30", "tugas": "Rincian perbaikan #perbaikan"},
-  {"jam_mulai": "15:30", "jam_selesai": "17:00", "tugas": "Rincian tugas 5"}
+  {"jam_mulai": "07:00", "jam_selesai": "09:00", "tugas": "Rincian kegiatan pagi"},
+  {"jam_mulai": "09:00", "jam_selesai": "12:00", "tugas": "Rincian kegiatan utama"},
+  {"jam_mulai": "12:00", "jam_selesai": "13:00", "tugas": "Istirahat, Makan Siang & Ibadah"},
+  {"jam_mulai": "13:00", "jam_selesai": "16:00", "tugas": "Rincian kegiatan lanjutan"},
+  {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Rincian penutup hari / evaluasi"}
 ]`;
 
             try {
-                let generatedTasks = [
-                    { jam_mulai: '07:00', jam_selesai: '09:00', tugas: 'Persiapan Alat & Cek Rutin Pagi' },
-                    { jam_mulai: '09:00', jam_selesai: '12:00', tugas: `Pekerjaan Utama Divisi ${role}` },
-                    { jam_mulai: '12:00', jam_selesai: '13:00', tugas: 'Istirahat, Ishoma & Standby Gedung' },
-                    { jam_mulai: '13:00', jam_selesai: '15:30', tugas: 'Lanjutan Perbaikan Fasilitas #perbaikan' },
-                    { jam_mulai: '15:30', jam_selesai: '17:00', tugas: 'Checklist Akhir, Evaluasi & Laporan Harian' }
-                ];
-
-                let usedAi = false;
-
-                if (userApiKey && userApiKey.length > 10) {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${userApiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-                    });
-
-                    const data = await response.json();
-                    if (!data.error) {
-                        let rawAi = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                        rawAi = rawAi.replace(/```json|```/gi, '').trim();
-                        try {
-                            const parsed = JSON.parse(rawAi);
-                            if (Array.isArray(parsed) && parsed.length > 0) {
-                                generatedTasks = parsed;
-                                usedAi = true;
-                            }
-                        } catch (e) {
-                            console.warn("Gagal parsing JSON AI, beralih ke template fallback.", e);
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userApiKey.trim()}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            responseMimeType: "application/json"
                         }
-                    } else {
-                        console.warn("Gemini API Error:", data.error);
-                        showToast("API Key limit / tidak valid. Menggunakan template rekomendasi.");
-                    }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error.message || "Gagal menghubungi Gemini API");
                 }
 
-                previewTasksData = generatedTasks;
+                let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+
+                const parsedTasks = JSON.parse(rawAiText);
+
+                if (!Array.isArray(parsedTasks) || parsedTasks.length === 0) {
+                    throw new Error("Format respon AI tidak sesuai.");
+                }
+
+                previewTasksData = parsedTasks;
                 renderAiPreviewCards();
 
                 document.getElementById('aiPreviewSection')?.classList.remove('hidden');
                 document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
-                showToast(usedAi ? "✨ Rancangan AI selesai! Silakan cek & edit di bawah." : "Template dibuat! Silakan cek & edit di bawah.");
+                showToast("✨ Jadwal asli berhasil dirancang oleh Gemini AI!");
 
             } catch (err) {
-                console.error("AI Generation Error:", err);
-                alert("Gagal merancang jadwal: " + err.message);
+                console.error("Gemini AI Error:", err);
+                alert(`Gagal generate via AI: ${err.message}\n\nPastikan API Key Anda aktif dan memiliki kuota.`);
             } finally {
                 btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
                 btnGen.disabled = false;
@@ -3517,7 +3519,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa 
                 container.innerHTML = `
                     <div class="p-4 text-center text-slate-400 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
                         <i class="fa-solid fa-calendar-xmark text-xl mb-1 opacity-40"></i>
-                        <p class="text-xs">Tidak ada slot tugas. Klik <b>Tambah Slot</b> di atas.</p>
+                        <p class="text-xs">Tidak ada slot jadwal. Klik <b>Tambah Slot</b> di atas.</p>
                     </div>`;
                 return;
             }
@@ -3541,7 +3543,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa 
                             <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
                     </div>
-                    <textarea rows="2" oninput="updatePreviewSlotField(${index}, 'tugas', this.value)" placeholder="Tulis rincian tugas..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500 leading-snug">${slot.tugas}</textarea>
+                    <textarea rows="2" oninput="updatePreviewSlotField(${index}, 'tugas', this.value)" placeholder="Tulis rincian kegiatan..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500 leading-snug">${slot.tugas}</textarea>
                 `;
                 container.appendChild(item);
             });
@@ -3574,12 +3576,12 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa 
             const btnSave = document.getElementById('btn-save-ai-tasks');
 
             if (previewTasksData.length === 0) {
-                return alert("Daftar tugas kosong! Tambahkan minimal satu tugas.");
+                return alert("Daftar jadwal kosong! Tambahkan minimal satu tugas.");
             }
 
             for (let i = 0; i < previewTasksData.length; i++) {
                 if (!previewTasksData[i].tugas || !previewTasksData[i].tugas.trim()) {
-                    return alert(`Slot ke-${i + 1} masih kosong. Silakan isi detail tugas atau hapus slot tersebut.`);
+                    return alert(`Slot ke-${i + 1} masih kosong. Silakan isi rincian kegiatan atau hapus slot tersebut.`);
                 }
             }
 
@@ -3609,7 +3611,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa 
             try {
                 const { error } = await _supabase.from('jadwal').insert(bulkPayload);
                 if (!error) {
-                    showToast(`✅ ${bulkPayload.length} tugas berhasil disimpan ke jadwal!`);
+                    showToast(`✅ ${bulkPayload.length} kegiatan berhasil disimpan ke jadwal!`);
                     closeAutoGenerateModal();
                     if (document.getElementById('gen-focus')) document.getElementById('gen-focus').value = '';
                     document.getElementById('aiPreviewSection')?.classList.add('hidden');
@@ -3644,7 +3646,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa format markdown (tanpa 
             userProfilesMap[targetUserId] = newName;
             const { error } = await _supabase.from('app_config').upsert({ id: 'user_profiles', config_data: userProfilesMap, updated_at: new Date().toISOString() });
             if (!error) {
-                showToast("Nama petugas berhasil disimpan!");
+                showToast("Nama berhasil disimpan!");
                 closeEditUserNameModal();
                 renderTasks();
                 calculateAndRenderEarnings();
