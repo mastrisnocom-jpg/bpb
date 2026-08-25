@@ -1,11 +1,11 @@
-    <!DOCTYPE html>
+                <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Jadwal Harian & Insentif - M-Ops Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Mutual Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate, Relasi Teman, Feed Jadwal, Like, Komentar, dan Poin Insentif.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -48,12 +48,9 @@
         ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
         .tab-active { color: #1877f2; border-bottom: 3px solid #1877f2; }
         .dark .tab-active { color: #2e89ff; border-bottom: 3px solid #2e89ff; }
-        .stat-card {
-            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.03);
-        }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
@@ -112,10 +109,6 @@
                     <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-blue-600 text-white transition">
                         <i class="fa-solid fa-newspaper text-xs"></i> Home Feed Jadwal
                     </button>
-                    <button onclick="openNotificationsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
-                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-bell text-xs text-amber-400"></i> Notifikasi</div>
-                        <span id="sideNotifBadge" class="hidden bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
-                    </button>
                     <button onclick="openGlobalChatModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
                         <div class="flex items-center gap-2.5"><i class="fa-solid fa-comments text-xs text-blue-400"></i> Chat Global</div>
                         <span id="sideGlobalChatBadge" class="hidden bg-blue-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
@@ -124,8 +117,8 @@
                         <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Insentif
                     </button>
                     <button onclick="openFollowsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
-                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-user-group text-xs text-teal-400"></i> Relasi Follow / Teman</div>
-                        <span id="sideFollowBadge" class="hidden bg-emerald-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-bell text-xs text-teal-400"></i> Notifikasi Teman</div>
+                        <span id="sideNotifBadge" class="hidden bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
                     </button>
                     
                     <div class="pt-3 border-t border-slate-800 my-2"></div>
@@ -153,7 +146,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-1">
                             <p class="text-[9px] text-slate-400 font-medium leading-none mb-0.5">User:</p>
-                            <span id="side-superadmin-badge" class="hidden bg-slate-800 text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full border border-blue-500/40">SUPER ADMIN ★</span>
+                            <span id="side-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1 rounded">ADMIN</span>
                         </div>
                         <p class="text-[11px] font-bold text-white truncate" id="user-display-side">User</p>
                     </div>
@@ -164,51 +157,43 @@
 
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
-            <!-- HEADER (DESAIN SESUAI GAMBAR) -->
-            <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            <!-- HEADER -->
+            <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
-                <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
+                <div class="flex items-center justify-between px-3 md:px-5 py-2">
                     <div class="flex items-center gap-3">
                         <button onclick="toggleSidebarMenu()" class="text-slate-900 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
-                            <i class="fa-solid fa-bars text-xl font-bold"></i>
+                            <i class="fa-solid fa-bars text-2xl font-bold"></i>
                         </button>
-                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[26px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[24px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
                             binayasa
                         </a>
-                        <span id="superadmin-indicator" class="hidden ml-1 bg-[#1e293b] text-blue-400 font-black text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                            SUPER ADMIN <span class="text-yellow-400 text-[10px]">★</span>
-                        </span>
+                        <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
                     </div>
 
-                    <div class="flex items-center gap-3.5">
+                    <div class="flex items-center gap-3">
+                        <button onclick="openTaskModal()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Buat Post / Tugas Baru">
+                            <i class="fa-regular fa-square-plus text-2xl font-bold"></i>
+                        </button>
                         <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
                             <i class="fa-solid fa-magnifying-glass text-xl font-bold"></i>
                         </button>
                         <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
-                            <i class="fa-regular fa-comment-dots text-2xl text-slate-900 dark:text-white"></i>
+                            <i class="fa-solid fa-comments text-2xl text-slate-900 dark:text-white"></i>
                             <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW (ICON SEPERTI GAMBAR) -->
+                <!-- BOTTOM TAB ROW -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-2 md:px-6">
-                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
-                        <i class="fa-solid fa-house"></i>
-                    </button>
-                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
-                        <i class="fa-solid fa-clapperboard"></i>
-                    </button>
-                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
-                        <i class="fa-solid fa-wallet"></i>
-                    </button>
-                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </button>
-                    <!-- TAB LONCENG NOTIFIKASI -->
-                    <button onclick="openNotificationsModal()" id="tabNotif" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95 relative" title="Notifikasi Interaksi & Teman">
+                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda"><i class="fa-solid fa-house"></i></button>
+                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA"><i class="fa-solid fa-clapperboard"></i></button>
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif"><i class="fa-solid fa-wallet"></i></button>
+                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-teal-500 transition active:scale-95 relative" title="Relasi Follow & Notifikasi">
                         <i class="fa-regular fa-bell"></i>
-                        <span id="tabNotifBadge" class="hidden absolute top-2 right-4 md:right-8 bg-rose-600 text-white text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">0</span>
+                        <span id="headerNotifBadge" class="hidden absolute top-1.5 right-1/4 bg-rose-600 text-white text-[9px] font-black min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                     </button>
                     <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
                         <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[11px] font-bold shadow-xs" id="header-user-avatar-btn">
@@ -268,10 +253,10 @@
                 </div>
             </header>
 
-            <div class="w-full max-w-4xl mx-auto px-3 md:px-4 pt-3.5 flex-grow">
+            <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- INDIKATOR/BANNER MELIHAT FEED TEMAN -->
-                <div id="friendFeedIndicator" class="hidden mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
+                <!-- INDIKATOR MELIHAT FEED TEMAN -->
+                <div id="friendFeedIndicator" class="hidden mx-3.5 md:mx-0 mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
                     <div class="flex items-center gap-2 min-w-0">
                         <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
                             <i class="fa-solid fa-eye"></i>
@@ -286,64 +271,51 @@
                     </button>
                 </div>
 
-                <!-- BARIS INPUT (SESUAI GAMBAR REFERENSI - ICON GAMBAR DIHILANGKAN) -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 mb-3.5 shadow-xs border border-slate-200/80 dark:border-slate-800">
+                <!-- BARIS INPUT CEPAT (ICON GAMBAR DIHILANGKAN SESUAI REQUEST) -->
+                <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 mb-3 shadow-xs">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
                             <div class="w-full h-full flex items-center justify-center text-slate-500"><i class="fa-solid fa-user text-sm"></i></div>
                         </div>
 
-                        <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
-                            <span class="text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold select-none">Apa rencana atau target harian Anda?</span>
+                        <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
+                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa rencana atau target harian Anda?</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (PERSIS GAMBAR REFERENSI) -->
-                <div class="mb-3.5">
-                    <section class="grid grid-cols-4 gap-2 sm:gap-2.5">
-                        
-                        <!-- CARD TOTAL -->
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
-                            <div class="w-8 h-8 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 rounded-xl flex items-center justify-center text-sm flex-shrink-0 border border-slate-200 dark:border-slate-700">
-                                <i class="fa-solid fa-list-ul"></i>
-                            </div>
+                <!-- KARTU STATUS BAR & INSENTIF DENGAN FORMAT 1k, 2k -->
+                <div class="px-3.5 md:px-0 mb-3">
+                    <section class="grid grid-cols-4 gap-2">
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-7 h-7 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-list-check"></i></div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Total</p>
-                                <p id="totalTaskCount" class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Total</p>
+                                <p id="totalTaskCount" class="text-sm font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <!-- CARD PROSES -->
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full border-2 border-amber-300/80 dark:border-amber-500/80 flex items-center justify-center text-xs font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">
-                                <span id="inProgressCountCircle">0</span>
-                            </div>
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-7 h-7 bg-amber-50 dark:bg-amber-950/60 text-amber-500 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-spinner"></i></div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Proses</p>
-                                <p id="inProgressCount" class="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Proses</p>
+                                <p id="inProgressCount" class="text-sm font-extrabold text-amber-500 leading-tight">0</p>
                             </div>
                         </div>
 
-                        <!-- CARD SELESAI -->
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
-                            <div class="w-8 h-8 bg-blue-50 dark:bg-blue-950/40 text-blue-500 rounded-xl flex items-center justify-center text-sm flex-shrink-0 border border-blue-200/60 dark:border-blue-900/60">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
+                        <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-7 h-7 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-lg flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid fa-circle-check"></i></div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Selesai</p>
-                                <p id="completedCount" class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
+                                <p class="text-[9px] text-slate-400 font-semibold truncate leading-none mb-0.5">Selesai</p>
+                                <p id="completedCount" class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400 leading-tight">0</p>
                             </div>
                         </div>
 
-                        <!-- CARD INSENTIF (GRADASI KUNING EMAS) -->
-                        <div onclick="openEarningsModal()" class="bg-[#fef7df] dark:bg-[#3d3110] rounded-2xl p-2.5 border border-amber-200/90 dark:border-amber-700/60 stat-card flex items-center gap-2.5 cursor-pointer active:scale-95 transition">
-                            <div class="w-8 h-8 bg-[#f5e6b3] dark:bg-[#524116] text-amber-800 dark:text-amber-300 rounded-xl flex items-center justify-center text-sm flex-shrink-0 shadow-xs">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
+                        <div onclick="openEarningsModal()" class="bg-gradient-to-tr from-amber-500/10 to-amber-600/20 dark:from-amber-950/40 dark:to-amber-900/20 rounded-xl p-2.5 border border-amber-300 dark:border-amber-700/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
+                            <div class="w-7 h-7 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs flex-shrink-0 shadow-xs shadow-amber-500/30"><i class="fa-solid fa-wallet"></i></div>
                             <div class="min-w-0">
-                                <p class="text-[9.5px] text-amber-800 dark:text-amber-300 font-bold truncate leading-none mb-1">Insentif</p>
-                                <p id="myEarningsBadge" class="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-200 leading-tight">Rp 0</p>
+                                <p class="text-[8.5px] text-amber-700 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif</p>
+                                <p id="myEarningsBadge" class="text-xs font-extrabold text-amber-800 dark:text-amber-300 leading-tight">Rp 0</p>
                             </div>
                         </div>
                     </section>
@@ -352,7 +324,7 @@
                 <!-- CONTAINER JADWAL -->
                 <section>
                     <!-- DESKTOP -->
-                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden mx-3.5 md:mx-0">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
@@ -372,7 +344,7 @@
                         </div>
                     </div>
 
-                    <!-- MOBILE FEED -->
+                    <!-- MOBILE -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
@@ -384,32 +356,6 @@
         </main>
     </div>
 
-    <!-- MODAL NOTIFIKASI TERPADU (LONCENG) -->
-    <div id="notificationsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[88] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Pusat Notifikasi</h3>
-                        <p class="text-[9.5px] text-slate-400">Jadwal teman, likes, komentar & teman baru</p>
-                    </div>
-                </div>
-                <button onclick="closeNotificationsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <div id="notificationsList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
-
-            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-                <button onclick="closeNotificationsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
-            </div>
-        </div>
-    </div>
-
 <!-- MODAL CHAT GLOBAL TIM -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
@@ -419,7 +365,9 @@
                         <i class="fa-solid fa-comments"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">Chat Global Tim</h3>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            Chat Global Tim <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        </h3>
                         <p class="text-[9.5px] text-slate-400">Diskusi & koordinasi seluruh rekan</p>
                     </div>
                 </div>
@@ -427,19 +375,28 @@
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
+
             <div id="globalChatMessages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                 <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
-                    <input type="text" id="inputGlobalChatMessage" onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" placeholder="Ketik pesan..." class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
+                    <input type="text" 
+                           id="inputGlobalChatMessage" 
+                           onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" 
+                           placeholder="Ketik pesan untuk seluruh tim..." 
+                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
                 </div>
-                <button id="btnSendGlobalChat" onclick="sendGlobalChatMessage()" class="w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
+
+                <button id="btnSendGlobalChat" 
+                        onclick="sendGlobalChatMessage()" 
+                        class="w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL FORM SELESAI TUGAS -->
+    <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -456,149 +413,570 @@
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
+
             <form id="formCompletionNote" class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     <input type="hidden" id="complete-task-id">
+                    
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tugas</label>
                         <p id="complete-task-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 leading-snug">-</p>
                     </div>
+
                     <div id="complete-late-warning" class="hidden p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] space-y-1">
                         <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
-                        <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak mendapat poin baru (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan lunas</b>.</p>
+                        <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
                     </div>
+                    
                     <div>
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan <span id="note-required-star" class="text-rose-500 hidden">*</span></label>
-                        <textarea id="complete-task-note" rows="3" placeholder="Rincian hasil pekerjaan..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
+                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
                     </div>
+
                     <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
-                        <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"><i class="fa-solid fa-camera mr-1"></i> Upload Dokumentasi Foto Kerja</p>
+                        <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                            <i class="fa-solid fa-camera mr-1"></i> Upload Dokumentasi Foto Kerja
+                        </p>
+
                         <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
-                            <label class="block text-[9.5px] font-extrabold text-slate-600 dark:text-slate-300">📷 Foto Sebelum (Before)</label>
+                            <label class="block text-[9.5px] font-extrabold text-slate-600 dark:text-slate-300">
+                                📷 Foto Sebelum Dikerjakan (Before)
+                            </label>
                             <input type="file" id="complete-file-before" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-slate-200 dark:file:bg-slate-700 file:text-slate-700 dark:file:text-slate-200 cursor-pointer">
-                            <div id="complete-before-preview-container" class="hidden pt-1"><img id="complete-before-preview" class="w-full h-28 object-cover rounded-lg border"></div>
+                            <div id="complete-before-preview-container" class="hidden pt-1">
+                                <img id="complete-before-preview" class="w-full h-28 object-cover rounded-lg border border-slate-200 dark:border-slate-700">
+                            </div>
                         </div>
+
                         <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
-                            <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">✅ Foto Sesudah (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span></label>
-                            <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white cursor-pointer">
-                            <div id="complete-after-preview-container" class="hidden pt-1"><img id="complete-after-preview" class="w-full h-28 object-cover rounded-lg border"></div>
+                            <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">
+                                ✅ Foto Sesudah Dikerjakan (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span>
+                            </label>
+                            <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                            <div id="complete-after-preview-container" class="hidden pt-1">
+                                <img id="complete-after-preview" class="w-full h-28 object-cover rounded-lg border border-slate-200 dark:border-slate-700">
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px] leading-tight">
+                        <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres &le; 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
                     </div>
                 </div>
+
                 <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
-                    <button type="submit" id="btn-submit-completion" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95"><i class="fa-solid fa-check"></i> Simpan Selesai</button>
+                    <button type="submit" id="btn-submit-completion" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                        <i class="fa-solid fa-check"></i> Simpan Selesai
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL DOMPET INSENTIF PRIBADI -->
+    <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
     <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center text-sm shadow-md"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Dompet Insentif Pribadi</h3>
-                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja harian</p>
+                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja harian (Senin - Jumat)</p>
                     </div>
                 </div>
-                <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+                <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
             </div>
+
             <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
-                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya</p>
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya (Bulan Ini)</p>
                     <div class="flex items-end justify-between mt-1">
                         <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold">Rp 0</h2>
-                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="hidden bg-white text-amber-700 hover:bg-amber-50 active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Tarik Dana</button>
+                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="hidden bg-white text-amber-700 hover:bg-amber-50 active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Tarik Dana
+                        </button>
                     </div>
-                    <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">* Minimal penarikan saldo adalah Rp 10k</p>
+
+                    <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">
+                        * Minimal penarikan saldo adalah Rp 10.000
+                    </p>
+
                     <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
                         <span id="modalMyPointsDetail">0 Poin</span>
                         <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
                         <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
                     </div>
                 </div>
+
                 <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
                     <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan</h4>
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan Insentif
+                        </h4>
                         <span id="myWithdrawalBadge" class="text-[9px] font-bold text-slate-400">0 Data</span>
                     </div>
-                    <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5"><div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div></div>
+                    <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5">
+                        <div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>
+                    </div>
                 </div>
+
                 <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-                    <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1"><i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin</h4>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin & Waktu
+                        </h4>
+                        <button id="btnEditPointScheme" onclick="closeEarningsModal(); openBudgetConfigModal();" class="hidden text-[10px] font-extrabold text-amber-500 hover:underline">
+                            <i class="fa-solid fa-pen mr-0.5"></i> Edit
+                        </button>
+                    </div>
                     <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
                 </div>
+
+                <div id="adminWithdrawalManagementCard" class="hidden p-3 bg-rose-50/50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-[10px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-money-bill-transfer text-rose-500"></i> Verifikasi Penarikan Tim (Admin)
+                        </h4>
+                    </div>
+                    <div id="adminWithdrawalsList" class="space-y-2 max-h-48 overflow-y-auto pr-0.5">
+                        <div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan baru.</div>
+                    </div>
+                </div>
+
+                <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
+                        <span>Total Realisasi Tim (Admin)</span>
+                        <span id="modalTeamBudgetUsage">Rp 0 / Rp 100.000</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="modalBudgetProgressBar" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="adminTeamListContainer" class="hidden">
+                    <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
+                    <div id="teamEarningsList" class="space-y-1.5"></div>
+                </div>
             </div>
+
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="closeEarningsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL RELASI FOLLOW -->
+    <!-- MODAL NOTIFIKASI & RELASI TEMAN -->
     <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-teal-500 text-white flex items-center justify-center text-sm shadow-md"><i class="fa-solid fa-user-group"></i></div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-teal-500 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
                     <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Relasi Petugas (Mutual Follow)</h3>
-                        <p class="text-[9.5px] text-slate-400">Klik nama teman mutual untuk melihat jadwalnya</p>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Notifikasi & Relasi Teman</h3>
+                        <p class="text-[9.5px] text-slate-400">Lihat relasi follow dan update jadwal rekan tim</p>
                     </div>
                 </div>
-                <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+                <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
             </div>
+
             <div id="usersFollowList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
                 <button onclick="closeFollowsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR -->
+    <!-- MODAL KOMENTAR POSTINGAN (DIPAKAI BERSAMA UNTUK JADWAL SENDIRI & TEMAN) -->
     <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90"><i class="fa-solid fa-chevron-left text-base font-bold"></i></button>
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90">
+                    <i class="fa-solid fa-chevron-left text-base font-bold"></i>
+                </button>
                 <div class="text-center">
                     <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi</h3>
                     <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
                 </div>
                 <div class="w-8"></div>
             </div>
+
             <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
+            <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span id="replyIndicatorText" class="text-blue-600 dark:text-blue-400 font-bold truncate"></span>
+                <button onclick="cancelReplyOrEdit()" class="text-slate-400 hover:text-rose-500 font-bold ml-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
             <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                 <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-blue-500 transition">
-                    <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 focus:outline-none py-1">
+                    <input type="text" 
+                           id="inputNewComment" 
+                           onkeydown="if(event.key === 'Enter') sendComment()" 
+                           placeholder="Silakan tulis komentar..." 
+                           class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
                 </div>
-                <button id="btnSendComment" onclick="sendComment()" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center transition active:scale-90 flex-shrink-0"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+
+                <button id="btnSendComment" 
+                        onclick="sendComment()" 
+                        class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-blue-600 hover:text-white flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-xs">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL FORM SINGLE TASK -->
+    <!-- TOAST NOTIFIKASI INTERAKTIF -->
+    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-blue-600 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
+        <div class="flex items-start gap-2.5">
+            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
+                <i id="notifIcon" class="fa-solid fa-bell"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between">
+                    <p id="notifTitle" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Notifikasi</p>
+                    <span class="text-[8px] text-slate-400">Baru saja</span>
+                </div>
+                <p id="notifSender" class="text-xs font-bold truncate">User</p>
+                <p id="notifMessage" class="text-[11px] text-slate-600 dark:text-slate-300 leading-snug line-clamp-2 mt-0.5">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM PENARIKAN -->
+    <div id="withdrawModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Form Penarikan Insentif</h3>
+                        <p class="text-[9.5px] text-slate-400">Pengajuan klaim insentif ke bendahara</p>
+                    </div>
+                </div>
+                <button onclick="closeWithdrawModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <form id="formWithdrawRequest" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Saldo Siap Tarik</label>
+                        <input type="text" id="wd-available-balance" disabled class="w-full bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Jumlah Penarikan (Rp)</label>
+                        <input type="number" id="wd-amount" min="10000" step="1000" required oninput="calculateWithdrawFee()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        <span id="wd-min-info" class="text-[9px] text-slate-400 block mt-0.5">* Minimal Rp 10.000</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tujuan Bank / E-Wallet</label>
+                        <select id="wd-method" required onchange="calculateWithdrawFee()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                            <option value="BANK_BTN">🏦 Bank BTN (Gratis Admin Rp 0)</option>
+                            <option value="BANK_BCA">🏦 Bank BCA</option>
+                            <option value="BANK_BRI">🏦 Bank BRI</option>
+                            <option value="BANK_MANDIRI">🏦 Bank Mandiri</option>
+                            <option value="BANK_BNI">🏦 Bank BNI</option>
+                            <option value="BANK_BSI">🏦 Bank Syariah Indonesia (BSI)</option>
+                            <option value="EWALLET_DANA">📱 DANA (E-Wallet)</option>
+                            <option value="EWALLET_GOPAY">📱 GoPay (E-Wallet)</option>
+                            <option value="EWALLET_OVO">📱 OVO (E-Wallet)</option>
+                            <option value="EWALLET_SHOPEEPAY">📱 ShopeePay (E-Wallet)</option>
+                            <option value="EWALLET_LINKAJA">📱 LinkAja (E-Wallet)</option>
+                            <option value="LAINNYA">💳 Bank / E-Wallet Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div id="wd-other-method-container" class="hidden">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Bank/E-Wallet Lainnya</label>
+                        <input type="text" id="wd-other-method-name" placeholder="Contoh: Bank Jatim / Seabank" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nomor Rekening / No. HP E-Wallet</label>
+                        <input type="text" id="wd-account-number" required placeholder="Contoh: 001234567890 / 08123456789" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500 font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Pemilik Rekening / Akun</label>
+                        <input type="text" id="wd-account-name" required placeholder="Nama sesuai buku tabungan / akun" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                        <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
+                            <span>Nominal Tarik:</span>
+                            <span id="wd-calc-nominal" class="font-bold text-slate-800 dark:text-white">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
+                            <span>Biaya Admin:</span>
+                            <span id="wd-calc-fee" class="font-bold text-rose-500">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-extrabold pt-1 border-t border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400">
+                            <span>Total Bersih Diterima:</span>
+                            <span id="wd-calc-net">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[9.5px] leading-snug">
+                        <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484).
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" id="btnSubmitWithdraw" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT NAMA USER (SUPER ADMIN) -->
+    <div id="editUserNameModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-xs h-auto md:h-auto md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-user-pen"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Edit Nama Petugas</h3>
+                        <p class="text-[9.5px] text-slate-400">Pengaturan Super Admin</p>
+                    </div>
+                </div>
+                <button onclick="closeEditUserNameModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <form id="formEditUserName" class="p-4 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                <input type="hidden" id="edit-user-target-id">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Email User</label>
+                    <input type="text" id="edit-user-email-display" disabled class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-medium text-slate-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan</label>
+                    <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Setelah disimpan, nama ini akan otomatis terisi saat user menambahkan tugas baru.
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan Nama</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL SETTING ANGGARAN, SKEMA POIN & PENARIKAN (SUPER ADMIN) -->
+    <div id="budgetConfigModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Pengaturan Anggaran & Penarikan</h3>
+                        <p class="text-[9.5px] text-slate-400">Konfigurasi poin & batas insentif operasional</p>
+                    </div>
+                </div>
+                <button onclick="closeBudgetConfigModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <form id="formBudgetConfig" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Total Anggaran Bulanan (Rp)</label>
+                        <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tarif / 100 Poin (Rp)</label>
+                            <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Max Tugas/Hari</label>
+                            <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                        <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Aturan Penarikan & Fee Admin</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Biaya Admin Non-BTN (Rp)</span>
+                                <input type="number" id="inputAdminFeeNonBtn" min="0" step="500" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Minimal Penarikan (Rp)</span>
+                                <input type="number" id="inputMinWithdrawal" min="1000" step="1000" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                        <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Penyesuaian Nilai Poin</label>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🌅 Buat &lt;06:00</span>
+                                <input type="number" id="inputPointsEarly" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">✅ Selesai Tepat Jam</span>
+                                <input type="number" id="inputPointsOnTime" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚡ Status Proses</span>
+                                <input type="number" id="inputPointsProcess" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚠️ Selesai Lewat Jam</span>
+                                <input type="number" id="inputPointsLate" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">❌ Expired (Lewat Hari)</span>
+                                <input type="number" id="inputPointsExpired" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🔥 Streak 5 Hari</span>
+                                <input type="number" id="inputPointsStreak" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button type="button" onclick="closeBudgetConfigModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI HAPUS JADWAL -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[99] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-xs h-auto md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="p-5 text-center">
+                <div class="w-12 h-12 bg-rose-100 dark:bg-rose-950/60 text-rose-500 rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-sm">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">Hapus Jadwal?</h3>
+                <p class="text-xs text-slate-400 mb-5">Tugas yang dihapus tidak dapat dipulihkan kembali dari sistem.</p>
+                <div class="flex gap-2">
+                    <button onclick="closeConfirmModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button id="btn-confirm-delete" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EXPORT PERIODE -->
+    <div id="exportModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-auto md:h-auto md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Pilih Rentang Waktu Export</h3>
+                        <p class="text-[9.5px] text-slate-400">Unduh rekapan laporan kerja tim</p>
+                    </div>
+                </div>
+                <button onclick="closeExportModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div class="p-4 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Periode Cetak</label>
+                    <select id="exportRangeType" onchange="handleExportRangeChange()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                        <option value="daily">📅 Harian (Tanggal Aktif)</option>
+                        <option value="weekly">📆 Mingguan (7 Hari Ini)</option>
+                        <option value="monthly">🗓️ Bulanan (Bulan Ini)</option>
+                        <option value="yearly">📊 Tahunan (Tahun Ini)</option>
+                        <option value="custom">⚙️ Kustom (Pilih Rentang Tanggal)</option>
+                    </select>
+                </div>
+
+                <div id="customDateRangeContainer" class="hidden space-y-2 pt-1">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Dari Tanggal</label>
+                        <input type="date" id="exportStartDate" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Sampai Tanggal</label>
+                        <input type="date" id="exportEndDate" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="closeExportModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button onclick="processExportExecution()" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                        <i class="fa-solid fa-file-export"></i> Unduh Laporan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FORM SINGLE TASK -->
     <div id="scheduleModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <h3 id="modalTitle" class="text-sm font-extrabold text-slate-900 dark:text-white">Tambah Tugas Baru</h3>
-                <button onclick="toggleModal(false)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="text-sm font-extrabold text-slate-900 dark:text-white">Tambah Tugas Baru</h3>
+                        <p class="text-[9.5px] text-slate-400">Jadwal kegiatan aktivitas</p>
+                    </div>
+                </div>
+                <button onclick="toggleModal(false)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
             </div>
+
             <form id="scheduleForm" class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal</label>
-                        <input type="date" id="input-date" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Tanggal</label>
+                        <input type="date" id="input-date" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
+
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Pengguna</label>
-                        <input type="text" id="input-name" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Nama Pengguna / Petugas</label>
+                        <input type="text" id="input-name" required placeholder="Contoh: Budi Santoso" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
+
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Kategori</label>
-                        <select id="input-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Kategori / Peran</label>
+                        <select id="input-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                             <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
                             <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
                             <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
@@ -607,600 +985,1011 @@
                             <option value="Admin Teknik">📋 Admin</option>
                         </select>
                     </div>
+
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Detail Tugas</label>
-                        <input type="text" id="input-task" required placeholder="Contoh: Kuliah Jam 09:00 / Perbaikan AC" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Detail Tugas / Aktivitas</label>
+                        <input type="text" id="input-task" required placeholder="Contoh: Kuliah Jam 09:00 / Perbaikan AC / Buka Toko" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
+
                     <div class="grid grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Jam Mulai</label>
-                            <input type="time" id="input-start-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Jam Mulai</label>
+                            <input type="time" id="input-start-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                         </div>
+
                         <div>
-                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Jam Selesai</label>
-                            <input type="time" id="input-end-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Jam Berakhir</label>
+                            <input type="time" id="input-end-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                         </div>
                     </div>
                 </div>
+
                 <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                    <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 font-bold py-2.5 rounded-xl text-xs">Batal</button>
-                    <button type="submit" id="btn-save-task" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs">Simpan</button>
+                    <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" id="btn-save-task" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1 shadow-md active:scale-95">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- TOAST STANDARD -->
+    <!-- MODAL: IMPORT TEKS CHAT WA -->
+    <div id="bulkTextModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-paste"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Import Banyak via Teks</h3>
+                        <p class="text-[9.5px] text-slate-400">Konversi otomatis format teks chat WA</p>
+                    </div>
+                </div>
+                <button onclick="closeBulkTextModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="bulk-date" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Pengguna</label>
+                        <input type="text" id="bulk-name" placeholder="Contoh: FIKRI" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Kategori / Peran</label>
+                        <select id="bulk-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                            <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                            <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                            <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
+                            <option value="Teknisi">🛠️ Teknisi</option>
+                            <option value="Cleaning">🧹 Cleaning Service</option>
+                            <option value="Admin Teknik">📋 Admin</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tempel Pesan Jadwal Chat</label>
+                        <textarea id="bulk-text-area" rows="6" placeholder="05.30-07-00: Belanja kebutuhan pasar&#10;08.00-11-00: Kuliah Algoritma&#10;12.00-14.00: Buka toko & cek stok" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button onclick="closeBulkTextModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button onclick="processBulkTextImport()" id="btn-process-bulk" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md active:scale-95 transition">Simpan Semua</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI -->
+    <div id="autoGenerateModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[94vh] md:h-[88vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            AI Smart Schedule Multi-Profesi
+                        </h3>
+                        <p class="text-[9.5px] text-slate-400">Generate, tinjau, dan edit jadwal sebelum disimpan</p>
+                    </div>
+                </div>
+                <button onclick="closeAutoGenerateModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    
+                    <div class="p-3 bg-white dark:bg-slate-800/90 border border-purple-200 dark:border-purple-900/60 rounded-2xl shadow-xs space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-[10px] font-extrabold text-purple-700 dark:text-purple-300 uppercase tracking-wider flex items-center gap-1">
+                                <i class="fa-solid fa-key text-amber-500"></i> Google Gemini API Key
+                            </label>
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[9px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5">
+                                Ambil Key Gratis <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                            </a>
+                        </div>
+                        <div class="relative flex items-center">
+                            <input type="password" id="userGeminiApiKey" placeholder="Tempel AIzaSy... API Key Anda" onchange="saveGeminiApiKey(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 pr-8 text-xs font-mono text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                            <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                                <i id="toggleKeyIcon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tanggal</label>
+                            <input type="date" id="gen-date" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Kategori / Profesi</label>
+                            <select id="gen-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-xs font-bold text-slate-800 dark:text-white">
+                                <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                                <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                                <option value="Pedagang / UMKM">🏪 Pedagang / Wirausaha / UMKM</option>
+                                <option value="Teknisi">🛠️ Teknisi Gedung & Perbaikan</option>
+                                <option value="Cleaning">🧹 Cleaning Service & Kebersihan</option>
+                                <option value="Admin Teknik">📋 Admin & Staf Perkantoran</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Pengguna</label>
+                        <input type="text" id="gen-name" placeholder="Contoh: Budi Santoso / Toko Berkah" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Aktivitas Utama / Target Spesifik (Opsional)</label>
+                        <input type="text" id="gen-focus" placeholder="Contoh: Ada kuliah jam 10, belanja stok pasar, atau olahraga" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white">
+                    </div>
+
+                    <button type="button" onclick="generateAiSchedulePreview()" id="btn-process-gen" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:opacity-95 text-white font-bold py-2.5 rounded-xl text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 1. Rancang Jadwal dengan AI
+                    </button>
+
+                    <div id="aiPreviewSection" class="hidden pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-extrabold text-purple-600 dark:text-purple-400 uppercase tracking-wider flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> Cek & Edit Daftar Tugas:
+                            </span>
+                            <button type="button" onclick="addNewPreviewSlot()" class="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-plus text-[9px]"></i> Tambah Slot
+                            </button>
+                        </div>
+
+                        <div id="aiPreviewList" class="space-y-2"></div>
+                    </div>
+
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button onclick="closeAutoGenerateModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button onclick="saveAllAiTasks()" id="btn-save-ai-tasks" class="hidden flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-check-double"></i> 2. Simpan Semua ke Jadwal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PREVIEW FOTO BESAR -->
+    <div id="imagePreviewModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[130] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4" onclick="this.classList.add('hidden')">
+        <div class="relative w-full md:max-w-lg bg-white dark:bg-slate-900 md:rounded-[32px] rounded-t-[28px] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
+            <div class="px-4 py-3.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
+                <h4 id="previewImageTitle" class="text-xs font-extrabold text-slate-900 dark:text-white">Dokumentasi Kerja</h4>
+                <button onclick="document.getElementById('imagePreviewModal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+            <div class="p-3 flex items-center justify-center bg-slate-950/80 min-h-[260px]">
+                <img id="previewImageLarge" src="" class="max-h-[65vh] w-auto object-contain rounded-xl">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PROFIL & TEMA -->
+    <div id="form-profile-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-sm h-auto md:h-auto md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Profil & Preferensi</h3>
+                        <p class="text-[9.5px] text-slate-400">Pengaturan akun pengguna</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div class="p-4 bg-slate-50/50 dark:bg-slate-950/40 space-y-3.5">
+                <div class="text-center pb-1">
+                    <div class="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-2xl font-bold shadow-md mx-auto mb-2 border-2 border-white dark:border-slate-800" id="modal-user-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-1.5">
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white" id="modal-user-name">Pengguna</h3>
+                        <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">SUPER ADMIN</span>
+                    </div>
+                    <p class="text-xs font-bold text-blue-600 dark:text-blue-400 mt-0.5" id="profile-email-display">email@domain.com</p>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-[9.5px] font-extrabold text-slate-500 dark:text-slate-300 uppercase tracking-wider">
+                            <i class="fa-solid fa-key text-amber-500 mr-0.5"></i> Kunci Gemini AI Device
+                        </label>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[8.5px] text-blue-500 hover:underline">Dapatkan Key</a>
+                    </div>
+                    <input type="password" id="profileGeminiApiKey" placeholder="AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                </div>
+
+                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider text-center mb-2.5">Pilihan Tema Warna</h4>
+                    <div class="grid grid-cols-5 gap-2.5 justify-items-center">
+                        <button onclick="applyTheme('blue')" class="w-8 h-8 rounded-full bg-[#3b82f6] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                        <button onclick="applyTheme('emerald')" class="w-8 h-8 rounded-full bg-[#10b981] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                        <button onclick="applyTheme('indigo')" class="w-8 h-8 rounded-full bg-[#6366f1] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                        <button onclick="applyTheme('violet')" class="w-8 h-8 rounded-full bg-[#8b5cf6] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                        <button onclick="applyTheme('rose')" class="w-8 h-8 rounded-full bg-[#f43f5e] shadow-sm border-2 border-white dark:border-slate-800 active:scale-95 transition"></button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2 pt-1">
+                    <a href="/" class="w-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-bold py-2.5 rounded-xl text-xs hover:bg-blue-100 dark:hover:bg-blue-900/50 flex items-center justify-center gap-1.5 transition active:scale-95">
+                        <i class="fa-solid fa-house text-xs"></i> Kembali ke Menu Utama
+                    </a>
+                    <div class="flex gap-2">
+                        <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+                        <button onclick="logout()" class="flex-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-bold py-2.5 rounded-xl text-xs hover:bg-rose-100 flex items-center justify-center gap-1.5 active:scale-95 transition"><i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-<script>
-        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
-        const ADMIN_WA_PHONE = '6282146511484';
-        const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
-
-        let currentUser = null;
-        let globalTasks = [];
-        let globalWithdrawals = [];
-        let notificationsList = [];
-        let unreadNotifCount = 0;
-        let editingTaskId = null;
-        let isSuperAdmin = false;
-        let activeFriendFeedId = null;
-        let activeFriendFeedName = null;
-
-        // Subscriptions
-        let realtimeSubscription = null;
-        let commentsSubscription = null;
-        let followsSubscription = null;
-        let globalChatSubscription = null;
-        let activeCommentJadwalId = null;
-        let myFollowings = [];
-        let myFollowers = [];
-        let mutualFriends = [];
-        let onlineUsersState = {};
-        let userProfilesMap = {};
-
-        let budgetSettings = {
-            monthlyBudget: 100000,
-            ratePerTask: 10,
-            maxDailyTasks: 5,
-            pointsEarly: 100,
-            pointsOnTime: 100,
-            pointsProcess: 50,
-            pointsLate: 0,
-            pointsExpired: 50,
-            pointsStreak: 200,
-            pointsNewUser: 1000,
-            pointsMutual: 500,
-            pointsPhoto: 50,
-            pointsPerbaikan: 100,
-            pointsComment: 10,
-            adminFeeNonBtn: 2500,
-            minWithdrawal: 10000
-        };
-
-        const localNow = new Date();
-        const yearNow = localNow.getFullYear();
-        const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
-        const dayNow = String(localNow.getDate()).padStart(2, '0');
-        const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
-
-        // FORMAT RUPIAH KE 1k, 2k, 10.5k
-        function formatRupiahK(amount) {
-            const num = Number(amount) || 0;
-            if (num === 0) return 'Rp 0';
-            if (num >= 1000) {
-                const inK = num / 1000;
-                return `Rp ${inK % 1 === 0 ? inK : inK.toFixed(1)}k`;
-            }
-            return `Rp ${num.toLocaleString('id-ID')}`;
-        }
-
-        function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
-            if (userProfilesMap[userId]) return userProfilesMap[userId];
-            if (fallbackName) return fallbackName;
-            if (fallbackEmail) return fallbackEmail.split('@')[0];
-            return 'Pengguna';
-        }
-
-        function formatTanggalIndo(dateStr) {
-            if (!dateStr) return '-';
-            const parts = dateStr.split('-');
-            if (parts.length === 3) {
-                const date = new Date(parts[0], parts[1] - 1, parts[2]);
-                return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            }
-            return dateStr;
-        }
-
-        function getAvatarUrl(userObj) {
-            return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
-        }
-
-        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
-            if (avatarUrl) {
-                return `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover border border-slate-200 dark:border-slate-700">`;
-            }
-            const initial = (name || 'U').charAt(0).toUpperCase();
-            return `<div class="${sizeClass} rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold border border-slate-200 dark:border-slate-700">${initial}</div>`;
-        }
-
-        // ==========================================================
-        // PUSAT NOTIFIKASI LONCENG & BADGE TEMAN
-        // ==========================================================
-        function addNotification(type, title, message, targetTaskId = null, targetUserId = null, targetUserName = '') {
-            const newNotif = {
-                id: Date.now(),
-                type,
-                title,
-                message,
-                targetTaskId,
-                targetUserId,
-                targetUserName,
-                time: new Date().toISOString()
-            };
-            notificationsList.unshift(newNotif);
-            unreadNotifCount++;
-            updateNotificationBadges();
-        }
-
-        function updateNotificationBadges() {
-            const tabBadge = document.getElementById('tabNotifBadge');
-            const sideNotifBadge = document.getElementById('sideNotifBadge');
-            const sideFollowBadge = document.getElementById('sideFollowBadge');
-
-            const pendingFollowsCount = myFollowers.filter(id => !myFollowings.includes(id)).length;
-
-            if (unreadNotifCount > 0) {
-                const countStr = unreadNotifCount > 99 ? '99+' : unreadNotifCount;
-                if (tabBadge) { tabBadge.innerText = countStr; tabBadge.classList.remove('hidden'); }
-                if (sideNotifBadge) { sideNotifBadge.innerText = countStr; sideNotifBadge.classList.remove('hidden'); }
-            } else {
-                if (tabBadge) tabBadge.classList.add('hidden');
-                if (sideNotifBadge) sideNotifBadge.classList.add('hidden');
-            }
-
-            if (pendingFollowsCount > 0) {
-                if (sideFollowBadge) { sideFollowBadge.innerText = pendingFollowsCount; sideFollowBadge.classList.remove('hidden'); }
-            } else {
-                if (sideFollowBadge) sideFollowBadge.classList.add('hidden');
-            }
-        }
-
-        function openNotificationsModal() {
-            unreadNotifCount = 0;
-            updateNotificationBadges();
-            renderNotificationsModalList();
-            document.getElementById('notificationsModal').classList.remove('hidden');
-        }
-
-        function closeNotificationsModal() {
-            document.getElementById('notificationsModal').classList.add('hidden');
-        }
-
-        function renderNotificationsModalList() {
-            const container = document.getElementById('notificationsList');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (notificationsList.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-slate-400 py-10">
-                        <i class="fa-regular fa-bell text-3xl mb-2 opacity-30 text-amber-500"></i>
-                        <p class="text-xs font-bold">Belum ada notifikasi baru.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            notificationsList.forEach(n => {
-                const item = document.createElement('div');
-                item.className = 'p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 flex items-start gap-2.5 shadow-xs cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition';
-                
-                let iconClass = 'fa-bell text-blue-500 bg-blue-50 dark:bg-blue-950/60';
-                if (n.type === 'like') iconClass = 'fa-thumbs-up text-rose-500 bg-rose-50 dark:bg-rose-950/60';
-                else if (n.type === 'comment') iconClass = 'fa-comment-dots text-emerald-500 bg-emerald-50 dark:bg-emerald-950/60';
-                else if (n.type === 'friend_task') iconClass = 'fa-calendar-plus text-amber-500 bg-amber-50 dark:bg-amber-950/60';
-                else if (n.type === 'friend_follow') iconClass = 'fa-user-plus text-teal-500 bg-teal-50 dark:bg-teal-950/60';
-
-                item.onclick = () => {
-                    closeNotificationsModal();
-                    if (n.targetUserId && n.type === 'friend_task') {
-                        viewFriendSchedule(n.targetUserId, n.targetUserName);
-                    } else if (n.targetTaskId) {
-                        const t = globalTasks.find(x => x.id == n.targetTaskId);
-                        if (t) openCommentModal(t.id, t.tugas);
-                    }
-                };
-
-                item.innerHTML = `
-                    <div class="w-8 h-8 rounded-xl flex items-center justify-center text-xs flex-shrink-0 ${iconClass}">
-                        <i class="fa-solid ${iconClass.split(' ')[0]}"></i>
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-extrabold text-slate-800 dark:text-white truncate">${n.title}</h4>
-                            <span class="text-[9px] text-slate-400 font-semibold">${new Date(n.time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
-                        </div>
-                        <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">${n.message}</p>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // ==========================================================
-        // LIHAT JADWAL TEMAN & RESET BERANDA
-        // ==========================================================
-        function viewFriendSchedule(targetUserId, targetUserName) {
-            const isMutual = mutualFriends.includes(targetUserId);
-            const isMe = targetUserId === currentUser?.id;
-
-            if (!isMutual && !isMe && !isSuperAdmin) {
-                showToast("🔒 Anda belum saling follow dengan pengguna ini.");
-                return;
-            }
-
-            activeFriendFeedId = targetUserId;
-            activeFriendFeedName = targetUserName;
-            closeFollowsModal();
-            renderTasks();
-            showToast(`Menampilkan jadwal: ${targetUserName}`);
-        }
-
-        function resetToMyFeed() {
-            activeFriendFeedId = null;
-            activeFriendFeedName = null;
-            goToHomeJadwal();
-        }
-
-        function goToHomeJadwal() {
-            activeFriendFeedId = null;
-            activeFriendFeedName = null;
-            document.getElementById('dateFilter').value = todayStr;
-            document.getElementById('roleFilter').value = 'All';
-            document.getElementById('statusFilter').value = 'All';
-            renderTasks();
-            showToast("Menampilkan jadwal Anda");
-        }
-
-        // ==========================================================
-        // PERHITUNGAN INSENTIF (FORMAT 'k')
-        // ==========================================================
-        function calculateAndRenderEarnings() {
-            const currentYearMonth = todayStr.slice(0, 7);
-            const userEarningsMap = {};
-
-            globalTasks.forEach(t => {
-                const uid = t.user_id;
-                const taskDateStr = t.tanggal;
-                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
-
-                if (!userEarningsMap[uid]) {
-                    userEarningsMap[uid] = {
-                        userId: uid,
-                        points: 0,
-                        grossEarning: 0,
-                        totalEarning: 0
-                    };
-                }
-
-                if (t.status === 'Selesai') {
-                    userEarningsMap[uid].points += budgetSettings.pointsOnTime;
-                } else if (t.status === 'Proses') {
-                    userEarningsMap[uid].points += budgetSettings.pointsProcess;
-                }
-            });
-
-            const currentUserId = currentUser?.id;
-            const myData = userEarningsMap[currentUserId] || { points: 0, totalEarning: 0 };
-            myData.totalEarning = Math.round((myData.points / 100) * budgetSettings.ratePerTask);
-
-            // TAMPILKAN FORMAT 1k, 2k PADA BADGE INSENTIF
-            document.getElementById('myEarningsBadge').innerText = formatRupiahK(myData.totalEarning);
-            document.getElementById('modalMyTotalEarnings').innerText = formatRupiahK(myData.totalEarning);
-            document.getElementById('modalMyPointsDetail').innerText = `${myData.points} Poin`;
-            return { userEarningsMap, myData };
-        }
-
-        // ==========================================================
-        // RENDER FEED JADWAL & LIKE / KOMENTAR
-        // ==========================================================
-        function renderTasks() {
-            const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); 
-            const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
-            const selectedRole = document.getElementById('roleFilter').value; 
-            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
-            const selectedDate = document.getElementById('dateFilter').value;
-
-            // Indikator Feed Teman
-            const friendIndicator = document.getElementById('friendFeedIndicator');
-            const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
-            if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
-                if (friendIndicator) friendIndicator.classList.remove('hidden');
-                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
-            } else {
-                if (friendIndicator) friendIndicator.classList.add('hidden');
-            }
-
-            tableBodyDesktop.innerHTML = ''; 
-            cardsContainerMobile.innerHTML = '';
-
-            const filteredTasks = globalTasks.filter(item => {
-                const matchDate = !selectedDate || item.tanggal === selectedDate; 
-                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
-                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
-                
-                let canView = false;
-                if (isSuperAdmin) canView = true;
-                else if (activeFriendFeedId) {
-                    canView = (item.user_id === activeFriendFeedId);
-                } else {
-                    // Default beranda: Jadwal User Sendiri
-                    canView = (item.user_id === currentUser?.id);
-                }
-                return matchDate && matchRole && matchStatus && canView;
-            });
-
-            // Update Statistik
-            const totalCount = filteredTasks.length;
-            const inProgressCount = filteredTasks.filter(t => t.status === 'Proses').length;
-            const completedCount = filteredTasks.filter(t => t.status === 'Selesai').length;
-
-            document.getElementById('totalTaskCount').innerText = totalCount;
-            document.getElementById('inProgressCount').innerText = inProgressCount;
-            document.getElementById('inProgressCountCircle').innerText = inProgressCount;
-            document.getElementById('completedCount').innerText = completedCount;
-
-            calculateAndRenderEarnings();
-
-            if (filteredTasks.length === 0) {
-                const emptyMsg = activeFriendFeedId ? `Teman ini belum memiliki jadwal.` : `Anda belum memiliki jadwal untuk tanggal ini.`;
-                cardsContainerMobile.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800"><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
-                return;
-            }
-
-            filteredTasks.forEach(item => {
-                const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
-                const isLiked = likedUsers.includes(currentUser?.id);
-                const isOwner = item.user_id === currentUser?.id;
-                const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
-                const isMutual = mutualFriends.includes(item.user_id);
-
-                const card = document.createElement('div');
-                card.className = 'w-full bg-white dark:bg-slate-900 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 stat-card space-y-2.5';
-                
-                card.innerHTML = `
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            ${renderAvatarHtml(item.user_avatar, displayName, "w-8 h-8", item.user_id)}
-                            <div class="min-w-0">
-                                ${isMutual ? `
-                                    <button onclick="viewFriendSchedule('${item.user_id}', '${displayName.replace(/'/g, "\\'")}')" class="text-xs font-extrabold text-blue-600 dark:text-blue-400 hover:underline truncate text-left">
-                                        ${displayName}
-                                    </button>
-                                ` : `
-                                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${displayName}</h4>
-                                `}
-                                <span class="text-[9.5px] text-slate-400 block">${item.jam_mulai} - ${item.jam_selesai} &bull; ${item.peran}</span>
-                            </div>
-                        </div>
-                        <span class="px-2 py-0.5 rounded-lg text-[9px] font-extrabold ${item.status === 'Selesai' ? 'bg-emerald-50 text-emerald-600' : (item.status === 'Proses' ? 'bg-amber-50 text-amber-500' : 'bg-slate-100 text-slate-500')}">
-                            ${item.status}
-                        </span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-800 dark:text-slate-100">${item.tugas}</p>
-                    <div class="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-slate-400">
-                        <div class="flex items-center gap-3">
-                            <!-- BISA LIKE JADWAL SENDIRI MAUPUN TEMAN -->
-                            <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-xs font-bold ${isLiked ? 'text-rose-500' : 'hover:text-slate-600'}">
-                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
-                                <span>${item.likes_count || 0}</span>
-                            </button>
-                            <!-- BISA KOMEN JADWAL SENDIRI MAUPUN TEMAN -->
-                            <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-xs font-bold hover:text-blue-500">
-                                <i class="fa-regular fa-comment text-sm"></i>
-                                <span>${item.comments_count || 0}</span>
-                            </button>
-                        </div>
-                        ${isOwner ? `
-                            <button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-[10px] font-bold text-blue-600 hover:underline">Update Selesai</button>
-                        ` : ''}
-                    </div>
-                `;
-                cardsContainerMobile.appendChild(card);
-            });
-        }
-
-        // ==========================================================
-        // LIKE & REALTIME SUBSCRIBERS
-        // ==========================================================
-        async function toggleLikeTask(taskId) {
-            const task = globalTasks.find(t => String(t.id) === String(taskId));
-            if (!task) return;
-
-            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : [];
-            const userIndex = likedUsers.indexOf(currentUser.id);
-
-            if (userIndex === -1) {
-                likedUsers.push(currentUser.id);
-            } else {
-                likedUsers.splice(userIndex, 1);
-            }
-
-            task.likes_count = likedUsers.length;
-            task.liked_users = likedUsers;
+task.likes_count = likedUsers.length; 
+            task.liked_users = likedUsers; 
             renderTasks();
 
-            const { error } = await _supabase.from('jadwal').update({
-                likes_count: task.likes_count,
-                liked_users: task.liked_users
-            }).eq('id', taskId);
-
-            if (error) {
-                showToast("Gagal like: " + error.message);
-                await fetchTasksSupabase();
+            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
+            if (error) { 
+                showToast("Gagal menyukai: " + error.message); 
+                await fetchTasksSupabase(); 
+            } else if (data) { 
+                task.likes_count = data.likes_count; 
+                task.liked_users = data.liked_users; 
+                renderTasks(); 
             }
         }
 
         async function openCommentModal(taskId, taskTitle) {
             activeCommentJadwalId = String(taskId);
+            cancelReplyOrEdit();
             document.getElementById('commentModalSubtitle').innerText = taskTitle;
-            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Memuat diskusi...</div>';
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat percakapan...</div>';
             document.getElementById('commentModal').classList.remove('hidden');
+            
             await fetchComments(activeCommentJadwalId);
+            setupCommentsRealtime(activeCommentJadwalId);
         }
 
         function closeCommentModal() {
             activeCommentJadwalId = null;
+            cancelReplyOrEdit();
+            if (commentsSubscription) {
+                _supabase.removeChannel(commentsSubscription);
+                commentsSubscription = null;
+            }
             document.getElementById('commentModal').classList.add('hidden');
         }
 
         async function fetchComments(taskId) {
             const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
-            const list = document.getElementById('commentList');
-            if (error || !data || data.length === 0) {
-                list.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">Belum ada komentar.</div>';
+            const commentList = document.getElementById('commentList');
+            if (error) {
+                commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-6">Gagal memuat: ${error.message}</div>`;
                 return;
             }
-            list.innerHTML = '';
-            data.forEach(c => {
-                const row = document.createElement('div');
-                row.className = 'flex items-start gap-2';
-                row.innerHTML = `
-                    <div class="flex-1 bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl">
-                        <span class="text-[10px] font-extrabold text-blue-600 block">${getUserDisplayName(c.user_id, c.user_email)}</span>
-                        <p class="text-xs mt-0.5">${c.comment}</p>
+            const task = globalTasks.find(t => t.id == taskId);
+            if (task) {
+                task.comments_count = data ? data.length : 0;
+                renderTasks();
+            }
+            if (!data || data.length === 0) {
+                commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-10">Belum ada komentar. Jadilah yang pertama!</div>';
+                return;
+            }
+            renderCommentList(data);
+        }
+
+        function renderCommentList(comments) {
+            const commentList = document.getElementById('commentList');
+            commentList.innerHTML = '';
+
+            comments.forEach(c => {
+                const isMyComment = c.user_id === currentUser?.id;
+                const senderName = getUserDisplayName(c.user_id, c.user_email);
+                const timeAgo = formatTimeAgo(c.created_at);
+                const userAvatar = c.user_avatar || null;
+                const isMutual = mutualFriends.includes(c.user_id);
+
+                const commentItem = document.createElement('div');
+                commentItem.className = 'flex items-start gap-3 text-slate-800 dark:text-slate-100 group';
+
+                commentItem.innerHTML = `
+                    <div class="flex-shrink-0 mt-0.5 ${isMutual ? 'cursor-pointer' : ''}" ${isMutual ? `onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')"` : ''}>
+                        ${renderAvatarHtml(userAvatar, senderName, "w-8 h-8", c.user_id)}
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            ${isMutual ? `
+                                <button onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')" class="font-extrabold text-[11px] text-blue-600 dark:text-blue-400 hover:underline leading-none flex items-center gap-0.5">
+                                    <span>${senderName}</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                </button>
+                            ` : `
+                                <span class="font-extrabold text-[11px] text-slate-600 dark:text-slate-300 leading-none">${senderName}</span>
+                            `}
+                        </div>
+
+                        <p class="text-xs text-slate-800 dark:text-slate-100 font-medium leading-relaxed mt-1 break-words">
+                            ${c.comment}
+                        </p>
+
+                        <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400 font-semibold">
+                            <span>${timeAgo}</span>
+                            <button onclick="startReplyTo('${senderName.replace(/'/g, "\\'")}')" class="hover:text-slate-600 dark:hover:text-slate-200 transition font-bold">
+                                Balas
+                            </button>
+                            ${isMyComment ? `
+                                <button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="opacity-0 group-hover:opacity-100 hover:text-blue-500 transition">Edit</button>
+                            ` : ''}
+                            ${(isMyComment || isSuperAdmin) ? `
+                                <button onclick="deleteComment('${c.id}')" class="opacity-0 group-hover:opacity-100 hover:text-rose-500 transition">Hapus</button>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
-                list.appendChild(row);
+                commentList.appendChild(commentItem);
             });
+
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+
+        function startReplyTo(userName) {
+            replyingToUser = userName;
+            editingCommentId = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `Membalas <b>@${userName}</b>`;
+            container.classList.remove('hidden');
+            input.value = `Balas ${userName}: `;
+            input.focus();
+        }
+
+        function startEditComment(commentId, commentText) {
+            editingCommentId = commentId;
+            replyingToUser = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `<b>Edit komentar</b>`;
+            container.classList.remove('hidden');
+            input.value = commentText;
+            input.focus();
+        }
+
+        function cancelReplyOrEdit() {
+            editingCommentId = null;
+            replyingToUser = null;
+            document.getElementById('replyIndicatorContainer').classList.add('hidden');
+            const input = document.getElementById('inputNewComment');
+            if (input) input.value = '';
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm("Hapus komentar ini?")) return;
+            const { error } = await _supabase.from('jadwal_comments').delete().eq('id', commentId);
+            if (error) showToast("Gagal menghapus komentar!");
+            else {
+                showToast("Komentar dihapus");
+                if (activeCommentJadwalId) fetchComments(activeCommentJadwalId);
+            }
         }
 
         async function sendComment() {
             const input = document.getElementById('inputNewComment');
-            const comment = input.value.trim();
-            if (!comment || !activeCommentJadwalId) return;
+            const commentText = input.value.trim();
+            if (!commentText || !activeCommentJadwalId) return;
 
-            input.value = '';
-            const payload = {
-                jadwal_id: activeCommentJadwalId,
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                comment: comment,
-                created_at: new Date().toISOString()
-            };
+            if (editingCommentId) {
+                const { error } = await _supabase.from('jadwal_comments').update({ comment: commentText }).eq('id', editingCommentId);
+                if (!error) {
+                    showToast("Komentar diperbarui");
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                } else {
+                    showToast("Gagal memperbarui: " + error.message);
+                }
+            } else {
+                input.value = '';
+                const payload = {
+                    jadwal_id: String(activeCommentJadwalId),
+                    user_id: currentUser.id,
+                    user_email: currentUser.email,
+                    comment: commentText,
+                    user_avatar: getAvatarUrl(currentUser),
+                    created_at: new Date().toISOString()
+                };
 
-            await _supabase.from('jadwal_comments').insert([payload]);
-            await fetchComments(activeCommentJadwalId);
+                const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+                if (error) {
+                    showToast("Gagal mengirim komentar: " + error.message);
+                    input.value = commentText;
+                } else {
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                }
+            }
+        }
+
+        function setupCommentsRealtime(taskId) {
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            commentsSubscription = _supabase.channel(`comments-realtime-${taskId}`)
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => { fetchComments(taskId); }).subscribe();
+        }
+
+        function openCompletionNoteModal(task) {
+            if (isTaskNotStartedYet(task) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
+            document.getElementById('complete-task-id').value = task.id; 
+            document.getElementById('complete-task-title').innerText = task.tugas || '-'; 
+            document.getElementById('complete-task-note').value = task.keterangan || '';
+            document.getElementById('complete-file-before').value = ''; 
+            document.getElementById('complete-file-after').value = '';
             
-            const task = globalTasks.find(t => String(t.id) === String(activeCommentJadwalId));
-            if (task) {
-                task.comments_count = (task.comments_count || 0) + 1;
-                await _supabase.from('jadwal').update({ comments_count: task.comments_count }).eq('id', task.id);
-                renderTasks();
+            const isPast = isTaskExpired(task.tanggal);
+            const warningEl = document.getElementById('complete-late-warning');
+            const starPhoto = document.getElementById('photo-required-star');
+            const starNote = document.getElementById('note-required-star');
+
+            if (isPast) {
+                warningEl.classList.remove('hidden');
+                starPhoto.classList.remove('hidden');
+                starNote.classList.remove('hidden');
+            } else {
+                warningEl.classList.add('hidden');
+                starPhoto.classList.add('hidden');
+                starNote.classList.add('hidden');
             }
+
+            const beforeContainer = document.getElementById('complete-before-preview-container'); 
+            const afterContainer = document.getElementById('complete-after-preview-container');
+            if (task.foto_sebelum) { document.getElementById('complete-before-preview').src = task.foto_sebelum; beforeContainer.classList.remove('hidden'); } else beforeContainer.classList.add('hidden');
+            if (task.foto_sesudah) { document.getElementById('complete-after-preview').src = task.foto_sesudah; afterContainer.classList.remove('hidden'); } else afterContainer.classList.add('hidden');
+            
+            document.getElementById('completionNoteModal').classList.remove('hidden'); 
+            setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
         }
 
-        async function fetchFollowRelations() {
-            if (!currentUser) return;
-            const { data } = await _supabase.from('user_follows').select('*');
-            if (data) {
-                myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
-                myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
-                mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
-                updateNotificationBadges();
-            }
-        }
+        function closeCompletionNoteModal() { document.getElementById('completionNoteModal').classList.add('hidden'); renderTasks(); }
 
-        async function fetchTasksSupabase() {
-            const { data } = await _supabase.from('jadwal').select('*').order('jam_mulai', { ascending: true });
-            if (data) {
-                globalTasks = data;
-                renderTasks();
-            }
-        }
+        document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const taskId = document.getElementById('complete-task-id').value; 
+            const target = globalTasks.find(t => t.id == taskId);
+            if (!target) return;
 
-        function setupRealtimeListener() {
-            _supabase.channel('public:jadwal')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, payload => {
-                    const { eventType, new: newRow } = payload;
-                    if (eventType === 'INSERT') {
-                        globalTasks.push(newRow);
-                        // Trigger notifikasi jika teman mutual membuat jadwal
-                        if (mutualFriends.includes(newRow.user_id)) {
-                            addNotification('friend_task', 'Jadwal Baru Teman', `${getUserDisplayName(newRow.user_id, newRow.user_email, newRow.nama)} menambahkan tugas "${newRow.tugas}"`, newRow.id, newRow.user_id, newRow.nama);
-                        }
-                    } else if (eventType === 'UPDATE') {
-                        const idx = globalTasks.findIndex(t => t.id === newRow.id);
-                        if (idx !== -1) globalTasks[idx] = newRow;
-                    }
+            if (isTaskNotStartedYet(target) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
+
+            const isPast = isTaskExpired(target.tanggal);
+            const noteText = document.getElementById('complete-task-note').value.trim();
+            const beforeFileInput = document.getElementById('complete-file-before'); 
+            const afterFileInput = document.getElementById('complete-file-after');
+
+            if (isPast) {
+                if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
+                const hasExistingPhoto = !!target.foto_sesudah;
+                const hasNewPhoto = afterFileInput && afterFileInput.files && afterFileInput.files.length > 0;
+                if (!hasExistingPhoto && !hasNewPhoto) return alert("Penyelesaian tugas susulan wajib menyertakan Foto Sesudah (After) sebagai bukti!");
+            }
+
+            const btn = document.getElementById('btn-submit-completion'); 
+            btn.innerText = "Mengompres & Mengunggah..."; 
+            btn.disabled = true;
+
+            try {
+                let beforePhotoUrl = target?.foto_sebelum || null; 
+                let afterPhotoUrl = target?.foto_sesudah || null;
+                const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email, target?.nama);
+
+                if (beforeFileInput && beforeFileInput.files && beforeFileInput.files[0]) { 
+                    const compressedBlobBefore = await processAndWatermarkImage(beforeFileInput.files[0], effectiveUserName); 
+                    beforePhotoUrl = await uploadEvidenceImage(compressedBlobBefore, 'before'); 
+                }
+                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) { 
+                    const compressedBlobAfter = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName); 
+                    afterPhotoUrl = await uploadEvidenceImage(compressedBlobAfter, 'after'); 
+                }
+
+                const updatePayload = { 
+                    status: 'Selesai', 
+                    completed_at: new Date().toISOString(), 
+                    keterangan: noteText, 
+                    foto_sebelum: beforePhotoUrl, 
+                    foto_sesudah: afterPhotoUrl 
+                };
+                
+                const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
+
+                if (error) {
+                    showToast("Gagal menyelesaikan tugas: " + error.message);
+                } else {
+                    target.status = 'Selesai'; 
+                    target.completed_at = updatePayload.completed_at; 
+                    target.keterangan = noteText; 
+                    target.foto_sebelum = beforePhotoUrl; 
+                    target.foto_sesudah = afterPhotoUrl;
+                    
+                    closeCompletionNoteModal(); 
+                    showToast(isPast ? "Tugas susulan diselesaikan (0 Poin, Hutang Lunas)!" : "Tugas Selesai & dokumentasi disimpan!"); 
                     renderTasks();
-                }).subscribe();
+                }
+            } catch (err) { 
+                alert("Terjadi kesalahan kompresi/upload foto: " + err.message); 
+            } finally { 
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai'; 
+                btn.disabled = false; 
+            }
+        });
+
+        async function updateStatus(id, newStatus) {
+            const target = globalTasks.find(t => t.id == id); if (!target) return;
+            if (target.status === 'Selesai' && !isSuperAdmin && newStatus !== 'Selesai') { showToast("Tugas sudah Selesai dan terkunci!"); renderTasks(); return; }
+            if (isTaskNotStartedYet(target) && !isSuperAdmin) { showToast(`🔒 Tugas terkunci! Baru dapat dikerjakan saat jam ${target.jam_mulai}`); renderTasks(); return; }
+
+            if (newStatus === 'Selesai') { openCompletionNoteModal(target); return; }
+            
+            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
+                showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
+                return;
+            }
+
+            const { error } = await _supabase.from('jadwal').update({ status: newStatus, completed_at: null }).eq('id', id);
+            if (error) showToast("Gagal memperbarui status!"); else { target.status = newStatus; target.completed_at = null; renderTasks(); showToast("Status diperbarui"); }
         }
 
-        function openTaskModal() {
-            document.getElementById('input-date').value = todayStr;
-            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
-            document.getElementById('scheduleModal').classList.remove('hidden');
+        function askDeleteTask(id) {
+            if (!isSuperAdmin) return showToast("Hanya Super Admin yang berhak menghapus jadwal!");
+            const item = globalTasks.find(t => t.id == id); if (!item) return;
+            deleteTargetId = id; document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() { deleteTargetId = null; document.getElementById('confirmModal').classList.add('hidden'); }
+
+        document.getElementById('btn-confirm-delete').onclick = async () => {
+            if (!isSuperAdmin) return; if (!deleteTargetId) return;
+            const { error } = await _supabase.from('jadwal').delete().eq('id', deleteTargetId);
+            if (!error) { globalTasks = globalTasks.filter(t => t.id != deleteTargetId); renderTasks(); showToast("Tugas berhasil dihapus"); } 
+            else showToast("Gagal menghapus tugas!");
+            closeConfirmModal();
+        };
+
+        function openExportModal(format) { activeExportFormat = format; document.getElementById('exportModal').classList.remove('hidden'); }
+        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+        function handleExportRangeChange() { const container = document.getElementById('customDateRangeContainer'); if (document.getElementById('exportRangeType').value === 'custom') container.classList.remove('hidden'); else container.classList.add('hidden'); }
+
+        function processExportExecution() {
+            const rangeType = document.getElementById('exportRangeType').value; const selectedRole = document.getElementById('roleFilter').value;
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All'; const selectedUser = document.getElementById('userFilter').value;
+            const activeDate = document.getElementById('dateFilter').value || todayStr;
+            let startDate, endDate, labelRange; const now = new Date(activeDate);
+
+            if (rangeType === 'daily') { startDate = activeDate; endDate = activeDate; labelRange = `Harian (${formatTanggalIndo(activeDate)})`; } 
+            else if (rangeType === 'weekly') { const first = now.getDate() - now.getDay(); const last = first + 6; startDate = new Date(now.setDate(first)).toISOString().slice(0, 10); endDate = new Date(now.setDate(last)).toISOString().slice(0, 10); labelRange = `Mingguan`; } 
+            else if (rangeType === 'monthly') { const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const lastDay = new Date(year, now.getMonth() + 1, 0).getDate(); startDate = `${year}-${month}-01`; endDate = `${year}-${month}-${lastDay}`; labelRange = `Bulanan`; } 
+            else if (rangeType === 'yearly') { const year = now.getFullYear(); startDate = `${year}-01-01`; endDate = `${year}-12-31`; labelRange = `Tahunan (${year})`; } 
+            else if (rangeType === 'custom') { startDate = document.getElementById('exportStartDate').value; endDate = document.getElementById('exportEndDate').value; if (!startDate || !endDate) return alert("Silakan tentukan tanggal!"); labelRange = `Kustom`; }
+
+            const tasksToExport = globalTasks.filter(item => {
+                const taskDate = item.tanggal || todayStr; 
+                let canView = isSuperAdmin || item.user_id === currentUser?.id;
+                if (activeFriendFeedId) {
+                    canView = item.user_id === activeFriendFeedId;
+                }
+                return taskDate >= startDate && taskDate <= endDate && (selectedRole === 'All' || item.peran === selectedRole) && (selectedStatus === 'All' || item.status === selectedStatus) && (!isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser) && canView;
+            });
+
+            if (tasksToExport.length === 0) return alert(`Tidak ada data tugas pada periode ini.`);
+            if (activeExportFormat === 'csv') generateCSVFile(tasksToExport, labelRange); else generatePDFFile(tasksToExport, labelRange);
+            closeExportModal();
+        }
+
+        function generateCSVFile(tasks, labelRange) {
+            const grouped = {}; tasks.forEach(t => { const key = getUserDisplayName(t.user_id, t.user_email, t.nama); if (!grouped[key]) grouped[key] = []; grouped[key].push(t); });
+            let csvContent = "data:text/csv;charset=utf-8,PENGGUNA,TANGGAL,JAM MULAI,JAM SELESAI,KATEGORI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
+            Object.keys(grouped).forEach(namaPetugas => {
+                grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai)).forEach(t => {
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
+                });
+            });
+            const link = document.createElement("a"); link.setAttribute("href", encodeURI(csvContent)); link.setAttribute("download", `Laporan_Jadwal.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Berhasil mengekspor CSV!");
+        }
+
+        function generatePDFFile(tasks, labelRange) {
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            doc.setFont("Helvetica", "bold"); doc.setFontSize(13); doc.text(`LAPORAN JADWAL AKTIVITAS`, 14, 16); doc.setFontSize(10); doc.text(`UNIT / WORKSPACE: ${UNIT_NAME}`, 14, 22);
+            doc.setFont("Helvetica", "normal"); doc.setFontSize(8.5); doc.text(`Rentang: ${labelRange}`, 14, 28);
+            
+            const grouped = {}; tasks.forEach(t => { const key = getUserDisplayName(t.user_id, t.user_email, t.nama); if (!grouped[key]) grouped[key] = []; grouped[key].push(t); });
+            const tableRows = []; let globalNo = 1;
+
+            Object.keys(grouped).forEach(namaPetugas => {
+                const list = grouped[namaPetugas]; list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
+                tableRows.push([{ content: `PENGGUNA: ${namaPetugas.toUpperCase()} - ${list.length} Kegiatan`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
+                list.forEach(item => { tableRows.push([globalNo++, formatTanggalIndo(item.tanggal || todayStr), `${item.jam_mulai} - ${item.jam_selesai}`, getUserDisplayName(item.user_id, item.user_email, item.nama), item.peran, item.tugas + (item.keterangan ? `\n(Ket: ${item.keterangan})` : ''), item.status]); });
+            });
+            doc.autoTable({ startY: 35, head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Kategori', 'Detail Tugas & Keterangan', 'Status']], body: tableRows, headStyles: { fillColor: [24, 119, 242] }, styles: { fontSize: 8 } });
+            doc.save(`Laporan_Jadwal.pdf`); showToast("Berhasil mengekspor PDF!");
         }
 
         function toggleModal(show) {
-            document.getElementById('scheduleModal').classList.toggle('hidden', !show);
+            const modal = document.getElementById('scheduleModal');
+            if (show) modal.classList.remove('hidden'); 
+            else { modal.classList.add('hidden'); document.getElementById('scheduleForm').reset(); editingTaskId = null; }
         }
 
-        document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
+        function openTaskModal() {
+            editingTaskId = null; document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            document.getElementById('modalTitle').innerText = "Tambah Tugas Baru"; document.getElementById('btn-save-task').innerText = "Simpan"; toggleModal(true);
+        }
+
+        function editTask(id) {
+            const item = globalTasks.find(t => t.id == id); if (!item) return;
+            if (item.status === 'Selesai' && !isSuperAdmin) return showToast("Tugas selesai tidak dapat diedit!");
+            if (isTaskExpired(item.tanggal) && !isSuperAdmin) return showToast("Tugas hari kemarin terkunci!");
+            editingTaskId = item.id;
+            document.getElementById('input-date').value = item.tanggal || todayStr; document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
+            document.getElementById('input-role').value = item.peran; document.getElementById('input-task').value = item.tugas;
+            document.getElementById('input-start-time').value = item.jam_mulai; document.getElementById('input-end-time').value = item.jam_selesai;
+            document.getElementById('modalTitle').innerText = "Edit Tugas"; document.getElementById('btn-save-task').innerText = "Update"; toggleModal(true);
+        }
+
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const payload = {
+            let tanggal = document.getElementById('input-date').value; const nama = document.getElementById('input-name').value; const peran = document.getElementById('input-role').value;
+            const tugas = document.getElementById('input-task').value; let jam_mulai = document.getElementById('input-start-time').value; let jam_selesai = document.getElementById('input-end-time').value;
+            const btnSave = document.getElementById('btn-save-task'); btnSave.innerText = "Menyimpan..."; btnSave.disabled = true;
+
+            try {
+                if (editingTaskId) {
+                    const existingTask = globalTasks.find(t => t.id == editingTaskId);
+                    if (!isSuperAdmin && existingTask) { tanggal = existingTask.tanggal; jam_mulai = existingTask.jam_mulai; jam_selesai = existingTask.jam_selesai; }
+                    const { error } = await _supabase.from('jadwal').update({ tanggal, nama, peran, tugas, jam_mulai, jam_selesai }).eq('id', editingTaskId);
+                    if (!error) { showToast("Tugas diperbarui!"); toggleModal(false); } else alert("Gagal memperbarui data: " + error.message);
+                } else {
+                    const insertPayload = { user_id: currentUser.id, user_email: currentUser.email, tanggal, nama, peran, tugas, jam_mulai, jam_selesai, status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0, created_at: new Date().toISOString() };
+                    const avatarUrl = getAvatarUrl(currentUser); if (avatarUrl) insertPayload.user_avatar = avatarUrl;
+                    const { error } = await _supabase.from('jadwal').insert([insertPayload]);
+                    if (!error) { showToast("Tugas ditambahkan!"); toggleModal(false); } else alert("Gagal menyimpan: " + error.message);
+                }
+            } catch (err) { alert("Kesalahan: " + err.message); } finally { btnSave.innerText = "Simpan"; btnSave.disabled = false; }
+        });
+
+        function openBulkTextModal() { 
+            setActiveTab('tabBulk');
+            document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('bulkTextModal').classList.remove('hidden'); 
+        }
+        function closeBulkTextModal() { 
+            document.getElementById('bulkTextModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        async function processBulkTextImport() {
+            let rawDate = document.getElementById('bulk-date').value || todayStr; const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
+            const role = document.getElementById('bulk-role').value; const rawText = document.getElementById('bulk-text-area').value;
+            if (!rawText.trim()) return alert("Tempel teks jadwal dahulu!");
+            document.getElementById('btn-process-bulk').innerText = "Memproses...";
+            const lines = rawText.split('\n'); const bulkPayload = []; const nowIso = new Date().toISOString(); const avatarUrl = getAvatarUrl(currentUser);
+
+            lines.forEach(line => {
+                const match = line.trim().match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
+                if (match) {
+                    bulkPayload.push({ user_id: currentUser.id, user_email: currentUser.email, tanggal: rawDate, nama: name, peran: role, tugas: match[5].trim(), jam_mulai: `${match[1].padStart(2, '0')}:${match[2]}`, jam_selesai: `${match[3].padStart(2, '0')}:${match[4]}`, status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0, created_at: nowIso, user_avatar: avatarUrl });
+                }
+            });
+
+            if (bulkPayload.length > 0) {
+                const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+                if (!error) { showToast(`${bulkPayload.length} tugas diimport!`); closeBulkTextModal(); document.getElementById('bulk-text-area').value = ''; } 
+                else alert("Gagal mengimport: " + error.message);
+            } else alert("Format tidak valid!");
+            document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
+        }
+
+        function openAutoGenerateModal() { 
+            setActiveTab('tabAuto');
+            syncApiKeyInputs();
+            document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('autoGenerateModal').classList.remove('hidden'); 
+        }
+        function closeAutoGenerateModal() { 
+            document.getElementById('autoGenerateModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        async function generateAiSchedulePreview() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const focus = document.getElementById('gen-focus')?.value.trim() || '';
+            const userApiKey = getDeviceGeminiApiKey().trim();
+            const btnGen = document.getElementById('btn-process-gen');
+
+            if (!name) return alert("Silakan isi nama pengguna terlebih dahulu!");
+
+            if (!userApiKey) {
+                return alert("⚠️ Google Gemini API Key belum diisi!\n\nSilakan tempelkan API Key Anda di kolom atas.");
+            }
+
+            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang jadwal...';
+            btnGen.disabled = true;
+
+            const promptText = `Kamu adalah asisten perencana aktivitas harian yang fleksibel dan cerdas.
+Buatlah rancangan jadwal kegiatan harian yang REALISTIS, PRAKTIS, dan SPESIFIK untuk seorang "${role}" bernama "${name}" pada tanggal ${tanggal}.
+${focus ? `Target / Catatan Tambahan: "${focus}".` : ''}
+
+Panduan Penyesuaian:
+- Mahasiswa / Pelajar: Kuliah, tugas, review materi, istirahat, dan aktivitas sosial/hobi.
+- Pedagang / Toko / UMKM: Buka toko, cek stok, layani pelanggan, rekap kasir/penjualan, dan closing toko.
+- Masyarakat Umum / Personal: Rutinitas harian seimbang (pekerjaan/hobi/keluarga, istirahat, belanja, urusan personal).
+- Teknisi / Gedung / Kebersihan: Cek fasilitas, alat kerja, tugas lapangan utama, closing laporan (sertakan #perbaikan jika relevan).
+
+Buat 5 pembagian slot waktu harian yang berurutan secara logis dari pagi hingga sore/malam.
+
+WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lain dan tanpa blok markdown:
+[
+  {"jam_mulai": "07:00", "jam_selesai": "09:00", "tugas": "Rincian kegiatan pagi"},
+  {"jam_mulai": "09:00", "jam_selesai": "12:00", "tugas": "Rincian kegiatan utama"},
+  {"jam_mulai": "12:00", "jam_selesai": "13:00", "tugas": "Istirahat, Makan Siang & Ibadah"},
+  {"jam_mulai": "13:00", "jam_selesai": "16:00", "tugas": "Rincian kegiatan lanjutan"},
+  {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Rincian penutup hari / evaluasi"}
+]`;
+
+            const candidateModels = [
+                'gemini-2.5-flash',
+                'gemini-3.6-flash',
+                'gemini-3.1-pro-preview',
+                'gemini-3-flash'
+            ];
+            
+            let parsedTasks = null;
+            let lastError = null;
+
+            for (const modelName of candidateModels) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(userApiKey)}`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: promptText }] }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                responseMimeType: "application/json"
+                            }
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        lastError = data.error.message || `Error pada model ${modelName}`;
+                        continue;
+                    }
+
+                    let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+
+                    const result = JSON.parse(rawAiText);
+                    if (Array.isArray(result) && result.length > 0) {
+                        parsedTasks = result;
+                        break;
+                    }
+                } catch (e) {
+                    lastError = e.message;
+                }
+            }
+
+            try {
+                if (!parsedTasks) {
+                    throw new Error(lastError || "Gagal mendapatkan respon dari AI.");
+                }
+
+                previewTasksData = parsedTasks;
+                renderAiPreviewCards();
+
+                const previewSection = document.getElementById('aiPreviewSection');
+                if (previewSection) {
+                    previewSection.classList.remove('hidden');
+                    setTimeout(() => {
+                        previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+
+                document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
+                showToast("✨ Jadwal berhasil dibuat oleh Gemini AI!");
+
+            } catch (err) {
+                console.error("Gemini Error:", err);
+                alert(`Gagal generate via AI: ${err.message}`);
+            } finally {
+                btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
+                btnGen.disabled = false;
+            }
+        }
+
+        function renderAiPreviewCards() {
+            const container = document.getElementById('aiPreviewList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (previewTasksData.length === 0) {
+                container.innerHTML = `
+                    <div class="p-4 text-center text-slate-400 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-calendar-xmark text-xl mb-1 opacity-40"></i>
+                        <p class="text-xs">Tidak ada slot jadwal. Klik <b>Tambah Slot</b> di atas.</p>
+                    </div>`;
+                return;
+            }
+
+            previewTasksData.forEach((slot, index) => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-2 shadow-xs transition';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center text-[10px] font-black">
+                                ${index + 1}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <input type="time" value="${slot.jam_mulai}" onchange="updatePreviewSlotField(${index}, 'jam_mulai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                                <span class="text-slate-400 font-bold">-</span>
+                                <input type="time" value="${slot.jam_selesai}" onchange="updatePreviewSlotField(${index}, 'jam_selesai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                        </div>
+                        <button type="button" onclick="deletePreviewSlot(${index})" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Hapus Slot">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                    <textarea rows="2" oninput="updatePreviewSlotField(${index}, 'tugas', this.value)" placeholder="Tulis rincian kegiatan..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500 leading-snug">${slot.tugas}</textarea>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function updatePreviewSlotField(index, field, value) {
+            if (previewTasksData[index]) {
+                previewTasksData[index][field] = value;
+            }
+        }
+
+        function addNewPreviewSlot() {
+            previewTasksData.push({
+                jam_mulai: '08:00',
+                jam_selesai: '10:00',
+                tugas: ''
+            });
+            renderAiPreviewCards();
+        }
+
+        function deletePreviewSlot(index) {
+            previewTasksData.splice(index, 1);
+            renderAiPreviewCards();
+        }
+
+        async function saveAllAiTasks() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const btnSave = document.getElementById('btn-save-ai-tasks');
+
+            if (previewTasksData.length === 0) {
+                return alert("Daftar jadwal kosong! Tambahkan minimal satu tugas.");
+            }
+
+            for (let i = 0; i < previewTasksData.length; i++) {
+                if (!previewTasksData[i].tugas || !previewTasksData[i].tugas.trim()) {
+                    return alert(`Slot ke-${i + 1} masih kosong. Silakan isi rincian kegiatan atau hapus slot tersebut.`);
+                }
+            }
+
+            btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Menyimpan ke Jadwal...';
+            btnSave.disabled = true;
+
+            const avatarUrl = getAvatarUrl(currentUser);
+            const nowIso = new Date().toISOString();
+
+            const bulkPayload = previewTasksData.map(t => ({
                 user_id: currentUser.id,
                 user_email: currentUser.email,
-                tanggal: document.getElementById('input-date').value,
-                nama: document.getElementById('input-name').value,
-                peran: document.getElementById('input-role').value,
-                tugas: document.getElementById('input-task').value,
-                jam_mulai: document.getElementById('input-start-time').value,
-                jam_selesai: document.getElementById('input-end-time').value,
+                tanggal: tanggal,
+                nama: name,
+                peran: role,
+                tugas: t.tugas.trim(),
+                jam_mulai: t.jam_mulai || '07:00',
+                jam_selesai: t.jam_selesai || '09:00',
                 status: 'Belum',
                 likes_count: 0,
                 liked_users: [],
                 comments_count: 0,
-                user_avatar: getAvatarUrl(currentUser),
-                created_at: new Date().toISOString()
-            };
-            await _supabase.from('jadwal').insert([payload]);
-            toggleModal(false);
-            showToast("Jadwal ditambahkan!");
-        });
+                created_at: nowIso,
+                user_avatar: avatarUrl
+            }));
 
-        async function checkAuth() {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('app-dashboard').classList.remove('hidden');
-                if (currentUser.email === SUPER_ADMIN_EMAIL) {
-                    isSuperAdmin = true;
-                    document.getElementById('superadmin-indicator').classList.remove('hidden');
+            try {
+                const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+                if (!error) {
+                    showToast(`✅ ${bulkPayload.length} kegiatan berhasil disimpan ke jadwal!`);
+                    closeAutoGenerateModal();
+                    if (document.getElementById('gen-focus')) document.getElementById('gen-focus').value = '';
+                    document.getElementById('aiPreviewSection')?.classList.add('hidden');
+                    document.getElementById('btn-save-ai-tasks')?.classList.add('hidden');
+                    previewTasksData = [];
+                } else {
+                    alert("Gagal menyimpan data: " + error.message);
                 }
-                await fetchFollowRelations();
-                await fetchTasksSupabase();
-                setupRealtimeListener();
-            } else {
-                document.getElementById('auth-screen').classList.remove('hidden');
+            } catch (err) {
+                alert("Terjadi kesalahan: " + err.message);
+            } finally {
+                btnSave.innerHTML = '<i class="fa-solid fa-check-double mr-1.5"></i> 2. Simpan Semua ke Jadwal';
+                btnSave.disabled = false;
             }
         }
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.remove('opacity-0');
-            setTimeout(() => t.classList.add('opacity-0'), 2500);
+        function openEditUserNameModal(targetUserId, currentEmail, currentName) {
+            document.getElementById('edit-user-target-id').value = targetUserId;
+            document.getElementById('edit-user-email-display').value = currentEmail;
+            document.getElementById('edit-user-new-name').value = currentName;
+            document.getElementById('editUserNameModal').classList.remove('hidden');
         }
 
+        function closeEditUserNameModal() { document.getElementById('editUserNameModal').classList.add('hidden'); }
+
+        document.getElementById('formEditUserName').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const targetUserId = document.getElementById('edit-user-target-id').value;
+            const newName = document.getElementById('edit-user-new-name').value.trim();
+            if (!targetUserId || !newName) return;
+
+            userProfilesMap[targetUserId] = newName;
+            const { error } = await _supabase.from('app_config').upsert({ id: 'user_profiles', config_data: userProfilesMap, updated_at: new Date().toISOString() });
+            if (!error) {
+                showToast("Nama berhasil disimpan!");
+                closeEditUserNameModal();
+                renderTasks();
+                calculateAndRenderEarnings();
+            } else {
+                showToast("Gagal menyimpan nama: " + error.message);
+            }
+        });
+
+        function openProfileModal() { 
+            syncApiKeyInputs();
+            document.getElementById('form-profile-modal').classList.remove('hidden'); 
+        }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
+
+        initTheme(); 
         checkAuth();
 </script>
 </body>
