@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Operasional & Penarikan Insentif - Personal Super App</title>
+    <title>Jadwal Operasional & Penarikan Insentif - Binayasa Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Chat Global, Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, Proteksi Waktu Nyata, dan Dokumentasi Before-After.">
+    <meta name="description" content="Sistem manajemen jadwal harian operasional terintegrasi Supabase dengan Chat Global, Mutual Follow, Dompet Insentif Poin, Sistem Penarikan Saldo, Proteksi Waktu Nyata, dan Dokumentasi Before-After - PT Binayasa Putrabatara.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -35,10 +35,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Klavika:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; }
-        .fb-logo-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .brand-logo-text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         ::-webkit-scrollbar { width: 4px; }
@@ -53,10 +53,10 @@
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
         <div class="bg-white dark:bg-slate-900 p-6 rounded-[28px] shadow-2xl w-11/12 max-w-xs text-center border border-slate-200 dark:border-slate-800">
-            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-blue-500/30">
-                <i id="auth-icon" class="fa-solid fa-shield-halved"></i>
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-blue-500/30 font-black">
+                B
             </div>
-            <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">M-Ops Schedule</h2>
+            <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">Binayasa M-Ops</h2>
             <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Masuk untuk mengelola tugas harian & insentif</p>
             
             <div id="form-container" class="space-y-2.5">
@@ -96,11 +96,11 @@
         <aside class="hidden md:flex flex-col w-56 bg-slate-900 text-white fixed top-0 bottom-0 left-0 p-4 z-30 justify-between shadow-xl border-r border-slate-800">
             <div>
                 <div class="flex items-center gap-2 mb-6 px-1">
-                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-lg font-black tracking-tighter">
-                        f
+                    <div class="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white text-base font-black tracking-tighter">
+                        B
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-base tracking-tight leading-none text-blue-500 fb-logo-text">facebook</h3>
+                        <h3 class="font-extrabold text-base tracking-tight leading-none text-blue-500 brand-logo-text">binayasa</h3>
                         <p class="text-[9px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">M-Ops Workspace</p>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
 
                     <button onclick="openGlobalChatModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
                         <div class="flex items-center gap-2.5">
-                            <i class="fa-brands fa-facebook-messenger text-xs text-blue-400"></i> Chat Global
+                            <i class="fa-solid fa-comments text-xs text-blue-400"></i> Chat Global
                         </div>
                         <span id="sideGlobalChatBadge" class="hidden bg-blue-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
                     </button>
@@ -169,7 +169,7 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             
-            <!-- HEADER PERSIS SEPERTI GAMBAR (FACEBOOK STYLE) -->
+            <!-- HEADER -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
                 <div class="flex items-center justify-between px-3 md:px-5 py-2">
@@ -177,8 +177,8 @@
                         <button onclick="toggleSidebarMenu()" class="text-slate-900 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
                             <i class="fa-solid fa-bars text-2xl font-bold"></i>
                         </button>
-                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[26px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] fb-logo-text select-none leading-none">
-                            facebook
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[24px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
+                            binayasa
                         </a>
                         <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
                     </div>
@@ -193,7 +193,7 @@
                         </button>
 
                         <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
-                            <i class="fa-brands fa-facebook-messenger text-2xl text-slate-900 dark:text-white"></i>
+                            <i class="fa-solid fa-comments text-2xl text-slate-900 dark:text-white"></i>
                             <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                         </button>
                     </div>
@@ -208,7 +208,7 @@
                         <i class="fa-solid fa-clapperboard"></i>
                     </button>
                     <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
-                        <i class="fa-solid fa-store"></i>
+                        <i class="fa-solid fa-wallet"></i>
                     </button>
                     <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-blue-500 transition active:scale-95" title="Auto Generate 07-17">
                         <i class="fa-solid fa-chart-column"></i>
@@ -276,7 +276,7 @@
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- BARIS "APA YANG ANDA PIKIRKAN?" -->
+                <!-- BARIS INPUT CEPAT -->
                 <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 mb-3 shadow-xs">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
@@ -284,7 +284,7 @@
                         </div>
 
                         <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
-                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa yang Anda pikirkan?</span>
+                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa rencana atau tugas operasional Anda?</span>
                         </div>
 
                         <button onclick="openTaskModal()" class="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition active:scale-95 flex-shrink-0" title="Upload Dokumentasi">
@@ -361,14 +361,14 @@
                         </div>
                     </div>
 
-                    <!-- TAMPILAN MOBILE FB FEED -->
+                    <!-- TAMPILAN MOBILE FEED -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
             </div>
 
             <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
-                <div>Operational Management System &bull; M-Ops Workspace</div>
+                <div>PT. Binayasa Putrabatara &bull; M-Ops Workspace</div>
             </footer>
         </main>
     </div>
@@ -380,7 +380,7 @@
             <div class="px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-brands fa-facebook-messenger"></i>
+                        <i class="fa-solid fa-comments"></i>
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -829,7 +829,7 @@
                     <i class="fa-solid fa-chevron-left text-base font-bold"></i>
                 </button>
                 <div class="text-center">
-                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Momen</h3>
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi Tugas</h3>
                     <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
                 </div>
                 <div class="w-8"></div>
@@ -849,7 +849,7 @@
                     <input type="text" 
                            id="inputNewComment" 
                            onkeydown="if(event.key === 'Enter') sendComment()" 
-                           placeholder="Silakan tulis komentar" 
+                           placeholder="Silakan tulis komentar..." 
                            class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
                 </div>
 
@@ -1135,7 +1135,8 @@
 
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
-    <script>
+
+<script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -2111,7 +2112,7 @@
             if (globalChatMessagesList.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-slate-400 py-10">
-                        <i class="fa-brands fa-facebook-messenger text-3xl mb-2 opacity-30 text-blue-500"></i>
+                        <i class="fa-solid fa-comments text-3xl mb-2 opacity-30 text-blue-500"></i>
                         <p class="text-xs font-bold">Belum ada obrolan di Chat Global.</p>
                         <p class="text-[10px] text-slate-400 mt-0.5">Sapa rekan tim dan mulai diskusi operasional hari ini!</p>
                     </div>
@@ -2204,7 +2205,7 @@
             const senderName = getUserDisplayName(msg.user_id, msg.user_email, msg.sender_name);
             const toast = document.getElementById('commentNotificationToast');
             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0';
-            document.getElementById('notifIcon').className = 'fa-brands fa-facebook-messenger';
+            document.getElementById('notifIcon').className = 'fa-solid fa-comments';
             document.getElementById('notifTitle').innerText = 'Pesan Chat Global';
             document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-wider';
             document.getElementById('notifSender').innerText = senderName;
@@ -2545,8 +2546,8 @@
                 const postDate = sampleTask?.tanggal || todayStr; const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
                 const taskUserId = sampleTask?.user_id;
 
-                const fbPostCard = document.createElement('div');
-                fbPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-200 dark:border-slate-800 shadow-xs transition';
+                const feedPostCard = document.createElement('div');
+                feedPostCard.className = 'w-full bg-white dark:bg-slate-900 px-4 py-3 border-y border-slate-200 dark:border-slate-800 shadow-xs transition';
 
                 let tasksListHtml = '';
                 tasksOfUser.forEach((item, index) => {
@@ -2699,7 +2700,7 @@
                     `;
                 });
 
-                fbPostCard.innerHTML = `
+                feedPostCard.innerHTML = `
                     <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2.5 min-w-0">
                             ${renderAvatarHtml(userAvatarUrl, petugasName, "w-9 h-9", taskUserId)}
@@ -2712,7 +2713,7 @@
                     </div>
                     <div class="py-1">${tasksListHtml}</div>
                 `;
-                cardsContainerMobile.appendChild(fbPostCard);
+                cardsContainerMobile.appendChild(feedPostCard);
 
                 const groupHeader = document.createElement('tr');
                 groupHeader.className = 'bg-blue-50 dark:bg-blue-950/40 border-y border-blue-200/80';
