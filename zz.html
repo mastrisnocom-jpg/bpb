@@ -1,4 +1,4 @@
-           <!DOCTYPE html>
+                      <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -227,6 +227,7 @@
                     <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate">
                         <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                     </button>
+                    <!-- LOGIKA 4: ICON LONCENG NOTIFIKASI -->
                     <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-rose-500 transition active:scale-95 relative" title="Notifikasi, Follow, Like & Update">
                         <i class="fa-regular fa-bell text-lg"></i>
                         <span id="headerFriendBadge" class="hidden absolute top-1.5 right-1/4 bg-rose-500 text-white text-[8.5px] font-black min-w-[15px] h-[15px] px-0.5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">0</span>
@@ -289,9 +290,8 @@
                 </div>
             </header>
 
-            <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
-                
-                <!-- INDIKATOR/BANNER MELIHAT FEED ORANG LAIN -->
+   <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
+                <!-- INDIKATOR MELIHAT FEED ORANG LAIN -->
                 <div id="friendFeedIndicator" class="hidden mx-3.5 md:mx-0 mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
                     <div class="flex items-center gap-2 min-w-0">
                         <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
@@ -406,7 +406,6 @@
 
     <!-- MODAL FULLSCREEN STORY VIEWER -->
     <div id="storyViewerModal" class="fixed inset-0 bg-black z-[140] hidden flex flex-col justify-between select-none">
-        <!-- TOP BAR -->
         <div class="p-3.5 z-20 bg-gradient-to-b from-black/85 via-black/40 to-transparent">
             <div class="w-full bg-white/30 h-1 rounded-full overflow-hidden mb-3">
                 <div id="storyProgressBar" class="bg-white h-full w-0 transition-all duration-100 ease-linear"></div>
@@ -434,7 +433,6 @@
             </div>
         </div>
 
-        <!-- MAIN MEDIA CONTAINER -->
         <div id="storyMediaContainer" class="relative flex-1 flex items-center justify-center overflow-hidden bg-black" onclick="handleStoryTap(event)">
             <img id="storyViewerImage" src="" class="w-full h-full object-contain max-h-[82vh]">
             
@@ -450,7 +448,6 @@
             </div>
         </div>
 
-        <!-- BOTTOM ACTION BAR -->
         <div class="p-3.5 z-30 bg-gradient-to-t from-black/95 via-black/60 to-transparent flex items-center gap-2.5">
             <button onclick="shareActiveStory()" class="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 active:scale-90 transition" title="Bagikan">
                 <i class="fa-solid fa-share-nodes text-sm"></i>
@@ -472,7 +469,7 @@
         </div>
     </div>
 
-    <!-- MODAL PUSAT NOTIFIKASI & RELASI -->
+ <!-- MODAL PUSAT NOTIFIKASI & RELASI (LOGIKA 4) -->
     <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -513,7 +510,7 @@
         </div>
     </div>
 
-    <!-- MODAL SUPERADMIN VERIFIKASI USER BARU -->
+    <!-- MODAL SUPERADMIN VERIFIKASI USER BARU (LOGIKA 1) -->
     <div id="superadminApprovalsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -659,7 +656,7 @@
         </div>
     </div>
 
-    <!-- MODAL DOMPET INSENTIF PRIBADI & ANGGARAN (LENGKAP) -->
+    <!-- MODAL DOMPET INSENTIF PRIBADI & ANGGARAN -->
     <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -678,7 +675,6 @@
             </div>
 
             <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
-                <!-- KARTU SALDO PRIBADI -->
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
                     <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Saldo Insentif Siap Tarik</p>
                     <div class="flex items-end justify-between mt-1">
@@ -699,7 +695,6 @@
                     </div>
                 </div>
 
-                <!-- RINCIAN POIN DETAIL PEROLEHAN -->
                 <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1.5">
                     <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1 mb-1">
                         <i class="fa-solid fa-receipt text-amber-500"></i> Rincian Sumber Poin Saya (Bulan Ini)
@@ -707,7 +702,6 @@
                     <div id="myPointsBreakdownList" class="space-y-1 text-[10.5px]"></div>
                 </div>
 
-                <!-- HISTORI PENARIKAN PRIBADI -->
                 <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
@@ -720,7 +714,6 @@
                     </div>
                 </div>
 
-                <!-- KETENTUAN SKEMA POIN -->
                 <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
                     <div class="flex items-center justify-between mb-1.5">
                         <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
@@ -733,7 +726,6 @@
                     <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
                 </div>
 
-                <!-- ADMIN SECTION: VERIFIKASI PENARIKAN TIM -->
                 <div id="adminWithdrawalManagementCard" class="hidden p-3 bg-rose-50/50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-800">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="text-[10px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1">
@@ -745,7 +737,6 @@
                     </div>
                 </div>
 
-                <!-- ADMIN SECTION: TOTAL REALISASI ANGGARAN BULANAN -->
                 <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
                     <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
                         <span>Total Realisasi Anggaran Tim (Admin)</span>
@@ -756,7 +747,6 @@
                     </div>
                 </div>
 
-                <!-- ADMIN SECTION: DAFTAR DETAIL PEROLEHAN SELURUH ANGGOTA -->
                 <div id="adminTeamListContainer" class="hidden">
                     <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
                     <div id="teamEarningsList" class="space-y-1.5"></div>
@@ -769,7 +759,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM PENARIKAN DANA -->
+    <!-- MODAL FORM PENARIKAN -->
     <div id="withdrawModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -945,7 +935,6 @@
                         </div>
                     </div>
 
-                    <!-- PENYESUAIAN NILAI POIN LENGKAP -->
                     <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
                         <label class="block text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase mb-2">Skema Nilai Poin & Bonus</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -1486,7 +1475,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <script>
+ <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1508,7 +1497,6 @@
         // Realtime channels
         let realtimeSubscription = null;
         let commentsSubscription = null;
-        let globalCommentsListener = null;
         let followsSubscription = null;
         let appConfigSubscription = null;
         let withdrawalsSubscription = null;
@@ -1536,13 +1524,13 @@
         let myFollowers = [];
         let userProfilesMap = {};
 
-        // Story Controller
+        // Controller Story Viewer Fullscreen
         let activeStoriesList = [];
         let currentStoryIndex = 0;
         let storyProgressTimer = null;
         const STORY_DURATION_MS = 6000;
 
-        // SKEMA ANGGARAN & POIN LENGKAP
+        // SKEMA LENGKAP ANGGARAN, POIN & PENARIKAN
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -1586,7 +1574,7 @@
         }
 
         // =========================================================================
-        // PENGATURAN ANGGARAN, POIN & PENARIKAN (SUPERADMIN & USER)
+        // 1 & 2. ANGGARAN & INSENTIF POIN REALTIME SYNC & CALCULATION
         // =========================================================================
         async function loadBudgetSettings() {
             try {
@@ -1639,7 +1627,7 @@
             document.getElementById('budgetConfigModal').classList.add('hidden');
         }
 
-        document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
+        document.getElementById('formBudgetConfig')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const newConfig = {
                 monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
@@ -1697,9 +1685,6 @@
             `;
         }
 
-        // =========================================================================
-        // PERHITUNGAN TOTAL POIN & INSENTIF SELURUH TIM & PRIBADI
-        // =========================================================================
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -1717,7 +1702,7 @@
                 if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
 
                 const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) return; // Khusus Senin-Jumat
+                if (dayOfWeek === 0 || dayOfWeek === 6) return;
 
                 if (!userEarningsMap[uid]) {
                     userEarningsMap[uid] = {
@@ -1789,7 +1774,6 @@
             Object.keys(userEarningsMap).forEach(uid => {
                 const u = userEarningsMap[uid];
                 
-                // Bonus Relasi Follow & New User
                 if (uid === currentUser?.id) {
                     u.followBonus = (myFollowings.length * (budgetSettings.pointsMutual || 500));
                 }
@@ -1839,7 +1823,8 @@
                 expiredTasksCount: 0
             };
             
-            document.getElementById('myEarningsBadge').innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
+            const badgeEl = document.getElementById('myEarningsBadge');
+            if (badgeEl) badgeEl.innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
             return { userEarningsMap, totalTeamBudgetUsed, myData };
         }
 
@@ -1982,7 +1967,7 @@
             document.getElementById('wd-calc-net').innerText = `Rp ${formatRupiahK(net)} (Rp ${net.toLocaleString('id-ID')})`;
         }
 
-        document.getElementById('formWithdrawRequest').addEventListener('submit', async function(e) {
+        document.getElementById('formWithdrawRequest')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const amount = parseInt(document.getElementById('wd-amount').value) || 0;
             if (amount < (budgetSettings.minWithdrawal || 10000)) return alert(`Minimal penarikan adalah Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
@@ -2044,7 +2029,6 @@
             document.getElementById('modalMyWithdrawnDetail').innerText = `Total Ditarik: Rp ${formatRupiahK(myData.totalWithdrawn)}`;
             document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
 
-            // Render Rincian Poin Saya
             const breakdownEl = document.getElementById('myPointsBreakdownList');
             if (breakdownEl) {
                 breakdownEl.innerHTML = `
@@ -2159,8 +2143,8 @@
             setActiveTab('tabHome');
         }
 
-        // =========================================================================
-        // INITIALISASI DAN CHECK AUTH
+ // =========================================================================
+        // LOGIKA VISIBILITAS FEED (CUKUP DI-FOLLOW BISA MELIHAT)
         // =========================================================================
         function viewFriendSchedule(targetUserId, targetUserName) {
             const isFollowingTarget = myFollowings.includes(targetUserId);
@@ -2188,6 +2172,18 @@
             activeFriendFeedId = null;
             activeFriendFeedName = null;
             goToHomeJadwal();
+        }
+
+        function goToHomeJadwal() {
+            setActiveTab('tabHome');
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            if (isSuperAdmin) document.getElementById('userFilter').value = 'All';
+            renderTasks();
+            showToast("Menampilkan jadwal Anda");
         }
 
         function getDeviceGeminiApiKey() {
@@ -2419,7 +2415,7 @@
         });
 
         // =========================================================================
-        // STORIES BAR RENDER
+        // STORIES BAR RENDER (DOKUMENTASI TIM)
         // =========================================================================
         function renderStoriesBar() {
             const container = document.getElementById('storiesContainer');
@@ -2501,6 +2497,9 @@
             });
         }
 
+        // =========================================================================
+        // FULLSCREEN STORY VIEWER (LIVE STREAM COMMENTS & FLOATING LOVE)
+        // =========================================================================
         function openStoryViewer(index) {
             if (!activeStoriesList[index]) return;
             currentStoryIndex = index;
@@ -2869,7 +2868,7 @@
         }
 
         // =========================================================================
-        // REGISTRASI & PERSETUJUAN SUPERADMIN
+        // PERSETUJUAN SUPERADMIN
         // =========================================================================
         async function checkUserApprovalStatus() {
             if (!currentUser) return false;
@@ -2993,7 +2992,7 @@
         }
 
         // =========================================================================
-        // REALTIME LISTENER: PEMBERITAHUAN JADWAL KE PENGIKUT
+        // REALTIME LISTENER: UPDATE JADWAL KE PENGIKUT
         // =========================================================================
         function setupFollowedUsersActivityListener() {
             if (tasksFeedListener) _supabase.removeChannel(tasksFeedListener);
@@ -3037,7 +3036,7 @@
         }
 
         // =========================================================================
-        // RELASI MENGIKUTI (FOLLOW SYSTEM SATU ARAH)
+        // RELASI MENGIKUTI (FOLLOW 1 ARAH)
         // =========================================================================
         async function fetchFollowRelations() {
             if (!currentUser) return;
@@ -3259,1224 +3258,6 @@
         }
 
         // =========================================================================
-        // RENDER TUGAS / JADWAL UTAMA
-        // =========================================================================
-        function renderTasks() {
-            renderStoriesBar();
-
-            const cardsContainer = document.getElementById('scheduleCardsMobile');
-            const tableDesktop = document.getElementById('scheduleTableDesktop');
-            const selectedRole = document.getElementById('roleFilter').value; 
-            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
-            const selectedUser = document.getElementById('userFilter').value; 
-            const selectedDate = document.getElementById('dateFilter').value;
-
-            const friendIndicator = document.getElementById('friendFeedIndicator');
-            const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
-            if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
-                if (friendIndicator) friendIndicator.classList.remove('hidden');
-                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
-            } else {
-                if (friendIndicator) friendIndicator.classList.add('hidden');
-            }
-
-            if (tableDesktop) tableDesktop.innerHTML = ''; 
-            if (cardsContainer) cardsContainer.innerHTML = '';
-
-            const filteredTasks = globalTasks.filter(item => {
-                const matchDate = !selectedDate || item.tanggal === selectedDate; 
-                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
-                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
-                
-                let canView = false;
-                if (isSuperAdmin) {
-                    const matchUser = selectedUser === 'All' || item.user_id === selectedUser;
-                    canView = matchUser;
-                } else if (activeFriendFeedId) {
-              
-        const isFollowing = myFollowings.includes(activeFriendFeedId);
-                    canView = (item.user_id === activeFriendFeedId) && (isFollowing || activeFriendFeedId === currentUser?.id);
-                } else {
-                    canView = (item.user_id === currentUser?.id);
-                }
-
-                return matchDate && matchRole && matchStatus && canView;
-            });
-
-            document.getElementById('totalTaskCount').innerText = filteredTasks.length;
-            document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
-            document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
-
-            const { userEarningsMap } = calculateAndRenderEarnings();
-
-            if (filteredTasks.length === 0) {
-                const emptyMsg = activeFriendFeedId ? `Pengguna ini belum memiliki jadwal pada tanggal yang dipilih.` : `Anda belum memiliki jadwal pada tanggal yang dipilih.`;
-                if (cardsContainer) cardsContainer.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
-                return;
-            }
-
-            // Desktop Table View
-            if (tableDesktop) {
-                filteredTasks.forEach(item => {
-                    const isOwner = (item.user_id === currentUser?.id);
-                    const isCompleted = item.status === 'Selesai';
-                    const isTooEarly = isTaskNotStartedYet(item);
-                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin;
-                    const canManage = isSuperAdmin || (isOwner && !isLocked);
-                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
-                    const isLiked = likedUsers.includes(currentUser?.id);
-
-                    let statusBadge = '';
-                    if (item.status === 'Selesai') {
-                        statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">✅ Selesai</span>';
-                    } else if (item.status === 'Proses') {
-                        statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">⚡ Proses</span>';
-                    } else {
-                        statusBadge = isTaskExpired(item.tanggal) 
-                            ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300">❌ Expired</span>'
-                            : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">⏱️ Belum</span>';
-                    }
-
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50/50 dark:hover:bg-slate-800/30';
-                    row.innerHTML = `
-                        <td class="p-3 text-slate-500 whitespace-nowrap">${item.tanggal || todayStr}</td>
-                        <td class="p-3 font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
-                        <td class="p-3 font-extrabold text-slate-900 dark:text-white">${getUserDisplayName(item.user_id, item.user_email, item.nama)}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-[10px]">${item.peran}</span></td>
-                        <td class="p-3">
-                            <p class="font-bold text-slate-800 dark:text-slate-100">${item.tugas}</p>
-                            ${item.keterangan ? `<p class="text-[10px] text-slate-400 mt-0.5">${item.keterangan}</p>` : ''}
-                        </td>
-                        <td class="p-3">${statusBadge}</td>
-                        <td class="p-3 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="toggleLikeTask('${item.id}')" class="text-xs font-bold ${isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'}">
-                                    <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> ${item.likes_count || 0}
-                                </button>
-                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="text-xs font-bold text-slate-400 hover:text-blue-600">
-                                    <i class="fa-regular fa-comment"></i> ${item.comments_count || 0}
-                                </button>
-                                ${canManage ? `
-                                    <button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-600"><i class="fa-solid fa-pen"></i></button>
-                                ` : ''}
-                                ${isSuperAdmin ? `
-                                    <button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
-                                ` : ''}
-                            </div>
-                        </td>
-                    `;
-                    tableDesktop.appendChild(row);
-                });
-            }
-
-            // Mobile Cards View
-            const groupedByUser = {};
-            filteredTasks.forEach(task => {
-                const userKey = task.user_id || 'unknown';
-                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
-                groupedByUser[userKey].push(task);
-            });
-
-            Object.keys(groupedByUser).forEach(uid => {
-                const tasksOfUser = groupedByUser[uid];
-                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
-                const sampleTask = tasksOfUser[0]; 
-                const petugasName = getUserDisplayName(sampleTask.user_id, sampleTask.user_email, sampleTask.nama);
-                const postDate = sampleTask?.tanggal || todayStr; 
-                const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
-                const taskUserId = sampleTask?.user_id;
-                const isFollowing = myFollowings.includes(taskUserId);
-
-                const uData = userEarningsMap[taskUserId];
-                const userPoints = uData ? uData.totalPoints : 0;
-                const userPointsK = (userPoints / 1000).toFixed(2).replace(/\.00$/, '') + 'k';
-
-                const feedPostCard = document.createElement('div');
-                feedPostCard.className = 'w-full bg-white dark:bg-slate-900 p-4 md:p-5 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-sm transition space-y-4 mb-3.5';
-
-                let tasksListHtml = '';
-                tasksOfUser.forEach((item, index) => {
-                    const isOwner = (item.user_id === currentUser?.id);
-                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; 
-                    const isLiked = likedUsers.includes(currentUser?.id);
-                    const likesCount = item.likes_count || 0; 
-                    const commentsCount = item.comments_count || 0;
-                    
-                    const isCompleted = item.status === 'Selesai';
-                    const isProcess = item.status === 'Proses';
-                    const isPastDay = isTaskExpired(item.tanggal); 
-                    const isTooEarly = isTaskNotStartedYet(item);
-                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
-                    const canManage = isSuperAdmin || (isOwner && !isLocked);
-
-                    let timeBadgeStyle = 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
-                    let statusIcon = '<i class="fa-regular fa-clock text-xs opacity-75"></i>';
-                    let statusLabel = 'Belum Dimulai';
-                    let taskPointBadge = '+0.1k';
-
-                    if (isCompleted) {
-                        timeBadgeStyle = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60';
-                        statusIcon = '<i class="fa-solid fa-circle-check text-xs text-emerald-600 dark:text-emerald-400"></i>';
-                        statusLabel = 'Selesai';
-                        taskPointBadge = isCompletedLate(item) ? '+0k (Terlambat)' : `+${((budgetSettings.pointsOnTime || 100) / 1000).toFixed(1)}k`;
-                    } else if (isProcess) {
-                        timeBadgeStyle = 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60';
-                        statusIcon = '<i class="fa-solid fa-bolt text-xs text-amber-500 animate-pulse"></i>';
-                        statusLabel = 'Sedang Dikerjakan';
-                        taskPointBadge = `+${((budgetSettings.pointsProcess || 50) / 1000).toFixed(1)}k`;
-                    } else if (isPastDay) {
-                        timeBadgeStyle = 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60';
-                        statusIcon = '<i class="fa-solid fa-triangle-exclamation text-xs text-rose-500"></i>';
-                        statusLabel = 'Lewat Hari (Expired)';
-                        taskPointBadge = `-${(Math.abs(budgetSettings.pointsExpired || 50) / 1000).toFixed(1)}k`;
-                    }
-
-                    let photoEvidenceHtml = '';
-                    if (item.foto_sebelum || item.foto_sesudah) {
-                        photoEvidenceHtml = `
-                            <div class="grid grid-cols-2 gap-2.5 my-3">
-                                ${item.foto_sebelum ? `
-                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer shadow-xs">
-                                        <img src="${item.foto_sebelum}" class="w-full h-full object-cover">
-                                        <span class="absolute bottom-2 left-2 bg-black/60 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">Sebelum</span>
-                                    </div>` : ''}
-                                ${item.foto_sesudah ? `
-                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-emerald-500/30 cursor-pointer shadow-xs">
-                                        <img src="${item.foto_sesudah}" class="w-full h-full object-cover">
-                                        <span class="absolute bottom-2 left-2 bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">Sesudah</span>
-                                    </div>` : ''}
-                            </div>
-                        `;
-                    }
-
-                    let statusActionDropdown = '';
-                    if (isLocked) {
-                        statusActionDropdown = `
-                            <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 py-1 px-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl select-none">
-                                <i class="fa-solid fa-lock text-xs"></i> Terkunci
-                            </span>
-                        `;
-                    } else if (canManage) {
-                        statusActionDropdown = `
-                            <div class="relative inline-block">
-                                <button onclick="toggleTaskMenu('${item.id}')" class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 hover:text-blue-600 font-bold text-xs py-1 px-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95 border border-slate-200/60 dark:border-slate-700/60">
-                                    <i class="fa-solid fa-pen-to-square text-xs text-blue-500"></i>
-                                    <span>Ubah Status</span>
-                                </button>
-                                <div id="task-menu-${item.id}" class="hidden absolute left-0 bottom-8 w-40 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-30 animate-slide-down">
-                                    <button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-clock text-slate-400"></i> Set: Belum</button>
-                                    <button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500"></i> Set: Proses</button>
-                                    <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Selesaikan Foto</button>
-                                    ${isSuperAdmin ? `
-                                        <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
-                                        <button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 flex items-center gap-2"><i class="fa-solid fa-pen"></i> Edit Detail</button>
-                                        <button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash"></i> Hapus</button>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    tasksListHtml += `
-                        <div class="pt-3 ${index !== 0 ? 'mt-4 border-t border-slate-100 dark:border-slate-800' : ''}">
-                            <div class="w-full ${timeBadgeStyle} px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center justify-between gap-2 mb-2.5">
-                                <div class="flex items-center gap-1.5">
-                                    <i class="fa-regular fa-clock text-xs opacity-75"></i>
-                                    <span>${item.jam_mulai} - ${item.jam_selesai}</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    ${statusIcon}
-                                    <span class="text-[11px]">${statusLabel}</span>
-                                    <span class="opacity-40">•</span>
-                                    <span class="font-mono">${taskPointBadge}</span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <h3 class="text-sm md:text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                                    ${item.tugas}
-                                </h3>
-
-                                ${item.keterangan ? `
-                                    <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800/80 text-xs">
-                                        <p class="font-bold text-slate-700 dark:text-slate-300 text-[10px] uppercase mb-0.5">Keterangan:</p>
-                                        <p class="text-slate-800 dark:text-slate-200 leading-relaxed break-words">${item.keterangan}</p>
-                                    </div>
-                                ` : ''}
-
-                                ${photoEvidenceHtml}
-                            </div>
-
-                            <div class="flex items-center justify-between gap-1 pt-2.5 mt-2 border-t border-slate-100 dark:border-slate-800/60 text-slate-600 dark:text-slate-300">
-                                <div>
-                                    ${statusActionDropdown}
-                                </div>
-
-                                <div class="flex items-center gap-3">
-                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1.5 text-xs font-bold hover:text-rose-500 transition active:scale-95 ${isLiked ? 'text-rose-500 font-black' : ''}">
-                                        <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
-                                        <span>${likesCount > 0 ? likesCount : 'Suka'}</span>
-                                    </button>
-
-                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1.5 text-xs font-bold hover:text-blue-600 transition active:scale-95 ${commentsCount > 0 ? 'text-blue-600 dark:text-blue-400' : ''}">
-                                        <i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment text-sm"></i>
-                                        <span>${commentsCount > 0 ? commentsCount : 'Komen'}</span>
-                                    </button>
-
-                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="flex items-center gap-1 text-xs font-bold hover:text-blue-600 transition active:scale-95" title="Bagikan">
-                                        <i class="fa-solid fa-share-nodes text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                feedPostCard.innerHTML = `
-                    <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="${isFollowing ? 'cursor-pointer' : ''}" ${isFollowing ? `onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')"` : ''}>
-                                ${renderAvatarHtml(userAvatarUrl, petugasName, "w-11 h-11", taskUserId)}
-                            </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h4 class="text-sm font-black text-slate-900 dark:text-white leading-tight truncate">${petugasName}</h4>
-                                    <span class="border border-blue-500/30 bg-blue-50/60 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 leading-none shadow-xs">
-                                        ${sampleTask?.peran || 'Teknisi'}
-                                    </span>
-                                </div>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
-                                    ${formatTanggalIndo(postDate)} &bull; ${tasksOfUser.length} Kegiatan
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full px-3.5 py-1.5 shadow-xs flex items-center gap-1 flex-shrink-0">
-                            <span class="text-xs font-bold text-slate-800 dark:text-slate-100">Poin:</span>
-                            <span class="text-xs font-black text-slate-900 dark:text-white font-mono">${userPointsK}</span>
-                            <span class="text-sm">🪙</span>
-                        </div>
-                    </div>
-
-                    <div>${tasksListHtml}</div>
-                `;
-
-                if (cardsContainer) cardsContainer.appendChild(feedPostCard);
-            });
-        }
-
-        // =========================================================================
-        // TOGGLE LIKE & NOTIFIKASI LIKE
-        // =========================================================================
-        async function toggleLikeTask(taskId) {
-            const task = globalTasks.find(t => String(t.id) === String(taskId)); 
-            if (!task) return;
-            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : []; 
-            const userIndex = likedUsers.indexOf(currentUser.id);
-            const isLiking = (userIndex === -1);
-
-            if (isLiking) { 
-                likedUsers.push(currentUser.id); 
-            } else { 
-                likedUsers.splice(userIndex, 1); 
-            }
-            task.likes_count = likedUsers.length; 
-            task.liked_users = likedUsers; 
-            renderTasks();
-
-            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
-            if (error) { 
-                showToast("Gagal menyukai: " + error.message); 
-                await fetchTasksSupabase(); 
-            } else {
-                if (data) {
-                    task.likes_count = data.likes_count; 
-                    task.liked_users = data.liked_users; 
-                    renderTasks(); 
-                }
-                if (isLiking && task.user_id !== currentUser.id) {
-                    await createSystemNotification({
-                        user_id: task.user_id,
-                        sender_id: currentUser.id,
-                        sender_email: currentUser.email,
-                        sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                        type: 'like',
-                        title: 'Menyukai Jadwal Anda ❤️',
-                        message: `${getUserDisplayName(currentUser.id, currentUser.email)} menyukai tugas: "${task.tugas}"`,
-                        task_id: task.id
-                    });
-                }
-            }
-        }
-
-        // =========================================================================
-        // MODAL & FITUR KOMENTAR POSTINGAN
-        // =========================================================================
-        async function openCommentModal(taskId, taskTitle) {
-            activeCommentJadwalId = String(taskId);
-            document.getElementById('commentModalSubtitle').innerText = taskTitle;
-            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat percakapan...</div>';
-            document.getElementById('commentModal').classList.remove('hidden');
-            
-            await fetchComments(activeCommentJadwalId);
-            setupCommentsRealtime(activeCommentJadwalId);
-        }
-
-        function closeCommentModal() {
-            activeCommentJadwalId = null;
-            if (commentsSubscription) {
-                _supabase.removeChannel(commentsSubscription);
-                commentsSubscription = null;
-            }
-            document.getElementById('commentModal').classList.add('hidden');
-        }
-
-        async function fetchComments(taskId) {
-            const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
-            const commentList = document.getElementById('commentList');
-            if (error) {
-                commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-6">Gagal memuat: ${error.message}</div>`;
-                return;
-            }
-            const task = globalTasks.find(t => String(t.id) === String(taskId));
-            if (task) {
-                task.comments_count = data ? data.length : 0;
-                renderTasks();
-            }
-            if (!data || data.length === 0) {
-                commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-10">Belum ada komentar. Tulis yang pertama!</div>';
-                return;
-            }
-            renderCommentList(data);
-        }
-
-        function renderCommentList(comments) {
-            const commentList = document.getElementById('commentList');
-            commentList.innerHTML = '';
-
-            comments.forEach(c => {
-                const isMyComment = c.user_id === currentUser?.id;
-                const senderName = getUserDisplayName(c.user_id, c.user_email);
-                const timeAgo = formatTimeAgo(c.created_at);
-                const userAvatar = c.user_avatar || null;
-                const isFollowing = myFollowings.includes(c.user_id);
-
-                const commentItem = document.createElement('div');
-                commentItem.className = 'flex items-start gap-3 text-slate-800 dark:text-slate-100 group';
-
-                commentItem.innerHTML = `
-                    <div class="flex-shrink-0 mt-0.5 ${isFollowing ? 'cursor-pointer' : ''}" ${isFollowing ? `onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')"` : ''}>
-                        ${renderAvatarHtml(userAvatar, senderName, "w-8 h-8", c.user_id)}
-                    </div>
-
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-1.5 flex-wrap">
-                            ${isFollowing ? `
-                                <button onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')" class="font-extrabold text-[11px] text-blue-600 dark:text-blue-400 hover:underline leading-none flex items-center gap-0.5">
-                                    <span>${senderName}</span>
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                                </button>
-                            ` : `
-                                <span class="font-extrabold text-[11px] text-slate-600 dark:text-slate-300 leading-none">${senderName}</span>
-                            `}
-                        </div>
-
-                        <p class="text-xs text-slate-800 dark:text-slate-100 font-medium leading-relaxed mt-1 break-words">
-                            ${c.comment}
-                        </p>
-
-                        <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400 font-semibold">
-                            <span>${timeAgo}</span>
-                            ${(isMyComment || isSuperAdmin) ? `
-                                <button onclick="deleteComment('${c.id}')" class="opacity-0 group-hover:opacity-100 hover:text-rose-500 transition">Hapus</button>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-                commentList.appendChild(commentItem);
-            });
-
-            commentList.scrollTop = commentList.scrollHeight;
-        }
-
-        async function deleteComment(commentId) {
-            if (!confirm("Hapus komentar ini?")) return;
-            const { error } = await _supabase.from('jadwal_comments').delete().eq('id', commentId);
-            if (error) {
-                showToast("Gagal menghapus komentar!");
-            } else {
-                showToast("Komentar dihapus");
-                if (activeCommentJadwalId) fetchComments(activeCommentJadwalId);
-            }
-        }
-
-        async function sendComment() {
-            const input = document.getElementById('inputNewComment');
-            const commentText = input.value.trim();
-            if (!commentText || !activeCommentJadwalId) return;
-
-            input.value = '';
-            const payload = {
-                jadwal_id: String(activeCommentJadwalId),
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                comment: commentText,
-                user_avatar: getAvatarUrl(currentUser),
-                created_at: new Date().toISOString()
-            };
-
-            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
-            if (error) {
-                showToast("Gagal mengirim komentar: " + error.message);
-                input.value = commentText;
-            } else {
-                const targetTask = globalTasks.find(t => String(t.id) === String(activeCommentJadwalId));
-                if (targetTask && targetTask.user_id !== currentUser.id) {
-                    await createSystemNotification({
-                        user_id: targetTask.user_id,
-                        sender_id: currentUser.id,
-                        sender_email: currentUser.email,
-                        sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                        type: 'comment',
-                        title: 'Komentar Tugas Baru 💬',
-                        message: `"${commentText}" pada jadwal: "${targetTask.tugas}"`,
-                        task_id: targetTask.id
-                    });
-                }
-                fetchComments(activeCommentJadwalId);
-            }
-        }
-
-        function setupCommentsRealtime(taskId) {
-            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
-            commentsSubscription = _supabase.channel(`comments-realtime-${taskId}`)
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => { 
-                    fetchComments(taskId); 
-                }).subscribe();
-        }
-
-        // =========================================================================
-        // FORM SELESAI & UPLOAD FOTO
-        // =========================================================================
-        function openCompletionNoteModal(task) {
-            if (isTaskNotStartedYet(task) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
-            document.getElementById('complete-task-id').value = task.id; 
-            document.getElementById('complete-task-title').innerText = task.tugas || '-'; 
-            document.getElementById('complete-task-note').value = task.keterangan || '';
-            document.getElementById('complete-file-before').value = ''; 
-            document.getElementById('complete-file-after').value = '';
-            
-            const isPast = isTaskExpired(task.tanggal);
-            const warningEl = document.getElementById('complete-late-warning');
-            const starPhoto = document.getElementById('photo-required-star');
-            const starNote = document.getElementById('note-required-star');
-
-            if (isPast) {
-                warningEl.classList.remove('hidden');
-                starPhoto.classList.remove('hidden');
-                starNote.classList.remove('hidden');
-            } else {
-                warningEl.classList.add('hidden');
-                starPhoto.classList.add('hidden');
-                starNote.classList.add('hidden');
-            }
-
-            const beforeContainer = document.getElementById('complete-before-preview-container'); 
-            const afterContainer = document.getElementById('complete-after-preview-container');
-            if (task.foto_sebelum) { 
-                document.getElementById('complete-before-preview').src = task.foto_sebelum; 
-                beforeContainer.classList.remove('hidden'); 
-            } else {
-                beforeContainer.classList.add('hidden');
-            }
-            if (task.foto_sesudah) { 
-                document.getElementById('complete-after-preview').src = task.foto_sesudah; 
-                afterContainer.classList.remove('hidden'); 
-            } else {
-                afterContainer.classList.add('hidden');
-            }
-            
-            document.getElementById('completionNoteModal').classList.remove('hidden'); 
-            setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
-        }
-
-        function closeCompletionNoteModal() { 
-            document.getElementById('completionNoteModal').classList.add('hidden'); 
-            renderTasks(); 
-        }
-
-        document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const taskId = document.getElementById('complete-task-id').value; 
-            const target = globalTasks.find(t => t.id == taskId);
-            if (!target) return;
-
-            if (isTaskNotStartedYet(target) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
-
-            const isPast = isTaskExpired(target.tanggal);
-            const noteText = document.getElementById('complete-task-note').value.trim();
-            const beforeFileInput = document.getElementById('complete-file-before'); 
-            const afterFileInput = document.getElementById('complete-file-after');
-
-            if (isPast) {
-                if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
-                const hasExistingPhoto = !!target.foto_sesudah;
-                const hasNewPhoto = afterFileInput && afterFileInput.files && afterFileInput.files.length > 0;
-                if (!hasExistingPhoto && !hasNewPhoto) return alert("Penyelesaian tugas susulan wajib menyertakan Foto Sesudah (After) sebagai bukti!");
-            }
-
-            const btn = document.getElementById('btn-submit-completion'); 
-            btn.innerText = "Mengompres & Mengunggah..."; 
-            btn.disabled = true;
-
-            try {
-                let beforePhotoUrl = target?.foto_sebelum || null; 
-                let afterPhotoUrl = target?.foto_sesudah || null;
-                const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email, target?.nama);
-
-                if (beforeFileInput && beforeFileInput.files && beforeFileInput.files[0]) { 
-                    const compressedBlobBefore = await processAndWatermarkImage(beforeFileInput.files[0], effectiveUserName); 
-                    beforePhotoUrl = await uploadEvidenceImage(compressedBlobBefore, 'before'); 
-                }
-                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) { 
-                    const compressedBlobAfter = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName); 
-                    afterPhotoUrl = await uploadEvidenceImage(compressedBlobAfter, 'after'); 
-                }
-
-                const updatePayload = { 
-                    status: 'Selesai', 
-                    completed_at: new Date().toISOString(), 
-                    keterangan: noteText, 
-                    foto_sebelum: beforePhotoUrl, 
-                    foto_sesudah: afterPhotoUrl 
-                };
-                
-                const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
-
-                if (error) {
-                    showToast("Gagal menyelesaikan tugas: " + error.message);
-                } else {
-                    target.status = 'Selesai'; 
-                    target.completed_at = updatePayload.completed_at; 
-                    target.keterangan = noteText; 
-                    target.foto_sebelum = beforePhotoUrl; 
-                    target.foto_sesudah = afterPhotoUrl;
-                    
-                    await notifyFollowersAboutActivity(target, 'selesai');
-
-                    closeCompletionNoteModal(); 
-                    showToast(isPast ? "Tugas susulan diselesaikan (0 Poin, Hutang Lunas)!" : "Tugas Selesai & dokumentasi disimpan!"); 
-                    renderTasks();
-                }
-            } catch (err) { 
-                alert("Terjadi kesalahan: " + err.message); 
-            } finally { 
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai'; 
-                btn.disabled = false; 
-            }
-        });
-
-        async function updateStatus(id, newStatus) {
-            const target = globalTasks.find(t => t.id == id); 
-            if (!target) return;
-            if (target.status === 'Selesai' && !isSuperAdmin && newStatus !== 'Selesai') { 
-                showToast("Tugas sudah Selesai dan terkunci!"); 
-                renderTasks(); 
-                return; 
-            }
-            if (isTaskNotStartedYet(target) && !isSuperAdmin) { 
-                showToast(`🔒 Tugas terkunci! Baru dapat dikerjakan saat jam ${target.jam_mulai}`); 
-                renderTasks(); 
-                return; 
-            }
-
-            if (newStatus === 'Selesai') { 
-                openCompletionNoteModal(target); 
-                return; 
-            }
-            
-            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
-                showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
-                return;
-            }
-
-            const { error } = await _supabase.from('jadwal').update({ status: newStatus, completed_at: null }).eq('id', id);
-            if (error) {
-                showToast("Gagal memperbarui status!"); 
-            } else { 
-                target.status = newStatus; 
-                target.completed_at = null; 
-                if (newStatus === 'Proses') {
-                    await notifyFollowersAboutActivity(target, 'proses');
-                }
-                renderTasks(); 
-                showToast("Status diperbarui"); 
-            }
-        }
-
-        async function notifyFollowersAboutActivity(task, type) {
-            const senderName = getUserDisplayName(currentUser.id, currentUser.email, task.nama);
-            for (const followerId of myFollowers) {
-                let title = 'Update Jadwal 🔔';
-                let msg = '';
-                if (type === 'schedule') {
-                    title = 'Jadwal Baru Ditambahkan 📅';
-                    msg = `${senderName} menambahkan tugas: "${task.tugas}" (${task.jam_mulai} - ${task.jam_selesai})`;
-                } else if (type === 'proses') {
-                    title = 'Tugas Mulai Dikerjakan ⚡';
-                    msg = `${senderName} sedang mengerjakan: "${task.tugas}"`;
-                } else if (type === 'selesai') {
-                    title = 'Tugas Telah Selesai ✅';
-                    msg = `${senderName} menyelesaikan tugas: "${task.tugas}"`;
-                }
-
-                await createSystemNotification({
-                    user_id: followerId,
-                    sender_id: currentUser.id,
-                    sender_email: currentUser.email,
-                    sender_name: senderName,
-                    type: type,
-                    title: title,
-                    message: msg,
-                    task_id: task.id
-                });
-            }
-        }
-
-        function askDeleteTask(id) {
-            if (!isSuperAdmin) return showToast("Hanya Super Admin yang berhak menghapus jadwal!");
-            const item = globalTasks.find(t => t.id == id); 
-            if (!item) return;
-            deleteTargetId = id; 
-            document.getElementById('confirmModal').classList.remove('hidden');
-        }
-
-        function closeConfirmModal() { 
-            deleteTargetId = null; 
-            document.getElementById('confirmModal').classList.add('hidden'); 
-        }
-
-        document.getElementById('btn-confirm-delete').onclick = async () => {
-            if (!isSuperAdmin || !deleteTargetId) return;
-            const { error } = await _supabase.from('jadwal').delete().eq('id', deleteTargetId);
-            if (!error) { 
-                globalTasks = globalTasks.filter(t => t.id != deleteTargetId); 
-                renderTasks(); 
-                showToast("Tugas berhasil dihapus"); 
-            } else {
-                showToast("Gagal menghapus tugas!");
-            }
-            closeConfirmModal();
-        };
-
-        function openExportModal(format) { 
-            activeExportFormat = format; 
-            document.getElementById('exportModal').classList.remove('hidden'); 
-        }
-        function closeExportModal() { 
-            document.getElementById('exportModal').classList.add('hidden'); 
-        }
-        function handleExportRangeChange() { 
-            const container = document.getElementById('customDateRangeContainer'); 
-            if (document.getElementById('exportRangeType').value === 'custom') {
-                container.classList.remove('hidden'); 
-            } else {
-                container.classList.add('hidden'); 
-            }
-        }
-
-        function processExportExecution() {
-            const rangeType = document.getElementById('exportRangeType').value; 
-            const selectedRole = document.getElementById('roleFilter').value;
-            const selectedStatus = document.getElementById('statusFilter')?.value || 'All'; 
-            const selectedUser = document.getElementById('userFilter').value;
-            const activeDate = document.getElementById('dateFilter').value || todayStr;
-            let startDate, endDate, labelRange; 
-            const now = new Date(activeDate);
-
-            if (rangeType === 'daily') { 
-                startDate = activeDate; 
-                endDate = activeDate; 
-                labelRange = `Harian (${formatTanggalIndo(activeDate)})`; 
-            } else if (rangeType === 'weekly') { 
-                const first = now.getDate() - now.getDay(); 
-                const last = first + 6; 
-                startDate = new Date(now.setDate(first)).toISOString().slice(0, 10); 
-                endDate = new Date(now.setDate(last)).toISOString().slice(0, 10); 
-                labelRange = `Mingguan`; 
-            } else if (rangeType === 'monthly') { 
-                const year = now.getFullYear(); 
-                const month = String(now.getMonth() + 1).padStart(2, '0'); 
-                const lastDay = new Date(year, now.getMonth() + 1, 0).getDate(); 
-                startDate = `${year}-${month}-01`; 
-                endDate = `${year}-${month}-${lastDay}`; 
-                labelRange = `Bulanan`; 
-            } else if (rangeType === 'yearly') { 
-                const year = now.getFullYear(); 
-                startDate = `${year}-01-01`; 
-                endDate = `${year}-12-31`; 
-                labelRange = `Tahunan (${year})`; 
-            } else if (rangeType === 'custom') { 
-                startDate = document.getElementById('exportStartDate').value; 
-                endDate = document.getElementById('exportEndDate').value; 
-                if (!startDate || !endDate) return alert("Silakan tentukan rentang tanggal!"); 
-                labelRange = `Kustom`; 
-            }
-
-            const tasksToExport = globalTasks.filter(item => {
-                const taskDate = item.tanggal || todayStr; 
-                let canView = isSuperAdmin || item.user_id === currentUser?.id;
-                if (activeFriendFeedId) {
-                    canView = item.user_id === activeFriendFeedId;
-                }
-                return taskDate >= startDate && taskDate <= endDate && (selectedRole === 'All' || item.peran === selectedRole) && (selectedStatus === 'All' || item.status === selectedStatus) && (!isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser) && canView;
-            });
-
-            if (tasksToExport.length === 0) return alert(`Tidak ada data tugas pada periode ini.`);
-            if (activeExportFormat === 'csv') {
-                generateCSVFile(tasksToExport, labelRange); 
-            } else {
-                generatePDFFile(tasksToExport, labelRange);
-            }
-            closeExportModal();
-        }
-
-        function generateCSVFile(tasks, labelRange) {
-            const grouped = {}; 
-            tasks.forEach(t => { 
-                const key = getUserDisplayName(t.user_id, t.user_email, t.nama); 
-                if (!grouped[key]) grouped[key] = []; 
-                grouped[key].push(t); 
-            });
-            let csvContent = "data:text/csv;charset=utf-8,PENGGUNA,TANGGAL,JAM MULAI,JAM SELESAI,KATEGORI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
-            Object.keys(grouped).forEach(namaPetugas => {
-                grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai)).forEach(t => {
-                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
-                });
-            });
-            const link = document.createElement("a"); 
-            link.setAttribute("href", encodeURI(csvContent)); 
-            link.setAttribute("download", `Laporan_Jadwal.csv`); 
-            document.body.appendChild(link); 
-            link.click(); 
-            document.body.removeChild(link); 
-            showToast("Berhasil ekspor CSV!");
-        }
-
-        function generatePDFFile(tasks, labelRange) {
-            const { jsPDF } = window.jspdf; 
-            const doc = new jsPDF();
-            doc.setFont("Helvetica", "bold"); 
-            doc.setFontSize(13); 
-            doc.text(`LAPORAN JADWAL AKTIVITAS`, 14, 16); 
-            doc.setFontSize(10); 
-            doc.text(`UNIT / WORKSPACE: ${UNIT_NAME}`, 14, 22);
-            doc.setFont("Helvetica", "normal"); 
-            doc.setFontSize(8.5); 
-            doc.text(`Rentang: ${labelRange}`, 14, 28);
-            
-            const grouped = {}; 
-            tasks.forEach(t => { 
-                const key = getUserDisplayName(t.user_id, t.user_email, t.nama); 
-                if (!grouped[key]) grouped[key] = []; 
-                grouped[key].push(t); 
-            });
-            const tableRows = []; 
-            let globalNo = 1;
-
-            Object.keys(grouped).forEach(namaPetugas => {
-                const list = grouped[namaPetugas]; 
-                list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
-                tableRows.push([{ content: `PENGGUNA: ${namaPetugas.toUpperCase()} - ${list.length} Kegiatan`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
-                list.forEach(item => { 
-                    tableRows.push([globalNo++, formatTanggalIndo(item.tanggal || todayStr), `${item.jam_mulai} - ${item.jam_selesai}`, getUserDisplayName(item.user_id, item.user_email, item.nama), item.peran, item.tugas + (item.keterangan ? `\n(Ket: ${item.keterangan})` : ''), item.status]); 
-                });
-            });
-            doc.autoTable({ startY: 35, head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Kategori', 'Detail Tugas & Keterangan', 'Status']], body: tableRows, headStyles: { fillColor: [24, 119, 242] }, styles: { fontSize: 8 } });
-            doc.save(`Laporan_Jadwal.pdf`); 
-            showToast("Berhasil ekspor PDF!");
-        }
-
-        function toggleModal(show) {
-            const modal = document.getElementById('scheduleModal');
-            if (show) {
-                modal.classList.remove('hidden'); 
-            } else { 
-                modal.classList.add('hidden'); 
-                document.getElementById('scheduleForm').reset(); 
-                editingTaskId = null; 
-            }
-        }
-
-        function openTaskModal() {
-            editingTaskId = null; 
-            document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
-            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
-            document.getElementById('modalTitle').innerText = "Tambah Tugas Baru"; 
-            document.getElementById('btn-save-task').innerText = "Simpan"; 
-            toggleModal(true);
-        }
-
-        function editTask(id) {
-            const item = globalTasks.find(t => t.id == id); 
-            if (!item) return;
-            if (item.status === 'Selesai' && !isSuperAdmin) return showToast("Tugas selesai tidak dapat diedit!");
-            if (isTaskExpired(item.tanggal) && !isSuperAdmin) return showToast("Tugas hari kemarin terkunci!");
-            editingTaskId = item.id;
-            document.getElementById('input-date').value = item.tanggal || todayStr; 
-            document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
-            document.getElementById('input-role').value = item.peran; 
-            document.getElementById('input-task').value = item.tugas;
-            document.getElementById('input-start-time').value = item.jam_mulai; 
-            document.getElementById('input-end-time').value = item.jam_selesai;
-            document.getElementById('modalTitle').innerText = "Edit Tugas"; 
-            document.getElementById('btn-save-task').innerText = "Update"; 
-            toggleModal(true);
-        }
-
-        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            let tanggal = document.getElementById('input-date').value; 
-            const nama = document.getElementById('input-name').value; 
-            const peran = document.getElementById('input-role').value;
-            const tugas = document.getElementById('input-task').value; 
-            let jam_mulai = document.getElementById('input-start-time').value; 
-            let jam_selesai = document.getElementById('input-end-time').value;
-            const btnSave = document.getElementById('btn-save-task'); 
-            btnSave.innerText = "Menyimpan..."; 
-            btnSave.disabled = true;
-
-            try {
-                if (editingTaskId) {
-                    const existingTask = globalTasks.find(t => t.id == editingTaskId);
-                    if (!isSuperAdmin && existingTask) { 
-                        tanggal = existingTask.tanggal; 
-                        jam_mulai = existingTask.jam_mulai; 
-                        jam_selesai = existingTask.jam_selesai; 
-                    }
-                    const { error } = await _supabase.from('jadwal').update({ tanggal, nama, peran, tugas, jam_mulai, jam_selesai }).eq('id', editingTaskId);
-                    if (!error) { 
-                        showToast("Tugas diperbarui!"); 
-                        toggleModal(false); 
-                    } else {
-                        alert("Gagal memperbarui: " + error.message);
-                    }
-                } else {
-                    const insertPayload = { 
-                        user_id: currentUser.id, 
-                        user_email: currentUser.email, 
-                        tanggal, 
-                        nama, 
-                        peran, 
-                        tugas, 
-                        jam_mulai, 
-                        jam_selesai, 
-                        status: 'Belum', 
-                        likes_count: 0, 
-                        liked_users: [], 
-                        comments_count: 0, 
-                        created_at: new Date().toISOString() 
-                    };
-                    const avatarUrl = getAvatarUrl(currentUser); 
-                    if (avatarUrl) insertPayload.user_avatar = avatarUrl;
-                    const { data, error } = await _supabase.from('jadwal').insert([insertPayload]).select();
-                    if (!error) { 
-                        showToast("Tugas ditambahkan!"); 
-                        if (data && data[0]) {
-                            await notifyFollowersAboutActivity(data[0], 'schedule');
-                        }
-                        toggleModal(false); 
-                    } else {
-                        alert("Gagal menyimpan: " + error.message);
-                    }
-                }
-            } catch (err) { 
-                alert("Kesalahan: " + err.message); 
-            } finally { 
-                btnSave.innerText = "Simpan"; 
-                btnSave.disabled = false; 
-            }
-        });
-
-        // =========================================================================
-        // BULK IMPORT WA
-        // =========================================================================
-        function openBulkTextModal() { 
-            setActiveTab('tabBulk');
-            document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr; 
-            document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
-            document.getElementById('bulkTextModal').classList.remove('hidden'); 
-        }
-        function closeBulkTextModal() { 
-            document.getElementById('bulkTextModal').classList.add('hidden'); 
-            setActiveTab('tabHome');
-        }
-
-        async function processBulkTextImport() {
-            let rawDate = document.getElementById('bulk-date').value || todayStr; 
-            const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
-            const role = document.getElementById('bulk-role').value; 
-            const rawText = document.getElementById('bulk-text-area').value;
-            if (!rawText.trim()) return alert("Tempel teks jadwal dahulu!");
-            document.getElementById('btn-process-bulk').innerText = "Memproses...";
-            const lines = rawText.split('\n'); 
-            const bulkPayload = []; 
-            const nowIso = new Date().toISOString(); 
-            const avatarUrl = getAvatarUrl(currentUser);
-
-            lines.forEach(line => {
-                const match = line.trim().match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
-                if (match) {
-                    bulkPayload.push({ 
-                        user_id: currentUser.id, 
-                        user_email: currentUser.email, 
-                        tanggal: rawDate, 
-                        nama: name, 
-                        peran: role, 
-                        tugas: match[5].trim(), 
-                        jam_mulai: `${match[1].padStart(2, '0')}:${match[2]}`, 
-                        jam_selesai: `${match[3].padStart(2, '0')}:${match[4]}`, 
-                        status: 'Belum', 
-                        likes_count: 0, 
-                        liked_users: [], 
-                        comments_count: 0, 
-                        created_at: nowIso, 
-                        user_avatar: avatarUrl 
-                    });
-                }
-            });
-
-            if (bulkPayload.length > 0) {
-                const { data, error } = await _supabase.from('jadwal').insert(bulkPayload).select();
-                if (!error) { 
-                    showToast(`${bulkPayload.length} tugas diimport!`); 
-                    if (data && data[0]) {
-                        await notifyFollowersAboutActivity(data[0], 'schedule');
-                    }
-                    closeBulkTextModal(); 
-                    document.getElementById('bulk-text-area').value = ''; 
-                } else {
-                    alert("Gagal mengimport: " + error.message);
-                }
-            } else {
-                alert("Format teks tidak sesuai!");
-            }
-            document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
-        }
-
-        // =========================================================================
-        // AI SMART SCHEDULE
-        // =========================================================================
-        function openAutoGenerateModal() { 
-            setActiveTab('tabAuto');
-            syncApiKeyInputs();
-            document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr; 
-            document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
-            document.getElementById('autoGenerateModal').classList.remove('hidden'); 
-        }
-        function closeAutoGenerateModal() { 
-            document.getElementById('autoGenerateModal').classList.add('hidden'); 
-            setActiveTab('tabHome');
-        }
-
-        async function generateAiSchedulePreview() {
-            const tanggal = document.getElementById('gen-date').value || todayStr; 
-            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
-            const role = document.getElementById('gen-role').value;
-            const focus = document.getElementById('gen-focus')?.value.trim() || '';
-            const userApiKey = getDeviceGeminiApiKey().trim();
-            const btnGen = document.getElementById('btn-process-gen');
-
-            if (!name) return alert("Silakan isi nama pengguna!");
-            if (!userApiKey) {
-                return alert("⚠️ Google Gemini API Key belum diisi!\n\nSilakan masukkan API Key di kolom atas.");
-            }
-
-            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang jadwal...';
-            btnGen.disabled = true;
-
-            const promptText = `Kamu adalah perencana kegiatan harian.
-Rancang jadwal harian realistis dan spesifik untuk "${role}" bernama "${name}" pada tanggal ${tanggal}.
-${focus ? `Target Fokus: "${focus}".` : ''}
-
-Buat 5 slot waktu berurutan pagi hingga malam.
-Hanya kembalikan array JSON murni:
-[
-  {"jam_mulai": "07:00", "jam_selesai": "09:00", "tugas": "Rincian kegiatan"},
-  {"jam_mulai": "09:00", "jam_selesai": "12:00", "tugas": "Rincian kegiatan"},
-  {"jam_mulai": "12:00", "jam_selesai": "13:00", "tugas": "Istirahat & Ibadah"},
-  {"jam_mulai": "13:00", "jam_selesai": "16:00", "tugas": "Rincian kegiatan"},
-  {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Evaluasi dan penutup"}
-]`;
-
-            const candidateModels = [
-                'gemini-2.5-flash',
-                'gemini-3.6-flash',
-                'gemini-3.1-pro-preview',
-                'gemini-3-flash'
-            ];
-            
-            let parsedTasks = null;
-            let lastError = null;
-
-            for (const modelName of candidateModels) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(userApiKey)}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: promptText }] }],
-                            generationConfig: {
-                                temperature: 0.7,
-                                responseMimeType: "application/json"
-                            }
-                        })
-                    });
-
-                    const data = await response.json();
-                    if (data.error) {
-                        lastError = data.error.message || `Error pada model ${modelName}`;
-                        continue;
-                    }
-
-                    let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                    rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-
-                    const result = JSON.parse(rawAiText);
-                    if (Array.isArray(result) && result.length > 0) {
-                        parsedTasks = result;
-                        break;
-                    }
-                } catch (e) {
-                    lastError = e.message;
-                }
-            }
-
-            try {
-                if (!parsedTasks) throw new Error(lastError || "Gagal menghubungi Gemini API.");
-                previewTasksData = parsedTasks;
-                renderAiPreviewCards();
-
-                const previewSection = document.getElementById('aiPreviewSection');
-                if (previewSection) {
-                    previewSection.classList.remove('hidden');
-                    setTimeout(() => previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-                }
-                document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
-                showToast("✨ Jadwal berhasil dibuat AI!");
-            } catch (err) {
-                alert(`Gagal generate: ${err.message}`);
-            } finally {
-                btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
-                btnGen.disabled = false;
-            }
-        }
-
-        function renderAiPreviewCards() {
-            const container = document.getElementById('aiPreviewList');
-            if (!container) return;
-            container.innerHTML = '';
-
-            previewTasksData.forEach((slot, index) => {
-                const item = document.createElement('div');
-                item.className = 'p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-2 shadow-xs transition';
-                item.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center text-[10px] font-black">
-                                ${index + 1}
-                            </span>
-                            <div class="flex items-center gap-1.5">
-                                <input type="time" value="${slot.jam_mulai}" onchange="updatePreviewSlotField(${index}, 'jam_mulai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
-                                <span class="text-slate-400 font-bold">-</span>
-                                <input type="time" value="${slot.jam_selesai}" onchange="updatePreviewSlotField(${index}, 'jam_selesai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
-                            </div>
-                        </div>
-                        <button type="button" onclick="deletePreviewSlot(${index})" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
-                    </div>
-                    <textarea rows="2" oninput="updatePreviewSlotField(${index}, 'tugas', this.value)" placeholder="Tulis rincian..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500 leading-snug">${slot.tugas}</textarea>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function updatePreviewSlotField(index, field, value) {
-            if (previewTasksData[index]) previewTasksData[index][field] = value;
-        }
-
-        function addNewPreviewSlot() {
-            previewTasksData.push({ jam_mulai: '08:00', jam_selesai: '10:00', tugas: '' });
-            renderAiPreviewCards();
-        }
-
-        function deletePreviewSlot(index) {
-            previewTasksData.splice(index, 1);
-            renderAiPreviewCards();
-        }
-
-        async function saveAllAiTasks() {
-            const tanggal = document.getElementById('gen-date').value || todayStr; 
-            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
-            const role = document.getElementById('gen-role').value;
-            const btnSave = document.getElementById('btn-save-ai-tasks');
-
-            if (previewTasksData.length === 0) return alert("Daftar jadwal kosong!");
-
-            for (let i = 0; i < previewTasksData.length; i++) {
-                if (!previewTasksData[i].tugas || !previewTasksData[i].tugas.trim()) {
-                    return alert(`Slot ke-${i + 1} masih kosong.`);
-                }
-            }
-
-            btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Menyimpan...';
-            btnSave.disabled = true;
-
-            const avatarUrl = getAvatarUrl(currentUser);
-            const nowIso = new Date().toISOString();
-
-            const bulkPayload = previewTasksData.map(t => ({
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                tanggal: tanggal,
-                nama: name,
-                peran: role,
-                tugas: t.tugas.trim(),
-                jam_mulai: t.jam_mulai || '07:00',
-                jam_selesai: t.jam_selesai || '09:00',
-                status: 'Belum',
-                likes_count: 0,
-                liked_users: [],
-                comments_count: 0,
-                created_at: nowIso,
-                user_avatar: avatarUrl
-            }));
-
-            try {
-                const { data, error } = await _supabase.from('jadwal').insert(bulkPayload).select();
-                if (!error) {
-                    showToast(`✅ ${bulkPayload.length} kegiatan disimpan!`);
-                    if (data && data[0]) {
-                        await notifyFollowersAboutActivity(data[0], 'schedule');
-                    }
-                    closeAutoGenerateModal();
-                    document.getElementById('aiPreviewSection')?.classList.add('hidden');
-                    document.getElementById('btn-save-ai-tasks')?.classList.add('hidden');
-                    previewTasksData = [];
-                } else {
-                    alert("Gagal menyimpan: " + error.message);
-                }
-            } catch (err) {
-                alert("Kesalahan: " + err.message);
-            } finally {
-                btnSave.innerHTML = '<i class="fa-solid fa-check-double mr-1.5"></i> 2. Simpan Semua ke Jadwal';
-                btnSave.disabled = false;
-            }
-        }
-
-        // =========================================================================
         // PROFIL & SETTING CORPORATE
         // =========================================================================
         function openEditUserNameModal(targetUserId, currentEmail, currentName) {
@@ -4490,7 +3271,7 @@ Hanya kembalikan array JSON murni:
             document.getElementById('editUserNameModal').classList.add('hidden'); 
         }
 
-        document.getElementById('formEditUserName').addEventListener('submit', async function(e) {
+        document.getElementById('formEditUserName')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const targetUserId = document.getElementById('edit-user-target-id').value;
             const newName = document.getElementById('edit-user-new-name').value.trim();
@@ -4603,13 +3384,9 @@ Hanya kembalikan array JSON murni:
             document.getElementById('form-profile-modal').classList.remove('hidden'); 
         }
 
-        function showToast(msg) { 
-            const t = document.getElementById('toast'); 
-            t.innerText = msg; 
-            t.classList.remove('opacity-0'); 
-            setTimeout(() => t.classList.add('opacity-0'), 2500); 
-        }
-
+        // =========================================================================
+        // JALANKAN INISIALISASI AMAN
+        // =========================================================================
         initTheme(); 
         checkAuth();
     </script>
