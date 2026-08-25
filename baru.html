@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -1274,7 +1274,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
- <script>
+<script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -3425,9 +3425,8 @@
             setActiveTab('tabHome');
         }
 
-      
-                        // ==========================================================
-        // AI SMART SCHEDULE: AUTO-DISCOVERY MODEL & ADAPTIVE FALLBACK
+        // ==========================================================
+        // AI SMART SCHEDULE: AUTO-DISCOVERY & ADAPTIVE FALLBACK
         // ==========================================================
         async function generateAiSchedulePreview() {
             const tanggal = document.getElementById('gen-date').value || todayStr; 
@@ -3542,28 +3541,6 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                 btnGen.disabled = false;
             }
         }
-
-            try {
-                if (!parsedTasks) {
-                    throw new Error(lastError || "Gagal mendapatkan respon valid dari model AI.");
-                }
-
-                previewTasksData = parsedTasks;
-                renderAiPreviewCards();
-
-                document.getElementById('aiPreviewSection')?.classList.remove('hidden');
-                document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
-                showToast("✨ Jadwal asli berhasil dirancang oleh Gemini AI!");
-
-            } catch (err) {
-                console.error("Gemini Error:", err);
-                alert(`Gagal generate via AI: ${err.message}`);
-            } finally {
-                btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
-                btnGen.disabled = false;
-            }
-        }
-
 
         function renderAiPreviewCards() {
             const container = document.getElementById('aiPreviewList');
