@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+                   <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -157,7 +157,7 @@
 
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
-            <!-- HEADER (PERSIS SESUAI GAMBAR) -->
+            <!-- HEADER -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
                 <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW (ICON HEADER SEPERTI GAMBAR) -->
+                <!-- BOTTOM TAB ROW -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 px-2 md:px-6">
                     <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
                         <i class="fa-solid fa-house text-lg"></i>
@@ -278,7 +278,7 @@
                     </button>
                 </div>
 
-                <!-- BARIS INPUT CEPAT (ICON GAMBAR SEBELAH KANAN TELAH DIHILANGKAN SESUAI REQUEST) -->
+                <!-- BARIS INPUT CEPAT -->
                 <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 mb-3 shadow-xs">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
@@ -291,10 +291,9 @@
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (GAYA KOTAK SESUAI GAMBAR) -->
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
-                        <!-- TOTAL -->
                         <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
                             <div class="w-8 h-8 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-slate-100 dark:border-slate-700">
                                 <i class="fa-solid fa-list-check"></i>
@@ -305,7 +304,6 @@
                             </div>
                         </div>
 
-                        <!-- PROSES -->
                         <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
                             <div class="w-8 h-8 bg-amber-50/60 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-amber-200/60 dark:border-amber-900/50">
                                 <i class="fa-solid fa-spinner"></i>
@@ -316,7 +314,6 @@
                             </div>
                         </div>
 
-                        <!-- SELESAI -->
                         <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
                             <div class="w-8 h-8 bg-blue-50/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-blue-200/60 dark:border-blue-900/50">
                                 <i class="fa-solid fa-shield-check"></i>
@@ -327,7 +324,6 @@
                             </div>
                         </div>
 
-                        <!-- INSENTIF (FORMAT 1k, 2k, DST) -->
                         <div onclick="openEarningsModal()" class="bg-[#fef9ee] dark:bg-amber-950/30 rounded-2xl p-2.5 border border-amber-200/80 dark:border-amber-800/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
                             <div class="w-8 h-8 bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0">
                                 <i class="fa-solid fa-wallet"></i>
@@ -415,7 +411,7 @@
         </div>
     </div>
 
-<!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
+    <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -2324,14 +2320,19 @@
         function updateFriendNotificationBadge() {
             const headerBadge = document.getElementById('headerFriendBadge');
             const sideBadge = document.getElementById('sideFriendBadge');
-            const count = mutualFriends.length;
-            if (count > 0) {
+            const totalMutual = mutualFriends.length;
+
+            const lastSeenCount = parseInt(localStorage.getItem('last_seen_friends_count') || '0', 10);
+            const unreadCount = Math.max(0, totalMutual - lastSeenCount);
+
+            if (unreadCount > 0) {
+                const countText = unreadCount > 99 ? '99+' : unreadCount;
                 if (headerBadge) {
-                    headerBadge.innerText = count > 99 ? '99+' : count;
+                    headerBadge.innerText = countText;
                     headerBadge.classList.remove('hidden');
                 }
                 if (sideBadge) {
-                    sideBadge.innerText = count > 99 ? '99+' : count;
+                    sideBadge.innerText = countText;
                     sideBadge.classList.remove('hidden');
                 }
             } else {
@@ -2496,11 +2497,16 @@
 
         async function fetchFollowRelations() {
             if (!currentUser) return;
-            const { data, error } = await _supabase.from('user_follows').select('*'); if (error || !data) return;
+            const { data, error } = await _supabase.from('user_follows').select('*'); 
+            if (error || !data) return;
             myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
             myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
             mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
-            updateFriendNotificationBadge();
+            
+            const isModalOpen = !document.getElementById('followsModal').classList.contains('hidden');
+            if (!isModalOpen) {
+                updateFriendNotificationBadge();
+            }
         }
 
         function setupFollowsRealtime() {
@@ -2539,7 +2545,6 @@
             setTimeout(() => { toast.classList.add('hidden'); }, 6000);
         }
 
-        // Listener Realtime Notifikasi saat Teman Mutual Membuat Jadwal Baru
         function setupFriendScheduleNotificationListener() {
             if (friendScheduleListener) _supabase.removeChannel(friendScheduleListener);
             friendScheduleListener = _supabase.channel('public:jadwal_friend_notify')
@@ -2662,9 +2667,18 @@
 
         async function openFollowsModal() {
             setActiveTab('tabFriends');
+
+            localStorage.setItem('last_seen_friends_count', mutualFriends.length.toString());
+
+            const headerBadge = document.getElementById('headerFriendBadge');
+            const sideBadge = document.getElementById('sideFriendBadge');
+            if (headerBadge) headerBadge.classList.add('hidden');
+            if (sideBadge) sideBadge.classList.add('hidden');
+
             document.getElementById('followsModal').classList.remove('hidden');
             document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pengguna...</div>';
-            await fetchFollowRelations(); renderUsersFollowModal();
+            await fetchFollowRelations(); 
+            renderUsersFollowModal();
         }
 
         function closeFollowsModal() { 
@@ -2866,9 +2880,6 @@
             else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin!"); }
         }
 
-        // ==========================================================
-        // RENDER TASKS: BISA LIKE & KOMEN DI JADWAL SENDIRI MAUPUN TEMAN
-        // ==========================================================
         function renderTasks() {
             const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); 
             const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
@@ -2877,7 +2888,6 @@
             const selectedUser = document.getElementById('userFilter').value; 
             const selectedDate = document.getElementById('dateFilter').value;
 
-            // Update Banner Teman
             const friendIndicator = document.getElementById('friendFeedIndicator');
             const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
             if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
@@ -3072,7 +3082,6 @@
                                 </div>` : ''
                             }
 
-                            <!-- INTERAKSI: LIKE & KOMENTAR DI JADWAL SENDIRI MAUPUN TEMAN -->
                             <div class="flex items-center justify-between flex-wrap gap-2 pt-2 mt-1">
                                 <div class="flex items-center gap-1.5">
                                     ${statusBadgeHtml}
@@ -3170,7 +3179,7 @@
                     
                     let roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${item.peran || 'Umum'}</span>`;
 
-                    let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
+ let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
                     
                     let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
 
