@@ -3426,7 +3426,7 @@
         }
 
         // ==========================================================
-        // AI SMART SCHEDULE: DIRECT CALL & FALLBACK
+        // AI SMART SCHEDULE: SUPPORT MODEL GENERASI TERBARU (3.6)
         // ==========================================================
         async function generateAiSchedulePreview() {
             const tanggal = document.getElementById('gen-date').value || todayStr; 
@@ -3466,8 +3466,14 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
   {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Rincian penutup hari / evaluasi"}
 ]`;
 
-            // Model utama yang diminta sistem
-            const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-pro'];
+            // Menggunakan daftar model generasi terbaru sesuai respon error API Google
+            const candidateModels = [
+                'gemini-3.6-flash',
+                'gemini-3.1-pro-preview',
+                'gemini-3-flash',
+                'gemini-2.5-flash'
+            ];
+            
             let parsedTasks = null;
             let lastError = null;
 
@@ -3487,13 +3493,13 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                         })
                     });
 
-                    if (!response.ok) {
-                        const errBody = await response.json().catch(() => ({}));
-                        lastError = errBody.error?.message || `HTTP error ${response.status}`;
+                    const data = await response.json();
+
+                    if (data.error) {
+                        lastError = data.error.message || `Error pada model ${modelName}`;
                         continue;
                     }
 
-                    const data = await response.json();
                     let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
                     rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
 
@@ -3509,7 +3515,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
 
             try {
                 if (!parsedTasks) {
-                    throw new Error(lastError || "Gagal mendapatkan respon valid dari model AI.");
+                    throw new Error(lastError || "Gagal mendapatkan respon dari AI.");
                 }
 
                 previewTasksData = parsedTasks;
@@ -3528,7 +3534,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
 
             } catch (err) {
                 console.error("Gemini Error:", err);
-                alert(`Gagal generate via AI: ${err.message}\n\nPastikan koneksi internet stabil dan API Key aktif.`);
+                alert(`Gagal generate via AI: ${err.message}`);
             } finally {
                 btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
                 btnGen.disabled = false;
