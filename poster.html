@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanduk Cetak 4m x 1m</title>
+    <style>
+        /* Standar Cetak Spanduk 400cm x 100cm */
+        @page {
+            size: 400cm 100cm landscape;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* Preview Layar (Skala Rasio 4:1) */
+        .banner-container {
+            width: 1200px;
+            height: 300px;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Area Gambar (Sisi Kiri/Samping) */
+        .banner-image-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 35%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            image-rendering: high-quality;
+        }
+
+        /* Area Teks & Konten */
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px 0 38%;
+            background: linear-gradient(
+                90deg, 
+                rgba(11, 23, 44, 0.95) 0%, 
+                rgba(11, 23, 44, 0.85) 40%, 
+                rgba(11, 23, 44, 1) 100%
+            );
+            color: #ffffff;
+        }
+
+        .text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #c5a059;
+            color: #0b172c;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 2px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            width: fit-content;
+            text-transform: uppercase;
+        }
+
+        .main-title {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .sub-title {
+            font-size: 18px;
+            font-weight: 300;
+            color: #d1d5db;
+            letter-spacing: 1px;
+        }
+
+        .cta-box {
+            text-align: right;
+            border-left: 2px solid rgba(197, 160, 89, 0.4);
+            padding-left: 30px;
+        }
+
+        .cta-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #c5a059;
+        }
+
+        .cta-desc {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        /* Mode Cetak Langsung / Export PDF */
+        @media print {
+            body {
+                background: none;
+            }
+            .banner-container {
+                width: 400cm !important;
+                height: 100cm !important;
+                box-shadow: none;
+            }
+            .main-title {
+                font-size: 120pt;
+            }
+            .sub-title {
+                font-size: 50pt;
+            }
+            .badge {
+                font-size: 40pt;
+                padding: 15pt 40pt;
+            }
+            .cta-text {
+                font-size: 60pt;
+            }
+            .cta-desc {
+                font-size: 40pt;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner-container">
+        <!-- Bagian Foto -->
+        <div class="banner-image-wrapper">
+            <img src="gambar-anda.jpg" alt="Visual" class="banner-image">
+        </div>
+
+        <!-- Bagian Tulisan -->
+        <div class="banner-content">
+            <div class="text-group">
+                <span class="badge">Layanan Prima</span>
+                <h1 class="main-title">Selamat Datang di Acara Resmi</h1>
+                <p class="sub-title">Mewujudkan Pelayanan Profesional, Modern, dan Terpercaya</p>
+            </div>
+            
+            <div class="cta-box">
+                <div class="cta-text">Tahun 2026</div>
+                <div class="cta-desc">Jakarta • Indonesia</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
