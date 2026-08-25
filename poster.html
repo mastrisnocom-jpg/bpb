@@ -3,48 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spanduk Cetak 4m x 1m</title>
+    <title>Generator Spanduk 4m x 1m</title>
     <style>
-        /* Standar Cetak Spanduk 400cm x 100cm */
-        @page {
-            size: 400cm 100cm landscape;
-            margin: 0;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #222;
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 30px 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
         }
 
-        /* Preview Layar (Skala Rasio 4:1) */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Panel Input Form */
+        .form-panel {
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        input[type="text"], input[type="file"] {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #ffffff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        .btn-print {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-print:hover {
+            background: #1d4ed8;
+        }
+
+        /* Area Preview Hasil Spanduk (Rasio 4:1) */
+        .preview-section {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
         .banner-container {
             width: 1200px;
             height: 300px;
-            background: #ffffff;
             position: relative;
             overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             display: flex;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background-color: #0b172c;
+            margin: 0 auto;
         }
 
-        /* Area Gambar (Sisi Kiri/Samping) */
+        /* Gambar Uploaded */
         .banner-image-wrapper {
             position: absolute;
             top: 0;
             left: 0;
-            width: 35%;
+            width: 38%;
             height: 100%;
             z-index: 1;
+            background: #1e293b;
         }
 
         .banner-image {
@@ -52,10 +115,10 @@
             height: 100%;
             object-fit: cover;
             object-position: top center;
-            image-rendering: high-quality;
+            display: block;
         }
 
-        /* Area Teks & Konten */
+        /* Overlay Gradasi & Konten */
         .banner-content {
             position: relative;
             z-index: 2;
@@ -64,20 +127,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 60px 0 38%;
+            padding: 0 50px 0 40%;
             background: linear-gradient(
                 90deg, 
                 rgba(11, 23, 44, 0.95) 0%, 
                 rgba(11, 23, 44, 0.85) 40%, 
                 rgba(11, 23, 44, 1) 100%
             );
-            color: #ffffff;
         }
 
         .text-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            max-width: 60%;
         }
 
         .badge {
@@ -85,69 +148,87 @@
             background: #c5a059;
             color: #0b172c;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
             letter-spacing: 2px;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
             width: fit-content;
             text-transform: uppercase;
         }
 
         .main-title {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            line-height: 1.1;
+            line-height: 1.2;
+            color: #ffffff;
         }
 
         .sub-title {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 300;
-            color: #d1d5db;
-            letter-spacing: 1px;
+            color: #cbd5e1;
+            letter-spacing: 0.5px;
         }
 
         .cta-box {
             text-align: right;
             border-left: 2px solid rgba(197, 160, 89, 0.4);
-            padding-left: 30px;
+            padding-left: 24px;
         }
 
         .cta-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #c5a059;
         }
 
         .cta-desc {
-            font-size: 14px;
-            color: #9ca3af;
+            font-size: 13px;
+            color: #94a3b8;
         }
 
-        /* Mode Cetak Langsung / Export PDF */
+        /* Mode Cetak Langsung (Ukuran Spanduk 400cm x 100cm) */
         @media print {
+            @page {
+                size: 400cm 100cm landscape;
+                margin: 0;
+            }
+
             body {
+                padding: 0;
                 background: none;
             }
+
+            .form-panel, .preview-label {
+                display: none !important;
+            }
+
             .banner-container {
                 width: 400cm !important;
                 height: 100cm !important;
+                border-radius: 0;
                 box-shadow: none;
             }
-            .main-title {
-                font-size: 120pt;
-            }
-            .sub-title {
-                font-size: 50pt;
-            }
+
             .badge {
                 font-size: 40pt;
                 padding: 15pt 40pt;
             }
+
+            .main-title {
+                font-size: 120pt;
+            }
+
+            .sub-title {
+                font-size: 50pt;
+            }
+
             .cta-text {
                 font-size: 60pt;
             }
+
             .cta-desc {
                 font-size: 40pt;
             }
@@ -156,26 +237,83 @@
 </head>
 <body>
 
-    <div class="banner-container">
-        <!-- Bagian Foto -->
-        <div class="banner-image-wrapper">
-            <img src="gambar-anda.jpg" alt="Visual" class="banner-image">
-        </div>
-
-        <!-- Bagian Tulisan -->
-        <div class="banner-content">
-            <div class="text-group">
-                <span class="badge">Layanan Prima</span>
-                <h1 class="main-title">Selamat Datang di Acara Resmi</h1>
-                <p class="sub-title">Mewujudkan Pelayanan Profesional, Modern, dan Terpercaya</p>
+    <div class="container">
+        <!-- Form Pengaturan & Upload -->
+        <div class="form-panel">
+            <div class="form-group">
+                <label for="imageInput">Upload Foto (Rekomendasi High-Res):</label>
+                <input type="file" id="imageInput" accept="image/*">
             </div>
             
-            <div class="cta-box">
-                <div class="cta-text">Tahun 2026</div>
-                <div class="cta-desc">Jakarta • Indonesia</div>
+            <div class="form-group">
+                <label for="inputTag">Kategori / Label:</label>
+                <input type="text" id="inputTag" value="Layanan Prima">
+            </div>
+
+            <div class="form-group">
+                <label for="inputTitle">Judul Utama:</label>
+                <input type="text" id="inputTitle" value="Selamat Datang di Acara Resmi">
+            </div>
+
+            <div class="form-group">
+                <label for="inputDesc">Sub-judul / Keterangan:</label>
+                <input type="text" id="inputDesc" value="Mewujudkan Pelayanan Profesional, Modern, dan Terpercaya">
+            </div>
+
+            <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+        </div>
+
+        <!-- Preview Spanduk -->
+        <div class="preview-section">
+            <div class="banner-container">
+                <div class="banner-image-wrapper">
+                    <img id="bannerImg" class="banner-image" src="" alt="Silakan Upload Foto">
+                </div>
+
+                <div class="banner-content">
+                    <div class="text-group">
+                        <span class="badge" id="displayTag">Layanan Prima</span>
+                        <h1 class="main-title" id="displayTitle">Selamat Datang di Acara Resmi</h1>
+                        <p class="sub-title" id="displayDesc">Mewujudkan Pelayanan Profesional, Modern, dan Terpercaya</p>
+                    </div>
+                    
+                    <div class="cta-box">
+                        <div class="cta-text">Tahun 2026</div>
+                        <div class="cta-desc">Jakarta • Indonesia</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const bannerImg = document.getElementById('bannerImg');
+
+        // Render preview gambar saat file diunggah
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bannerImg.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Update teks spanduk secara live (realtime)
+        document.getElementById('inputTag').addEventListener('input', function() {
+            document.getElementById('displayTag').textContent = this.value;
+        });
+
+        document.getElementById('inputTitle').addEventListener('input', function() {
+            document.getElementById('displayTitle').textContent = this.value;
+        });
+
+        document.getElementById('inputDesc').addEventListener('input', function() {
+            document.getElementById('displayDesc').textContent = this.value;
+        });
+    </script>
 </body>
 </html>
