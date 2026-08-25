@@ -1,0 +1,1207 @@
+    <!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Jadwal Harian & Insentif - M-Ops Super App</title>
+    
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Mutual Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        :root {
+            --t-50: #ecfdf5; --t-100: #d1fae5; --t-400: #34d399; --t-500: #10b981; --t-600: #059669; --t-700: #047857; --t-900: #064e3b; --t-950: #022c22;
+        }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        theme: { 
+                            50: 'var(--t-50)', 100: 'var(--t-100)', 400: 'var(--t-400)', 500: 'var(--t-500)', 
+                            600: 'var(--t-600)', 700: 'var(--t-700)', 900: 'var(--t-900)', 950: 'var(--t-950)'
+                        } 
+                    } 
+                } 
+            } 
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; }
+        .brand-logo-text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+        .tab-active { color: #1877f2; border-bottom: 3px solid #1877f2; }
+        .dark .tab-active { color: #2e89ff; border-bottom: 3px solid #2e89ff; }
+        .stat-card {
+            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.03);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+
+    <!-- SCREEN AUTHENTICATION -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-[28px] shadow-2xl w-11/12 max-w-xs text-center border border-slate-200 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md shadow-blue-500/30 font-black">B</div>
+            <h2 id="auth-title" class="text-lg font-extrabold text-slate-900 dark:text-white mb-0.5">Binayasa M-Ops</h2>
+            <p id="auth-subtitle" class="text-[10px] font-medium text-slate-400 mb-5">Kelola jadwal aktivitas harian & produktivitas</p>
+            
+            <div id="form-container" class="space-y-2.5">
+                <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-blue-500 transition">
+                <input type="password" id="input-password" placeholder="Kata Sandi" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-center text-xs text-slate-800 dark:text-white font-semibold focus:outline-none focus:border-blue-500 transition">
+            </div>
+            
+            <p id="auth-error" class="text-[10px] text-rose-500 font-bold mt-2.5 hidden">Error message</p>
+            <button id="btn-action" class="w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl hover:bg-blue-700 active:scale-95 transition text-xs shadow-md shadow-blue-600/20 mt-4">Masuk</button>
+            
+            <div class="flex items-center my-3 text-[10px] text-slate-400">
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div><span class="px-2">atau</span><div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+            </div>
+
+            <button onclick="loginWithGoogle()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl active:scale-95 transition flex items-center justify-center gap-2 text-[11px] shadow-sm">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.33 0 3.357 2.673 1.386 6.577l3.88 3.188z"/>
+                    <path fill="#4285F4" d="M23.605 12.3c0-.823-.074-1.614-.211-2.373H12v4.582h6.51c-.28 1.514-1.137 2.795-2.42 3.655v3.036h3.914c2.29-2.11 3.601-5.214 3.601-8.9z"/>
+                    <path fill="#FBBC05" d="M5.266 14.235A7.087 7.087 0 0 1 4.909 12c0-.795.132-1.559.357-2.265L1.386 6.577A11.948 11.948 0 0 0 0 12c0 1.959.473 3.81 1.309 5.455l3.957-3.22z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.955-1.077 7.94-2.918l-3.913-3.036c-1.087.727-2.477 1.163-4.027 1.163-3.11 0-5.74-2.105-6.682-4.945L1.31 17.486C3.286 21.359 7.314 24 12 24z"/>
+                </svg>
+                Masuk dengan Google
+            </button>
+            <button id="btn-switch" class="text-slate-400 text-[10px] font-bold mt-4 hover:text-blue-600 transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            
+            <a href="/" class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 text-slate-400 hover:text-blue-600 text-[10px] font-bold flex items-center justify-center gap-1.5 transition">
+                <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
+            </a>
+        </div>
+    </div>
+
+    <!-- LAYOUT UTAMA DASHBOARD -->
+    <div id="app-dashboard" class="flex min-h-screen flex-col md:flex-row hidden">
+        
+        <!-- SIDEBAR (DESKTOP) -->
+        <aside class="hidden md:flex flex-col w-56 bg-slate-900 text-white fixed top-0 bottom-0 left-0 p-4 z-30 justify-between shadow-xl border-r border-slate-800">
+            <div>
+                <div class="flex items-center gap-2 mb-6 px-1">
+                    <div class="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white text-base font-black tracking-tighter">B</div>
+                    <div>
+                        <h3 class="font-extrabold text-base tracking-tight leading-none text-blue-500 brand-logo-text">binayasa</h3>
+                        <p class="text-[9px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">M-Ops Workspace</p>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="/" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/50 hover:bg-slate-800 text-slate-200 transition mb-1">
+                        <i class="fa-solid fa-house text-xs text-blue-400"></i> Halaman Utama
+                    </a>
+                    <button onclick="goToHomeJadwal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-blue-600 text-white transition">
+                        <i class="fa-solid fa-newspaper text-xs"></i> Home Feed Jadwal
+                    </button>
+                    <button onclick="openNotificationsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-bell text-xs text-amber-400"></i> Notifikasi</div>
+                        <span id="sideNotifBadge" class="hidden bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                    </button>
+                    <button onclick="openGlobalChatModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-comments text-xs text-blue-400"></i> Chat Global</div>
+                        <span id="sideGlobalChatBadge" class="hidden bg-blue-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                    </button>
+                    <button onclick="openEarningsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Insentif
+                    </button>
+                    <button onclick="openFollowsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-user-group text-xs text-teal-400"></i> Relasi Follow / Teman</div>
+                        <span id="sideFollowBadge" class="hidden bg-emerald-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
+                    </button>
+                    
+                    <div class="pt-3 border-t border-slate-800 my-2"></div>
+                    
+                    <button onclick="openTaskModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md mb-2">
+                        <i class="fa-solid fa-plus text-xs"></i> Tambah Single
+                    </button>
+                    <button onclick="openBulkTextModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 mb-2">
+                        <i class="fa-solid fa-paste text-xs text-blue-400"></i> Import Teks WA
+                    </button>
+                    <button onclick="openAutoGenerateModal()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:opacity-95 text-white font-bold py-2.5 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> AI Smart Schedule
+                    </button>
+                    <button id="btnSidebarBudget" onclick="openBudgetConfigModal()" class="hidden w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold py-2 px-3 rounded-xl text-[11px] transition flex items-center justify-center gap-1.5 border border-amber-400/30 mt-2">
+                        <i class="fa-solid fa-coins text-xs"></i> Pengaturan Anggaran
+                    </button>
+                </nav>
+            </div>
+
+            <div class="mt-auto pt-3 border-t border-slate-800 flex flex-col gap-2">
+                <div onclick="openProfileModal()" class="flex items-center gap-2.5 cursor-pointer p-1.5 rounded-xl hover:bg-slate-800 transition">
+                    <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-700 text-slate-200 flex items-center justify-center text-xs font-bold shadow-sm" id="user-avatar-placeholder">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1">
+                            <p class="text-[9px] text-slate-400 font-medium leading-none mb-0.5">User:</p>
+                            <span id="side-superadmin-badge" class="hidden bg-slate-800 text-blue-400 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full border border-blue-500/40">SUPER ADMIN ★</span>
+                        </div>
+                        <p class="text-[11px] font-bold text-white truncate" id="user-display-side">User</p>
+                    </div>
+                    <i class="fa-solid fa-gear text-slate-400 text-[10px]"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA DASHBOARD -->
+        <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
+            <!-- HEADER (DESAIN SESUAI GAMBAR) -->
+            <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+                <!-- TOP BAR -->
+                <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSidebarMenu()" class="text-slate-900 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
+                            <i class="fa-solid fa-bars text-xl font-bold"></i>
+                        </button>
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[26px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] brand-logo-text select-none leading-none">
+                            binayasa
+                        </a>
+                        <span id="superadmin-indicator" class="hidden ml-1 bg-[#1e293b] text-blue-400 font-black text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                            SUPER ADMIN <span class="text-yellow-400 text-[10px]">★</span>
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-3.5">
+                        <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
+                            <i class="fa-solid fa-magnifying-glass text-xl font-bold"></i>
+                        </button>
+                        <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
+                            <i class="fa-regular fa-comment-dots text-2xl text-slate-900 dark:text-white"></i>
+                            <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BOTTOM TAB ROW (ICON SEPERTI GAMBAR) -->
+                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-2 md:px-6">
+                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
+                        <i class="fa-solid fa-house"></i>
+                    </button>
+                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
+                        <i class="fa-solid fa-clapperboard"></i>
+                    </button>
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
+                        <i class="fa-solid fa-wallet"></i>
+                    </button>
+                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                    <!-- TAB LONCENG NOTIFIKASI -->
+                    <button onclick="openNotificationsModal()" id="tabNotif" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95 relative" title="Notifikasi Interaksi & Teman">
+                        <i class="fa-regular fa-bell"></i>
+                        <span id="tabNotifBadge" class="hidden absolute top-2 right-4 md:right-8 bg-rose-600 text-white text-[9px] font-extrabold min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">0</span>
+                    </button>
+                    <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
+                        <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[11px] font-bold shadow-xs" id="header-user-avatar-btn">
+                            <i class="fa-solid fa-user text-slate-600 dark:text-slate-300"></i>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- ACCORDION FILTER DRAWER -->
+                <div id="filterSearchDrawer" class="hidden bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700/80 p-3 animate-slide-down">
+                    <div class="max-w-4xl mx-auto flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-extrabold uppercase text-slate-500 tracking-wider flex items-center gap-1">
+                                <i class="fa-solid fa-filter text-blue-500"></i> Filter & Rentang Jadwal
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="toggleTheme()" class="text-xs px-2 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-bold flex items-center gap-1">
+                                    <i id="theme-icon" class="fa-solid fa-moon"></i> Tema
+                                </button>
+                                <button id="btnHeaderBudget" onclick="openBudgetConfigModal()" class="hidden text-xs px-2 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold flex items-center gap-1">
+                                    <i class="fa-solid fa-coins"></i> Anggaran
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-1">
+                            <input type="date" id="dateFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                            <select id="roleFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                                <option value="All">🔍 Semua Kategori</option>
+                                <option value="Masyarakat Umum / Personal">👤 Personal / Umum</option>
+                                <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                                <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
+                                <option value="Teknisi">🛠️ Teknisi</option>
+                                <option value="Cleaning">🧹 Cleaning Service</option>
+                                <option value="Admin Teknik">📋 Admin</option>
+                            </select>
+                            <select id="statusFilter" onchange="renderTasks()" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-[11px] font-bold rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
+                                <option value="All">📌 Semua Status</option>
+                                <option value="Belum">⏱️ Belum</option>
+                                <option value="Proses">⚡ Proses</option>
+                                <option value="Selesai">✅ Selesai</option>
+                            </select>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openExportModal('csv')" class="flex-1 bg-white dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 text-[10px] font-bold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-file-csv text-emerald-600"></i> CSV
+                                </button>
+                                <button onclick="openExportModal('pdf')" class="flex-1 bg-white dark:bg-slate-900 hover:bg-slate-100 text-slate-700 dark:text-slate-200 text-[10px] font-bold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <select id="userFilter" onchange="renderTasks()" class="hidden bg-amber-500 text-slate-950 border border-amber-300 text-[11px] font-extrabold rounded-lg px-2.5 py-1.5 focus:outline-none w-full mt-1">
+                            <option value="All">👥 Filter: Semua User</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <div class="w-full max-w-4xl mx-auto px-3 md:px-4 pt-3.5 flex-grow">
+                
+                <!-- INDIKATOR/BANNER MELIHAT FEED TEMAN -->
+                <div id="friendFeedIndicator" class="hidden mb-3 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-slide-down">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[9.5px] text-blue-600 dark:text-blue-400 font-extrabold uppercase tracking-wider leading-none">Melihat Jadwal Teman</p>
+                            <h4 id="friendFeedNameDisplay" class="text-xs font-black text-slate-900 dark:text-white truncate mt-0.5">Nama Teman</h4>
+                        </div>
+                    </div>
+                    <button onclick="resetToMyFeed()" class="bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700 px-3 py-1.5 rounded-xl font-bold text-[10px] hover:bg-blue-50 transition active:scale-95 shadow-xs flex items-center gap-1 flex-shrink-0">
+                        <i class="fa-solid fa-arrow-left text-[9px]"></i> Jadwal Saya
+                    </button>
+                </div>
+
+                <!-- BARIS INPUT (SESUAI GAMBAR REFERENSI - ICON GAMBAR DIHILANGKAN) -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 mb-3.5 shadow-xs border border-slate-200/80 dark:border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
+                            <div class="w-full h-full flex items-center justify-center text-slate-500"><i class="fa-solid fa-user text-sm"></i></div>
+                        </div>
+
+                        <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
+                            <span class="text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold select-none">Apa rencana atau target harian Anda?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (PERSIS GAMBAR REFERENSI) -->
+                <div class="mb-3.5">
+                    <section class="grid grid-cols-4 gap-2 sm:gap-2.5">
+                        
+                        <!-- CARD TOTAL -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
+                            <div class="w-8 h-8 bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 rounded-xl flex items-center justify-center text-sm flex-shrink-0 border border-slate-200 dark:border-slate-700">
+                                <i class="fa-solid fa-list-ul"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Total</p>
+                                <p id="totalTaskCount" class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <!-- CARD PROSES -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full border-2 border-amber-300/80 dark:border-amber-500/80 flex items-center justify-center text-xs font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">
+                                <span id="inProgressCountCircle">0</span>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Proses</p>
+                                <p id="inProgressCount" class="text-sm sm:text-base font-extrabold text-amber-600 dark:text-amber-400 leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <!-- CARD SELESAI -->
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 stat-card flex items-center gap-2.5">
+                            <div class="w-8 h-8 bg-blue-50 dark:bg-blue-950/40 text-blue-500 rounded-xl flex items-center justify-center text-sm flex-shrink-0 border border-blue-200/60 dark:border-blue-900/60">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-slate-400 font-semibold truncate leading-none mb-1">Selesai</p>
+                                <p id="completedCount" class="text-sm sm:text-base font-extrabold text-slate-800 dark:text-white leading-tight">0</p>
+                            </div>
+                        </div>
+
+                        <!-- CARD INSENTIF (GRADASI KUNING EMAS) -->
+                        <div onclick="openEarningsModal()" class="bg-[#fef7df] dark:bg-[#3d3110] rounded-2xl p-2.5 border border-amber-200/90 dark:border-amber-700/60 stat-card flex items-center gap-2.5 cursor-pointer active:scale-95 transition">
+                            <div class="w-8 h-8 bg-[#f5e6b3] dark:bg-[#524116] text-amber-800 dark:text-amber-300 rounded-xl flex items-center justify-center text-sm flex-shrink-0 shadow-xs">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[9.5px] text-amber-800 dark:text-amber-300 font-bold truncate leading-none mb-1">Insentif</p>
+                                <p id="myEarningsBadge" class="text-xs sm:text-sm font-black text-amber-950 dark:text-amber-200 leading-tight">Rp 0</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- CONTAINER JADWAL -->
+                <section>
+                    <!-- DESKTOP -->
+                    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase tracking-wider font-extrabold">
+                                        <th class="p-3">Tanggal</th>
+                                        <th class="p-3">Waktu</th>
+                                        <th class="p-3">Nama Pengguna</th>
+                                        <th class="p-3">Kategori</th>
+                                        <th class="p-3">Detail Tugas & Dokumentasi</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Interaksi</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduleTableDesktop" class="divide-y divide-slate-200 dark:divide-slate-800 text-[11px]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- MOBILE FEED -->
+                    <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
+                </section>
+
+            </div>
+
+            <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
+                <div>PT. Binayasa Putrabatara &bull; M-Ops Workspace</div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- MODAL NOTIFIKASI TERPADU (LONCENG) -->
+    <div id="notificationsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[88] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Pusat Notifikasi</h3>
+                        <p class="text-[9.5px] text-slate-400">Jadwal teman, likes, komentar & teman baru</p>
+                    </div>
+                </div>
+                <button onclick="closeNotificationsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div id="notificationsList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeNotificationsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+<!-- MODAL CHAT GLOBAL TIM -->
+    <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">Chat Global Tim</h3>
+                        <p class="text-[9.5px] text-slate-400">Diskusi & koordinasi seluruh rekan</p>
+                    </div>
+                </div>
+                <button onclick="closeGlobalChatModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+            <div id="globalChatMessages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-2 focus-within:ring-blue-500 transition">
+                    <input type="text" id="inputGlobalChatMessage" onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" placeholder="Ketik pesan..." class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none py-1">
+                </div>
+                <button id="btnSendGlobalChat" onclick="sendGlobalChatMessage()" class="w-9 h-9 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM SELESAI TUGAS -->
+    <div id="completionNoteModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Form Penyelesaian Tugas</h3>
+                        <p class="text-[9.5px] text-slate-400">Lampirkan catatan dan dokumentasi foto</p>
+                    </div>
+                </div>
+                <button onclick="closeCompletionNoteModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+            <form id="formCompletionNote" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <input type="hidden" id="complete-task-id">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tugas</label>
+                        <p id="complete-task-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 leading-snug">-</p>
+                    </div>
+                    <div id="complete-late-warning" class="hidden p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] space-y-1">
+                        <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
+                        <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak mendapat poin baru (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan lunas</b>.</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan <span id="note-required-star" class="text-rose-500 hidden">*</span></label>
+                        <textarea id="complete-task-note" rows="3" placeholder="Rincian hasil pekerjaan..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                        <p class="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"><i class="fa-solid fa-camera mr-1"></i> Upload Dokumentasi Foto Kerja</p>
+                        <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+                            <label class="block text-[9.5px] font-extrabold text-slate-600 dark:text-slate-300">📷 Foto Sebelum (Before)</label>
+                            <input type="file" id="complete-file-before" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-slate-200 dark:file:bg-slate-700 file:text-slate-700 dark:file:text-slate-200 cursor-pointer">
+                            <div id="complete-before-preview-container" class="hidden pt-1"><img id="complete-before-preview" class="w-full h-28 object-cover rounded-lg border"></div>
+                        </div>
+                        <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
+                            <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">✅ Foto Sesudah (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span></label>
+                            <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white cursor-pointer">
+                            <div id="complete-after-preview-container" class="hidden pt-1"><img id="complete-after-preview" class="w-full h-28 object-cover rounded-lg border"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" id="btn-submit-completion" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95"><i class="fa-solid fa-check"></i> Simpan Selesai</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DOMPET INSENTIF PRIBADI -->
+    <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center text-sm shadow-md"><i class="fa-solid fa-wallet"></i></div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Dompet Insentif Pribadi</h3>
+                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja harian</p>
+                    </div>
+                </div>
+                <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+            </div>
+            <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya</p>
+                    <div class="flex items-end justify-between mt-1">
+                        <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold">Rp 0</h2>
+                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="hidden bg-white text-amber-700 hover:bg-amber-50 active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Tarik Dana</button>
+                    </div>
+                    <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">* Minimal penarikan saldo adalah Rp 10k</p>
+                    <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
+                        <span id="modalMyPointsDetail">0 Poin</span>
+                        <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
+                        <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
+                    </div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan</h4>
+                        <span id="myWithdrawalBadge" class="text-[9px] font-bold text-slate-400">0 Data</span>
+                    </div>
+                    <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5"><div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div></div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1"><i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin</h4>
+                    <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
+                </div>
+            </div>
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeEarningsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RELASI FOLLOW -->
+    <div id="followsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-teal-500 text-white flex items-center justify-center text-sm shadow-md"><i class="fa-solid fa-user-group"></i></div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Relasi Petugas (Mutual Follow)</h3>
+                        <p class="text-[9.5px] text-slate-400">Klik nama teman mutual untuk melihat jadwalnya</p>
+                    </div>
+                </div>
+                <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+            </div>
+            <div id="usersFollowList" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeFollowsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL KOMENTAR -->
+    <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 transition active:scale-90"><i class="fa-solid fa-chevron-left text-base font-bold"></i></button>
+                <div class="text-center">
+                    <h3 class="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Detail Diskusi</h3>
+                    <p id="commentModalSubtitle" class="text-[9.5px] text-slate-400 truncate max-w-[200px]"></p>
+                </div>
+                <div class="w-8"></div>
+            </div>
+            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs bg-slate-50/50 dark:bg-slate-950/40"></div>
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <div class="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-3.5 py-1.5 focus-within:ring-1 focus-within:ring-blue-500 transition">
+                    <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="w-full bg-transparent border-none text-xs text-slate-800 dark:text-slate-100 focus:outline-none py-1">
+                </div>
+                <button id="btnSendComment" onclick="sendComment()" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center transition active:scale-90 flex-shrink-0"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM SINGLE TASK -->
+    <div id="scheduleModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <h3 id="modalTitle" class="text-sm font-extrabold text-slate-900 dark:text-white">Tambah Tugas Baru</h3>
+                <button onclick="toggleModal(false)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition"><i class="fa-solid fa-xmark text-base font-bold"></i></button>
+            </div>
+            <form id="scheduleForm" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="input-date" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Pengguna</label>
+                        <input type="text" id="input-name" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Kategori</label>
+                        <select id="input-role" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                            <option value="Masyarakat Umum / Personal">👤 Masyarakat Umum / Personal</option>
+                            <option value="Mahasiswa / Pelajar">🎓 Mahasiswa / Pelajar</option>
+                            <option value="Pedagang / UMKM">🏪 Pedagang / UMKM</option>
+                            <option value="Teknisi">🛠️ Teknisi</option>
+                            <option value="Cleaning">🧹 Cleaning Service</option>
+                            <option value="Admin Teknik">📋 Admin</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Detail Tugas</label>
+                        <input type="text" id="input-task" required placeholder="Contoh: Kuliah Jam 09:00 / Perbaikan AC" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Jam Mulai</label>
+                            <input type="time" id="input-start-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Jam Selesai</label>
+                            <input type="time" id="input-end-time" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button type="button" onclick="toggleModal(false)" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 font-bold py-2.5 rounded-xl text-xs">Batal</button>
+                    <button type="submit" id="btn-save-task" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST STANDARD -->
+    <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
+
+<script>
+        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
+        const ADMIN_WA_PHONE = '6282146511484';
+        const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
+
+        let currentUser = null;
+        let globalTasks = [];
+        let globalWithdrawals = [];
+        let notificationsList = [];
+        let unreadNotifCount = 0;
+        let editingTaskId = null;
+        let isSuperAdmin = false;
+        let activeFriendFeedId = null;
+        let activeFriendFeedName = null;
+
+        // Subscriptions
+        let realtimeSubscription = null;
+        let commentsSubscription = null;
+        let followsSubscription = null;
+        let globalChatSubscription = null;
+        let activeCommentJadwalId = null;
+        let myFollowings = [];
+        let myFollowers = [];
+        let mutualFriends = [];
+        let onlineUsersState = {};
+        let userProfilesMap = {};
+
+        let budgetSettings = {
+            monthlyBudget: 100000,
+            ratePerTask: 10,
+            maxDailyTasks: 5,
+            pointsEarly: 100,
+            pointsOnTime: 100,
+            pointsProcess: 50,
+            pointsLate: 0,
+            pointsExpired: 50,
+            pointsStreak: 200,
+            pointsNewUser: 1000,
+            pointsMutual: 500,
+            pointsPhoto: 50,
+            pointsPerbaikan: 100,
+            pointsComment: 10,
+            adminFeeNonBtn: 2500,
+            minWithdrawal: 10000
+        };
+
+        const localNow = new Date();
+        const yearNow = localNow.getFullYear();
+        const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
+        const dayNow = String(localNow.getDate()).padStart(2, '0');
+        const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
+
+        // FORMAT RUPIAH KE 1k, 2k, 10.5k
+        function formatRupiahK(amount) {
+            const num = Number(amount) || 0;
+            if (num === 0) return 'Rp 0';
+            if (num >= 1000) {
+                const inK = num / 1000;
+                return `Rp ${inK % 1 === 0 ? inK : inK.toFixed(1)}k`;
+            }
+            return `Rp ${num.toLocaleString('id-ID')}`;
+        }
+
+        function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
+            if (userProfilesMap[userId]) return userProfilesMap[userId];
+            if (fallbackName) return fallbackName;
+            if (fallbackEmail) return fallbackEmail.split('@')[0];
+            return 'Pengguna';
+        }
+
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr) return '-';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+            return dateStr;
+        }
+
+        function getAvatarUrl(userObj) {
+            return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
+        }
+
+        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
+            if (avatarUrl) {
+                return `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover border border-slate-200 dark:border-slate-700">`;
+            }
+            const initial = (name || 'U').charAt(0).toUpperCase();
+            return `<div class="${sizeClass} rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold border border-slate-200 dark:border-slate-700">${initial}</div>`;
+        }
+
+        // ==========================================================
+        // PUSAT NOTIFIKASI LONCENG & BADGE TEMAN
+        // ==========================================================
+        function addNotification(type, title, message, targetTaskId = null, targetUserId = null, targetUserName = '') {
+            const newNotif = {
+                id: Date.now(),
+                type,
+                title,
+                message,
+                targetTaskId,
+                targetUserId,
+                targetUserName,
+                time: new Date().toISOString()
+            };
+            notificationsList.unshift(newNotif);
+            unreadNotifCount++;
+            updateNotificationBadges();
+        }
+
+        function updateNotificationBadges() {
+            const tabBadge = document.getElementById('tabNotifBadge');
+            const sideNotifBadge = document.getElementById('sideNotifBadge');
+            const sideFollowBadge = document.getElementById('sideFollowBadge');
+
+            const pendingFollowsCount = myFollowers.filter(id => !myFollowings.includes(id)).length;
+
+            if (unreadNotifCount > 0) {
+                const countStr = unreadNotifCount > 99 ? '99+' : unreadNotifCount;
+                if (tabBadge) { tabBadge.innerText = countStr; tabBadge.classList.remove('hidden'); }
+                if (sideNotifBadge) { sideNotifBadge.innerText = countStr; sideNotifBadge.classList.remove('hidden'); }
+            } else {
+                if (tabBadge) tabBadge.classList.add('hidden');
+                if (sideNotifBadge) sideNotifBadge.classList.add('hidden');
+            }
+
+            if (pendingFollowsCount > 0) {
+                if (sideFollowBadge) { sideFollowBadge.innerText = pendingFollowsCount; sideFollowBadge.classList.remove('hidden'); }
+            } else {
+                if (sideFollowBadge) sideFollowBadge.classList.add('hidden');
+            }
+        }
+
+        function openNotificationsModal() {
+            unreadNotifCount = 0;
+            updateNotificationBadges();
+            renderNotificationsModalList();
+            document.getElementById('notificationsModal').classList.remove('hidden');
+        }
+
+        function closeNotificationsModal() {
+            document.getElementById('notificationsModal').classList.add('hidden');
+        }
+
+        function renderNotificationsModalList() {
+            const container = document.getElementById('notificationsList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (notificationsList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-10">
+                        <i class="fa-regular fa-bell text-3xl mb-2 opacity-30 text-amber-500"></i>
+                        <p class="text-xs font-bold">Belum ada notifikasi baru.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            notificationsList.forEach(n => {
+                const item = document.createElement('div');
+                item.className = 'p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 flex items-start gap-2.5 shadow-xs cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition';
+                
+                let iconClass = 'fa-bell text-blue-500 bg-blue-50 dark:bg-blue-950/60';
+                if (n.type === 'like') iconClass = 'fa-thumbs-up text-rose-500 bg-rose-50 dark:bg-rose-950/60';
+                else if (n.type === 'comment') iconClass = 'fa-comment-dots text-emerald-500 bg-emerald-50 dark:bg-emerald-950/60';
+                else if (n.type === 'friend_task') iconClass = 'fa-calendar-plus text-amber-500 bg-amber-50 dark:bg-amber-950/60';
+                else if (n.type === 'friend_follow') iconClass = 'fa-user-plus text-teal-500 bg-teal-50 dark:bg-teal-950/60';
+
+                item.onclick = () => {
+                    closeNotificationsModal();
+                    if (n.targetUserId && n.type === 'friend_task') {
+                        viewFriendSchedule(n.targetUserId, n.targetUserName);
+                    } else if (n.targetTaskId) {
+                        const t = globalTasks.find(x => x.id == n.targetTaskId);
+                        if (t) openCommentModal(t.id, t.tugas);
+                    }
+                };
+
+                item.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center text-xs flex-shrink-0 ${iconClass}">
+                        <i class="fa-solid ${iconClass.split(' ')[0]}"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-extrabold text-slate-800 dark:text-white truncate">${n.title}</h4>
+                            <span class="text-[9px] text-slate-400 font-semibold">${new Date(n.time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">${n.message}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // ==========================================================
+        // LIHAT JADWAL TEMAN & RESET BERANDA
+        // ==========================================================
+        function viewFriendSchedule(targetUserId, targetUserName) {
+            const isMutual = mutualFriends.includes(targetUserId);
+            const isMe = targetUserId === currentUser?.id;
+
+            if (!isMutual && !isMe && !isSuperAdmin) {
+                showToast("🔒 Anda belum saling follow dengan pengguna ini.");
+                return;
+            }
+
+            activeFriendFeedId = targetUserId;
+            activeFriendFeedName = targetUserName;
+            closeFollowsModal();
+            renderTasks();
+            showToast(`Menampilkan jadwal: ${targetUserName}`);
+        }
+
+        function resetToMyFeed() {
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            goToHomeJadwal();
+        }
+
+        function goToHomeJadwal() {
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('roleFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            renderTasks();
+            showToast("Menampilkan jadwal Anda");
+        }
+
+        // ==========================================================
+        // PERHITUNGAN INSENTIF (FORMAT 'k')
+        // ==========================================================
+        function calculateAndRenderEarnings() {
+            const currentYearMonth = todayStr.slice(0, 7);
+            const userEarningsMap = {};
+
+            globalTasks.forEach(t => {
+                const uid = t.user_id;
+                const taskDateStr = t.tanggal;
+                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
+
+                if (!userEarningsMap[uid]) {
+                    userEarningsMap[uid] = {
+                        userId: uid,
+                        points: 0,
+                        grossEarning: 0,
+                        totalEarning: 0
+                    };
+                }
+
+                if (t.status === 'Selesai') {
+                    userEarningsMap[uid].points += budgetSettings.pointsOnTime;
+                } else if (t.status === 'Proses') {
+                    userEarningsMap[uid].points += budgetSettings.pointsProcess;
+                }
+            });
+
+            const currentUserId = currentUser?.id;
+            const myData = userEarningsMap[currentUserId] || { points: 0, totalEarning: 0 };
+            myData.totalEarning = Math.round((myData.points / 100) * budgetSettings.ratePerTask);
+
+            // TAMPILKAN FORMAT 1k, 2k PADA BADGE INSENTIF
+            document.getElementById('myEarningsBadge').innerText = formatRupiahK(myData.totalEarning);
+            document.getElementById('modalMyTotalEarnings').innerText = formatRupiahK(myData.totalEarning);
+            document.getElementById('modalMyPointsDetail').innerText = `${myData.points} Poin`;
+            return { userEarningsMap, myData };
+        }
+
+        // ==========================================================
+        // RENDER FEED JADWAL & LIKE / KOMENTAR
+        // ==========================================================
+        function renderTasks() {
+            const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); 
+            const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
+            const selectedRole = document.getElementById('roleFilter').value; 
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
+            const selectedDate = document.getElementById('dateFilter').value;
+
+            // Indikator Feed Teman
+            const friendIndicator = document.getElementById('friendFeedIndicator');
+            const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
+            if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
+                if (friendIndicator) friendIndicator.classList.remove('hidden');
+                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
+            } else {
+                if (friendIndicator) friendIndicator.classList.add('hidden');
+            }
+
+            tableBodyDesktop.innerHTML = ''; 
+            cardsContainerMobile.innerHTML = '';
+
+            const filteredTasks = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate; 
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
+                
+                let canView = false;
+                if (isSuperAdmin) canView = true;
+                else if (activeFriendFeedId) {
+                    canView = (item.user_id === activeFriendFeedId);
+                } else {
+                    // Default beranda: Jadwal User Sendiri
+                    canView = (item.user_id === currentUser?.id);
+                }
+                return matchDate && matchRole && matchStatus && canView;
+            });
+
+            // Update Statistik
+            const totalCount = filteredTasks.length;
+            const inProgressCount = filteredTasks.filter(t => t.status === 'Proses').length;
+            const completedCount = filteredTasks.filter(t => t.status === 'Selesai').length;
+
+            document.getElementById('totalTaskCount').innerText = totalCount;
+            document.getElementById('inProgressCount').innerText = inProgressCount;
+            document.getElementById('inProgressCountCircle').innerText = inProgressCount;
+            document.getElementById('completedCount').innerText = completedCount;
+
+            calculateAndRenderEarnings();
+
+            if (filteredTasks.length === 0) {
+                const emptyMsg = activeFriendFeedId ? `Teman ini belum memiliki jadwal.` : `Anda belum memiliki jadwal untuk tanggal ini.`;
+                cardsContainerMobile.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800"><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
+                return;
+            }
+
+            filteredTasks.forEach(item => {
+                const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : [];
+                const isLiked = likedUsers.includes(currentUser?.id);
+                const isOwner = item.user_id === currentUser?.id;
+                const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
+                const isMutual = mutualFriends.includes(item.user_id);
+
+                const card = document.createElement('div');
+                card.className = 'w-full bg-white dark:bg-slate-900 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 stat-card space-y-2.5';
+                
+                card.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            ${renderAvatarHtml(item.user_avatar, displayName, "w-8 h-8", item.user_id)}
+                            <div class="min-w-0">
+                                ${isMutual ? `
+                                    <button onclick="viewFriendSchedule('${item.user_id}', '${displayName.replace(/'/g, "\\'")}')" class="text-xs font-extrabold text-blue-600 dark:text-blue-400 hover:underline truncate text-left">
+                                        ${displayName}
+                                    </button>
+                                ` : `
+                                    <h4 class="text-xs font-extrabold text-slate-900 dark:text-white truncate">${displayName}</h4>
+                                `}
+                                <span class="text-[9.5px] text-slate-400 block">${item.jam_mulai} - ${item.jam_selesai} &bull; ${item.peran}</span>
+                            </div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-lg text-[9px] font-extrabold ${item.status === 'Selesai' ? 'bg-emerald-50 text-emerald-600' : (item.status === 'Proses' ? 'bg-amber-50 text-amber-500' : 'bg-slate-100 text-slate-500')}">
+                            ${item.status}
+                        </span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800 dark:text-slate-100">${item.tugas}</p>
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/60 text-slate-400">
+                        <div class="flex items-center gap-3">
+                            <!-- BISA LIKE JADWAL SENDIRI MAUPUN TEMAN -->
+                            <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-xs font-bold ${isLiked ? 'text-rose-500' : 'hover:text-slate-600'}">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                                <span>${item.likes_count || 0}</span>
+                            </button>
+                            <!-- BISA KOMEN JADWAL SENDIRI MAUPUN TEMAN -->
+                            <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-xs font-bold hover:text-blue-500">
+                                <i class="fa-regular fa-comment text-sm"></i>
+                                <span>${item.comments_count || 0}</span>
+                            </button>
+                        </div>
+                        ${isOwner ? `
+                            <button onclick="openCompletionNoteModal(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-[10px] font-bold text-blue-600 hover:underline">Update Selesai</button>
+                        ` : ''}
+                    </div>
+                `;
+                cardsContainerMobile.appendChild(card);
+            });
+        }
+
+        // ==========================================================
+        // LIKE & REALTIME SUBSCRIBERS
+        // ==========================================================
+        async function toggleLikeTask(taskId) {
+            const task = globalTasks.find(t => String(t.id) === String(taskId));
+            if (!task) return;
+
+            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : [];
+            const userIndex = likedUsers.indexOf(currentUser.id);
+
+            if (userIndex === -1) {
+                likedUsers.push(currentUser.id);
+            } else {
+                likedUsers.splice(userIndex, 1);
+            }
+
+            task.likes_count = likedUsers.length;
+            task.liked_users = likedUsers;
+            renderTasks();
+
+            const { error } = await _supabase.from('jadwal').update({
+                likes_count: task.likes_count,
+                liked_users: task.liked_users
+            }).eq('id', taskId);
+
+            if (error) {
+                showToast("Gagal like: " + error.message);
+                await fetchTasksSupabase();
+            }
+        }
+
+        async function openCommentModal(taskId, taskTitle) {
+            activeCommentJadwalId = String(taskId);
+            document.getElementById('commentModalSubtitle').innerText = taskTitle;
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Memuat diskusi...</div>';
+            document.getElementById('commentModal').classList.remove('hidden');
+            await fetchComments(activeCommentJadwalId);
+        }
+
+        function closeCommentModal() {
+            activeCommentJadwalId = null;
+            document.getElementById('commentModal').classList.add('hidden');
+        }
+
+        async function fetchComments(taskId) {
+            const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
+            const list = document.getElementById('commentList');
+            if (error || !data || data.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">Belum ada komentar.</div>';
+                return;
+            }
+            list.innerHTML = '';
+            data.forEach(c => {
+                const row = document.createElement('div');
+                row.className = 'flex items-start gap-2';
+                row.innerHTML = `
+                    <div class="flex-1 bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl">
+                        <span class="text-[10px] font-extrabold text-blue-600 block">${getUserDisplayName(c.user_id, c.user_email)}</span>
+                        <p class="text-xs mt-0.5">${c.comment}</p>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        async function sendComment() {
+            const input = document.getElementById('inputNewComment');
+            const comment = input.value.trim();
+            if (!comment || !activeCommentJadwalId) return;
+
+            input.value = '';
+            const payload = {
+                jadwal_id: activeCommentJadwalId,
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                comment: comment,
+                created_at: new Date().toISOString()
+            };
+
+            await _supabase.from('jadwal_comments').insert([payload]);
+            await fetchComments(activeCommentJadwalId);
+            
+            const task = globalTasks.find(t => String(t.id) === String(activeCommentJadwalId));
+            if (task) {
+                task.comments_count = (task.comments_count || 0) + 1;
+                await _supabase.from('jadwal').update({ comments_count: task.comments_count }).eq('id', task.id);
+                renderTasks();
+            }
+        }
+
+        async function fetchFollowRelations() {
+            if (!currentUser) return;
+            const { data } = await _supabase.from('user_follows').select('*');
+            if (data) {
+                myFollowings = data.filter(f => f.follower_id === currentUser.id).map(f => f.following_id);
+                myFollowers = data.filter(f => f.following_id === currentUser.id).map(f => f.follower_id);
+                mutualFriends = myFollowings.filter(id => myFollowers.includes(id));
+                updateNotificationBadges();
+            }
+        }
+
+        async function fetchTasksSupabase() {
+            const { data } = await _supabase.from('jadwal').select('*').order('jam_mulai', { ascending: true });
+            if (data) {
+                globalTasks = data;
+                renderTasks();
+            }
+        }
+
+        function setupRealtimeListener() {
+            _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, payload => {
+                    const { eventType, new: newRow } = payload;
+                    if (eventType === 'INSERT') {
+                        globalTasks.push(newRow);
+                        // Trigger notifikasi jika teman mutual membuat jadwal
+                        if (mutualFriends.includes(newRow.user_id)) {
+                            addNotification('friend_task', 'Jadwal Baru Teman', `${getUserDisplayName(newRow.user_id, newRow.user_email, newRow.nama)} menambahkan tugas "${newRow.tugas}"`, newRow.id, newRow.user_id, newRow.nama);
+                        }
+                    } else if (eventType === 'UPDATE') {
+                        const idx = globalTasks.findIndex(t => t.id === newRow.id);
+                        if (idx !== -1) globalTasks[idx] = newRow;
+                    }
+                    renderTasks();
+                }).subscribe();
+        }
+
+        function openTaskModal() {
+            document.getElementById('input-date').value = todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            document.getElementById('scheduleModal').classList.remove('hidden');
+        }
+
+        function toggleModal(show) {
+            document.getElementById('scheduleModal').classList.toggle('hidden', !show);
+        }
+
+        document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                tanggal: document.getElementById('input-date').value,
+                nama: document.getElementById('input-name').value,
+                peran: document.getElementById('input-role').value,
+                tugas: document.getElementById('input-task').value,
+                jam_mulai: document.getElementById('input-start-time').value,
+                jam_selesai: document.getElementById('input-end-time').value,
+                status: 'Belum',
+                likes_count: 0,
+                liked_users: [],
+                comments_count: 0,
+                user_avatar: getAvatarUrl(currentUser),
+                created_at: new Date().toISOString()
+            };
+            await _supabase.from('jadwal').insert([payload]);
+            toggleModal(false);
+            showToast("Jadwal ditambahkan!");
+        });
+
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-dashboard').classList.remove('hidden');
+                if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                    isSuperAdmin = true;
+                    document.getElementById('superadmin-indicator').classList.remove('hidden');
+                }
+                await fetchFollowRelations();
+                await fetchTasksSupabase();
+                setupRealtimeListener();
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.remove('opacity-0');
+            setTimeout(() => t.classList.add('opacity-0'), 2500);
+        }
+
+        checkAuth();
+</script>
+</body>
+</html>
