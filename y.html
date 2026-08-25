@@ -2322,23 +2322,30 @@
         }
 
         function updateFriendNotificationBadge() {
-            const headerBadge = document.getElementById('headerFriendBadge');
-            const sideBadge = document.getElementById('sideFriendBadge');
-            const count = mutualFriends.length;
-            if (count > 0) {
-                if (headerBadge) {
-                    headerBadge.innerText = count > 99 ? '99+' : count;
-                    headerBadge.classList.remove('hidden');
-                }
-                if (sideBadge) {
-                    sideBadge.innerText = count > 99 ? '99+' : count;
-                    sideBadge.classList.remove('hidden');
-                }
-            } else {
-                if (headerBadge) headerBadge.classList.add('hidden');
-                if (sideBadge) sideBadge.classList.add('hidden');
-            }
+    const headerBadge = document.getElementById('headerFriendBadge');
+    const sideBadge = document.getElementById('sideFriendBadge');
+    const totalMutual = mutualFriends.length;
+
+    // Ambil jumlah teman yang sudah pernah dilihat dari memori browser
+    const lastSeenCount = parseInt(localStorage.getItem('last_seen_friends_count') || '0', 10);
+    const unreadCount = Math.max(0, totalMutual - lastSeenCount);
+
+    if (unreadCount > 0) {
+        const countText = unreadCount > 99 ? '99+' : unreadCount;
+        if (headerBadge) {
+            headerBadge.innerText = countText;
+            headerBadge.classList.remove('hidden');
         }
+        if (sideBadge) {
+            sideBadge.innerText = countText;
+            sideBadge.classList.remove('hidden');
+        }
+    } else {
+        if (headerBadge) headerBadge.classList.add('hidden');
+        if (sideBadge) sideBadge.classList.add('hidden');
+    }
+}
+
 
         async function openGlobalChatModal() {
             isGlobalChatOpen = true;
