@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -518,6 +518,7 @@
 
                     <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
                         <span id="modalMyPointsDetail">0 Poin</span>
+                        <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
                         <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
                     </div>
                 </div>
@@ -1136,7 +1137,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-<script>
+        <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1494,10 +1495,22 @@
             else { showToast("Gagal menyimpan: " + error.message); }
         });
 
+        // ==========================================================
+        // PERHITUNGAN SALDO REAL (OTOMATIS BERKURANG SAAT PENARIKAN)
+        // ==========================================================
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
 
+            // 1. Akumulasi total nominal yang sudah ditarik (Sukses / Pending)
+            const userWithdrawnMap = {};
+            globalWithdrawals.forEach(w => {
+                if (w.user_id && (w.status === 'Sukses' || w.status === 'Pending')) {
+                    userWithdrawnMap[w.user_id] = (userWithdrawnMap[w.user_id] || 0) + Number(w.nominal || 0);
+                }
+            });
+
+            // 2. Akumulasi poin & tugas per user
             globalTasks.forEach(t => {
                 const uid = t.user_id;
                 const taskDateStr = t.tanggal;
@@ -1520,6 +1533,8 @@
                         extraBonus: 0, 
                         debtPoints: 0,
                         expiredTasksCount: 0,
+                        grossEarning: 0,
+                        totalWithdrawn: 0,
                         totalEarning: 0,
                         perbaikanCount: {}
                     };
@@ -1569,6 +1584,7 @@
 
             let totalTeamBudgetUsed = 0;
 
+            // 3. Kalkulasi Saldo Kotor vs Bersih
             Object.keys(userEarningsMap).forEach(uid => {
                 const u = userEarningsMap[uid];
                 
@@ -1586,8 +1602,15 @@
 
                 u.grossPoints = grossPoints;
                 u.totalPoints = netPoints;
-                u.totalEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
-                totalTeamBudgetUsed += u.totalEarning;
+                
+                // Nominal kotor berbasis poin
+                u.grossEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
+                // Total penarikan yang pernah diajukan/sukses
+                u.totalWithdrawn = userWithdrawnMap[uid] || 0;
+                // Sisa saldo real yang belum ditarik
+                u.totalEarning = Math.max(0, u.grossEarning - u.totalWithdrawn);
+
+                totalTeamBudgetUsed += u.grossEarning;
             });
 
             const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
@@ -1598,14 +1621,19 @@
                 }
             });
 
-            const myData = userEarningsMap[currentUser?.id] || { 
+            const currentUserId = currentUser?.id;
+            const myWithdrawn = userWithdrawnMap[currentUserId] || 0;
+            const myGross = Math.round((budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask);
+            const myData = userEarningsMap[currentUserId] || { 
                 totalPoints: budgetSettings.pointsNewUser, 
                 grossPoints: budgetSettings.pointsNewUser,
                 points: 0, 
                 earlyBirdBonus: 0, 
                 streakBonus: 0, 
                 eligibleTasks: 0, 
-                totalEarning: (budgetSettings.pointsNewUser / 100) * budgetSettings.ratePerTask, 
+                grossEarning: myGross,
+                totalWithdrawn: myWithdrawn,
+                totalEarning: Math.max(0, myGross - myWithdrawn), 
                 extraBonus: budgetSettings.pointsNewUser,
                 debtPoints: 0,
                 expiredTasksCount: 0
@@ -1619,13 +1647,19 @@
         async function fetchWithdrawalsSupabase() {
             let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
             const { data, error } = await query;
-            if (!error && data) { globalWithdrawals = data; renderWithdrawalsHistory(); }
+            if (!error && data) { 
+                globalWithdrawals = data; 
+                renderWithdrawalsHistory(); 
+                calculateAndRenderEarnings();
+            }
         }
 
         function setupWithdrawalsRealtime() {
             if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription);
             withdrawalsSubscription = _supabase.channel('public:penarikan_insentif')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { await fetchWithdrawalsSupabase(); })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { 
+                    await fetchWithdrawalsSupabase(); 
+                })
                 .subscribe();
         }
 
@@ -1711,8 +1745,13 @@
         async function updateWithdrawalStatus(id, newStatus) {
             if (!confirm(`Ubah status penarikan ini menjadi ${newStatus}?`)) return;
             const { error } = await _supabase.from('penarikan_insentif').update({ status: newStatus }).eq('id', id);
-            if (!error) { showToast(`Status penarikan diubah: ${newStatus}`); fetchWithdrawalsSupabase(); } 
-            else { showToast(`Gagal: ${error.message}`); }
+            if (!error) { 
+                showToast(`Status penarikan diubah: ${newStatus}`); 
+                await fetchWithdrawalsSupabase(); 
+                calculateAndRenderEarnings();
+            } else { 
+                showToast(`Gagal: ${error.message}`); 
+            }
         }
 
         function openWithdrawModal() {
@@ -1799,9 +1838,10 @@
                 : '';
 
             document.getElementById('modalMyPointsDetail').innerHTML = `
-                <span>Total Bersih: <b>${myData.totalPoints || 0} Poin</b> (Kotor: ${myData.grossPoints || 0})</span>
+                <span>Total Poin: <b>${myData.totalPoints || 0} Poin</b> (Estimasi: Rp ${myData.grossEarning.toLocaleString('id-ID')})</span>
                 ${debtDetail}
             `;
+            document.getElementById('modalMyWithdrawnDetail').innerText = `Total Ditarik: Rp ${myData.totalWithdrawn.toLocaleString('id-ID')}`;
             document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
 
             const btnWD = document.getElementById('btnWithdrawEarning');
@@ -1856,10 +1896,10 @@
                                         <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
                                         ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama Petugas"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
                                     </div>
-                                    <p class="text-[9px] text-slate-400">${u.totalPoints || 0} Poin ${u.debtPoints > 0 ? `(Hutang: -${u.debtPoints})` : ''} &bull; ${u.eligibleTasks} tugas valid</p>
+                                    <p class="text-[9px] text-slate-400">Total: Rp ${u.grossEarning.toLocaleString('id-ID')} &bull; Ditarik: Rp ${u.totalWithdrawn.toLocaleString('id-ID')}</p>
                                 </div>
                             </div>
-                            <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Rp ${u.totalEarning.toLocaleString('id-ID')}</span>
+                            <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Sisa: Rp ${u.totalEarning.toLocaleString('id-ID')}</span>
                         `;
                         listEl.appendChild(row);
                     });
@@ -2023,8 +2063,8 @@
 
             requestNotificationPermission(); 
             await fetchFollowRelations(); 
-            await fetchTasksSupabase(); 
             await fetchWithdrawalsSupabase();
+            await fetchTasksSupabase(); 
             setupRealtimeListener(); 
             setupGlobalCommentNotificationListener(); 
             setupFollowsRealtime(); 
@@ -3260,3 +3300,4 @@
     </script>
 </body>
 </html>
+
