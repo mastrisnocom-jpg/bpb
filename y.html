@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -43,11 +43,13 @@
         @keyframes slideUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         .animate-slide-down { animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #1877f2; border-radius: 10px; }
         .tab-active { color: #1877f2; border-bottom: 3px solid #1877f2; }
         .dark .tab-active { color: #2e89ff; border-bottom: 3px solid #2e89ff; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen bg-[#f0f2f5] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
@@ -291,46 +293,53 @@
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
+                <!-- STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 2) -->
+                <div class="px-3.5 md:px-0 mb-3.5">
+                    <div id="storiesContainer" class="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
+                        <!-- Story Cards otomatis dirender via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN (SESUAI GAMBAR 1) -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-8 h-8 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-slate-100 dark:border-slate-700">
+                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-9 h-9 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-[14px] flex items-center justify-center text-xs flex-shrink-0">
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Total</p>
-                                <p id="totalTaskCount" class="text-sm font-black text-slate-800 dark:text-white leading-tight">0</p>
+                                <p class="text-[9.5px] text-slate-400 font-bold truncate leading-none mb-1">Total</p>
+                                <p id="totalTaskCount" class="text-base font-black text-slate-800 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-8 h-8 bg-amber-50/60 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-amber-200/60 dark:border-amber-900/50">
-                                <i class="fa-solid fa-spinner"></i>
+                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-9 h-9 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/50 rounded-[14px] flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-spinner animate-spin"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Proses</p>
-                                <p id="inProgressCount" class="text-sm font-black text-amber-600 dark:text-amber-400 leading-tight">0</p>
+                                <p class="text-[9.5px] text-slate-400 font-bold truncate leading-none mb-1">Pros...</p>
+                                <p id="inProgressCount" class="text-base font-black text-amber-600 dark:text-amber-400 leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
-                            <div class="w-8 h-8 bg-blue-50/60 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-xs flex-shrink-0 border border-blue-200/60 dark:border-blue-900/50">
-                                <i class="fa-solid fa-shield-check"></i>
+                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-2.5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2">
+                            <div class="w-9 h-9 bg-blue-50/70 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-900/50 rounded-[14px] flex items-center justify-center text-xs flex-shrink-0">
+                                <i class="fa-solid fa-check"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-slate-400 font-bold truncate leading-none mb-0.5">Selesai</p>
-                                <p id="completedCount" class="text-sm font-black text-slate-800 dark:text-white leading-tight">0</p>
+                                <p class="text-[9.5px] text-slate-400 font-bold truncate leading-none mb-1">Sele...</p>
+                                <p id="completedCount" class="text-base font-black text-slate-800 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <div onclick="openEarningsModal()" class="bg-[#fef9ee] dark:bg-amber-950/30 rounded-2xl p-2.5 border border-amber-200/80 dark:border-amber-800/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
-                            <div class="w-8 h-8 bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 rounded-xl flex items-center justify-center text-xs flex-shrink-0">
+                        <div onclick="openEarningsModal()" class="bg-[#fff9ea] dark:bg-amber-950/30 rounded-[22px] p-2.5 border border-amber-200/90 dark:border-amber-800/60 shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition">
+                            <div class="w-9 h-9 bg-[#fef0c7] dark:bg-amber-900/60 text-[#b54708] dark:text-amber-300 rounded-[14px] flex items-center justify-center text-xs flex-shrink-0">
                                 <i class="fa-solid fa-wallet"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[9px] text-amber-800 dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Insentif</p>
-                                <p id="myEarningsBadge" class="text-xs font-black text-amber-900 dark:text-amber-200 leading-tight">Rp 0</p>
+                                <p class="text-[9.5px] text-[#b54708] dark:text-amber-300 font-extrabold truncate leading-none mb-0.5">Inse...</p>
+                                <p id="myEarningsBadge" class="text-xs font-black text-[#78350f] dark:text-amber-200 leading-tight">Rp 0</p>
                             </div>
                         </div>
                     </section>
@@ -370,7 +379,7 @@
         </main>
     </div>
 
-    <!-- MODAL CHAT GLOBAL TIM -->
+<!-- MODAL CHAT GLOBAL TIM -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -832,7 +841,7 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFIKASI INTERAKTIF (LONCENG, LIKE, KOMENTAR, JADWAL TEMAN) -->
+    <!-- TOAST NOTIFIKASI INTERAKTIF -->
     <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-white dark:bg-slate-900 border-2 border-blue-600 text-slate-800 dark:text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-slide-down">
         <div class="flex items-start gap-2.5">
             <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -849,7 +858,7 @@
         </div>
     </div>
 
-    <!-- MODAL KOMENTAR POSTINGAN (DISKUSI JADWAL SAYA & TEMAN) -->
+    <!-- MODAL KOMENTAR POSTINGAN -->
     <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md h-[92vh] md:h-[85vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -1082,7 +1091,7 @@
         </div>
     </div>
 
-    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI DENGAN PREVIEW & EDITABLE USER -->
+    <!-- MODAL: AUTO GENERATE AI MULTI-PROFESI -->
     <div id="autoGenerateModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-lg h-[94vh] md:h-[88vh] md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
@@ -1197,11 +1206,10 @@
         </div>
     </div>
 
-    <!-- MODAL PROFIL & PREFERENSI (CORPORATE ID CARD MODERN) -->
+    <!-- MODAL PROFIL & PREFERENSI -->
     <div id="form-profile-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-white dark:bg-slate-900 w-full md:max-w-md max-h-[94vh] md:max-h-[90vh] md:rounded-[32px] rounded-t-[32px] shadow-2xl flex flex-col overflow-hidden border border-slate-200/80 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             
-            <!-- HEADER MODAL -->
             <div class="px-5 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-base shadow-md shadow-blue-500/20">
@@ -1217,10 +1225,8 @@
                 </button>
             </div>
 
-            <!-- BODY SCROLLABLE -->
             <div class="p-4 md:p-5 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40 text-xs">
                 
-                <!-- CORPORATE ID CARD -->
                 <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-4 text-white shadow-lg border border-slate-700/60">
                     <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-blue-500/10 blur-2xl pointer-events-none"></div>
                     <div class="absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-indigo-500/10 blur-2xl pointer-events-none"></div>
@@ -1249,7 +1255,6 @@
                     </div>
                 </div>
 
-                <!-- INFORMASI KREDENSIAL & IDENTITAS PEGAWAI (NIP, WA, ALAMAT) -->
                 <div class="bg-white dark:bg-slate-800/90 rounded-2xl p-3.5 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2.5">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 pb-2">
                         <h4 class="text-[10.5px] font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
@@ -1260,7 +1265,6 @@
                         </button>
                     </div>
 
-                    <!-- NIP -->
                     <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                             <i class="fa-solid fa-id-card text-xs text-blue-500 w-4 text-center"></i>
@@ -1270,7 +1274,6 @@
                         <input type="text" id="input-profile-nip" class="hidden w-1/2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 text-right" placeholder="Masukkan NIP">
                     </div>
 
-                    <!-- NO WHATSAPP -->
                     <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                             <i class="fa-brands fa-whatsapp text-xs text-emerald-500 w-4 text-center"></i>
@@ -1280,7 +1283,6 @@
                         <input type="tel" id="input-profile-phone" class="hidden w-1/2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 text-right" placeholder="08xxxxxxxxxx">
                     </div>
 
-                    <!-- ALAMAT & UNIT PENUGASAN -->
                     <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 space-y-1">
                         <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                             <i class="fa-solid fa-building-shield text-xs text-amber-500 w-4 text-center"></i>
@@ -1292,13 +1294,11 @@
                         <textarea id="input-profile-address" rows="2" class="hidden w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 mt-1" placeholder="Masukkan alamat lengkap"></textarea>
                     </div>
 
-                    <!-- TOMBOL SIMPAN KE SUPABASE -->
                     <button id="btnSaveProfileDetails" onclick="saveProfileCorporateDetails()" class="hidden w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-xs transition active:scale-95 shadow-md flex items-center justify-center gap-1.5 mt-2">
                         <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai
                     </button>
                 </div>
 
-                <!-- GOOGLE GEMINI AI KEY -->
                 <div class="bg-white dark:bg-slate-800/90 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1.5">
                     <div class="flex items-center justify-between">
                         <label class="block text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
@@ -1316,7 +1316,6 @@
                     </div>
                 </div>
 
-                <!-- PREFERENSI TEMA WARNA -->
                 <div class="bg-white dark:bg-slate-800/90 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
                     <h4 class="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-3">Pilihan Tema Warna</h4>
                     <div class="flex items-center justify-center gap-3">
@@ -1330,7 +1329,6 @@
 
             </div>
 
-            <!-- FOOTER MODAL -->
             <div class="p-3.5 md:p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
                 <a href="/" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition active:scale-98">
                     <i class="fa-solid fa-house text-blue-600 dark:text-blue-400 text-xs"></i> Kembali ke Menu Utama
@@ -1384,17 +1382,14 @@
         let userRanksMap = {};
         let isEditingProfile = false;
 
-        // State Navigasi Jadwal Teman & Auto Generate
         let activeFriendFeedId = null;
         let activeFriendFeedName = null;
         let previewTasksData = [];
 
-        // State Chat Global
         let globalChatMessagesList = [];
         let unreadGlobalChatCount = 0;
         let isGlobalChatOpen = false;
 
-        // Relasi Follow, Online Presence & Mapping Profil
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -1402,7 +1397,6 @@
         let presenceChannel = null;
         let userProfilesMap = {};
 
-        // Pengaturan Anggaran, Poin & Penalti
         let budgetSettings = {
             monthlyBudget: 100000,
             ratePerTask: 10,
@@ -1700,6 +1694,93 @@
             if (file) { document.getElementById('complete-after-preview').src = URL.createObjectURL(file); container.classList.remove('hidden'); } 
             else { container.classList.add('hidden'); }
         });
+
+        // ==========================================================
+        // RENDER STORIES / DOKUMENTASI TERBARU TIM (SESUAI GAMBAR 2)
+        // ==========================================================
+        function renderStoriesBar() {
+            const container = document.getElementById('storiesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const allowedUserIds = new Set([currentUser?.id, ...mutualFriends]);
+            if (isSuperAdmin) {
+                globalTasks.forEach(t => { if(t.user_id) allowedUserIds.add(t.user_id); });
+            }
+
+            const latestPhotosByUser = {};
+            globalTasks.forEach(task => {
+                if (allowedUserIds.has(task.user_id) && task.foto_sesudah) {
+                    const existing = latestPhotosByUser[task.user_id];
+                    const taskTime = new Date(task.completed_at || task.created_at || task.tanggal).getTime();
+                    
+                    if (!existing || taskTime > existing.time) {
+                        latestPhotosByUser[task.user_id] = {
+                            userId: task.user_id,
+                            userName: getUserDisplayName(task.user_id, task.user_email, task.nama),
+                            userAvatar: task.user_avatar || (task.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null),
+                            photoUrl: task.foto_sesudah,
+                            taskTitle: task.tugas,
+                            time: taskTime
+                        };
+                    }
+                }
+            });
+
+            const storyList = Object.values(latestPhotosByUser);
+
+            if (storyList.length === 0) {
+                container.innerHTML = `
+                    <div class="w-full py-3.5 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 text-xs text-center flex items-center justify-center gap-2 shadow-xs">
+                        <i class="fa-solid fa-camera text-slate-400"></i> Belum ada foto dokumentasi selesai hari ini dari Anda maupun rekan.
+                    </div>
+                `;
+                return;
+            }
+
+            storyList.forEach(story => {
+                const isMe = story.userId === currentUser?.id;
+                const card = document.createElement('div');
+                card.className = 'relative flex-shrink-0 w-32 md:w-36 h-56 rounded-[24px] overflow-hidden bg-slate-800 shadow-md cursor-pointer group transition duration-300 hover:scale-[1.02] snap-start border border-slate-200/60 dark:border-slate-800';
+                
+                card.onclick = () => {
+                    if (isMe) {
+                        resetToMyFeed();
+                    } else {
+                        viewFriendSchedule(story.userId, story.userName);
+                    }
+                };
+
+                const avatarSrc = story.userAvatar || '';
+                const avatarHtml = avatarSrc 
+                    ? `<img src="${avatarSrc}" class="w-full h-full object-cover rounded-full">`
+                    : `<div class="w-full h-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">${story.userName.charAt(0).toUpperCase()}</div>`;
+
+                card.innerHTML = `
+                    <img src="${story.photoUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/85 pointer-events-none"></div>
+
+                    <div class="absolute top-2.5 left-2.5 w-9 h-9 rounded-full p-[2px] bg-blue-600 shadow-md z-10">
+                        <div class="w-full h-full rounded-full overflow-hidden border-2 border-white dark:border-slate-900">
+                            ${avatarHtml}
+                        </div>
+                    </div>
+
+                    <div class="absolute top-13 left-2.5 right-2.5 z-10 pointer-events-none">
+                        <p class="text-white text-[11px] font-black leading-snug drop-shadow-md line-clamp-3">
+                            ${story.taskTitle}
+                        </p>
+                    </div>
+
+                    <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10 pointer-events-none">
+                        <p class="text-white text-xs font-black drop-shadow-md truncate">
+                            ${story.userName} ${isMe ? '(Saya)' : ''}
+                        </p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
 
         function renderPointSchemeList() {
             const list = document.getElementById('pointSchemeList');
@@ -2960,9 +3041,11 @@
         }
 
         // ==========================================================
-        // RENDER TASKS DESAIN BARU (HORIZONTAL INTERACTION & STATUS ACCURATE)
+        // RENDER TASKS DENGAN STORIES & FEED HORIZONTAL
         // ==========================================================
         function renderTasks() {
+            renderStoriesBar();
+
             const cardsContainer = document.getElementById('scheduleCardsMobile');
             const tableDesktop = document.getElementById('scheduleTableDesktop');
             const selectedRole = document.getElementById('roleFilter').value; 
@@ -3013,7 +3096,7 @@
                 return;
             }
 
-            // Render Table Desktop
+            // Desktop Table View
             if (tableDesktop) {
                 filteredTasks.forEach(item => {
                     const isOwner = (item.user_id === currentUser?.id);
@@ -3068,7 +3151,7 @@
                 });
             }
 
-            // Render Feed Mobile / Cards
+            // Mobile Feed View
             const groupedByUser = {};
             filteredTasks.forEach(task => {
                 const userKey = task.user_id || 'unknown';
@@ -3108,9 +3191,8 @@
                     const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
                     const canManage = isSuperAdmin || (isOwner && !isLocked);
 
-                    // Badge Waktu & Poin Akurat sesuai status
                     let timeBadgeStyle = 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
-                    let statusIcon = '<i class="fa-regular fa-clock text-xs opacity-70"></i>';
+                    let statusIcon = '<i class="fa-regular fa-clock text-xs opacity-75"></i>';
                     let statusLabel = 'Belum Dimulai';
                     let taskPointBadge = '+0.1k';
 
@@ -3179,7 +3261,6 @@
 
                     tasksListHtml += `
                         <div class="pt-3 ${index !== 0 ? 'mt-4 border-t border-slate-100 dark:border-slate-800' : ''}">
-                            <!-- BADGE WAKTU & STATUS SESUAI STATE ASLI -->
                             <div class="w-full ${timeBadgeStyle} px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center justify-between gap-2 mb-2.5">
                                 <div class="flex items-center gap-1.5">
                                     <i class="fa-regular fa-clock text-xs opacity-75"></i>
@@ -3193,7 +3274,6 @@
                                 </div>
                             </div>
 
-                            <!-- DETAIL TUGAS -->
                             <div class="space-y-1.5">
                                 <h3 class="text-sm md:text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
                                     ${item.tugas}
@@ -3209,7 +3289,6 @@
                                 ${photoEvidenceHtml}
                             </div>
 
-                            <!-- TOMBOL INTERAKSI HORIZONTAL (AKSI, SUKA, KOMEN, SHARE) -->
                             <div class="flex items-center justify-between gap-1 pt-2.5 mt-2 border-t border-slate-100 dark:border-slate-800/60 text-slate-600 dark:text-slate-300">
                                 <div>
                                     ${statusActionDropdown}
@@ -3250,7 +3329,7 @@
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <h4 class="text-sm font-black text-slate-900 dark:text-white leading-tight truncate">${petugasName}</h4>
-                                                                       <span class="border border-blue-500/30 bg-blue-50/60 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 leading-none shadow-xs">
+                                    <span class="border border-blue-500/30 bg-blue-50/60 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 leading-none shadow-xs">
                                         ${sampleTask?.peran || 'Teknisi'}
                                     </span>
                                 </div>
@@ -4322,4 +4401,3 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
     </script>
 </body>
 </html>
-
