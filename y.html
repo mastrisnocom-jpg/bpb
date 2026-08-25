@@ -1351,8 +1351,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-<script>
-        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
+                      const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1384,6 +1383,7 @@
         let audioCtx = null;
         let cachedMyEarningsData = null;
         let userRanksMap = {};
+        let isEditingProfile = false;
 
         // State Navigasi Jadwal Teman & Auto Generate
         let activeFriendFeedId = null;
@@ -1437,7 +1437,6 @@
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
 
-        // Format Nominal ke Satuan Ribuan (1k, 2k, 10.5k dst)
         function formatRupiahK(amount) {
             const num = Number(amount) || 0;
             if (num >= 1000) {
@@ -1788,7 +1787,6 @@
             else { showToast("Gagal menyimpan: " + error.message); }
         });
 
-        // Penghitungan Insentif Poin dengan Konversi 'k'
         function calculateAndRenderEarnings() {
             const currentYearMonth = todayStr.slice(0, 7);
             const userEarningsMap = {};
@@ -1897,7 +1895,6 @@
                 totalTeamBudgetUsed += u.grossEarning;
             });
 
-            // Urutkan peringkat 1, 2, 3 berdasarkan poin tertinggi
             const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
             userRanksMap = {};
             sortedUsers.forEach((u, index) => {
@@ -1924,7 +1921,6 @@
                 expiredTasksCount: 0
             };
             
-            // Format 1k, 2k, dan seterusnya pada Stat Card
             document.getElementById('myEarningsBadge').innerText = `Rp ${formatRupiahK(myData.totalEarning)}`;
 
             return { userEarningsMap, totalTeamBudgetUsed, myData };
@@ -2752,7 +2748,6 @@
 
         async function openFollowsModal() {
             setActiveTab('tabFriends');
-
             localStorage.setItem('last_seen_friends_count', mutualFriends.length.toString());
 
             const headerBadge = document.getElementById('headerFriendBadge');
@@ -2965,15 +2960,17 @@
             else { navigator.clipboard.writeText(shareText); showToast("Detail jadwal berhasil disalin!"); }
         }
 
-                function renderTasks() {
-            const tableBodyDesktop = document.getElementById('scheduleTableDesktop'); 
-            const cardsContainerMobile = document.getElementById('scheduleCardsMobile');
+        // ==========================================================
+        // RENDER TASKS DESAIN BARU (SESUAI GAMBAR)
+        // ==========================================================
+        function renderTasks() {
+            const cardsContainer = document.getElementById('scheduleCardsMobile');
+            const tableDesktop = document.getElementById('scheduleTableDesktop');
             const selectedRole = document.getElementById('roleFilter').value; 
             const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
             const selectedUser = document.getElementById('userFilter').value; 
             const selectedDate = document.getElementById('dateFilter').value;
 
-            // Update Banner Teman jika sedang melihat feed teman
             const friendIndicator = document.getElementById('friendFeedIndicator');
             const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
             if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
@@ -2983,8 +2980,8 @@
                 if (friendIndicator) friendIndicator.classList.add('hidden');
             }
 
-            if (tableBodyDesktop) tableBodyDesktop.innerHTML = ''; 
-            if (cardsContainerMobile) cardsContainerMobile.innerHTML = '';
+            if (tableDesktop) tableDesktop.innerHTML = ''; 
+            if (cardsContainer) cardsContainer.innerHTML = '';
 
             const filteredTasks = globalTasks.filter(item => {
                 const matchDate = !selectedDate || item.tanggal === selectedDate; 
@@ -3013,8 +3010,7 @@
 
             if (filteredTasks.length === 0) {
                 const emptyMsg = activeFriendFeedId ? `Teman ini belum memiliki jadwal pada tanggal yang dipilih.` : `Anda belum memiliki jadwal pada tanggal yang dipilih.`;
-                if (tableBodyDesktop) tableBodyDesktop.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></td></tr>`;
-                if (cardsContainerMobile) cardsContainerMobile.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
+                if (cardsContainer) cardsContainer.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
                 return;
             }
 
@@ -3035,12 +3031,10 @@
                 const taskUserId = sampleTask?.user_id;
                 const isMutual = mutualFriends.includes(taskUserId);
 
-                // Hitung estimasi poin user untuk badge kanan atas
                 const uData = userEarningsMap[taskUserId];
                 const userPoints = uData ? uData.totalPoints : 0;
                 const userPointsK = (userPoints / 1000).toFixed(2).replace(/\.00$/, '') + 'k';
 
-                // KARTU FEED MODERN (SESUAI GAMBAR)
                 const feedPostCard = document.createElement('div');
                 feedPostCard.className = 'w-full bg-white dark:bg-slate-900 p-4 md:p-5 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-sm transition space-y-4 mb-3.5';
 
@@ -3057,7 +3051,6 @@
                     const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
                     const canManage = isSuperAdmin || (isOwner && !isLocked);
 
-                    // Hitung nominal per item
                     const taskPointBonus = isCompleted ? `+${(budgetSettings.pointsOnTime / 1000).toFixed(1)}k` : `+0.1k`;
 
                     let photoEvidenceHtml = '';
@@ -3078,7 +3071,6 @@
                         `;
                     }
 
-                    // Tentukan tombol status di kolom kanan
                     let statusActionBtn = '';
                     if (isLocked) {
                         statusActionBtn = `
@@ -3105,8 +3097,6 @@
 
                     tasksListHtml += `
                         <div class="pt-3 ${index !== 0 ? 'mt-4 border-t border-slate-100 dark:border-slate-800' : ''}">
-                            
-                            <!-- BANNER WAKTU & POIN HIJAU PASTEL -->
                             <div class="w-full bg-[#dcfce7]/70 dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-300 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 mb-3">
                                 <i class="fa-regular fa-clock text-xs opacity-80"></i>
                                 <span>${item.jam_mulai} - ${item.jam_selesai}</span>
@@ -3114,10 +3104,7 @@
                                 <span>${taskPointBonus}</span>
                             </div>
 
-                            <!-- KONTEN TUGAS (KIRI) DAN TOMBOL AKSI (KANAN) -->
                             <div class="flex items-start justify-between gap-4">
-                                
-                                <!-- KOLOM KIRI: JUDUL, KETERANGAN & FOTO -->
                                 <div class="flex-1 min-w-0">
                                     <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight leading-snug mb-3">
                                         ${item.tugas}
@@ -3135,37 +3122,29 @@
                                     ${photoEvidenceHtml}
                                 </div>
 
-                                <!-- KOLOM KANAN: AKSI (KUNCI STATUS, SUKA, KOMEN, BAGIKAN) -->
                                 <div class="flex flex-col items-start gap-3.5 pl-2 flex-shrink-0">
-                                    
                                     ${statusActionBtn}
 
-                                    <!-- TOMBOL SUKA -->
                                     <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95 ${isLiked ? 'text-blue-600 dark:text-blue-400' : ''}">
                                         <i class="${isLiked ? 'fa-solid text-blue-600 dark:text-blue-400' : 'fa-regular'} fa-thumbs-up text-base"></i>
                                         <span>Suka ${likesCount > 0 ? `(${likesCount})` : ''}</span>
                                     </button>
 
-                                    <!-- TOMBOL KOMENTAR -->
                                     <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95">
                                         <i class="${commentsCount > 0 ? 'fa-solid text-blue-600' : 'fa-regular'} fa-comment text-base"></i>
                                         <span>Komentar ${commentsCount > 0 ? `(${commentsCount})` : ''}</span>
                                     </button>
 
-                                    <!-- TOMBOL BAGIKAN -->
                                     <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95">
                                         <i class="fa-solid fa-share text-base"></i>
                                         <span>Bagikan</span>
                                     </button>
-
                                 </div>
-
                             </div>
                         </div>
                     `;
                 });
 
-                // HEADER KARTU (NAMA, BADGE TEKNISI CENTANG, POIN HARIAN)
                 feedPostCard.innerHTML = `
                     <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
                         <div class="flex items-center gap-3 min-w-0">
@@ -3192,7 +3171,6 @@
                             </div>
                         </div>
 
-                        <!-- BADGE POIN HARIAN DI SEBELAH KANAN -->
                         <div class="border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full px-3.5 py-1.5 shadow-xs flex items-center gap-1 flex-shrink-0">
                             <span class="text-xs font-bold text-slate-800 dark:text-slate-100">Poin Harian:</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white font-mono">${userPointsK}</span>
@@ -3200,82 +3178,10 @@
                         </div>
                     </div>
 
-                    <!-- DAFTAR KEGIATAN -->
                     <div>${tasksListHtml}</div>
                 `;
 
-                if (cardsContainerMobile) cardsContainerMobile.appendChild(feedPostCard);
-            });
-        }
-
-
-                const groupHeader = document.createElement('tr');
-                groupHeader.className = 'bg-blue-50 dark:bg-blue-950/40 border-y border-blue-200/80';
-                groupHeader.innerHTML = `
-                    <td colspan="8" class="px-3 py-2">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                ${isMutual ? `
-                                    <div class="cursor-pointer" onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')">
-                                        ${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}
-                                    </div>
-                                    <button onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')" class="font-extrabold text-blue-700 dark:text-blue-300 text-xs hover:underline flex items-center gap-1">
-                                        <span>${petugasName}</span>
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                                    </button>
-                                ` : `
-                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-6 h-6", taskUserId)}
-                                    <span class="font-extrabold text-blue-900 dark:text-blue-300 text-xs">${petugasName}</span>
-                                `}
-                            </div>
-                            <span class="bg-blue-200/60 text-blue-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full">${tasksOfUser.length} Kegiatan</span>
-                        </div>
-                    </td>
-                `;
-                tableBodyDesktop.appendChild(groupHeader);
-
-                tasksOfUser.forEach(item => {
-                    const isOwner = (item.user_id === currentUser?.id); 
-                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; const isLiked = likedUsers.includes(currentUser?.id);
-                    const likesCount = item.likes_count || 0; const commentsCount = item.comments_count || 0;
-                    const isCompleted = item.status === 'Selesai'; const isPastDay = isTaskExpired(item.tanggal); const isTooEarly = isTaskNotStartedYet(item);
-                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; const canManage = isSuperAdmin || (isOwner && !isLocked);
-                    const isLate = isCompletedLate(item); const isEarly = isCreatedBefore6AM(item); 
-                    const displayName = getUserDisplayName(item.user_id, item.user_email, item.nama);
-                    
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors border-b border-slate-200 dark:border-slate-800';
-                    
-                    let roleBadge = `<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${item.peran || 'Umum'}</span>`;
-
- let statusCell = canManage ? `<select onchange="updateStatus('${item.id}', this.value)" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"><option value="Belum" ${item.status === 'Belum' ? 'selected' : ''}>⏱️ Belum</option><option value="Proses" ${item.status === 'Proses' ? 'selected' : ''}>⚡ Proses</option><option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>✅ Selesai</option></select>` : `<span class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.status === 'Selesai' ? (isLate ? 'text-amber-700 bg-amber-50' : 'text-emerald-600 bg-emerald-50') : (item.status === 'Proses' ? 'text-amber-500 bg-amber-50' : 'text-rose-500 bg-rose-50')}">${item.status === 'Selesai' ? (isLate ? '⚠️ Selesai' : '✅ Selesai') : (item.status === 'Proses' ? '⚡ Proses' : '⏱️ Belum')}</span>`;
-                    
-                    let actionCell = canManage ? `<div class="flex items-center justify-center gap-1.5"><button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="text-slate-400 hover:text-blue-500 p-1"><i class="fa-solid fa-share"></i></button><button onclick="editTask('${item.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div>` : (!isOwner && !isSuperAdmin ? `<span class="text-[10px] text-slate-400">Mutual</span>` : `<span class="text-[9px] font-extrabold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-lock text-[8px] text-amber-500"></i> Terkunci</span>`);
-
-                    row.innerHTML = `
-                        <td class="p-3 font-mono font-bold text-[10px] text-slate-500">${item.tanggal || '-'}</td>
-                        <td class="p-3 font-mono font-bold text-[11px]">${item.jam_mulai} - ${item.jam_selesai}${isEarly ? `<span class="ml-1 text-[8px]">🌅</span>` : ''}</td>
-                        <td class="p-3 font-bold text-[11px]">
-                            ${isMutual ? `
-                                <button onclick="viewFriendSchedule('${item.user_id}', '${displayName.replace(/'/g, "\\'")}')" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
-                                    <span>${displayName}</span>
-                                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                                </button>
-                            ` : `
-                                <span>${displayName}</span>
-                            `}
-                        </td>
-                        <td class="p-3">${roleBadge}</td>
-                        <td class="p-3 font-semibold text-[11px]">
-                            <p>${item.tugas}</p>${item.keterangan ? `<p class="text-[10px] text-blue-600 font-medium mt-0.5"><i class="fa-solid fa-check mr-1"></i>${item.keterangan}</p>` : ''}
-                            ${(item.foto_sebelum || item.foto_sesudah) ? `<div class="flex gap-2 mt-1.5">${item.foto_sebelum ? `<button onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="text-[9.5px] text-slate-500 hover:text-blue-600 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-image"></i> Sebelum</button>` : ''}${item.foto_sesudah ? `<button onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="text-[9.5px] text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-bold underline"><i class="fa-solid fa-circle-check"></i> Sesudah</button>` : ''}</div>` : ''}
-                        </td>
-                        <td class="p-3 text-center">${statusCell}</td>
-                        <td class="p-3 text-center"><div class="flex items-center justify-center gap-2.5"><button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-1 text-[11px] font-bold ${isLiked ? 'text-blue-500' : 'text-slate-400'}"><i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i><span>${likesCount}</span></button><button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-1 text-[11px] font-bold ${commentsCount > 0 ? 'text-blue-600' : 'text-slate-400'}"><i class="${commentsCount > 0 ? 'fa-solid' : 'fa-regular'} fa-comment-dots"></i><span>${commentsCount}</span></button></div></td>
-                        <td class="p-3 text-center">${actionCell}</td>
-                    `;
-                    tableBodyDesktop.appendChild(row);
-                });
+                if (cardsContainer) cardsContainer.appendChild(feedPostCard);
             });
         }
 
@@ -4009,14 +3915,1275 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
             }
         });
 
+        function toggleEditProfileFields() {
+            isEditingProfile = !isEditingProfile;
+            const btnToggle = document.getElementById('btnToggleEditProfile');
+            const btnSave = document.getElementById('btnSaveProfileDetails');
+
+            const nipDisplay = document.getElementById('display-profile-nip');
+            const nipInput = document.getElementById('input-profile-nip');
+            const phoneDisplay = document.getElementById('display-profile-phone');
+            const phoneInput = document.getElementById('input-profile-phone');
+            const addressDisplay = document.getElementById('display-profile-address');
+            const addressInput = document.getElementById('input-profile-address');
+
+            if (isEditingProfile) {
+                btnToggle.innerHTML = '<i class="fa-solid fa-xmark text-[9px]"></i> Batal';
+                btnSave.classList.remove('hidden');
+
+                nipInput.value = nipDisplay.innerText.trim();
+                phoneInput.value = phoneDisplay.innerText.trim();
+                addressInput.value = addressDisplay.innerText.trim();
+
+                nipDisplay.classList.add('hidden');
+                nipInput.classList.remove('hidden');
+                phoneDisplay.classList.add('hidden');
+                phoneInput.classList.remove('hidden');
+                addressDisplay.classList.add('hidden');
+                addressInput.classList.remove('hidden');
+            } else {
+                btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data';
+                btnSave.classList.add('hidden');
+
+                nipDisplay.classList.remove('hidden');
+                nipInput.classList.add('hidden');
+                phoneDisplay.classList.remove('hidden');
+                phoneInput.classList.add('hidden');
+                addressDisplay.classList.remove('hidden');
+                addressInput.classList.add('hidden');
+            }
+        }
+
+        async function loadProfileCorporateDetails() {
+            if (!currentUser) return;
+            try {
+                const { data, error } = await _supabase
+                    .from('profiles')
+                    .select('nip, no_wa, alamat, nama')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (data && !error) {
+                    if (data.nip) document.getElementById('display-profile-nip').innerText = data.nip;
+                    if (data.no_wa) document.getElementById('display-profile-phone').innerText = data.no_wa;
+                    if (data.alamat) document.getElementById('display-profile-address').innerText = data.alamat;
+                }
+            } catch (e) {
+                console.error("Gagal memuat profil Supabase:", e);
+            }
+        }
+
+        async function saveProfileCorporateDetails() {
+            if (!currentUser) return;
+            const newNip = document.getElementById('input-profile-nip').value.trim() || '-';
+            const newPhone = document.getElementById('input-profile-phone').value.trim() || '-';
+            const newAddress = document.getElementById('input-profile-address').value.trim() || '-';
+            const btnSave = document.getElementById('btnSaveProfileDetails');
+
+            btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btnSave.disabled = true;
+
+            const { error } = await _supabase.from('profiles').upsert({
+                id: currentUser.id,
+                email: currentUser.email,
+                nip: newNip,
+                no_wa: newPhone,
+                alamat: newAddress,
+                updated_at: new Date().toISOString()
+            });
+
+            if (!error) {
+                document.getElementById('display-profile-nip').innerText = newNip;
+                document.getElementById('display-profile-phone').innerText = newPhone;
+                document.getElementById('display-profile-address').innerText = newAddress;
+                toggleEditProfileFields();
+                showToast("✅ Data pegawai berhasil diperbarui di Supabase!");
+            } else {
+                showToast("Gagal menyimpan ke Supabase: " + error.message);
+            }
+
+            btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai';
+            btnSave.disabled = false;
+        }
+
         function openProfileModal() { 
             syncApiKeyInputs();
+            loadProfileCorporateDetails();
             document.getElementById('form-profile-modal').classList.remove('hidden'); 
         }
-        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2500); }
 
-        initTheme(); checkAuth();
-          let isEditingProfile = false;
+        function showToast(msg) { 
+            const t = document.getElementById('toast'); 
+            t.innerText = msg; 
+            t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 2500); 
+        }
+
+        initTheme(); 
+        checkAuth();
+
+  // ==========================================================
+        // RENDER TASKS DESAIN BARU (SESUAI GAMBAR)
+        // ==========================================================
+        function renderTasks() {
+            const cardsContainer = document.getElementById('scheduleCardsMobile');
+            const tableDesktop = document.getElementById('scheduleTableDesktop');
+            const selectedRole = document.getElementById('roleFilter').value; 
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
+            const selectedUser = document.getElementById('userFilter').value; 
+            const selectedDate = document.getElementById('dateFilter').value;
+
+            const friendIndicator = document.getElementById('friendFeedIndicator');
+            const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
+            if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
+                if (friendIndicator) friendIndicator.classList.remove('hidden');
+                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
+            } else {
+                if (friendIndicator) friendIndicator.classList.add('hidden');
+            }
+
+            if (tableDesktop) tableDesktop.innerHTML = ''; 
+            if (cardsContainer) cardsContainer.innerHTML = '';
+
+            const filteredTasks = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate; 
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
+                
+                let canView = false;
+                if (isSuperAdmin) {
+                    const matchUser = selectedUser === 'All' || item.user_id === selectedUser;
+                    canView = matchUser;
+                } else if (activeFriendFeedId) {
+                    const isMutual = mutualFriends.includes(activeFriendFeedId);
+                    canView = (item.user_id === activeFriendFeedId) && (isMutual || activeFriendFeedId === currentUser?.id);
+                } else {
+                    canView = (item.user_id === currentUser?.id);
+                }
+
+                return matchDate && matchRole && matchStatus && canView;
+            });
+
+            document.getElementById('totalTaskCount').innerText = filteredTasks.length;
+            document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
+            document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
+
+            const { userEarningsMap } = calculateAndRenderEarnings();
+
+            if (filteredTasks.length === 0) {
+                const emptyMsg = activeFriendFeedId ? `Teman ini belum memiliki jadwal pada tanggal yang dipilih.` : `Anda belum memiliki jadwal pada tanggal yang dipilih.`;
+                if (cardsContainer) cardsContainer.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
+                return;
+            }
+
+            const groupedByUser = {};
+            filteredTasks.forEach(task => {
+                const userKey = task.user_id || 'unknown';
+                if (!groupedByUser[userKey]) groupedByUser[userKey] = [];
+                groupedByUser[userKey].push(task);
+            });
+
+            Object.keys(groupedByUser).forEach(uid => {
+                const tasksOfUser = groupedByUser[uid];
+                tasksOfUser.sort((a, b) => (a.jam_mulai || '').localeCompare(b.jam_mulai || ''));
+                const sampleTask = tasksOfUser[0]; 
+                const petugasName = getUserDisplayName(sampleTask.user_id, sampleTask.user_email, sampleTask.nama);
+                const postDate = sampleTask?.tanggal || todayStr; 
+                const userAvatarUrl = sampleTask?.user_avatar || (sampleTask?.user_id === currentUser?.id ? getAvatarUrl(currentUser) : null);
+                const taskUserId = sampleTask?.user_id;
+                const isMutual = mutualFriends.includes(taskUserId);
+
+                const uData = userEarningsMap[taskUserId];
+                const userPoints = uData ? uData.totalPoints : 0;
+                const userPointsK = (userPoints / 1000).toFixed(2).replace(/\.00$/, '') + 'k';
+
+                const feedPostCard = document.createElement('div');
+                feedPostCard.className = 'w-full bg-white dark:bg-slate-900 p-4 md:p-5 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-sm transition space-y-4 mb-3.5';
+
+                let tasksListHtml = '';
+                tasksOfUser.forEach((item, index) => {
+                    const isOwner = (item.user_id === currentUser?.id);
+                    const likedUsers = Array.isArray(item.liked_users) ? item.liked_users : []; 
+                    const isLiked = likedUsers.includes(currentUser?.id);
+                    const likesCount = item.likes_count || 0; 
+                    const commentsCount = item.comments_count || 0;
+                    const isCompleted = item.status === 'Selesai'; 
+                    const isPastDay = isTaskExpired(item.tanggal); 
+                    const isTooEarly = isTaskNotStartedYet(item);
+                    const isLocked = (isCompleted || isTooEarly) && !isSuperAdmin; 
+                    const canManage = isSuperAdmin || (isOwner && !isLocked);
+
+                    const taskPointBonus = isCompleted ? `+${(budgetSettings.pointsOnTime / 1000).toFixed(1)}k` : `+0.1k`;
+
+                    let photoEvidenceHtml = '';
+                    if (item.foto_sebelum || item.foto_sesudah) {
+                        photoEvidenceHtml = `
+                            <div class="grid grid-cols-2 gap-2.5 my-3">
+                                ${item.foto_sebelum ? `
+                                    <div onclick="showLargeImage('${item.foto_sebelum}', 'Foto Sebelum')" class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer shadow-xs">
+                                        <img src="${item.foto_sebelum}" class="w-full h-full object-cover">
+                                        <span class="absolute bottom-2 left-2 bg-black/60 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">Sebelum</span>
+                                    </div>` : ''}
+                                ${item.foto_sesudah ? `
+                                    <div onclick="showLargeImage('${item.foto_sesudah}', 'Foto Sesudah')" class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-emerald-500/30 cursor-pointer shadow-xs">
+                                        <img src="${item.foto_sesudah}" class="w-full h-full object-cover">
+                                        <span class="absolute bottom-2 left-2 bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-md">Sesudah</span>
+                                    </div>` : ''}
+                            </div>
+                        `;
+                    }
+
+                    let statusActionBtn = '';
+                    if (isLocked) {
+                        statusActionBtn = `
+                            <div class="flex items-center gap-2.5 text-slate-700 dark:text-slate-300 font-bold text-[13px] select-none py-1">
+                                <i class="fa-solid fa-lock text-base"></i>
+                                <span>Kunci Status</span>
+                            </div>
+                        `;
+                    } else if (canManage) {
+                        statusActionBtn = `
+                            <div class="relative">
+                                <button onclick="toggleTaskMenu('${item.id}')" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95">
+                                    <i class="fa-solid fa-pen-to-square text-base"></i>
+                                    <span>Ubah Status</span>
+                                </button>
+                                <div id="task-menu-${item.id}" class="hidden absolute right-0 top-7 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-30 animate-slide-down">
+                                    <button onclick="updateStatus('${item.id}', 'Belum'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-clock text-rose-500"></i> Set: Belum</button>
+                                    <button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500"></i> Set: Proses</button>
+                                    <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Selesaikan Foto</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    tasksListHtml += `
+                        <div class="pt-3 ${index !== 0 ? 'mt-4 border-t border-slate-100 dark:border-slate-800' : ''}">
+                            <div class="w-full bg-[#dcfce7]/70 dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-300 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 mb-3">
+                                <i class="fa-regular fa-clock text-xs opacity-80"></i>
+                                <span>${item.jam_mulai} - ${item.jam_selesai}</span>
+                                <i class="fa-solid fa-circle-check text-xs text-emerald-600 dark:text-emerald-400 ml-0.5"></i>
+                                <span>${taskPointBonus}</span>
+                            </div>
+
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight leading-snug mb-3">
+                                        ${item.tugas}
+                                    </h3>
+
+                                    ${item.keterangan ? `
+                                        <div class="space-y-1">
+                                            <p class="font-black text-slate-900 dark:text-white text-xs">Keterangan:</p>
+                                            <p class="text-slate-800 dark:text-slate-200 text-xs font-normal leading-relaxed break-words">
+                                                ${item.keterangan}
+                                            </p>
+                                        </div>
+                                    ` : ''}
+
+                                    ${photoEvidenceHtml}
+                                </div>
+
+                                <div class="flex flex-col items-start gap-3.5 pl-2 flex-shrink-0">
+                                    ${statusActionBtn}
+
+                                    <button onclick="toggleLikeTask('${item.id}')" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95 ${isLiked ? 'text-blue-600 dark:text-blue-400' : ''}">
+                                        <i class="${isLiked ? 'fa-solid text-blue-600 dark:text-blue-400' : 'fa-regular'} fa-thumbs-up text-base"></i>
+                                        <span>Suka ${likesCount > 0 ? `(${likesCount})` : ''}</span>
+                                    </button>
+
+                                    <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95">
+                                        <i class="${commentsCount > 0 ? 'fa-solid text-blue-600' : 'fa-regular'} fa-comment text-base"></i>
+                                        <span>Komentar ${commentsCount > 0 ? `(${commentsCount})` : ''}</span>
+                                    </button>
+
+                                    <button onclick="shareSpecificTask(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="flex items-center gap-2.5 text-slate-800 dark:text-slate-200 hover:text-blue-600 font-bold text-[13px] py-1 transition active:scale-95">
+                                        <i class="fa-solid fa-share text-base"></i>
+                                        <span>Bagikan</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                feedPostCard.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-3 min-w-0">
+                            ${isMutual ? `
+                                <div class="cursor-pointer" onclick="viewFriendSchedule('${taskUserId}', '${petugasName.replace(/'/g, "\\'")}')">
+                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-12 h-12", taskUserId)}
+                                </div>
+                            ` : `
+                                <div>
+                                    ${renderAvatarHtml(userAvatarUrl, petugasName, "w-12 h-12", taskUserId)}
+                                </div>
+                            `}
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h4 class="text-sm font-black text-slate-900 dark:text-white leading-tight truncate">${petugasName}</h4>
+                                    <span class="border border-emerald-500/80 bg-emerald-50/40 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[10.5px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 leading-none shadow-xs">
+                                        ${sampleTask?.peran || 'Teknisi'}
+                                        <i class="fa-solid fa-circle-check text-[10px] text-emerald-600 dark:text-emerald-400"></i>
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+                                    ${formatTanggalIndo(postDate)} &bull; ${tasksOfUser.length} Kegiatan
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full px-3.5 py-1.5 shadow-xs flex items-center gap-1 flex-shrink-0">
+                            <span class="text-xs font-bold text-slate-800 dark:text-slate-100">Poin Harian:</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white font-mono">${userPointsK}</span>
+                            <span class="text-sm">🪙</span>
+                        </div>
+                    </div>
+
+                    <div>${tasksListHtml}</div>
+                `;
+
+                if (cardsContainer) cardsContainer.appendChild(feedPostCard);
+            });
+        }
+
+async function toggleLikeTask(taskId) {
+            const task = globalTasks.find(t => String(t.id) === String(taskId)); 
+            if (!task) return;
+            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : []; 
+            const userIndex = likedUsers.indexOf(currentUser.id);
+            if (userIndex === -1) { 
+                likedUsers.push(currentUser.id); 
+            } else { 
+                likedUsers.splice(userIndex, 1); 
+            }
+            task.likes_count = likedUsers.length; 
+            task.liked_users = likedUsers; 
+            renderTasks();
+            const { data, error } = await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
+            if (error) { 
+                showToast("Gagal menyukai: " + error.message); 
+                await fetchTasksSupabase(); 
+            } else if (data) { 
+                task.likes_count = data.likes_count; 
+                task.liked_users = data.liked_users; 
+                renderTasks(); 
+            }
+        }
+
+        async function openCommentModal(taskId, taskTitle) {
+            activeCommentJadwalId = String(taskId);
+            cancelReplyOrEdit();
+            document.getElementById('commentModalSubtitle').innerText = taskTitle;
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-slate-400 text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat percakapan...</div>';
+            document.getElementById('commentModal').classList.remove('hidden');
+            
+            await fetchComments(activeCommentJadwalId);
+            setupCommentsRealtime(activeCommentJadwalId);
+        }
+
+        function closeCommentModal() {
+            activeCommentJadwalId = null;
+            cancelReplyOrEdit();
+            if (commentsSubscription) {
+                _supabase.removeChannel(commentsSubscription);
+                commentsSubscription = null;
+            }
+            document.getElementById('commentModal').classList.add('hidden');
+        }
+
+        async function fetchComments(taskId) {
+            const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
+            const commentList = document.getElementById('commentList');
+            if (error) {
+                commentList.innerHTML = `<div class="text-center text-rose-500 text-[11px] py-6">Gagal memuat: ${error.message}</div>`;
+                return;
+            }
+            const task = globalTasks.find(t => t.id == taskId);
+            if (task) {
+                task.comments_count = data ? data.length : 0;
+                renderTasks();
+            }
+            if (!data || data.length === 0) {
+                commentList.innerHTML = '<div class="text-center text-slate-400 text-[11px] py-10">Belum ada komentar. Jadilah yang pertama!</div>';
+                return;
+            }
+            renderCommentList(data);
+        }
+
+        function renderCommentList(comments) {
+            const commentList = document.getElementById('commentList');
+            commentList.innerHTML = '';
+
+            comments.forEach(c => {
+                const isMyComment = c.user_id === currentUser?.id;
+                const senderName = getUserDisplayName(c.user_id, c.user_email);
+                const timeAgo = formatTimeAgo(c.created_at);
+                const userAvatar = c.user_avatar || null;
+                const isMutual = mutualFriends.includes(c.user_id);
+
+                const commentItem = document.createElement('div');
+                commentItem.className = 'flex items-start gap-3 text-slate-800 dark:text-slate-100 group';
+
+                commentItem.innerHTML = `
+                    <div class="flex-shrink-0 mt-0.5 ${isMutual ? 'cursor-pointer' : ''}" ${isMutual ? `onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')"` : ''}>
+                        ${renderAvatarHtml(userAvatar, senderName, "w-8 h-8", c.user_id)}
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            ${isMutual ? `
+                                <button onclick="viewFriendSchedule('${c.user_id}', '${senderName.replace(/'/g, "\\'")}')" class="font-extrabold text-[11px] text-blue-600 dark:text-blue-400 hover:underline leading-none flex items-center gap-0.5">
+                                    <span>${senderName}</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                </button>
+                            ` : `
+                                <span class="font-extrabold text-[11px] text-slate-600 dark:text-slate-300 leading-none">${senderName}</span>
+                            `}
+                        </div>
+
+                        <p class="text-xs text-slate-800 dark:text-slate-100 font-medium leading-relaxed mt-1 break-words">
+                            ${c.comment}
+                        </p>
+
+                        <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400 font-semibold">
+                            <span>${timeAgo}</span>
+                            <button onclick="startReplyTo('${senderName.replace(/'/g, "\\'")}')" class="hover:text-slate-600 dark:hover:text-slate-200 transition font-bold">
+                                Balas
+                            </button>
+                            ${isMyComment ? `
+                                <button onclick="startEditComment('${c.id}', '${c.comment.replace(/'/g, "\\'")}')" class="opacity-0 group-hover:opacity-100 hover:text-blue-500 transition">Edit</button>
+                            ` : ''}
+                            ${(isMyComment || isSuperAdmin) ? `
+                                <button onclick="deleteComment('${c.id}')" class="opacity-0 group-hover:opacity-100 hover:text-rose-500 transition">Hapus</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                commentList.appendChild(commentItem);
+            });
+
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+
+        function startReplyTo(userName) {
+            replyingToUser = userName;
+            editingCommentId = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `Membalas <b>@${userName}</b>`;
+            container.classList.remove('hidden');
+            input.value = `Balas ${userName}: `;
+            input.focus();
+        }
+
+        function startEditComment(commentId, commentText) {
+            editingCommentId = commentId;
+            replyingToUser = null;
+            const container = document.getElementById('replyIndicatorContainer');
+            const textEl = document.getElementById('replyIndicatorText');
+            const input = document.getElementById('inputNewComment');
+            
+            textEl.innerHTML = `<b>Edit komentar</b>`;
+            container.classList.remove('hidden');
+            input.value = commentText;
+            input.focus();
+        }
+
+        function cancelReplyOrEdit() {
+            editingCommentId = null;
+            replyingToUser = null;
+            document.getElementById('replyIndicatorContainer').classList.add('hidden');
+            const input = document.getElementById('inputNewComment');
+            if (input) input.value = '';
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm("Hapus komentar ini?")) return;
+            const { error } = await _supabase.from('jadwal_comments').delete().eq('id', commentId);
+            if (error) showToast("Gagal menghapus komentar!");
+            else {
+                showToast("Komentar dihapus");
+                if (activeCommentJadwalId) fetchComments(activeCommentJadwalId);
+            }
+        }
+
+        async function sendComment() {
+            const input = document.getElementById('inputNewComment');
+            const commentText = input.value.trim();
+            if (!commentText || !activeCommentJadwalId) return;
+
+            if (editingCommentId) {
+                const { error } = await _supabase.from('jadwal_comments').update({ comment: commentText }).eq('id', editingCommentId);
+                if (!error) {
+                    showToast("Komentar diperbarui");
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                } else {
+                    showToast("Gagal memperbarui: " + error.message);
+                }
+            } else {
+                input.value = '';
+                const payload = {
+                    jadwal_id: String(activeCommentJadwalId),
+                    user_id: currentUser.id,
+                    user_email: currentUser.email,
+                    comment: commentText,
+                    user_avatar: getAvatarUrl(currentUser),
+                    created_at: new Date().toISOString()
+                };
+
+                const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+                if (error) {
+                    showToast("Gagal mengirim komentar: " + error.message);
+                    input.value = commentText;
+                } else {
+                    cancelReplyOrEdit();
+                    fetchComments(activeCommentJadwalId);
+                }
+            }
+        }
+
+        function setupCommentsRealtime(taskId) {
+            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
+            commentsSubscription = _supabase.channel(`comments-realtime-${taskId}`)
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => { fetchComments(taskId); }).subscribe();
+        }
+
+        function openCompletionNoteModal(task) {
+            if (isTaskNotStartedYet(task) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
+            document.getElementById('complete-task-id').value = task.id; 
+            document.getElementById('complete-task-title').innerText = task.tugas || '-'; 
+            document.getElementById('complete-task-note').value = task.keterangan || '';
+            document.getElementById('complete-file-before').value = ''; 
+            document.getElementById('complete-file-after').value = '';
+            
+            const isPast = isTaskExpired(task.tanggal);
+            const warningEl = document.getElementById('complete-late-warning');
+            const starPhoto = document.getElementById('photo-required-star');
+            const starNote = document.getElementById('note-required-star');
+
+            if (isPast) {
+                warningEl.classList.remove('hidden');
+                starPhoto.classList.remove('hidden');
+                starNote.classList.remove('hidden');
+            } else {
+                warningEl.classList.add('hidden');
+                starPhoto.classList.add('hidden');
+                starNote.classList.add('hidden');
+            }
+
+            const beforeContainer = document.getElementById('complete-before-preview-container'); 
+            const afterContainer = document.getElementById('complete-after-preview-container');
+            if (task.foto_sebelum) { 
+                document.getElementById('complete-before-preview').src = task.foto_sebelum; 
+                beforeContainer.classList.remove('hidden'); 
+            } else {
+                beforeContainer.classList.add('hidden');
+            }
+            if (task.foto_sesudah) { 
+                document.getElementById('complete-after-preview').src = task.foto_sesudah; 
+                afterContainer.classList.remove('hidden'); 
+            } else {
+                afterContainer.classList.add('hidden');
+            }
+            
+            document.getElementById('completionNoteModal').classList.remove('hidden'); 
+            setTimeout(() => document.getElementById('complete-task-note').focus(), 150);
+        }
+
+        function closeCompletionNoteModal() { 
+            document.getElementById('completionNoteModal').classList.add('hidden'); 
+            renderTasks(); 
+        }
+
+        document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const taskId = document.getElementById('complete-task-id').value; 
+            const target = globalTasks.find(t => t.id == taskId);
+            if (!target) return;
+
+            if (isTaskNotStartedYet(target) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
+
+            const isPast = isTaskExpired(target.tanggal);
+            const noteText = document.getElementById('complete-task-note').value.trim();
+            const beforeFileInput = document.getElementById('complete-file-before'); 
+            const afterFileInput = document.getElementById('complete-file-after');
+
+            if (isPast) {
+                if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
+                const hasExistingPhoto = !!target.foto_sesudah;
+                const hasNewPhoto = afterFileInput && afterFileInput.files && afterFileInput.files.length > 0;
+                if (!hasExistingPhoto && !hasNewPhoto) return alert("Penyelesaian tugas susulan wajib menyertakan Foto Sesudah (After) sebagai bukti!");
+            }
+
+            const btn = document.getElementById('btn-submit-completion'); 
+            btn.innerText = "Mengompres & Mengunggah..."; 
+            btn.disabled = true;
+
+            try {
+                let beforePhotoUrl = target?.foto_sebelum || null; 
+                let afterPhotoUrl = target?.foto_sesudah || null;
+                const effectiveUserName = getUserDisplayName(currentUser.id, currentUser.email, target?.nama);
+
+                if (beforeFileInput && beforeFileInput.files && beforeFileInput.files[0]) { 
+                    const compressedBlobBefore = await processAndWatermarkImage(beforeFileInput.files[0], effectiveUserName); 
+                    beforePhotoUrl = await uploadEvidenceImage(compressedBlobBefore, 'before'); 
+                }
+                if (afterFileInput && afterFileInput.files && afterFileInput.files[0]) { 
+                    const compressedBlobAfter = await processAndWatermarkImage(afterFileInput.files[0], effectiveUserName); 
+                    afterPhotoUrl = await uploadEvidenceImage(compressedBlobAfter, 'after'); 
+                }
+
+                const updatePayload = { 
+                    status: 'Selesai', 
+                    completed_at: new Date().toISOString(), 
+                    keterangan: noteText, 
+                    foto_sebelum: beforePhotoUrl, 
+                    foto_sesudah: afterPhotoUrl 
+                };
+                
+                const { error } = await _supabase.from('jadwal').update(updatePayload).eq('id', taskId);
+
+                if (error) {
+                    showToast("Gagal menyelesaikan tugas: " + error.message);
+                } else {
+                    target.status = 'Selesai'; 
+                    target.completed_at = updatePayload.completed_at; 
+                    target.keterangan = noteText; 
+                    target.foto_sebelum = beforePhotoUrl; 
+                    target.foto_sesudah = afterPhotoUrl;
+                    
+                    closeCompletionNoteModal(); 
+                    showToast(isPast ? "Tugas susulan diselesaikan (0 Poin, Hutang Lunas)!" : "Tugas Selesai & dokumentasi disimpan!"); 
+                    renderTasks();
+                }
+            } catch (err) { 
+                alert("Terjadi kesalahan kompresi/upload foto: " + err.message); 
+            } finally { 
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Simpan Selesai'; 
+                btn.disabled = false; 
+            }
+        });
+
+        async function updateStatus(id, newStatus) {
+            const target = globalTasks.find(t => t.id == id); 
+            if (!target) return;
+            if (target.status === 'Selesai' && !isSuperAdmin && newStatus !== 'Selesai') { 
+                showToast("Tugas sudah Selesai dan terkunci!"); 
+                renderTasks(); 
+                return; 
+            }
+            if (isTaskNotStartedYet(target) && !isSuperAdmin) { 
+                showToast(`🔒 Tugas terkunci! Baru dapat dikerjakan saat jam ${target.jam_mulai}`); 
+                renderTasks(); 
+                return; 
+            }
+
+            if (newStatus === 'Selesai') { 
+                openCompletionNoteModal(target); 
+                return; 
+            }
+            
+            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
+                showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
+                return;
+            }
+
+            const { error } = await _supabase.from('jadwal').update({ status: newStatus, completed_at: null }).eq('id', id);
+            if (error) {
+                showToast("Gagal memperbarui status!"); 
+            } else { 
+                target.status = newStatus; 
+                target.completed_at = null; 
+                renderTasks(); 
+                showToast("Status diperbarui"); 
+            }
+        }
+
+        function askDeleteTask(id) {
+            if (!isSuperAdmin) return showToast("Hanya Super Admin yang berhak menghapus jadwal!");
+            const item = globalTasks.find(t => t.id == id); 
+            if (!item) return;
+            deleteTargetId = id; 
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() { 
+            deleteTargetId = null; 
+            document.getElementById('confirmModal').classList.add('hidden'); 
+        }
+
+        document.getElementById('btn-confirm-delete').onclick = async () => {
+            if (!isSuperAdmin || !deleteTargetId) return;
+            const { error } = await _supabase.from('jadwal').delete().eq('id', deleteTargetId);
+            if (!error) { 
+                globalTasks = globalTasks.filter(t => t.id != deleteTargetId); 
+                renderTasks(); 
+                showToast("Tugas berhasil dihapus"); 
+            } else {
+                showToast("Gagal menghapus tugas!");
+            }
+            closeConfirmModal();
+        };
+
+        function openExportModal(format) { 
+            activeExportFormat = format; 
+            document.getElementById('exportModal').classList.remove('hidden'); 
+        }
+        function closeExportModal() { 
+            document.getElementById('exportModal').classList.add('hidden'); 
+        }
+        function handleExportRangeChange() { 
+            const container = document.getElementById('customDateRangeContainer'); 
+            if (document.getElementById('exportRangeType').value === 'custom') {
+                container.classList.remove('hidden'); 
+            } else {
+                container.classList.add('hidden'); 
+            }
+        }
+
+        function processExportExecution() {
+            const rangeType = document.getElementById('exportRangeType').value; 
+            const selectedRole = document.getElementById('roleFilter').value;
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All'; 
+            const selectedUser = document.getElementById('userFilter').value;
+            const activeDate = document.getElementById('dateFilter').value || todayStr;
+            let startDate, endDate, labelRange; 
+            const now = new Date(activeDate);
+
+            if (rangeType === 'daily') { 
+                startDate = activeDate; 
+                endDate = activeDate; 
+                labelRange = `Harian (${formatTanggalIndo(activeDate)})`; 
+            } else if (rangeType === 'weekly') { 
+                const first = now.getDate() - now.getDay(); 
+                const last = first + 6; 
+                startDate = new Date(now.setDate(first)).toISOString().slice(0, 10); 
+                endDate = new Date(now.setDate(last)).toISOString().slice(0, 10); 
+                labelRange = `Mingguan`; 
+            } else if (rangeType === 'monthly') { 
+                const year = now.getFullYear(); 
+                const month = String(now.getMonth() + 1).padStart(2, '0'); 
+                const lastDay = new Date(year, now.getMonth() + 1, 0).getDate(); 
+                startDate = `${year}-${month}-01`; 
+                endDate = `${year}-${month}-${lastDay}`; 
+                labelRange = `Bulanan`; 
+            } else if (rangeType === 'yearly') { 
+                const year = now.getFullYear(); 
+                startDate = `${year}-01-01`; 
+                endDate = `${year}-12-31`; 
+                labelRange = `Tahunan (${year})`; 
+            } else if (rangeType === 'custom') { 
+                startDate = document.getElementById('exportStartDate').value; 
+                endDate = document.getElementById('exportEndDate').value; 
+                if (!startDate || !endDate) return alert("Silakan tentukan tanggal!"); 
+                labelRange = `Kustom`; 
+            }
+
+            const tasksToExport = globalTasks.filter(item => {
+                const taskDate = item.tanggal || todayStr; 
+                let canView = isSuperAdmin || item.user_id === currentUser?.id;
+                if (activeFriendFeedId) {
+                    canView = item.user_id === activeFriendFeedId;
+                }
+                return taskDate >= startDate && taskDate <= endDate && (selectedRole === 'All' || item.peran === selectedRole) && (selectedStatus === 'All' || item.status === selectedStatus) && (!isSuperAdmin || selectedUser === 'All' || item.user_id === selectedUser) && canView;
+            });
+
+            if (tasksToExport.length === 0) return alert(`Tidak ada data tugas pada periode ini.`);
+            if (activeExportFormat === 'csv') {
+                generateCSVFile(tasksToExport, labelRange); 
+            } else {
+                generatePDFFile(tasksToExport, labelRange);
+            }
+            closeExportModal();
+        }
+
+        function generateCSVFile(tasks, labelRange) {
+            const grouped = {}; 
+            tasks.forEach(t => { 
+                const key = getUserDisplayName(t.user_id, t.user_email, t.nama); 
+                if (!grouped[key]) grouped[key] = []; 
+                grouped[key].push(t); 
+            });
+            let csvContent = "data:text/csv;charset=utf-8,PENGGUNA,TANGGAL,JAM MULAI,JAM SELESAI,KATEGORI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
+            Object.keys(grouped).forEach(namaPetugas => {
+                grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai)).forEach(t => {
+                    csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
+                });
+            });
+            const link = document.createElement("a"); 
+            link.setAttribute("href", encodeURI(csvContent)); 
+            link.setAttribute("download", `Laporan_Jadwal.csv`); 
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link); 
+            showToast("Berhasil mengekspor CSV!");
+        }
+
+        function generatePDFFile(tasks, labelRange) {
+            const { jsPDF } = window.jspdf; 
+            const doc = new jsPDF();
+            doc.setFont("Helvetica", "bold"); 
+            doc.setFontSize(13); 
+            doc.text(`LAPORAN JADWAL AKTIVITAS`, 14, 16); 
+            doc.setFontSize(10); 
+            doc.text(`UNIT / WORKSPACE: ${UNIT_NAME}`, 14, 22);
+            doc.setFont("Helvetica", "normal"); 
+            doc.setFontSize(8.5); 
+            doc.text(`Rentang: ${labelRange}`, 14, 28);
+            
+            const grouped = {}; 
+            tasks.forEach(t => { 
+                const key = getUserDisplayName(t.user_id, t.user_email, t.nama); 
+                if (!grouped[key]) grouped[key] = []; 
+                grouped[key].push(t); 
+            });
+            const tableRows = []; 
+            let globalNo = 1;
+
+            Object.keys(grouped).forEach(namaPetugas => {
+                const list = grouped[namaPetugas]; 
+                list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
+                tableRows.push([{ content: `PENGGUNA: ${namaPetugas.toUpperCase()} - ${list.length} Kegiatan`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
+                list.forEach(item => { 
+                    tableRows.push([globalNo++, formatTanggalIndo(item.tanggal || todayStr), `${item.jam_mulai} - ${item.jam_selesai}`, getUserDisplayName(item.user_id, item.user_email, item.nama), item.peran, item.tugas + (item.keterangan ? `\n(Ket: ${item.keterangan})` : ''), item.status]); 
+                });
+            });
+            doc.autoTable({ startY: 35, head: [['No', 'Tanggal', 'Waktu Jam', 'Nama', 'Kategori', 'Detail Tugas & Keterangan', 'Status']], body: tableRows, headStyles: { fillColor: [24, 119, 242] }, styles: { fontSize: 8 } });
+            doc.save(`Laporan_Jadwal.pdf`); 
+            showToast("Berhasil mengekspor PDF!");
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('scheduleModal');
+            if (show) {
+                modal.classList.remove('hidden'); 
+            } else { 
+                modal.classList.add('hidden'); 
+                document.getElementById('scheduleForm').reset(); 
+                editingTaskId = null; 
+            }
+        }
+
+        function openTaskModal() {
+            editingTaskId = null; 
+            document.getElementById('input-date').value = document.getElementById('dateFilter').value || todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            document.getElementById('modalTitle').innerText = "Tambah Tugas Baru"; 
+            document.getElementById('btn-save-task').innerText = "Simpan"; 
+            toggleModal(true);
+        }
+
+        function editTask(id) {
+            const item = globalTasks.find(t => t.id == id); 
+            if (!item) return;
+            if (item.status === 'Selesai' && !isSuperAdmin) return showToast("Tugas selesai tidak dapat diedit!");
+            if (isTaskExpired(item.tanggal) && !isSuperAdmin) return showToast("Tugas hari kemarin terkunci!");
+            editingTaskId = item.id;
+            document.getElementById('input-date').value = item.tanggal || todayStr; 
+            document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
+            document.getElementById('input-role').value = item.peran; 
+            document.getElementById('input-task').value = item.tugas;
+            document.getElementById('input-start-time').value = item.jam_mulai; 
+            document.getElementById('input-end-time').value = item.jam_selesai;
+            document.getElementById('modalTitle').innerText = "Edit Tugas"; 
+            document.getElementById('btn-save-task').innerText = "Update"; 
+            toggleModal(true);
+        }
+
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            let tanggal = document.getElementById('input-date').value; 
+            const nama = document.getElementById('input-name').value; 
+            const peran = document.getElementById('input-role').value;
+            const tugas = document.getElementById('input-task').value; 
+            let jam_mulai = document.getElementById('input-start-time').value; 
+            let jam_selesai = document.getElementById('input-end-time').value;
+            const btnSave = document.getElementById('btn-save-task'); 
+            btnSave.innerText = "Menyimpan..."; 
+            btnSave.disabled = true;
+
+            try {
+                if (editingTaskId) {
+                    const existingTask = globalTasks.find(t => t.id == editingTaskId);
+                    if (!isSuperAdmin && existingTask) { 
+                        tanggal = existingTask.tanggal; 
+                        jam_mulai = existingTask.jam_mulai; 
+                        jam_selesai = existingTask.jam_selesai; 
+                    }
+                    const { error } = await _supabase.from('jadwal').update({ tanggal, nama, peran, tugas, jam_mulai, jam_selesai }).eq('id', editingTaskId);
+                    if (!error) { 
+                        showToast("Tugas diperbarui!"); 
+                        toggleModal(false); 
+                    } else {
+                        alert("Gagal memperbarui data: " + error.message);
+                    }
+                } else {
+                    const insertPayload = { 
+                        user_id: currentUser.id, 
+                        user_email: currentUser.email, 
+                        tanggal, 
+                        nama, 
+                        peran, 
+                        tugas, 
+                        jam_mulai, 
+                        jam_selesai, 
+                        status: 'Belum', 
+                        likes_count: 0, 
+                        liked_users: [], 
+                        comments_count: 0, 
+                        created_at: new Date().toISOString() 
+                    };
+                    const avatarUrl = getAvatarUrl(currentUser); 
+                    if (avatarUrl) insertPayload.user_avatar = avatarUrl;
+                    const { error } = await _supabase.from('jadwal').insert([insertPayload]);
+                    if (!error) { 
+                        showToast("Tugas ditambahkan!"); 
+                        toggleModal(false); 
+                    } else {
+                        alert("Gagal menyimpan: " + error.message);
+                    }
+                }
+            } catch (err) { 
+                alert("Kesalahan: " + err.message); 
+            } finally { 
+                btnSave.innerText = "Simpan"; 
+                btnSave.disabled = false; 
+            }
+        });
+
+        function openBulkTextModal() { 
+            setActiveTab('tabBulk');
+            document.getElementById('bulk-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('bulk-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('bulkTextModal').classList.remove('hidden'); 
+        }
+        function closeBulkTextModal() { 
+            document.getElementById('bulkTextModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        async function processBulkTextImport() {
+            let rawDate = document.getElementById('bulk-date').value || todayStr; 
+            const name = document.getElementById('bulk-name').value || getUserDisplayName(currentUser?.id, currentUser?.email);
+            const role = document.getElementById('bulk-role').value; 
+            const rawText = document.getElementById('bulk-text-area').value;
+            if (!rawText.trim()) return alert("Tempel teks jadwal dahulu!");
+            document.getElementById('btn-process-bulk').innerText = "Memproses...";
+            const lines = rawText.split('\n'); 
+            const bulkPayload = []; 
+            const nowIso = new Date().toISOString(); 
+            const avatarUrl = getAvatarUrl(currentUser);
+
+            lines.forEach(line => {
+                const match = line.trim().match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
+                if (match) {
+                    bulkPayload.push({ 
+                        user_id: currentUser.id, 
+                        user_email: currentUser.email, 
+                        tanggal: rawDate, 
+                        nama: name, 
+                        peran: role, 
+                        tugas: match[5].trim(), 
+                        jam_mulai: `${match[1].padStart(2, '0')}:${match[2]}`, 
+                        jam_selesai: `${match[3].padStart(2, '0')}:${match[4]}`, 
+                        status: 'Belum', 
+                        likes_count: 0, 
+                        liked_users: [], 
+                        comments_count: 0, 
+                        created_at: nowIso, 
+                        user_avatar: avatarUrl 
+                    });
+                }
+            });
+
+            if (bulkPayload.length > 0) {
+                const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+                if (!error) { 
+                    showToast(`${bulkPayload.length} tugas diimport!`); 
+                    closeBulkTextModal(); 
+                    document.getElementById('bulk-text-area').value = ''; 
+                } else {
+                    alert("Gagal mengimport: " + error.message);
+                }
+            } else {
+                alert("Format tidak valid!");
+            }
+            document.getElementById('btn-process-bulk').innerText = "Simpan Semua";
+        }
+
+        function openAutoGenerateModal() { 
+            setActiveTab('tabAuto');
+            syncApiKeyInputs();
+            document.getElementById('gen-date').value = document.getElementById('dateFilter').value || todayStr; 
+            document.getElementById('gen-name').value = getUserDisplayName(currentUser?.id, currentUser?.email); 
+            document.getElementById('autoGenerateModal').classList.remove('hidden'); 
+        }
+        function closeAutoGenerateModal() { 
+            document.getElementById('autoGenerateModal').classList.add('hidden'); 
+            setActiveTab('tabHome');
+        }
+
+        async function generateAiSchedulePreview() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const focus = document.getElementById('gen-focus')?.value.trim() || '';
+            const userApiKey = getDeviceGeminiApiKey().trim();
+            const btnGen = document.getElementById('btn-process-gen');
+
+            if (!name) return alert("Silakan isi nama pengguna terlebih dahulu!");
+            if (!userApiKey) {
+                return alert("⚠️ Google Gemini API Key belum diisi!\n\nSilakan tempelkan API Key Anda di kolom atas.");
+            }
+
+            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang jadwal...';
+            btnGen.disabled = true;
+
+            const promptText = `Kamu adalah asisten perencana aktivitas harian yang fleksibel dan cerdas.
+Buatlah rancangan jadwal kegiatan harian yang REALISTIS, PRAKTIS, dan SPESIFIK untuk seorang "${role}" bernama "${name}" pada tanggal ${tanggal}.
+${focus ? `Target / Catatan Tambahan: "${focus}".` : ''}
+
+Panduan Penyesuaian:
+- Mahasiswa / Pelajar: Kuliah, tugas, review materi, istirahat, dan aktivitas sosial/hobi.
+- Pedagang / Toko / UMKM: Buka toko, cek stok, layani pelanggan, rekap kasir/penjualan, dan closing toko.
+- Masyarakat Umum / Personal: Rutinitas harian seimbang (pekerjaan/hobi/keluarga, istirahat, belanja, urusan personal).
+- Teknisi / Gedung / Kebersihan: Cek fasilitas, alat kerja, tugas lapangan utama, closing laporan (sertakan #perbaikan jika relevan).
+
+Buat 5 pembagian slot waktu harian yang berurutan secara logis dari pagi hingga sore/malam.
+
+WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lain dan tanpa blok markdown:
+[
+  {"jam_mulai": "07:00", "jam_selesai": "09:00", "tugas": "Rincian kegiatan pagi"},
+  {"jam_mulai": "09:00", "jam_selesai": "12:00", "tugas": "Rincian kegiatan utama"},
+  {"jam_mulai": "12:00", "jam_selesai": "13:00", "tugas": "Istirahat, Makan Siang & Ibadah"},
+  {"jam_mulai": "13:00", "jam_selesai": "16:00", "tugas": "Rincian kegiatan lanjutan"},
+  {"jam_mulai": "16:00", "jam_selesai": "18:00", "tugas": "Rincian penutup hari / evaluasi"}
+]`;
+
+            const candidateModels = [
+                'gemini-2.5-flash',
+                'gemini-3.6-flash',
+                'gemini-3.1-pro-preview',
+                'gemini-3-flash'
+            ];
+            
+            let parsedTasks = null;
+            let lastError = null;
+
+            for (const modelName of candidateModels) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(userApiKey)}`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: promptText }] }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                responseMimeType: "application/json"
+                            }
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        lastError = data.error.message || `Error pada model ${modelName}`;
+                        continue;
+                    }
+
+                    let rawAiText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    rawAiText = rawAiText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+
+                    const result = JSON.parse(rawAiText);
+                    if (Array.isArray(result) && result.length > 0) {
+                        parsedTasks = result;
+                        break;
+                    }
+                } catch (e) {
+                    lastError = e.message;
+                }
+            }
+
+            try {
+                if (!parsedTasks) {
+                    throw new Error(lastError || "Gagal mendapatkan respon dari AI.");
+                }
+
+                previewTasksData = parsedTasks;
+                renderAiPreviewCards();
+
+                const previewSection = document.getElementById('aiPreviewSection');
+                if (previewSection) {
+                    previewSection.classList.remove('hidden');
+                    setTimeout(() => {
+                        previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+
+                document.getElementById('btn-save-ai-tasks')?.classList.remove('hidden');
+                showToast("✨ Jadwal berhasil dibuat oleh Gemini AI!");
+
+            } catch (err) {
+                console.error("Gemini Error:", err);
+                alert(`Gagal generate via AI: ${err.message}`);
+            } finally {
+                btnGen.innerHTML = '<i class="fa-solid fa-arrows-rotate mr-1.5"></i> Generate Ulang AI';
+                btnGen.disabled = false;
+            }
+        }
+
+        function renderAiPreviewCards() {
+            const container = document.getElementById('aiPreviewList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (previewTasksData.length === 0) {
+                container.innerHTML = `
+                    <div class="p-4 text-center text-slate-400 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-calendar-xmark text-xl mb-1 opacity-40"></i>
+                        <p class="text-xs">Tidak ada slot jadwal. Klik <b>Tambah Slot</b> di atas.</p>
+                    </div>`;
+                return;
+            }
+
+            previewTasksData.forEach((slot, index) => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-2 shadow-xs transition';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center text-[10px] font-black">
+                                ${index + 1}
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <input type="time" value="${slot.jam_mulai}" onchange="updatePreviewSlotField(${index}, 'jam_mulai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                                <span class="text-slate-400 font-bold">-</span>
+                                <input type="time" value="${slot.jam_selesai}" onchange="updatePreviewSlotField(${index}, 'jam_selesai', this.value)" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                        </div>
+                        <button type="button" onclick="deletePreviewSlot(${index})" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" title="Hapus Slot">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                    <textarea rows="2" oninput="updatePreviewSlotField(${index}, 'tugas', this.value)" placeholder="Tulis rincian kegiatan..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-purple-500 leading-snug">${slot.tugas}</textarea>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function updatePreviewSlotField(index, field, value) {
+            if (previewTasksData[index]) {
+                previewTasksData[index][field] = value;
+            }
+        }
+
+        function addNewPreviewSlot() {
+            previewTasksData.push({
+                jam_mulai: '08:00',
+                jam_selesai: '10:00',
+                tugas: ''
+            });
+            renderAiPreviewCards();
+        }
+
+        function deletePreviewSlot(index) {
+            previewTasksData.splice(index, 1);
+            renderAiPreviewCards();
+        }
+
+        async function saveAllAiTasks() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const btnSave = document.getElementById('btn-save-ai-tasks');
+
+            if (previewTasksData.length === 0) {
+                return alert("Daftar jadwal kosong! Tambahkan minimal satu tugas.");
+            }
+
+            for (let i = 0; i < previewTasksData.length; i++) {
+                if (!previewTasksData[i].tugas || !previewTasksData[i].tugas.trim()) {
+                    return alert(`Slot ke-${i + 1} masih kosong. Silakan isi rincian kegiatan atau hapus slot tersebut.`);
+                }
+            }
+
+            btnSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Menyimpan ke Jadwal...';
+            btnSave.disabled = true;
+
+            const avatarUrl = getAvatarUrl(currentUser);
+            const nowIso = new Date().toISOString();
+
+            const bulkPayload = previewTasksData.map(t => ({
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                tanggal: tanggal,
+                nama: name,
+                peran: role,
+                tugas: t.tugas.trim(),
+                jam_mulai: t.jam_mulai || '07:00',
+                jam_selesai: t.jam_selesai || '09:00',
+                status: 'Belum',
+                likes_count: 0,
+                liked_users: [],
+                comments_count: 0,
+                created_at: nowIso,
+                user_avatar: avatarUrl
+            }));
+
+            try {
+                const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+                if (!error) {
+                    showToast(`✅ ${bulkPayload.length} kegiatan berhasil disimpan ke jadwal!`);
+                    closeAutoGenerateModal();
+                    if (document.getElementById('gen-focus')) document.getElementById('gen-focus').value = '';
+                    document.getElementById('aiPreviewSection')?.classList.add('hidden');
+                    document.getElementById('btn-save-ai-tasks')?.classList.add('hidden');
+                    previewTasksData = [];
+                } else {
+                    alert("Gagal menyimpan data: " + error.message);
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan: " + err.message);
+            } finally {
+                btnSave.innerHTML = '<i class="fa-solid fa-check-double mr-1.5"></i> 2. Simpan Semua ke Jadwal';
+                btnSave.disabled = false;
+            }
+        }
+
+        function openEditUserNameModal(targetUserId, currentEmail, currentName) {
+            document.getElementById('edit-user-target-id').value = targetUserId;
+            document.getElementById('edit-user-email-display').value = currentEmail;
+            document.getElementById('edit-user-new-name').value = currentName;
+            document.getElementById('editUserNameModal').classList.remove('hidden');
+        }
+
+        function closeEditUserNameModal() { 
+            document.getElementById('editUserNameModal').classList.add('hidden'); 
+        }
+
+        document.getElementById('formEditUserName').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const targetUserId = document.getElementById('edit-user-target-id').value;
+            const newName = document.getElementById('edit-user-new-name').value.trim();
+            if (!targetUserId || !newName) return;
+
+            userProfilesMap[targetUserId] = newName;
+            const { error } = await _supabase.from('app_config').upsert({ id: 'user_profiles', config_data: userProfilesMap, updated_at: new Date().toISOString() });
+            if (!error) {
+                showToast("Nama berhasil disimpan!");
+                closeEditUserNameModal();
+                renderTasks();
+                calculateAndRenderEarnings();
+            } else {
+                showToast("Gagal menyimpan nama: " + error.message);
+            }
+        });
 
         function toggleEditProfileFields() {
             isEditingProfile = !isEditingProfile;
@@ -4115,6 +5282,15 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
             document.getElementById('form-profile-modal').classList.remove('hidden'); 
         }
 
+        function showToast(msg) { 
+            const t = document.getElementById('toast'); 
+            t.innerText = msg; 
+            t.classList.remove('opacity-0'); 
+            setTimeout(() => t.classList.add('opacity-0'), 2500); 
+        }
+
+        initTheme(); 
+        checkAuth();
 </script>
 </body>
 </html>
