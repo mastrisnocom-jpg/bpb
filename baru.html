@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -169,58 +169,55 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             
-            <!-- HEADER PERSIS SEPERTI GAMBAR (FACEBOOK STYLE DENGAN CHAT GLOBAL DI KANAN ATAS) -->
+            <!-- HEADER PERSIS SEPERTI GAMBAR (FACEBOOK STYLE) -->
             <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <!-- TOP BAR -->
-                <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
-                    <div class="flex items-center gap-2.5">
-                        <button onclick="toggleSidebarMenu()" class="w-9 h-9 flex items-center justify-center text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition active:scale-95" title="Menu Sidebar">
-                            <i class="fa-solid fa-bars text-xl"></i>
+                <div class="flex items-center justify-between px-3 md:px-5 py-2">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSidebarMenu()" class="text-slate-900 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
+                            <i class="fa-solid fa-bars text-2xl font-bold"></i>
                         </button>
-                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-2xl font-black tracking-tighter text-[#1877f2] dark:text-[#2e89ff] fb-logo-text select-none">
+                        <a href="javascript:void(0)" onclick="goToHomeJadwal()" class="text-[26px] font-black tracking-tight text-[#1877f2] dark:text-[#2e89ff] fb-logo-text select-none leading-none">
                             facebook
                         </a>
                         <span id="superadmin-indicator" class="hidden ml-1 bg-amber-400 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider">Super Admin</span>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <!-- Tombol Tambah (+) -->
-                        <button onclick="openTaskModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95" title="Tambah Tugas Baru">
-                            <i class="fa-solid fa-plus text-base font-bold"></i>
+                    <div class="flex items-center gap-3">
+                        <button onclick="openTaskModal()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Buat Post / Tugas Baru">
+                            <i class="fa-regular fa-square-plus text-2xl font-bold"></i>
                         </button>
 
-                        <!-- Tombol Cari / Filter (🔍) -->
-                        <button onclick="toggleFilterDrawer()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-full flex items-center justify-center transition active:scale-95" title="Pencarian & Filter">
-                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-900 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
+                            <i class="fa-solid fa-magnifying-glass text-xl font-bold"></i>
                         </button>
 
-                        <!-- Tombol Chat Messenger Icon (MEMBUKA CHAT GLOBAL TIM) -->
-                        <button onclick="openGlobalChatModal()" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white hover:text-blue-600 rounded-full flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
-                            <i class="fa-brands fa-facebook-messenger text-base text-blue-600"></i>
-                            <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-blue-600 text-white text-[9px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
+                        <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative transition active:scale-95" title="Chat Global Tim">
+                            <i class="fa-brands fa-facebook-messenger text-2xl text-slate-900 dark:text-white"></i>
+                            <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[10px] font-black min-w-[17px] h-[17px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- BOTTOM TAB ROW -->
-                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-1 md:px-6">
-                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda Jadwal">
+                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 px-2 md:px-6">
+                    <button onclick="goToHomeJadwal()" id="tabHome" class="flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
                         <i class="fa-solid fa-house"></i>
                     </button>
-                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
+                    <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
                         <i class="fa-solid fa-clapperboard"></i>
                     </button>
-                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-amber-500 transition active:scale-95 relative" title="Dompet Insentif">
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
                         <i class="fa-solid fa-store"></i>
                     </button>
-                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95" title="Auto Generate 07-17">
+                    <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-blue-500 transition active:scale-95" title="Auto Generate 07-17">
                         <i class="fa-solid fa-chart-column"></i>
                     </button>
-                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-teal-500 transition active:scale-95" title="Relasi Follow / Rekan">
+                    <button onclick="openFollowsModal()" id="tabFriends" class="flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-teal-500 transition active:scale-95 relative" title="Relasi Follow">
                         <i class="fa-regular fa-bell"></i>
                     </button>
                     <button onclick="openProfileModal()" id="tabProfile" class="flex-1 py-2 flex justify-center items-center transition active:scale-95" title="Profil Saya">
-                        <div class="w-7 h-7 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border-2 border-transparent hover:border-blue-500 flex items-center justify-center text-[11px] font-bold" id="header-user-avatar-btn">
+                        <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[11px] font-bold shadow-xs" id="header-user-avatar-btn">
                             <i class="fa-solid fa-user text-slate-600 dark:text-slate-300"></i>
                         </div>
                     </button>
@@ -279,7 +276,24 @@
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
-                <!-- STATUS BAR & REWARD -->
+                <!-- BARIS "APA YANG ANDA PIKIRKAN?" -->
+                <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 mb-3 shadow-xs">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="openProfileModal()" id="feed-user-avatar-btn">
+                            <div class="w-full h-full flex items-center justify-center text-slate-500"><i class="fa-solid fa-user text-sm"></i></div>
+                        </div>
+
+                        <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
+                            <span class="text-slate-800 dark:text-slate-200 text-sm font-medium select-none">Apa yang Anda pikirkan?</span>
+                        </div>
+
+                        <button onclick="openTaskModal()" class="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition active:scale-95 flex-shrink-0" title="Upload Dokumentasi">
+                            <i class="fa-regular fa-image text-2xl text-emerald-600"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KARTU STATUS BAR & ESTIMASI PENDAPATAN -->
                 <div class="px-3.5 md:px-0 mb-3">
                     <section class="grid grid-cols-4 gap-2">
                         <div class="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-2">
@@ -324,9 +338,9 @@
                     </section>
                 </div>
 
-                <!-- DAFTAR JADWAL -->
+                <!-- CONTAINER JADWAL -->
                 <section>
-                    <!-- DESKTOP -->
+                    <!-- TAMPILAN DESKTOP (TABEL) -->
                     <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden mx-3.5 md:mx-0">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -347,7 +361,7 @@
                         </div>
                     </div>
 
-                    <!-- MOBILE -->
+                    <!-- TAMPILAN MOBILE FB FEED -->
                     <div id="scheduleCardsMobile" class="md:hidden space-y-2"></div>
                 </section>
 
@@ -471,8 +485,8 @@
     </div>
 
     <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
-    <div id="earningsModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down">
+    <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-sm p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col max-h-[85vh] animate-slide-down" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800">
                 <div class="flex items-center gap-2">
                     <div class="w-7 h-7 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs">
@@ -1121,8 +1135,7 @@
 
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
-
-   <script>
+    <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1155,12 +1168,12 @@
         let cachedMyEarningsData = null;
         let userRanksMap = {};
 
-        // Chat Global State
+        // State Chat Global
         let globalChatMessagesList = [];
         let unreadGlobalChatCount = 0;
         let isGlobalChatOpen = false;
 
-        // Relasi Follow, Online Presence & Mapping Nama Petugas
+        // Relasi Follow, Online Presence & Mapping Profil
         let myFollowings = [];
         let myFollowers = [];
         let mutualFriends = [];
@@ -1219,7 +1232,7 @@
                     if (t === tabId) {
                         el.className = 'flex-1 py-2.5 flex justify-center items-center text-xl transition active:scale-95 tab-active';
                     } else {
-                        el.className = 'flex-1 py-2.5 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-blue-500 transition active:scale-95';
+                        el.className = 'flex-1 py-2.5 flex justify-center items-center text-xl text-slate-700 dark:text-slate-300 hover:text-blue-500 transition active:scale-95 relative';
                     }
                 }
             });
@@ -1858,6 +1871,12 @@
             document.getElementById('earningsModal').classList.remove('hidden');
         }
 
+        function closeEarningsModal() { 
+            const modal = document.getElementById('earningsModal');
+            if (modal) modal.classList.add('hidden');
+            setActiveTab('tabHome');
+        }
+
         function goToHomeJadwal() {
             setActiveTab('tabHome');
             document.getElementById('dateFilter').value = todayStr;
@@ -1967,30 +1986,51 @@
             const username = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name || currentUser.user_metadata?.name);
             const avatarUrl = getAvatarUrl(currentUser);
 
-            document.getElementById('user-display-side').innerText = username; document.getElementById('modal-user-name').innerText = username; document.getElementById('profile-email-display').innerText = currentUser.email;
+            document.getElementById('user-display-side').innerText = username; 
+            document.getElementById('modal-user-name').innerText = username; 
+            document.getElementById('profile-email-display').innerText = currentUser.email;
 
             if (avatarUrl) {
-                document.getElementById('user-avatar-placeholder').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
-                document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                const userImgHtml = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('user-avatar-placeholder').innerHTML = userImgHtml;
+                document.getElementById('modal-user-avatar').innerHTML = userImgHtml;
+                
                 const headerAvatar = document.getElementById('header-user-avatar-btn');
                 if (headerAvatar) headerAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
+
+                const feedAvatar = document.getElementById('feed-user-avatar-btn');
+                if (feedAvatar) feedAvatar.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full">`;
             }
 
             if (currentUser.email === SUPER_ADMIN_EMAIL) {
                 isSuperAdmin = true;
-                document.getElementById('superadmin-indicator').classList.remove('hidden'); document.getElementById('side-superadmin-badge').classList.remove('hidden');
-                document.getElementById('profile-superadmin-badge').classList.remove('hidden'); document.getElementById('userFilter').classList.remove('hidden');
-                document.getElementById('btnSidebarBudget').classList.remove('hidden'); document.getElementById('btnHeaderBudget').classList.remove('hidden');
+                document.getElementById('superadmin-indicator').classList.remove('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.remove('hidden');
+                document.getElementById('profile-superadmin-badge').classList.remove('hidden'); 
+                document.getElementById('userFilter').classList.remove('hidden');
+                document.getElementById('btnSidebarBudget').classList.remove('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.remove('hidden');
             } else {
                 isSuperAdmin = false;
-                document.getElementById('superadmin-indicator').classList.add('hidden'); document.getElementById('side-superadmin-badge').classList.add('hidden');
-                document.getElementById('profile-superadmin-badge').classList.add('hidden'); document.getElementById('userFilter').classList.add('hidden');
-                document.getElementById('btnSidebarBudget').classList.add('hidden'); document.getElementById('btnHeaderBudget').classList.add('hidden');
+                document.getElementById('superadmin-indicator').classList.add('hidden'); 
+                document.getElementById('side-superadmin-badge').classList.add('hidden');
+                document.getElementById('profile-superadmin-badge').classList.add('hidden'); 
+                document.getElementById('userFilter').classList.add('hidden');
+                document.getElementById('btnSidebarBudget').classList.add('hidden'); 
+                document.getElementById('btnHeaderBudget').classList.add('hidden');
             }
 
-            requestNotificationPermission(); await fetchFollowRelations(); await fetchTasksSupabase(); await fetchWithdrawalsSupabase();
-            setupRealtimeListener(); setupGlobalCommentNotificationListener(); setupFollowsRealtime(); setupFollowNotificationListener();
-            setupAppConfigRealtime(); setupWithdrawalsRealtime(); setupPresenceSync();
+            requestNotificationPermission(); 
+            await fetchFollowRelations(); 
+            await fetchTasksSupabase(); 
+            await fetchWithdrawalsSupabase();
+            setupRealtimeListener(); 
+            setupGlobalCommentNotificationListener(); 
+            setupFollowsRealtime(); 
+            setupFollowNotificationListener();
+            setupAppConfigRealtime(); 
+            setupWithdrawalsRealtime(); 
+            setupPresenceSync();
             setupSuperAdminActivityListener();
             setupGlobalChatRealtime();
         }
@@ -2013,7 +2053,7 @@
         }
 
         // ==========================================================
-        // FITUR CHAT GLOBAL REALTIME (POJOK KANAN ATAS MESSENGER ICON)
+        // FITUR CHAT GLOBAL REALTIME
         // ==========================================================
         function updateGlobalChatBadge() {
             const headerBadge = document.getElementById('headerGlobalChatBadge');
@@ -2309,7 +2349,7 @@
         async function openFollowsModal() {
             setActiveTab('tabFriends');
             document.getElementById('followsModal').classList.remove('hidden');
-            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memuat daftar petugas...</div>';
+            document.getElementById('usersFollowList').innerHTML = '<div class="text-center text-slate-400 text-xs py-4"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar petugas...</div>';
             await fetchFollowRelations(); renderUsersFollowModal();
         }
 
@@ -2552,7 +2592,7 @@
                                 ${!isPastDay ? `<button onclick="updateStatus('${item.id}', 'Proses'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-spinner text-amber-500 text-xs"></i> Set: Proses</button>` : ''}
                                 <button onclick="updateStatus('${item.id}', 'Selesai'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500 text-xs"></i> Selesaikan Foto</button>
                                 ${!isPastDay ? `<button onclick="editTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2 border-t border-slate-100 dark:border-slate-700"><i class="fa-solid fa-pen text-blue-500 text-xs"></i> Edit Tugas</button>` : ''}
-                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}'); toggleTaskMenu('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
+                                ${isSuperAdmin ? `<button onclick="askDeleteTask('${item.id}')" class="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2"><i class="fa-solid fa-trash text-xs"></i> Hapus Tugas</button>` : ''}
                             </div>
                         `;
                     }
