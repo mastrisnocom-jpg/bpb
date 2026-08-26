@@ -1,4 +1,4 @@
-                        <!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -2907,7 +2907,7 @@
             if (session) { 
                 currentUser = session.user;
                 if (currentUser.email !== SUPER_ADMIN_EMAIL) {
-                    let { data: profile } = await _supabase.from('profiles').select('status_approval').eq('id', currentUser.id).single();
+                    let { data: profile } = await _supabase.from('profiles').select('status_approval').eq('id', currentUser.id).maybeSingle();
                     if (!profile) {
                         await _supabase.from('profiles').upsert({
                             id: currentUser.id,
@@ -2918,9 +2918,10 @@
                         });
                         profile = { status_approval: 'pending' };
                     }
-                    if (profile && profile.status_approval === 'pending') {
+                    if (profile && profile.status_approval !== 'approved') {
                         await _supabase.auth.signOut();
                         alert("Akun Anda sedang menunggu persetujuan dari Super Admin. Silakan hubungi admin untuk aktivasi.");
+                        setAuthMode('login');
                         document.getElementById('auth-screen').classList.remove('hidden');
                         return;
                     }
@@ -2962,6 +2963,7 @@
                         await _supabase.from('profiles').upsert({
                             id: data.user.id,
                             email: email,
+                            nama: email.split('@')[0],
                             status_approval: statusApproval,
                             created_at: new Date().toISOString()
                         });
@@ -2982,7 +2984,7 @@
                 } else { 
                     currentUser = data.user; 
                     if (currentUser.email !== SUPER_ADMIN_EMAIL) {
-                        let { data: profile } = await _supabase.from('profiles').select('status_approval').eq('id', currentUser.id).single();
+                        let { data: profile } = await _supabase.from('profiles').select('status_approval').eq('id', currentUser.id).maybeSingle();
                         if (!profile) {
                             await _supabase.from('profiles').upsert({
                                 id: currentUser.id,
@@ -2993,9 +2995,9 @@
                             });
                             profile = { status_approval: 'pending' };
                         }
-                        if (profile && profile.status_approval === 'pending') {
+                        if (profile && profile.status_approval !== 'approved') {
                             await _supabase.auth.signOut();
-                            errEl.innerText = "Akun belum disetujui Superadmin. Silakan hubungi admin.";
+                            errEl.innerText = "Akun Anda sedang menunggu persetujuan Super Admin.";
                             errEl.classList.remove('hidden');
                             document.getElementById('btn-action').innerText = "Masuk Dashboard";
                             return;
@@ -3428,15 +3430,14 @@
                     if (!wd || wd.user_id === currentUser.id) return;
                     triggerAdminNotification(
                         `💰 Tarik Insentif: ${wd.nama_petugas}`,
-`Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
+                        `Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
                         'fa-wallet',
                         'bg-rose-500'
                     );
                 })
                 .subscribe();
         }
-
-        async function openFollowsModal() {
+async function openFollowsModal() {
             setActiveTab('tabFriends');
             unreadNotifCount = 0;
             updateNotifBadge();
