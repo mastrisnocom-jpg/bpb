@@ -1,11 +1,11 @@
-                <!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Jadwal Harian - M-Ops Super App</title>
+    <title>Sistem Manajemen Jadwal Harian & Insentif - M-Ops Super App</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Sistem Follow, dan Notifikasi Gempa Realtime BMKG.">
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Sistem Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <style>
@@ -34,6 +34,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
+    <!-- LEAFLET MAPS FOR EARTHQUAKE REALTIME -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -57,8 +61,14 @@
             100% { transform: translateY(-240px) scale(1.8) rotate(15deg); opacity: 0; }
         }
         .floating-heart {
-            position: absolute; bottom: 80px; right: 40px; font-size: 2.2rem; color: #f43f5e;
-            animation: flyHeart 1.4s ease-out forwards; pointer-events: none; z-index: 50;
+            position: absolute;
+            bottom: 80px;
+            right: 40px;
+            font-size: 2.2rem;
+            color: #f43f5e;
+            animation: flyHeart 1.4s ease-out forwards;
+            pointer-events: none;
+            z-index: 50;
             filter: drop-shadow(0 4px 10px rgba(244,63,94,0.6));
         }
 
@@ -68,10 +78,23 @@
             85% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-20px); opacity: 0; }
         }
-        .live-comment-bubble { animation: liveCommentFade 4.5s ease-in-out forwards; }
+        .live-comment-bubble {
+            animation: liveCommentFade 4.5s ease-in-out forwards;
+        }
+
+        /* Pulse wave untuk episentrum gempa */
+        .quake-pulse-ring {
+            border: 3px solid #ef4444;
+            border-radius: 50%;
+            animation: quakePulse 1.8s ease-out infinite;
+        }
+        @keyframes quakePulse {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2.6); opacity: 0; }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+<body class="min-h-screen bg-[#f0f2f5] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden p-4">
@@ -134,9 +157,16 @@
                         <div class="flex items-center gap-2.5"><i class="fa-solid fa-comments text-xs text-blue-400"></i> Chat Global</div>
                         <span id="sideGlobalChatBadge" class="hidden bg-blue-600 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow-sm">0</span>
                     </button>
+                    <button onclick="openEarningsModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
+                        <i class="fa-solid fa-wallet text-xs text-amber-400"></i> Dompet Insentif
+                    </button>
                     <button onclick="openFollowsModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-slate-800/40 hover:bg-slate-800 text-slate-200 transition">
                         <div class="flex items-center gap-2.5"><i class="fa-solid fa-bell text-xs text-teal-400"></i> Notifikasi & Relasi</div>
                         <span id="sideFriendBadge" class="hidden bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">0</span>
+                    </button>
+                    <button onclick="openQuakeModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-800/40 transition">
+                        <div class="flex items-center gap-2.5"><i class="fa-solid fa-tower-broadcast text-xs text-rose-400 animate-pulse"></i> Radar Gempa BMKG</div>
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                     </button>
                     
                     <div class="pt-3 border-t border-slate-800 my-2"></div>
@@ -178,7 +208,7 @@
         <!-- KONTEN UTAMA DASHBOARD -->
         <main class="flex-1 md:pl-56 flex flex-col min-h-screen">
             <!-- HEADER -->
-            <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-xs">
+            <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs">
                 <div class="flex items-center justify-between px-3 md:px-5 py-2.5">
                     <div class="flex items-center gap-3">
                         <button onclick="toggleSidebarMenu()" class="text-slate-800 dark:text-white hover:opacity-75 transition active:scale-95" title="Menu">
@@ -193,18 +223,18 @@
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <!-- ICON TOGGLE SIANG / MALAM (DI SEBELAH ICON PESAN) -->
-                        <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition active:scale-95 shadow-xs" title="Ganti Mode Siang / Malam">
-                            <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
+                        <!-- Tombol Pintas Radar Gempa -->
+                        <button onclick="openQuakeModal()" class="flex items-center gap-1 px-2.5 py-1 bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 rounded-full text-[11px] font-extrabold active:scale-95 transition" title="Peta Gempa Real-Time">
+                            <i class="fa-solid fa-tower-broadcast animate-pulse"></i>
+                            <span class="hidden sm:inline">Gempa BMKG</span>
                         </button>
 
-                        <button onclick="openGlobalChatModal()" class="w-9 h-9 flex items-center justify-center relative rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition active:scale-95 shadow-xs" title="Chat Global Tim">
-                            <i class="fa-regular fa-comment-dots text-lg"></i>
+                        <button onclick="toggleFilterDrawer()" class="w-8 h-8 flex items-center justify-center text-slate-800 dark:text-white hover:text-blue-600 transition active:scale-95" title="Pencarian & Filter">
+                            <i class="fa-solid fa-magnifying-glass text-lg font-bold"></i>
+                        </button>
+                        <button onclick="openGlobalChatModal()" class="w-8 h-8 flex items-center justify-center relative text-slate-800 dark:text-white hover:text-blue-600 transition active:scale-95" title="Chat Global Tim">
+                            <i class="fa-regular fa-comment-dots text-xl"></i>
                             <span id="headerGlobalChatBadge" class="hidden absolute -top-1 -right-1 bg-rose-600 text-white text-[9px] font-black min-w-[16px] h-[16px] px-1 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">0</span>
-                        </button>
-
-                        <button onclick="toggleFilterDrawer()" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition active:scale-95 shadow-xs" title="Pencarian & Filter">
-                            <i class="fa-solid fa-magnifying-glass text-base"></i>
                         </button>
                     </div>
                 </div>
@@ -216,6 +246,9 @@
                     </button>
                     <button onclick="openBulkTextModal()" id="tabBulk" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-[#1877f2] transition active:scale-95" title="Import Teks WA">
                         <i class="fa-solid fa-clapperboard text-lg"></i>
+                    </button>
+                    <button onclick="openEarningsModal()" id="tabWallet" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-amber-500 transition active:scale-95" title="Dompet Insentif">
+                        <i class="fa-solid fa-wallet text-lg"></i>
                     </button>
                     <button onclick="openAutoGenerateModal()" id="tabAuto" class="flex-1 py-2 flex justify-center items-center text-xl text-slate-500 dark:text-slate-400 hover:text-purple-500 transition active:scale-95" title="AI Auto Generate">
                         <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
@@ -232,7 +265,7 @@
                 </div>
 
                 <!-- ACCORDION FILTER DRAWER -->
-                <div id="filterSearchDrawer" class="hidden bg-slate-50 dark:bg-slate-800/95 border-t border-slate-200 dark:border-slate-700/80 p-3 animate-slide-down">
+                <div id="filterSearchDrawer" class="hidden bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700/80 p-3 animate-slide-down">
                     <div class="max-w-4xl mx-auto flex flex-col gap-2">
                         <div class="flex items-center justify-between">
                             <span class="text-[10px] font-extrabold uppercase text-slate-500 tracking-wider flex items-center gap-1">
@@ -280,25 +313,33 @@
             </header>
 
             <div class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
-                <!-- BANNER REALTIME GEMPA BUMI BMKG -->
-                <div id="earthquakeLiveBanner" class="hidden mx-3.5 md:mx-0 mb-3 p-3.5 bg-amber-50 dark:bg-amber-950/70 border-2 border-amber-400 dark:border-amber-600 rounded-2xl flex items-center justify-between shadow-sm animate-slide-down">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-sm font-black flex-shrink-0 animate-pulse">
-                            <i class="fa-solid fa-house-chimney-crack"></i>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="flex items-center gap-2">
-                                <h4 class="text-xs font-black text-amber-900 dark:text-amber-200">Info Gempa Terkini (BMKG)</h4>
-                                <span id="eqMagnitudeBadge" class="bg-rose-600 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded">M 0.0</span>
+                
+                <!-- BANNER REAL-TIME NOTIFIKASI GEMPA BUMI BMKG (DAPAT DI-DISMISS DENGAN X) -->
+                <div id="liveQuakeBanner" class="hidden mx-3.5 md:mx-0 mb-3.5 bg-gradient-to-r from-rose-600 via-rose-700 to-red-800 text-white rounded-2xl p-3 shadow-lg border border-rose-500/40 relative overflow-hidden animate-slide-down">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0 cursor-pointer flex-1" onclick="openQuakeModal()">
+                            <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center text-lg font-black text-amber-300 flex-shrink-0 border border-white/20">
+                                <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
                             </div>
-                            <p id="eqWilayahText" class="text-[11px] text-amber-800 dark:text-amber-300 font-medium leading-tight mt-0.5 truncate">
-                                Memuat data gempa realtime...
-                            </p>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-amber-400 text-slate-950 font-black text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider">BMKG Terkini</span>
+                                    <span id="quakeBannerMag" class="text-xs font-black text-amber-200">M 5.0+</span>
+                                    <span id="quakeBannerTime" class="text-[10px] text-white/80 font-medium">Baru saja</span>
+                                </div>
+                                <h4 id="quakeBannerWilayah" class="text-xs font-black text-white truncate mt-0.5">Pusat Gempa Terdeteksi</h4>
+                                <p id="quakeBannerPotensi" class="text-[10px] text-rose-100 font-medium truncate">Tidak berpotensi tsunami</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <button onclick="openQuakeModal()" class="bg-white text-rose-700 hover:bg-rose-50 px-2.5 py-1.5 rounded-xl font-extrabold text-[10px] transition active:scale-95 shadow-sm flex items-center gap-1">
+                                <i class="fa-solid fa-map-location-dot"></i> Peta
+                            </button>
+                            <button onclick="dismissQuakeBanner()" class="w-7 h-7 rounded-xl bg-black/20 hover:bg-black/40 text-white/90 flex items-center justify-center transition active:scale-90" title="Tutup Notifikasi">
+                                <i class="fa-solid fa-xmark text-xs font-bold"></i>
+                            </button>
                         </div>
                     </div>
-                    <button onclick="openEarthquakeDetailModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1.5 rounded-xl font-extrabold text-[10px] transition active:scale-95 shadow-md flex items-center gap-1.5 flex-shrink-0 ml-2">
-                        <i class="fa-solid fa-circle-info text-[9px]"></i> Detail
-                    </button>
                 </div>
 
                 <!-- BANNER PERINGATAN BELUM MEMBUAT JADWAL SAMPAI JAM 9 PAGI -->
@@ -310,7 +351,7 @@
                         <div class="min-w-0">
                             <h4 class="text-xs font-black text-rose-900 dark:text-rose-200">Pengingat Jadwal Hari Kerja</h4>
                             <p class="text-[11px] text-rose-700 dark:text-rose-300 font-medium leading-tight mt-0.5">
-                                Sudah melewati jam <b>09:00</b> pagi dan Anda belum mengisi jadwal hari ini! Segera buat tugas harian agar produktivitas terpantau.
+                                Sudah melewati jam <b>09:00</b> pagi dan Anda belum mengisi jadwal hari ini! Segera buat tugas harian agar saldo insentif tidak dipotong <b id="bannerPenaltyPointsText">-200 Poin</b>.
                             </p>
                         </div>
                     </div>
@@ -342,8 +383,8 @@
                             <div class="w-full h-full flex items-center justify-center text-slate-500"><i class="fa-solid fa-user text-sm"></i></div>
                         </div>
 
-                        <div onclick="openTaskModal()" class="flex-1 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition flex items-center">
-                            <span class="text-slate-600 dark:text-slate-300 text-xs md:text-sm font-medium select-none truncate">Apa rencana atau target harian Anda?</span>
+                        <div onclick="openTaskModal()" class="flex-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full py-2.5 px-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition flex items-center">
+                            <span class="text-slate-700 dark:text-slate-300 text-xs md:text-sm font-medium select-none truncate">Apa rencana atau target harian Anda?</span>
                         </div>
                     </div>
                 </div>
@@ -361,38 +402,38 @@
                     </div>
                 </div>
 
-                <!-- KARTU STATUS BAR (3 KOLOM TANPA INSENTIF KANAN) -->
-                <div class="px-3.5 md:px-0 mb-3">
+                <!-- KARTU STATUS BAR (HANYA 3: TOTAL, PROSES, SELESAI DENGAN WARNA BACKGROUND SESUAI) -->
+                <div class="px-3.5 md:px-0 mb-3.5">
                     <section class="grid grid-cols-3 gap-2.5">
-                        <!-- Total -->
-                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-3 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2.5">
-                            <div class="w-10 h-10 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-900/50 rounded-[14px] flex items-center justify-center text-sm flex-shrink-0">
+                        <!-- TOTAL TUGAS (THEME BLUE / SLATE) -->
+                        <div class="bg-gradient-to-br from-blue-50/90 to-indigo-50/50 dark:from-slate-900 dark:to-blue-950/30 rounded-[22px] p-3 border border-blue-200/80 dark:border-blue-900/50 shadow-xs flex items-center gap-2.5">
+                            <div class="w-10 h-10 bg-blue-600 text-white rounded-[16px] flex items-center justify-center text-sm flex-shrink-0 shadow-md shadow-blue-500/20">
                                 <i class="fa-solid fa-list-check"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-bold truncate leading-none mb-1">Total</p>
-                                <p id="totalTaskCount" class="text-lg font-black text-slate-800 dark:text-white leading-tight">0</p>
+                                <p class="text-[10px] text-blue-700 dark:text-blue-300 font-extrabold uppercase tracking-wider truncate leading-none mb-1">Total</p>
+                                <p id="totalTaskCount" class="text-lg font-black text-slate-900 dark:text-white leading-tight">0</p>
                             </div>
                         </div>
 
-                        <!-- Proses -->
-                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-3 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2.5">
-                            <div class="w-10 h-10 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/50 rounded-[14px] flex items-center justify-center text-sm flex-shrink-0">
+                        <!-- PROSES (THEME AMBER / ORANGE) -->
+                        <div class="bg-gradient-to-br from-amber-50/90 to-orange-50/50 dark:from-slate-900 dark:to-amber-950/30 rounded-[22px] p-3 border border-amber-200/80 dark:border-amber-900/50 shadow-xs flex items-center gap-2.5">
+                            <div class="w-10 h-10 bg-amber-500 text-slate-950 rounded-[16px] flex items-center justify-center text-sm flex-shrink-0 shadow-md shadow-amber-500/20">
                                 <i class="fa-solid fa-spinner animate-spin"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-bold truncate leading-none mb-1">Proses</p>
+                                <p class="text-[10px] text-amber-700 dark:text-amber-400 font-extrabold uppercase tracking-wider truncate leading-none mb-1">Proses</p>
                                 <p id="inProgressCount" class="text-lg font-black text-amber-600 dark:text-amber-400 leading-tight">0</p>
                             </div>
                         </div>
 
-                        <!-- Selesai -->
-                        <div class="bg-white dark:bg-slate-900 rounded-[22px] p-3 border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-2.5">
-                            <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/50 rounded-[14px] flex items-center justify-center text-sm flex-shrink-0">
-                                <i class="fa-solid fa-check"></i>
+                        <!-- SELESAI (THEME EMERALD / GREEN) -->
+                        <div class="bg-gradient-to-br from-emerald-50/90 to-teal-50/50 dark:from-slate-900 dark:to-emerald-950/30 rounded-[22px] p-3 border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs flex items-center gap-2.5">
+                            <div class="w-10 h-10 bg-emerald-600 text-white rounded-[16px] flex items-center justify-center text-sm flex-shrink-0 shadow-md shadow-emerald-600/20">
+                                <i class="fa-solid fa-circle-check"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-[10px] text-slate-400 font-bold truncate leading-none mb-1">Selesai</p>
+                                <p class="text-[10px] text-emerald-700 dark:text-emerald-400 font-extrabold uppercase tracking-wider truncate leading-none mb-1">Selesai</p>
                                 <p id="completedCount" class="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">0</p>
                             </div>
                         </div>
@@ -432,60 +473,92 @@
         </main>
     </div>
 
-    <!-- MODAL DETAIL GEMPA BUMI REALTIME BMKG -->
-    <div id="earthquakeDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[120] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-auto md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-sm shadow-md font-bold">
-                        <i class="fa-solid fa-house-chimney-crack"></i>
+    <!-- MODAL PETA & NOTIFIKASI GEMPA BUMI REAL-TIME (BMKG) -->
+    <div id="quakeModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[150] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-[90vh] md:max-w-2xl md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <!-- Header Modal Gempa -->
+            <div class="px-5 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-600 to-red-600 text-white flex items-center justify-center text-base shadow-md shadow-rose-500/20">
+                        <i class="fa-solid fa-tower-broadcast animate-pulse"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Detail Informasi Gempa BMKG</h3>
-                        <p class="text-[9.5px] text-slate-400">Data Realtime Indonesia Tsunami Early Warning System</p>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                            Peta Gempa Real-Time BMKG <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        </h3>
+                        <p class="text-[9.5px] text-slate-400">Monitoring kegempaan nasional real-time & peta seismik interaktif</p>
                     </div>
                 </div>
-                <button onclick="closeEarthquakeDetailModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                <!-- Tombol X untuk Keluar -->
+                <button onclick="closeQuakeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition active:scale-90" title="Tutup (Keluar)">
+                    <i class="fa-solid fa-xmark text-lg font-bold"></i>
                 </button>
             </div>
 
-            <div class="p-4 space-y-3 text-xs bg-slate-50/50 dark:bg-slate-950/40 flex-1 overflow-y-auto">
-                <div class="p-3.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2">
-                        <span class="font-bold text-slate-400">Magnitudo</span>
-                        <span id="modalEqMagnitude" class="font-extrabold text-rose-600 dark:text-rose-400 text-sm">-</span>
+            <!-- Body Modal Gempa -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 bg-slate-50/50 dark:bg-slate-950/40 text-xs flex flex-col">
+                
+                <!-- Kartu Informasi Detail Gempa Utama -->
+                <div class="bg-gradient-to-br from-rose-900 via-slate-900 to-slate-950 rounded-2xl p-4 text-white border border-rose-800/40 shadow-md">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <span class="bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Gempa Terkini</span>
+                            <h2 id="modalQuakeWilayah" class="text-base md:text-lg font-black text-white mt-1 leading-snug">Memuat data BMKG...</h2>
+                            <p id="modalQuakeTime" class="text-xs text-rose-200/90 font-semibold mt-0.5">-</p>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <span class="text-[10px] uppercase font-extrabold text-slate-300 block">Kekuatan</span>
+                            <span id="modalQuakeMag" class="text-2xl md:text-3xl font-black text-amber-400 leading-none">M -</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2">
-                        <span class="font-bold text-slate-400">Waktu Gempa</span>
-                        <span id="modalEqTime" class="font-bold text-slate-800 dark:text-white">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2">
-                        <span class="font-bold text-slate-400">Kedalaman</span>
-                        <span id="modalEqDepth" class="font-bold text-slate-800 dark:text-white">-</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-2">
-                        <span class="font-bold text-slate-400">Koordinat Pusat</span>
-                        <span id="modalEqCoords" class="font-mono font-bold text-slate-800 dark:text-white">-</span>
-                    </div>
-                    <div>
-                        <span class="font-bold text-slate-400 block mb-1">Wilayah Pusat Gempa</span>
-                        <p id="modalEqWilayah" class="font-extrabold text-slate-900 dark:text-white text-sm leading-snug">-</p>
+
+                    <div class="grid grid-cols-3 gap-2 pt-3 mt-3 border-t border-white/10 text-center">
+                        <div class="bg-white/10 rounded-xl p-2">
+                            <p class="text-[9px] text-slate-300 font-bold uppercase">Kedalaman</p>
+                            <p id="modalQuakeKedalaman" class="text-xs font-black text-white mt-0.5">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-2">
+                            <p class="text-[9px] text-slate-300 font-bold uppercase">Koordinat</p>
+                            <p id="modalQuakeKoordinat" class="text-xs font-mono font-black text-white mt-0.5">-</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-2">
+                            <p class="text-[9px] text-slate-300 font-bold uppercase">Potensi Tsunami</p>
+                            <p id="modalQuakePotensi" class="text-[11px] font-black text-emerald-300 mt-0.5 leading-tight">-</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-[10px] leading-relaxed">
-                    <p class="font-bold mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Rekomendasi Keselamatan:</p>
-                    <ul class="list-disc pl-4 space-y-0.5">
-                        <li>Tetap tenang dan hindari bangunan yang retak atau rusak.</li>
-                        <li>Periksa jika ada potensi kerusakan instalasi listrik atau gas.</li>
-                        <li>Pantau informasi resmi susulan hanya dari BMKG.</li>
-                    </ul>
+                <!-- Peta Interaktif Leaflet Gempa -->
+                <div class="space-y-1.5 flex-1 flex flex-col min-h-[260px]">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10.5px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-map-location-dot text-rose-500"></i> Peta Episentrum & Wilayah Terdampak
+                        </span>
+                        <button onclick="fetchLatestEarthquake(true)" class="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-rotate"></i> Refresh Peta
+                        </button>
+                    </div>
+
+                    <div class="relative w-full flex-1 min-h-[250px] md:min-h-[320px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner bg-slate-900 z-10">
+                        <div id="earthquakeLeafletMap" class="w-full h-full min-h-[250px] md:min-h-[320px]"></div>
+                    </div>
                 </div>
+
+                <!-- Catatan & Mitigasi Singkat -->
+                <div class="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800/80 text-amber-800 dark:text-amber-300 text-[10.5px] leading-relaxed flex items-start gap-2">
+                    <i class="fa-solid fa-shield-halved text-amber-600 mt-0.5"></i>
+                    <div>
+                        <b class="font-extrabold">Tips Keamanan:</b> Jauhi bangunan tinggi, kaca jendela, dan tiang listrik saat guncangan. Berlindung di bawah meja yang kokoh jika berada di dalam ruangan.
+                    </div>
+                </div>
+
             </div>
 
-            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-                <button onclick="closeEarthquakeDetailModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            <!-- Footer Modal dengan Tombol Keluar -->
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                <button onclick="closeQuakeModal()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-xmark"></i> Tutup & Keluar
+                </button>
             </div>
         </div>
     </div>
@@ -669,10 +742,15 @@
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Tugas</label>
                         <p id="complete-task-title" class="text-xs font-bold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 leading-snug">-</p>
                     </div>
+
+                    <div id="complete-late-warning" class="hidden p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-[10px] space-y-1">
+                        <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
+                        <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
+                    </div>
                     
                     <div>
-                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan</label>
-                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Keterangan / Hasil Pekerjaan <span id="note-required-star" class="text-rose-500 hidden">*</span></label>
+                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
                     <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
@@ -692,7 +770,7 @@
 
                         <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5">
                             <label class="block text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">
-                                ✅ Foto Sesudah Dikerjakan (After)
+                                ✅ Foto Sesudah Dikerjakan (After) <span id="photo-required-star" class="text-rose-500 hidden">*</span>
                             </label>
                             <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
                             <div id="complete-after-preview-container" class="hidden pt-1">
@@ -700,12 +778,211 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px] leading-tight">
+                        <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres &le; 200KB dan dibubuhi watermark nama petugas serta waktu secara vertikal di kanan foto.
+                    </div>
                 </div>
 
                 <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal / Tutup</button>
                     <button type="submit" id="btn-submit-completion" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
                         <i class="fa-solid fa-check"></i> Simpan Selesai
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
+    <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down" onclick="event.stopPropagation()">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Dompet Insentif Pribadi</h3>
+                        <p class="text-[9.5px] text-slate-400">Poin & reward kinerja harian (Senin - Jumat)</p>
+                    </div>
+                </div>
+                <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-white shadow-md">
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya (Bulan Ini)</p>
+                    <div class="flex items-end justify-between mt-1">
+                        <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold">Rp 0</h2>
+                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="hidden bg-white text-amber-700 hover:bg-amber-50 active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Tarik Dana
+                        </button>
+                    </div>
+
+                    <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">
+                        * Minimal penarikan saldo adalah Rp 10.000 (10k)
+                    </p>
+
+                    <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
+                        <span id="modalMyPointsDetail">0 Poin</span>
+                        <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
+                        <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
+                    </div>
+                </div>
+
+                <!-- RINCIAN POTONGAN PENALTI -->
+                <div id="penaltyDetailCard" class="hidden p-3 bg-rose-50/70 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-800/80 shadow-xs">
+                    <h4 class="text-[10px] font-extrabold text-rose-700 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> Rincian Hari Kerja Tanpa Jadwal (Sejak 18 Ags 2026)
+                    </h4>
+                    <div id="penaltyDatesList" class="space-y-1 max-h-28 overflow-y-auto text-[10px] text-rose-800 dark:text-rose-200 font-medium"></div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan Insentif
+                        </h4>
+                        <span id="myWithdrawalBadge" class="text-[9px] font-bold text-slate-400">0 Data</span>
+                    </div>
+                    <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5">
+                        <div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin & Waktu
+                        </h4>
+                    </div>
+                    <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
+                </div>
+
+                <div id="adminWithdrawalManagementCard" class="hidden p-3 bg-rose-50/50 dark:bg-rose-950/30 rounded-xl border border-rose-200 dark:border-rose-800">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-[10px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-money-bill-transfer text-rose-500"></i> Verifikasi Penarikan Tim (Admin)
+                        </h4>
+                    </div>
+                    <div id="adminWithdrawalsList" class="space-y-2 max-h-48 overflow-y-auto pr-0.5">
+                        <div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan baru.</div>
+                    </div>
+                </div>
+
+                <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-50/50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
+                        <span>Total Realisasi Tim (Admin)</span>
+                        <span id="modalTeamBudgetUsage">Rp 0 / Rp 100.000</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="modalBudgetProgressBar" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="adminTeamListContainer" class="hidden">
+                    <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
+                    <div id="teamEarningsList" class="space-y-1.5"></div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+                <button onclick="closeEarningsModal()" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORM PENARIKAN -->
+    <div id="withdrawModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center text-sm shadow-md">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Form Penarikan Insentif</h3>
+                        <p class="text-[9.5px] text-slate-400">Pengajuan klaim insentif ke bendahara</p>
+                    </div>
+                </div>
+                <button onclick="closeWithdrawModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+
+            <form id="formWithdrawRequest" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Saldo Siap Tarik</label>
+                        <input type="text" id="wd-available-balance" disabled class="w-full bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Jumlah Penarikan (Rp)</label>
+                        <input type="number" id="wd-amount" min="10000" step="1000" required oninput="calculateWithdrawFee()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        <span id="wd-min-info" class="text-[9px] text-slate-400 block mt-0.5">* Minimal Rp 10.000 (10k)</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Tujuan Bank / E-Wallet</label>
+                        <select id="wd-method" required onchange="calculateWithdrawFee()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                            <option value="BANK_BTN">🏦 Bank BTN (Gratis Admin Rp 0)</option>
+                            <option value="BANK_BCA">🏦 Bank BCA</option>
+                            <option value="BANK_BRI">🏦 Bank BRI</option>
+                            <option value="BANK_MANDIRI">🏦 Bank Mandiri</option>
+                            <option value="BANK_BNI">🏦 Bank BNI</option>
+                            <option value="BANK_BSI">🏦 Bank Syariah Indonesia (BSI)</option>
+                            <option value="EWALLET_DANA">📱 DANA (E-Wallet)</option>
+                            <option value="EWALLET_GOPAY">📱 GoPay (E-Wallet)</option>
+                            <option value="EWALLET_OVO">📱 OVO (E-Wallet)</option>
+                            <option value="EWALLET_SHOPEEPAY">📱 ShopeePay (E-Wallet)</option>
+                            <option value="EWALLET_LINKAJA">📱 LinkAJA (E-Wallet)</option>
+                            <option value="LAINNYA">💳 Bank / E-Wallet Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div id="wd-other-method-container" class="hidden">
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Bank/E-Wallet Lainnya</label>
+                        <input type="text" id="wd-other-method-name" placeholder="Contoh: Bank Jatim / Seabank" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nomor Rekening / No. HP E-Wallet</label>
+                        <input type="text" id="wd-account-number" required placeholder="Contoh: 001234567890 / 08123456789" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500 font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-0.5">Nama Pemilik Rekening / Akun</label>
+                        <input type="text" id="wd-account-name" required placeholder="Nama sesuai buku tabungan / akun" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                    </div>
+
+                    <div class="p-2.5 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                        <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
+                            <span>Nominal Tarik:</span>
+                            <span id="wd-calc-nominal" class="font-bold text-slate-800 dark:text-white">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400">
+                            <span>Biaya Admin:</span>
+                            <span id="wd-calc-fee" class="font-bold text-rose-500">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-extrabold pt-1 border-t border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400">
+                            <span>Total Bersih Diterima:</span>
+                            <span id="wd-calc-net">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <div class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-amber-800 dark:text-amber-300 text-[9.5px] leading-snug">
+                        <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484).
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Batal</button>
+                    <button type="submit" id="btnSubmitWithdraw" class="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan
                     </button>
                 </div>
             </form>
@@ -741,6 +1018,9 @@
                         <label class="block text-[10px] font-extrabold text-slate-400 uppercase mb-1">Nama Tampilan</label>
                         <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-blue-500">
                     </div>
+                    <div class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[9.5px]">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Setelah disimpan, nama ini akan otomatis terisi saat user menambahkan tugas baru.
+                    </div>
                 </div>
                 <div class="flex gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                     <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
@@ -750,9 +1030,9 @@
         </div>
     </div>
 
-    <!-- MODAL PUSAT PENGATURAN SUPER ADMIN (API GEMINI & TEMA) -->
+    <!-- MODAL PUSAT PENGATURAN SUPER ADMIN -->
     <div id="budgetConfigModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-[80vh] md:max-w-lg md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
+        <div class="bg-white dark:bg-slate-900 w-full h-full md:h-[90vh] md:max-w-lg md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800 animate-slide-up md:animate-slide-down">
             <div class="px-5 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
                     <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 flex items-center justify-center text-base shadow-md shadow-amber-500/20">
@@ -760,7 +1040,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Pusat Pengaturan Super Admin</h3>
-                        <p class="text-[9.5px] text-slate-400">Konfigurasi API Gemini & Tampilan Sistem</p>
+                        <p class="text-[9.5px] text-slate-400">Konfigurasi Anggaran, Poin, Libur, API Gemini & Tampilan</p>
                     </div>
                 </div>
                 <button onclick="closeBudgetConfigModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">
@@ -770,6 +1050,7 @@
 
             <form id="formBudgetConfig" class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4 text-xs bg-slate-50/50 dark:bg-slate-950/40">
+                    
                     <!-- PENGATURAN API GEMINI -->
                     <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-purple-200 dark:border-purple-900/60 rounded-2xl shadow-xs space-y-2">
                         <div class="flex items-center justify-between">
@@ -780,7 +1061,7 @@
                                 Ambil Key Gratis <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
                             </a>
                         </div>
-                        <p class="text-[9.5px] text-slate-400 leading-snug">Digunakan untuk fitur AI Smart Schedule Multi-Profesi.</p>
+                        <p class="text-[9.5px] text-slate-400 leading-snug">Digunakan untuk fitur AI Smart Schedule Multi-Profesi di seluruh sistem.</p>
                         <div class="relative flex items-center">
                             <input type="password" id="adminGeminiApiKey" placeholder="Tempel AIzaSy... API Key Anda" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 pr-8 text-xs font-mono text-slate-800 dark:text-white focus:outline-none focus:border-purple-500">
                             <button type="button" onclick="toggleAdminApiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
@@ -789,12 +1070,15 @@
                         </div>
                     </div>
 
-                    <!-- PENGATURAN TEMA WARNA -->
+                    <!-- PENGATURAN TEMA WARNA & MODE GELAP -->
                     <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
                         <div class="flex items-center justify-between">
                             <label class="block text-[10.5px] font-extrabold text-slate-700 dark:text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-palette text-blue-500"></i> Tema Warna & Tampilan Sistem
                             </label>
+                            <button type="button" onclick="toggleTheme()" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-bold flex items-center gap-1.5 active:scale-95 transition">
+                                <i id="theme-icon" class="fa-solid fa-moon"></i> Ganti Gelap/Terang
+                            </button>
                         </div>
                         <div class="flex items-center justify-center gap-3 pt-1">
                             <button type="button" onclick="applyTheme('blue')" title="Corporate Blue" class="w-8 h-8 rounded-full bg-[#3b82f6] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-blue-500 active:scale-90 transition"></button>
@@ -804,11 +1088,101 @@
                             <button type="button" onclick="applyTheme('rose')" title="Executive Rose" class="w-8 h-8 rounded-full bg-[#f43f5e] shadow-sm ring-2 ring-transparent hover:ring-offset-2 hover:ring-rose-500 active:scale-90 transition"></button>
                         </div>
                     </div>
+
+                    <!-- PENGATURAN ANGGARAN & TARIF -->
+                    <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2.5">
+                        <label class="block text-[10.5px] font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-coins"></i> Alokasi Anggaran & Batasan
+                        </label>
+                        <div>
+                            <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Total Anggaran Bulanan (Rp)</span>
+                            <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Tarif / 100 Poin (Rp)</span>
+                                <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Max Tugas/Hari Dihitung</span>
+                                <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PENGATURAN TANGGAL MERAH / HARI LIBUR NASIONAL -->
+                    <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-[10.5px] font-extrabold text-rose-600 dark:text-rose-400 uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-calendar-xmark"></i> Tanggal Merah (Bebas Penalti)
+                            </label>
+                            <button type="button" onclick="autoSyncNationalHolidays()" class="text-[9.5px] font-bold text-blue-500 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> Auto Sync Libur Nasional
+                            </button>
+                        </div>
+                        <p class="text-[9.5px] text-slate-400 leading-snug">Format: <b>YYYY-MM-DD</b> (pisahkan koma atau baris baru).</p>
+                        <textarea id="inputHolidaysList" rows="3" placeholder="2026-08-17, 2026-05-01, 2026-12-25" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2 font-mono text-[11px] text-slate-800 dark:text-white focus:outline-none focus:border-rose-500"></textarea>
+                    </div>
+
+                    <!-- ATURAN PENARIKAN & FEE ADMIN -->
+                    <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2">
+                        <label class="block text-[10.5px] font-extrabold text-amber-600 dark:text-amber-400 uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-wallet"></i> Aturan Penarikan & Fee Admin
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Biaya Admin Non-BTN (Rp)</span>
+                                <input type="number" id="inputAdminFeeNonBtn" min="0" step="500" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Minimal Penarikan (Rp)</span>
+                                <input type="number" id="inputMinWithdrawal" min="1000" step="1000" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PENYESUAIAN NILAI POIN & PENALTI -->
+                    <div class="p-3.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-2">
+                        <label class="block text-[10.5px] font-extrabold text-amber-600 dark:text-amber-400 uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-scale-balanced"></i> Penyesuaian Nilai Poin & Penalti
+                        </label>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <span class="text-[9.5px] font-bold text-rose-600 dark:text-rose-400 block mb-0.5">🚫 Tidak Buat Jadwal (-Poin)</span>
+                                <input type="number" id="inputPointsNoSchedule" class="w-full bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🌅 Buat &lt;06:00 (+Poin)</span>
+                                <input type="number" id="inputPointsEarly" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">✅ Selesai Tepat Jam</span>
+                                <input type="number" id="inputPointsOnTime" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚡ Status Proses</span>
+                                <input type="number" id="inputPointsProcess" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">⚠️ Selesai Lewat Jam</span>
+                                <input type="number" id="inputPointsLate" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">❌ Expired (Lewat Hari)</span>
+                                <input type="number" id="inputPointsExpired" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                            <div>
+                                <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-0.5">🔥 Streak 5 Hari</span>
+                                <input type="number" id="inputPointsStreak" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                     <button type="button" onclick="closeBudgetConfigModal()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold py-2.5 rounded-xl text-xs active:scale-95 transition">Tutup</button>
-                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan Pengaturan</button>
+                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan Seluruh Pengaturan</button>
                 </div>
             </form>
         </div>
@@ -1216,7 +1590,7 @@
                         </div>
                         <div>
                             <h4 class="text-xs font-black text-amber-900 dark:text-amber-200">Menu Super Admin</h4>
-                            <p class="text-[9.5px] text-slate-500 dark:text-slate-400">Kelola master sistem & API</p>
+                            <p class="text-[9.5px] text-slate-500 dark:text-slate-400">Kelola master sistem & anggaran</p>
                         </div>
                     </div>
                     <button onclick="document.getElementById('form-profile-modal').classList.add('hidden'); openBudgetConfigModal();" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[10.5px] transition shadow-xs">
@@ -1292,10 +1666,12 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
+        const ADMIN_WA_PHONE = '6282146511484';
         const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
 
         let currentUser = null;
         let globalTasks = [];
+        let globalWithdrawals = [];
         let globalNotifications = [];
         let pendingApprovalUsers = [];
         let editingTaskId = null;
@@ -1307,6 +1683,8 @@
         let followsSubscription = null;
         let followNotifyListener = null;
         let appConfigSubscription = null;
+        let withdrawalsSubscription = null;
+        let superAdminActivitySubscription = null;
         let globalChatSubscription = null;
         let friendScheduleListener = null;
         let activityNotifSubscription = null;
@@ -1316,6 +1694,7 @@
         let replyingToUser = null;
         let notifiedTaskId = null;
         let audioCtx = null;
+        let cachedMyEarningsData = null;
         let userRanksMap = {};
         let isEditingProfile = false;
 
@@ -1334,6 +1713,13 @@
         let presenceChannel = null;
         let userProfilesMap = {};
 
+        // DATA DAN MAP REAL-TIME GEMPA (BMKG & LEAFLET)
+        let leafletQuakeMap = null;
+        let quakeMapMarker = null;
+        let quakeCircleLayer = null;
+        let latestQuakeData = null;
+        let quakePollingInterval = null;
+
         // STRUKTUR STATUS / STORY MULTI ITEM
         let userStoriesGroups = [];
         let activeUserStoryGroupIndex = 0;
@@ -1341,10 +1727,26 @@
         let storyProgressTimer = null;
         const STORY_DURATION_MS = 5000;
 
-        let latestEarthquakeData = null;
-
         let budgetSettings = {
-            geminiApiKey: ''
+            monthlyBudget: 100000,
+            ratePerTask: 10,
+            maxDailyTasks: 5,
+            pointsNoSchedule: 200,
+            holidaysList: ['2026-08-17', '2026-05-01', '2026-12-25'],
+            geminiApiKey: '',
+            pointsEarly: 100,
+            pointsOnTime: 100,
+            pointsProcess: 50,
+            pointsLate: 0,
+            pointsExpired: 50,
+            pointsStreak: 200,
+            pointsNewUser: 1000,
+            pointsMutual: 500,
+            pointsPhoto: 50,
+            pointsPerbaikan: 100,
+            pointsComment: 10,
+            adminFeeNonBtn: 2500,
+            minWithdrawal: 10000
         };
 
         const localNow = new Date();
@@ -1361,44 +1763,186 @@
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
 
-        // FETCH REALTIME EARTHQUAKE FROM BMKG PUBLIC API
-        async function fetchRealtimeEarthquake() {
+        function formatRupiahK(amount) {
+            const num = Number(amount) || 0;
+            if (num >= 1000) {
+                const inK = num / 1000;
+                return (inK % 1 === 0 ? inK : inK.toFixed(1)) + 'k';
+            }
+            return num.toString();
+        }
+
+        // ======================== MODUL REAL-TIME GEMPA BUMI & PETA LEAFLET ========================
+        async function fetchLatestEarthquake(isManualRefresh = false) {
             try {
-                const response = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
-                const data = await response.json();
-                if (data && data.Infogempa && data.Infogempa.gempa) {
-                    const eq = data.Infogempa.gempa;
-                    latestEarthquakeData = eq;
+                // Endpoint Terbuka Data Gempa Real-time BMKG
+                const response = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error("Gagal mengambil data BMKG");
+                const result = await response.json();
+                const quake = result?.Infogempa?.gempa;
 
-                    const banner = document.getElementById('earthquakeLiveBanner');
-                    const magBadge = document.getElementById('eqMagnitudeBadge');
-                    const wilayahText = document.getElementById('eqWilayahText');
+                if (quake) {
+                    const isNewQuake = !latestQuakeData || (latestQuakeData.DateTime !== quake.DateTime);
+                    latestQuakeData = quake;
 
-                    if (banner && magBadge && wilayahText) {
-                        magBadge.innerText = `M ${eq.Magnitude}`;
-                        wilayahText.innerHTML = `<b>${eq.Wilayah}</b> (${eq.Tanggal} ${eq.Jam}) &bull; Kedalaman: ${eq.Kedalaman}`;
-                        banner.classList.remove('hidden');
+                    updateQuakeUI(quake);
+
+                    if (isNewQuake) {
+                        showQuakeBanner(quake);
+                    }
+
+                    if (isManualRefresh) {
+                        showToast("Peta & data gempa BMKG diperbarui!");
                     }
                 }
-            } catch (e) {
-                console.warn("Gagal memuat data gempa BMKG:", e);
+            } catch (error) {
+                console.warn("Gagal memuat auto gempa BMKG:", error);
+                // Fallback contoh data jika offline/CORS
+                if (!latestQuakeData) {
+                    const fallbackData = {
+                        Tanggal: "27 Agu 2026",
+                        Jam: "21:30:15 WIB",
+                        DateTime: "2026-08-27T14:30:15+00:00",
+                        Coordinates: "-8.45,114.30",
+                        Lintang: "8.45 LS",
+                        Bujur: "114.30 BT",
+                        Magnitude: "4.8",
+                        Kedalaman: "15 km",
+                        Wilayah: "Pusat gempa berada di laut 62 km Barat Daya Banyuwangi",
+                        Potensi: "Tidak berpotensi tsunami"
+                    };
+                    latestQuakeData = fallbackData;
+                    updateQuakeUI(fallbackData);
+                }
             }
         }
 
-        function openEarthquakeDetailModal() {
-            if (!latestEarthquakeData) return;
-            const eq = latestEarthquakeData;
-            document.getElementById('modalEqMagnitude').innerText = `Magnitudo ${eq.Magnitude} (Potensi Tsunami: ${eq.Potensi || '-'})`;
-            document.getElementById('modalEqTime').innerText = `${eq.Tanggal}, Pukul ${eq.Jam} WIB`;
-            document.getElementById('modalEqDepth').innerText = eq.Kedalaman;
-            document.getElementById('modalEqCoords').innerText = `${eq.Coordinates} (${eq.Lintang}, ${eq.Bujur})`;
-            document.getElementById('modalEqWilayah').innerText = eq.Wilayah;
-            document.getElementById('earthquakeDetailModal').classList.remove('hidden');
+        function showQuakeBanner(quake) {
+            const banner = document.getElementById('liveQuakeBanner');
+            if (!banner) return;
+
+            document.getElementById('quakeBannerMag').innerText = `M ${quake.Magnitude || '-'}`;
+            document.getElementById('quakeBannerTime').innerText = `${quake.Jam || ''} (${quake.Tanggal || ''})`;
+            document.getElementById('quakeBannerWilayah').innerText = quake.Wilayah || 'Pusat gempa terdeteksi';
+            document.getElementById('quakeBannerPotensi').innerText = quake.Potensi || 'Tidak berpotensi tsunami';
+            
+            banner.classList.remove('hidden');
         }
 
-        function closeEarthquakeDetailModal() {
-            document.getElementById('earthquakeDetailModal').classList.add('hidden');
+        function dismissQuakeBanner() {
+            const banner = document.getElementById('liveQuakeBanner');
+            if (banner) banner.classList.add('hidden');
         }
+
+        function updateQuakeUI(quake) {
+            document.getElementById('modalQuakeWilayah').innerText = quake.Wilayah || '-';
+            document.getElementById('modalQuakeTime').innerText = `🗓️ ${quake.Tanggal || '-'} • ⏰ ${quake.Jam || '-'}`;
+            document.getElementById('modalQuakeMag').innerText = `M ${quake.Magnitude || '-'}`;
+            document.getElementById('modalQuakeKedalaman').innerText = quake.Kedalaman || '-';
+            document.getElementById('modalQuakeKoordinat').innerText = `${quake.Lintang || '-'}, ${quake.Bujur || '-'}`;
+            document.getElementById('modalQuakePotensi').innerText = quake.Potensi || 'Tidak berpotensi tsunami';
+            
+            if (leafletQuakeMap) {
+                renderQuakeOnMap(quake);
+            }
+        }
+
+        function initQuakeMap() {
+            if (leafletQuakeMap) return;
+            const mapEl = document.getElementById('earthquakeLeafletMap');
+            if (!mapEl) return;
+
+            // Inisialisasi peta Leaflet berpusat di Indonesia
+            leafletQuakeMap = L.map('earthquakeLeafletMap', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([-2.5, 118.0], 5);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '© OpenStreetMap'
+            }).addTo(leafletQuakeMap);
+
+            if (latestQuakeData) {
+                renderQuakeOnMap(latestQuakeData);
+            }
+        }
+
+        function renderQuakeOnMap(quake) {
+            if (!leafletQuakeMap || !quake) return;
+
+            let lat = -7.5, lng = 112.5;
+            if (quake.Coordinates) {
+                const parts = quake.Coordinates.split(',');
+                if (parts.length === 2) {
+                    lat = parseFloat(parts[0]);
+                    lng = parseFloat(parts[1]);
+                }
+            }
+
+            if (quakeMapMarker) leafletQuakeMap.removeLayer(quakeMapMarker);
+            if (quakeCircleLayer) leafletQuakeMap.removeLayer(quakeCircleLayer);
+
+            const customIcon = L.divIcon({
+                className: 'custom-quake-icon',
+                html: `
+                    <div class="relative w-8 h-8 flex items-center justify-center">
+                        <div class="absolute inset-0 quake-pulse-ring"></div>
+                        <div class="w-4 h-4 rounded-full bg-rose-600 border-2 border-white shadow-lg z-10 flex items-center justify-center text-[8px] text-white font-black">!</div>
+                    </div>
+                `,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            quakeMapMarker = L.marker([lat, lng], { icon: customIcon }).addTo(leafletQuakeMap);
+            
+            const magVal = parseFloat(quake.Magnitude) || 4.5;
+            const radiusMeters = Math.max(25000, magVal * 15000);
+
+            quakeCircleLayer = L.circle([lat, lng], {
+                color: '#ef4444',
+                fillColor: '#f87171',
+                fillOpacity: 0.25,
+                radius: radiusMeters
+            }).addTo(leafletQuakeMap);
+
+            quakeMapMarker.bindPopup(`
+                <div class="text-xs p-1 font-sans">
+                    <b class="text-rose-600 font-extrabold text-sm">Gempa Magnitudo ${quake.Magnitude}</b>
+                    <p class="font-bold text-slate-800 mt-1">${quake.Wilayah}</p>
+                    <p class="text-slate-500 text-[10px] mt-0.5">Kedalaman: ${quake.Kedalaman} | ${quake.Jam}</p>
+                </div>
+            `).openPopup();
+
+            leafletQuakeMap.setView([lat, lng], 7);
+        }
+
+        function openQuakeModal() {
+            document.getElementById('quakeModal').classList.remove('hidden');
+            setTimeout(() => {
+                initQuakeMap();
+                if (leafletQuakeMap) {
+                    leafletQuakeMap.invalidateSize();
+                    if (latestQuakeData) renderQuakeOnMap(latestQuakeData);
+                }
+            }, 200);
+        }
+
+        function closeQuakeModal() {
+            document.getElementById('quakeModal').classList.add('hidden');
+        }
+
+        function setupEarthquakeRealtimePolling() {
+            fetchLatestEarthquake();
+            if (quakePollingInterval) clearInterval(quakePollingInterval);
+            // Polling berkala update BMKG setiap 90 detik
+            quakePollingInterval = setInterval(() => {
+                fetchLatestEarthquake();
+            }, 90000);
+        }
+
+        // ======================== END MODUL GEMPA BUMI ========================
 
         function toggleUserScheduleCollapse(userId) {
             const listEl = document.getElementById(`user-schedule-list-${userId}`);
@@ -1415,13 +1959,38 @@
             }
         }
 
+        async function autoSyncNationalHolidays() {
+            const year = new Date().getFullYear();
+            showToast(`Mengambil data libur nasional ${year}...`);
+            try {
+                const res = await fetch(`https://dayoffapi.vercel.app/api?year=${year}`);
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    const holidays = data.filter(item => item.is_holiday).map(item => item.holiday_date);
+                    const mergedSet = new Set([...(budgetSettings.holidaysList || []), ...holidays]);
+                    const mergedArray = Array.from(mergedSet).sort();
+                    
+                    document.getElementById('inputHolidaysList').value = mergedArray.join(',\n');
+                    showToast(`✅ Berhasil menyinkronkan ${holidays.length} hari libur nasional!`);
+                } else {
+                    showToast("Tidak ada data libur ditemukan.");
+                }
+            } catch (e) {
+                showToast("Gagal mengambil data libur nasional: " + e.message);
+            }
+        }
+
         function checkDailyScheduleDeadline() {
             const banner = document.getElementById('scheduleDeadlineBanner');
             if (!banner || !currentUser) return;
 
+            const penaltyText = document.getElementById('bannerPenaltyPointsText');
+            if (penaltyText) penaltyText.innerText = `-${Math.abs(budgetSettings.pointsNoSchedule || 200)} Poin`;
+
             const now = new Date();
             const dayOfWeek = now.getDay();
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
+            const holidays = budgetSettings.holidaysList || [];
+            if (dayOfWeek === 0 || dayOfWeek === 6 || holidays.includes(todayStr) || todayStr < '2026-08-18') {
                 banner.classList.add('hidden');
                 return;
             }
@@ -1493,7 +2062,7 @@
         }
 
         function setActiveTab(tabId) {
-            const tabs = ['tabHome', 'tabBulk', 'tabAuto', 'tabFriends'];
+            const tabs = ['tabHome', 'tabBulk', 'tabWallet', 'tabAuto', 'tabFriends'];
             tabs.forEach(t => {
                 const el = document.getElementById(t);
                 if (el) {
@@ -1541,6 +2110,32 @@
                 return `${curHours}:${curMinutes}` < task.jam_mulai;
             }
             return false;
+        }
+
+        function isCompletedLate(task) {
+            if (task.status !== 'Selesai') return false;
+            if (!task.completed_at || !task.tanggal || !task.jam_selesai) return false;
+
+            const compTime = new Date(task.completed_at);
+            const compYear = compTime.getFullYear();
+            const compMonth = String(compTime.getMonth() + 1).padStart(2, '0');
+            const compDay = String(compTime.getDate()).padStart(2, '0');
+            const compDateStr = `${compYear}-${compMonth}-${compDay}`;
+
+            const compHours = String(compTime.getHours()).padStart(2, '0');
+            const compMinutes = String(compTime.getMinutes()).padStart(2, '0');
+            const compTimeStr = `${compHours}:${compMinutes}`;
+
+            if (compDateStr > task.tanggal) return true;
+            if (compDateStr === task.tanggal && compTimeStr > task.jam_selesai) return true;
+            return false;
+        }
+
+        function isCreatedBefore6AM(task) {
+            if (!task.created_at) return false;
+            const createDate = new Date(task.created_at);
+            const hour = createDate.getHours();
+            return (hour < 6) || (hour === 6 && createDate.getMinutes() === 0);
         }
 
         function getAvatarUrl(userObj) {
@@ -2002,8 +2597,15 @@
         async function sendAppNotification({ recipient_id, sender_id, sender_name, type, title, message, task_id = null }) {
             if (!recipient_id || recipient_id === sender_id) return;
             const notifData = {
-                recipient_id, sender_id, sender_name, type, title, message, task_id,
-                is_read: false, created_at: new Date().toISOString()
+                recipient_id,
+                sender_id,
+                sender_name,
+                type,
+                title,
+                message,
+                task_id,
+                is_read: false,
+                created_at: new Date().toISOString()
             };
             await _supabase.from('app_notifications').insert([notifData]);
         }
@@ -2012,9 +2614,15 @@
             if (!myFollowers || myFollowers.length === 0) return;
             const senderName = getUserDisplayName(currentUser.id, currentUser.email);
             const inserts = myFollowers.map(followerId => ({
-                recipient_id: followerId, sender_id: currentUser.id, sender_name: senderName,
-                type: type, title: title, message: message, task_id: taskId,
-                is_read: false, created_at: new Date().toISOString()
+                recipient_id: followerId,
+                sender_id: currentUser.id,
+                sender_name: senderName,
+                type: type,
+                title: title,
+                message: message,
+                task_id: taskId,
+                is_read: false,
+                created_at: new Date().toISOString()
             }));
             await _supabase.from('app_notifications').insert(inserts);
         }
@@ -2267,6 +2875,34 @@
             }
         }
 
+        function renderPointSchemeList() {
+            const list = document.getElementById('pointSchemeList');
+            if (!list) return;
+
+            const penaltyNoSchedule = Math.abs(budgetSettings.pointsNoSchedule || 200);
+            const holidayCount = (budgetSettings.holidaysList || []).length;
+
+            list.innerHTML = `
+                <li class="flex items-center justify-between text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-200 dark:border-blue-900/50 mb-1">
+                    <span class="font-bold">🎉 Pendaftar Baru (Akun Google)</span><span class="font-extrabold">+${budgetSettings.pointsNewUser} Poin</span>
+                </li>
+                <li class="flex items-center justify-between text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 p-1.5 rounded-lg border border-rose-200 dark:border-rose-900/50 mb-1 font-bold">
+                    <span>🚫 Tidak Buat Jadwal (Mulai 18 Ags 2026)</span><span class="font-black">-${penaltyNoSchedule} Poin/Hari</span>
+                </li>
+                <li class="flex items-center justify-between text-slate-500 text-[9px] mb-1">
+                    <span>📅 Pengecualian Tanggal Merah</span><span class="font-bold text-emerald-600 dark:text-emerald-400">${holidayCount} Hari Libur Terdaftar (Bebas Penalti)</span>
+                </li>
+                <li class="flex items-center justify-between"><span>🤝 Mengikuti Rekan</span><span class="font-extrabold text-blue-500">+${budgetSettings.pointsMutual} Poin/Relasi</span></li>
+                <li class="flex items-center justify-between"><span>📷 Upload Foto Kerja (Before/After)</span><span class="font-extrabold text-emerald-500">+${budgetSettings.pointsPhoto} Poin</span></li>
+                <li class="flex items-center justify-between"><span>🛠️ Tugas dengan tag #perbaikan</span><span class="font-extrabold text-amber-500">+${budgetSettings.pointsPerbaikan} Poin</span></li>
+                <li class="flex items-center justify-between"><span>💬 Berkomentar pada tugas</span><span class="font-extrabold text-teal-500">+${budgetSettings.pointsComment} Poin</span></li>
+                <li class="flex items-center justify-between"><span>✅ Selesai Sesuai Jam Kerja</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">+${budgetSettings.pointsOnTime} Poin</span></li>
+                <li class="flex items-center justify-between"><span>⚠️ Hutang Penalti (Tugas Expired)</span><span class="font-extrabold text-rose-500">-${Math.abs(budgetSettings.pointsExpired)} Poin (1x/tugas)</span></li>
+                <li class="flex items-center justify-between text-slate-500 italic"><span>🛠️ Selesai Susulan (Expired)</span><span class="font-bold">0 Poin (Lunas Hutang)</span></li>
+                <li class="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-700/60 text-[9.5px] text-amber-600 dark:text-amber-400"><span>💳 Rekening Bank BTN</span><span class="font-extrabold text-emerald-600 dark:text-emerald-400">Bebas Biaya Admin</span></li>
+            `;
+        }
+
         async function loadBudgetSettings() {
             try {
                 const { data, error } = await _supabase.from('app_config').select('*');
@@ -2277,6 +2913,7 @@
                     if (profileRow && profileRow.config_data) userProfilesMap = profileRow.config_data;
                 }
             } catch (e) {}
+            renderPointSchemeList();
         }
 
         function setupAppConfigRealtime() {
@@ -2285,13 +2922,27 @@
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'app_config' }, async (payload) => {
                     if (payload.new && payload.new.id === 'budget_settings') {
                         budgetSettings = Object.assign(budgetSettings, payload.new.config_data);
+                        renderPointSchemeList(); calculateAndRenderEarnings();
                     }
                 }).subscribe();
         }
 
         function openBudgetConfigModal() {
             if (!isSuperAdmin) return;
+            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
+            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
+            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+            document.getElementById('inputAdminFeeNonBtn').value = budgetSettings.adminFeeNonBtn || 2500;
+            document.getElementById('inputMinWithdrawal').value = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('inputPointsNoSchedule').value = Math.abs(budgetSettings.pointsNoSchedule || 200);
+            document.getElementById('inputHolidaysList').value = (budgetSettings.holidaysList || []).join(',\n');
             document.getElementById('adminGeminiApiKey').value = budgetSettings.geminiApiKey || localStorage.getItem('user_gemini_api_key') || '';
+            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
+            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
+            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
+            document.getElementById('inputPointsLate').value = budgetSettings.pointsLate;
+            document.getElementById('inputPointsExpired').value = Math.abs(budgetSettings.pointsExpired);
+            document.getElementById('inputPointsStreak').value = budgetSettings.pointsStreak;
             document.getElementById('budgetConfigModal').classList.remove('hidden');
         }
 
@@ -2299,26 +2950,555 @@
 
         document.getElementById('formBudgetConfig').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            const rawHolidays = document.getElementById('inputHolidaysList').value;
+            const parsedHolidays = rawHolidays
+                .split(/[\n,]+/)
+                .map(d => d.trim())
+                .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d));
+
             const newGeminiKey = document.getElementById('adminGeminiApiKey').value.trim();
             if (newGeminiKey) {
                 localStorage.setItem('user_gemini_api_key', newGeminiKey);
             }
 
             const newConfig = {
-                geminiApiKey: newGeminiKey
+                monthlyBudget: parseInt(document.getElementById('inputMonthlyBudget').value) || 100000,
+                ratePerTask: parseInt(document.getElementById('inputRatePerTask').value) || 10,
+                maxDailyTasks: parseInt(document.getElementById('inputMaxDailyTasks').value) || 5,
+                adminFeeNonBtn: parseInt(document.getElementById('inputAdminFeeNonBtn').value) || 2500,
+                minWithdrawal: parseInt(document.getElementById('inputMinWithdrawal').value) || 10000,
+                pointsNoSchedule: parseInt(document.getElementById('inputPointsNoSchedule').value) || 200,
+                holidaysList: parsedHolidays,
+                geminiApiKey: newGeminiKey,
+                pointsEarly: parseInt(document.getElementById('inputPointsEarly').value) || 100,
+                pointsOnTime: parseInt(document.getElementById('inputPointsOnTime').value) || 100,
+                pointsProcess: parseInt(document.getElementById('inputPointsProcess').value) || 50,
+                pointsLate: parseInt(document.getElementById('inputPointsLate').value) || 0,
+                pointsExpired: parseInt(document.getElementById('inputPointsExpired').value) || 50,
+                pointsStreak: parseInt(document.getElementById('inputPointsStreak').value) || 200,
+                pointsNewUser: budgetSettings.pointsNewUser, pointsMutual: budgetSettings.pointsMutual, pointsPhoto: budgetSettings.pointsPhoto, pointsPerbaikan: budgetSettings.pointsPerbaikan, pointsComment: budgetSettings.pointsComment
             };
             const { error } = await _supabase.from('app_config').upsert({ id: 'budget_settings', config_data: newConfig, updated_at: new Date().toISOString() });
             if (!error) { 
                 budgetSettings = Object.assign(budgetSettings, newConfig); 
                 showToast("Pengaturan Super Admin berhasil disimpan!"); 
                 closeBudgetConfigModal(); 
+                renderPointSchemeList(); 
+                calculateAndRenderEarnings(); 
             } else { 
                 showToast("Gagal menyimpan: " + error.message); 
             }
         });
 
-        function openQRISModal() {
-            showToast("Fitur QRIS / Dompet Insentif ditiadakan sesuai permintaan.");
+        function calculateAndRenderEarnings() {
+            const currentYearMonth = todayStr.slice(0, 7);
+            const userEarningsMap = {};
+
+            const userWithdrawnMap = {};
+            globalWithdrawals.forEach(w => {
+                if (w.user_id && (w.status === 'Sukses' || w.status === 'Pending')) {
+                    userWithdrawnMap[w.user_id] = (userWithdrawnMap[w.user_id] || 0) + Number(w.nominal || 0);
+                }
+            });
+
+            const allUserIds = new Set();
+            if (currentUser) allUserIds.add(currentUser.id);
+            globalTasks.forEach(t => { if (t.user_id) allUserIds.add(t.user_id); });
+
+            const holidaysSet = new Set(budgetSettings.holidaysList || []);
+            const now = new Date();
+            const currentDayNumber = now.getDate();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+            const currentHour = now.getHours();
+
+            const PENALTY_START_DATE = '2026-08-18';
+
+            const pastWorkDays = [];
+            for (let d = 1; d <= currentDayNumber; d++) {
+                const dateObj = new Date(currentYear, currentMonth, d);
+                const dayOfWeek = dateObj.getDay();
+                const dStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidaysSet.has(dStr) && dStr >= PENALTY_START_DATE) {
+                    if (d === currentDayNumber) {
+                        if (currentHour >= 9) pastWorkDays.push(dStr);
+                    } else {
+                        pastWorkDays.push(dStr);
+                    }
+                }
+            }
+
+            allUserIds.forEach(uid => {
+                const fallbackEmail = uid === currentUser?.id ? currentUser.email : '';
+                userEarningsMap[uid] = {
+                    userId: uid, 
+                    nama: getUserDisplayName(uid, fallbackEmail), 
+                    email: fallbackEmail,
+                    dailyCount: {}, 
+                    activeDates: new Set(), 
+                    missedDates: [],
+                    points: 0, 
+                    eligibleTasks: 0,
+                    earlyBirdBonus: 0, 
+                    streakBonus: 0, 
+                    extraBonus: 0, 
+                    debtPoints: 0,
+                    expiredTasksCount: 0,
+                    noScheduleDaysCount: 0,
+                    grossEarning: 0,
+                    totalWithdrawn: 0,
+                    totalEarning: 0,
+                    perbaikanCount: {}
+                };
+            });
+
+            globalTasks.forEach(t => {
+                const uid = t.user_id;
+                const taskDateStr = t.tanggal;
+                if (!uid || !taskDateStr || !taskDateStr.startsWith(currentYearMonth)) return;
+
+                const dayOfWeek = new Date(taskDateStr.split('-')[0], taskDateStr.split('-')[1] - 1, taskDateStr.split('-')[2]).getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+                if (!userEarningsMap[uid]) {
+                    userEarningsMap[uid] = {
+                        userId: uid, 
+                        nama: getUserDisplayName(uid, t.user_email, t.nama), 
+                        email: t.user_email || '',
+                        dailyCount: {}, 
+                        activeDates: new Set(), 
+                        missedDates: [],
+                        points: 0, 
+                        eligibleTasks: 0,
+                        earlyBirdBonus: 0, 
+                        streakBonus: 0, 
+                        extraBonus: 0, 
+                        debtPoints: 0,
+                        expiredTasksCount: 0,
+                        noScheduleDaysCount: 0,
+                        grossEarning: 0,
+                        totalWithdrawn: 0,
+                        totalEarning: 0,
+                        perbaikanCount: {}
+                    };
+                }
+
+                if (!userEarningsMap[uid].dailyCount[taskDateStr]) {
+                    userEarningsMap[uid].dailyCount[taskDateStr] = 0;
+                    userEarningsMap[uid].perbaikanCount[taskDateStr] = 0;
+                }
+
+                userEarningsMap[uid].activeDates.add(taskDateStr);
+
+                if (userEarningsMap[uid].dailyCount[taskDateStr] < budgetSettings.maxDailyTasks) {
+                    userEarningsMap[uid].dailyCount[taskDateStr]++;
+                    userEarningsMap[uid].eligibleTasks++;
+
+                    const isiTugas = (t.tugas || '').toLowerCase();
+                    const isiKet = (t.keterangan || '').toLowerCase();
+                    if (isiTugas.includes('#perbaikan') || isiKet.includes('#perbaikan')) {
+                        if (userEarningsMap[uid].perbaikanCount[taskDateStr] < 5) {
+                            userEarningsMap[uid].perbaikanCount[taskDateStr]++;
+                            userEarningsMap[uid].extraBonus += budgetSettings.pointsPerbaikan;
+                        }
+                    }
+
+                    if (t.foto_sebelum && t.foto_sesudah) {
+                        userEarningsMap[uid].extraBonus += budgetSettings.pointsPhoto;
+                    }
+
+                    if (isCreatedBefore6AM(t)) {
+                        userEarningsMap[uid].points += budgetSettings.pointsEarly;
+                        userEarningsMap[uid].earlyBirdBonus += budgetSettings.pointsEarly;
+                    }
+
+                    if (t.status === 'Selesai') {
+                        const isLate = isCompletedLate(t);
+                        userEarningsMap[uid].points += (isLate ? budgetSettings.pointsLate : budgetSettings.pointsOnTime);
+                    } else if (t.status === 'Proses') {
+                        userEarningsMap[uid].points += budgetSettings.pointsProcess;
+                    } else if (t.status === 'Belum' && isTaskExpired(taskDateStr)) {
+                        const penaltyVal = Math.abs(budgetSettings.pointsExpired || 50);
+                        userEarningsMap[uid].debtPoints += penaltyVal;
+                        userEarningsMap[uid].expiredTasksCount++;
+                    }
+                }
+            });
+
+            const penaltyNoSchedPerDay = Math.abs(budgetSettings.pointsNoSchedule || 200);
+            Object.keys(userEarningsMap).forEach(uid => {
+                const u = userEarningsMap[uid];
+                const missed = [];
+                pastWorkDays.forEach(workDay => {
+                    if (!u.activeDates.has(workDay)) {
+                        missed.push(workDay);
+                    }
+                });
+
+                u.missedDates = missed;
+                u.noScheduleDaysCount = missed.length;
+                u.debtPoints += (missed.length * penaltyNoSchedPerDay);
+            });
+
+            let totalTeamBudgetUsed = 0;
+
+            Object.keys(userEarningsMap).forEach(uid => {
+                const u = userEarningsMap[uid];
+                
+                if (uid === currentUser?.id) {
+                    const isGoogleAuth = currentUser?.app_metadata?.provider === 'google';
+                    if (isGoogleAuth) {
+                        u.extraBonus += (budgetSettings.pointsNewUser || 1000);
+                    }
+                    u.extraBonus += (myFollowings.length * (budgetSettings.pointsMutual || 0));
+                }
+
+                if (u.activeDates.size >= 5) {
+                    u.streakBonus = Math.floor(u.activeDates.size / 5) * budgetSettings.pointsStreak;
+                }
+
+                const grossPoints = u.points + u.streakBonus + u.extraBonus;
+                const netPoints = Math.max(0, grossPoints - u.debtPoints);
+
+                u.grossPoints = grossPoints;
+                u.totalPoints = netPoints;
+                u.grossEarning = Math.round((netPoints / 100) * budgetSettings.ratePerTask);
+                u.totalWithdrawn = userWithdrawnMap[uid] || 0;
+                u.totalEarning = Math.max(0, u.grossEarning - u.totalWithdrawn);
+
+                totalTeamBudgetUsed += u.grossEarning;
+            });
+
+            const sortedUsers = Object.values(userEarningsMap).sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+            userRanksMap = {};
+            sortedUsers.forEach((u, index) => {
+                if (index < 3 && u.totalPoints > 0) {
+                    userRanksMap[u.userId] = index + 1;
+                }
+            });
+
+            const currentUserId = currentUser?.id;
+            const myWithdrawn = userWithdrawnMap[currentUserId] || 0;
+            const myData = userEarningsMap[currentUserId] || { 
+                totalPoints: 0, 
+                grossPoints: 0,
+                points: 0, 
+                earlyBirdBonus: 0, 
+                streakBonus: 0, 
+                eligibleTasks: 0, 
+                grossEarning: 0,
+                totalWithdrawn: myWithdrawn,
+                totalEarning: 0, 
+                extraBonus: 0,
+                debtPoints: 0,
+                expiredTasksCount: 0,
+                noScheduleDaysCount: 0,
+                missedDates: []
+            };
+
+            const penaltyCard = document.getElementById('penaltyDetailCard');
+            const penaltyList = document.getElementById('penaltyDatesList');
+            if (penaltyCard && penaltyList) {
+                if (myData.missedDates && myData.missedDates.length > 0) {
+                    penaltyCard.classList.remove('hidden');
+                    penaltyList.innerHTML = myData.missedDates.map(dateStr => `
+                        <div class="flex items-center justify-between py-0.5 border-b border-rose-200/50 dark:border-rose-900/40">
+                            <span>📅 ${formatTanggalIndo(dateStr)}</span>
+                            <span class="font-extrabold text-rose-600 dark:text-rose-400">-${penaltyNoSchedPerDay} Poin</span>
+                        </div>
+                    `).join('');
+                } else {
+                    penaltyCard.classList.add('hidden');
+                }
+            }
+
+            return { userEarningsMap, totalTeamBudgetUsed, myData };
+        }
+
+        async function fetchWithdrawalsSupabase() {
+            let query = _supabase.from('penarikan_insentif').select('*').order('created_at', { ascending: false });
+            const { data, error } = await query;
+            if (!error && data) { 
+                globalWithdrawals = data; 
+                renderWithdrawalsHistory(); 
+                calculateAndRenderEarnings();
+            }
+        }
+
+        function setupWithdrawalsRealtime() {
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription);
+            withdrawalsSubscription = _supabase.channel('public:penarikan_insentif')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'penarikan_insentif' }, async () => { 
+                    await fetchWithdrawalsSupabase(); 
+                })
+                .subscribe();
+        }
+
+        function renderWithdrawalsHistory() {
+            const myListContainer = document.getElementById('myWithdrawalsList');
+            const adminListContainer = document.getElementById('adminWithdrawalsList');
+            const myBadge = document.getElementById('myWithdrawalBadge');
+
+            const myWithdrawals = globalWithdrawals.filter(w => w.user_id === currentUser?.id);
+            if (myBadge) myBadge.innerText = `${myWithdrawals.length} Data`;
+
+            if (myListContainer) {
+                myListContainer.innerHTML = '';
+                if (myWithdrawals.length === 0) myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
+                else {
+                    myWithdrawals.forEach(w => {
+                        let statusColor = 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300';
+                        let statusIcon = 'fa-hourglass-half';
+                        let statusText = w.status;
+
+                        if (w.status === 'Sukses') {
+                            statusColor = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300';
+                            statusIcon = 'fa-check-double';
+                            statusText = 'Telah Dibayar ✅';
+                        } else if (w.status === 'Ditolak') {
+                            statusColor = 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300';
+                            statusIcon = 'fa-xmark';
+                        }
+
+                        const item = document.createElement('div');
+                        item.className = 'p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5';
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-bold">
+                                <span class="text-slate-800 dark:text-white">Rp ${formatRupiahK(w.nominal)} (Rp ${Number(w.nominal).toLocaleString('id-ID')})</span>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] border font-extrabold ${statusColor}">
+                                    <i class="fa-solid ${statusIcon} mr-0.5"></i> ${statusText}
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between text-[9px] text-slate-400 mt-1">
+                                <span class="truncate">${w.metode_pembayaran} &bull; ${w.nomor_rekening}</span>
+                                <span>${new Date(w.created_at).toLocaleDateString('id-ID')}</span>
+                            </div>
+                            ${w.biaya_admin > 0 ? `<p class="text-[8.5px] text-rose-500 font-semibold mt-0.5">Biaya Admin: Rp ${formatRupiahK(w.biaya_admin)} &bull; Diterima: Rp ${formatRupiahK(w.total_diterima)}</p>` : `<p class="text-[8.5px] text-emerald-600 font-semibold mt-0.5">Bebas Biaya Admin (BTN)</p>`}
+                        `;
+                        myListContainer.appendChild(item);
+                    });
+                }
+            }
+
+            if (isSuperAdmin && adminListContainer) {
+                adminListContainer.innerHTML = '';
+                if (globalWithdrawals.length === 0) adminListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan.</div>';
+                else {
+                    globalWithdrawals.forEach(w => {
+                        const item = document.createElement('div');
+                        item.className = 'p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 text-[10px] space-y-1 mb-2';
+                        const isPending = w.status === 'Pending';
+                        
+                        item.innerHTML = `
+                            <div class="flex items-center justify-between font-extrabold">
+                                <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Pengguna'}</span>
+                                <span class="px-1.5 py-0.5 rounded text-[8.5px] ${w.status === 'Sukses' ? 'bg-emerald-500 text-white' : (w.status === 'Ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950')} font-extrabold">${w.status === 'Sukses' ? 'Telah Dibayar ✅' : w.status}</span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300"><b>Tujuan:</b> ${w.metode_pembayaran} - ${w.nomor_rekening} a.n <b>${w.nama_pemilik}</b></p>
+                            <div class="flex items-center justify-between text-slate-500">
+                                <span>Nominal: <b>Rp ${formatRupiahK(w.nominal)}</b></span>
+                                <span>Admin: <b class="text-rose-500">Rp ${formatRupiahK(w.biaya_admin)}</b></span>
+                                <span>Bersih: <b class="text-emerald-600">Rp ${formatRupiahK(w.total_diterima)}</b></span>
+                            </div>
+                            ${isPending ? `
+                                <div class="flex gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Sukses')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Setujui & Bayar</button>
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Ditolak')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Tolak</button>
+                                </div>
+                            ` : ''}
+                        `;
+                        adminListContainer.appendChild(item);
+                    });
+                }
+            }
+        }
+
+        async function updateWithdrawalStatus(id, newStatus) {
+            if (!confirm(`Ubah status penarikan ini menjadi ${newStatus}?`)) return;
+            const { error } = await _supabase.from('penarikan_insentif').update({ status: newStatus }).eq('id', id);
+            if (!error) { 
+                showToast(`Status penarikan diubah: ${newStatus}`); 
+                await fetchWithdrawalsSupabase(); 
+                calculateAndRenderEarnings();
+            } else { 
+                showToast(`Gagal: ${error.message}`); 
+            }
+        }
+
+        function openWithdrawModal() {
+            if (!cachedMyEarningsData || cachedMyEarningsData.totalEarning < (budgetSettings.minWithdrawal || 10000)) {
+                return showToast(`Saldo minimal Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
+            }
+            document.getElementById('wd-available-balance').value = `Rp ${formatRupiahK(cachedMyEarningsData.totalEarning)} (Rp ${cachedMyEarningsData.totalEarning.toLocaleString('id-ID')})`;
+            document.getElementById('wd-amount').value = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').max = cachedMyEarningsData.totalEarning;
+            document.getElementById('wd-amount').min = budgetSettings.minWithdrawal || 10000;
+            document.getElementById('wd-min-info').innerText = `* Minimal penarikan Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`;
+            document.getElementById('wd-account-name').value = getUserDisplayName(currentUser?.id, currentUser?.email, currentUser?.user_metadata?.full_name);
+            calculateWithdrawFee();
+            document.getElementById('withdrawModal').classList.remove('hidden');
+        }
+
+        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
+
+        function calculateWithdrawFee() {
+            const method = document.getElementById('wd-method').value;
+            const otherContainer = document.getElementById('wd-other-method-container');
+            if (method === 'LAINNYA') otherContainer.classList.remove('hidden'); else otherContainer.classList.add('hidden');
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            let fee = (method !== 'BANK_BTN') ? (budgetSettings.adminFeeNonBtn || 2500) : 0;
+            const net = Math.max(0, amount - fee);
+            document.getElementById('wd-calc-nominal').innerText = `Rp ${formatRupiahK(amount)} (Rp ${amount.toLocaleString('id-ID')})`;
+            document.getElementById('wd-calc-fee').innerText = fee === 0 ? `Gratis (Rp 0)` : `Rp ${formatRupiahK(fee)}`;
+            document.getElementById('wd-calc-net').innerText = `Rp ${formatRupiahK(net)} (Rp ${net.toLocaleString('id-ID')})`;
+        }
+
+        document.getElementById('formWithdrawRequest').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('wd-amount').value) || 0;
+            if (amount < (budgetSettings.minWithdrawal || 10000)) return alert(`Minimal penarikan adalah Rp ${formatRupiahK(budgetSettings.minWithdrawal || 10000)}`);
+            if (amount > cachedMyEarningsData.totalEarning) return alert(`Jumlah melebihi saldo tersedia!`);
+
+            const methodKey = document.getElementById('wd-method').value;
+            let methodText = document.getElementById('wd-method').options[document.getElementById('wd-method').selectedIndex].text;
+            if (methodKey === 'LAINNYA') {
+                
+const accountNumber = document.getElementById('wd-account-number').value.trim();
+            const accountName = document.getElementById('wd-account-name').value.trim();
+            let fee = (methodKey === 'BANK_BTN') ? 0 : (budgetSettings.adminFeeNonBtn || 2500);
+            let net = Math.max(0, amount - fee);
+
+            const userName = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name);
+            const btnSubmit = document.getElementById('btnSubmitWithdraw');
+            btnSubmit.innerText = "Memproses...";
+
+            const payload = {
+                user_id: currentUser.id, 
+                user_email: currentUser.email, 
+                nama_petugas: userName,
+                nominal: amount, 
+                biaya_admin: fee, 
+                total_diterima: net,
+                metode_pembayaran: methodText, 
+                nomor_rekening: accountNumber, 
+                nama_pemilik: accountName,
+                status: 'Pending', 
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('penarikan_insentif').insert([payload]);
+            if (error) console.error("Gagal simpan penarikan:", error);
+
+            const tanggalKlaim = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const pesanWA = `Halo Admin, saya ingin mengajukan *Penarikan Insentif Poin Kerja*:\n\n👤 *Nama Pengguna:* ${userName}\n📧 *Email:* ${currentUser.email}\n🗓️ *Tanggal Pengajuan:* ${tanggalKlaim}\n\n💳 *Informasi Tujuan:* \n • ${methodText}\n • No: *${accountNumber}*\n • A.N: *${accountName}*\n\n💰 *Rincian:*\n • Nominal: Rp ${amount.toLocaleString('id-ID')} (${formatRupiahK(amount)})\n • Biaya Admin: ${fee === 0 ? 'Gratis' : `Rp ${fee.toLocaleString('id-ID')}`}\n • *Total Diterima:* *Rp ${net.toLocaleString('id-ID')} (${formatRupiahK(net)})*\n\nMohon diproses, terima kasih!`;
+
+            const waUrl = `https://wa.me/${ADMIN_WA_PHONE}?text=${encodeURIComponent(pesanWA)}`;
+            closeWithdrawModal();
+            btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan';
+            showToast("Pengajuan berhasil! Membuka WhatsApp...");
+            window.open(waUrl, '_blank');
+            await fetchWithdrawalsSupabase();
+        });
+
+        function openEarningsModal() {
+            setActiveTab('tabWallet');
+            renderPointSchemeList();
+            const { userEarningsMap, totalTeamBudgetUsed, myData } = calculateAndRenderEarnings();
+            cachedMyEarningsData = myData;
+
+            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${formatRupiahK(myData.totalEarning)} (Rp ${myData.totalEarning.toLocaleString('id-ID')})`;
+            
+            let debtDetails = '';
+            if (myData.noScheduleDaysCount > 0) {
+                const penaltyPerDay = Math.abs(budgetSettings.pointsNoSchedule || 200);
+                debtDetails += `<span class="text-rose-200 font-bold block mt-0.5">🚫 Tidak Buat Jadwal: -${myData.noScheduleDaysCount * penaltyPerDay} Poin (${myData.noScheduleDaysCount} hari kerja sejak 18 Ags 2026)</span>`;
+            }
+            if (myData.expiredTasksCount > 0) {
+                const penaltyExpired = Math.abs(budgetSettings.pointsExpired || 50);
+                debtDetails += `<span class="text-rose-200 font-bold block mt-0.5">⚠️ Tugas Expired: -${myData.expiredTasksCount * penaltyExpired} Poin (${myData.expiredTasksCount} tugas)</span>`;
+            }
+
+            document.getElementById('modalMyPointsDetail').innerHTML = `
+                <span>Total Poin: <b>${myData.totalPoints || 0} Poin</b> (Estimasi Kotor: Rp ${formatRupiahK(myData.grossEarning)})</span>
+                ${debtDetails}
+            `;
+            document.getElementById('modalMyWithdrawnDetail').innerText = `Total Ditarik: Rp ${formatRupiahK(myData.totalWithdrawn)}`;
+            document.getElementById('modalCurrentRate').innerText = `Tarif: Rp ${budgetSettings.ratePerTask} / 100 Poin`;
+
+            const btnWD = document.getElementById('btnWithdrawEarning');
+            const noticeWD = document.getElementById('withdrawNotice');
+            const minWd = budgetSettings.minWithdrawal || 10000;
+
+            if (myData.totalEarning >= minWd) {
+                btnWD.classList.remove('hidden');
+                noticeWD.innerText = `✅ Saldo memenuhi syarat penarikan.`;
+                noticeWD.className = "text-[9.5px] text-emerald-100 font-bold mt-1";
+            } else {
+                btnWD.classList.add('hidden');
+                noticeWD.innerText = `* Minimal penarikan saldo adalah Rp ${formatRupiahK(minWd)} (Kurang Rp ${formatRupiahK(minWd - myData.totalEarning)})`;
+                noticeWD.className = "text-[9px] text-amber-100/90 mt-1 font-medium italic";
+            }
+
+            renderWithdrawalsHistory();
+
+            const adminBudgetCard = document.getElementById('adminTeamBudgetCard');
+            const adminListContainer = document.getElementById('adminTeamListContainer');
+            const adminWdCard = document.getElementById('adminWithdrawalManagementCard');
+
+            if (isSuperAdmin) {
+                adminBudgetCard.classList.remove('hidden');
+                adminListContainer.classList.remove('hidden');
+                if (adminWdCard) adminWdCard.classList.remove('hidden');
+
+                document.getElementById('modalTeamBudgetUsage').innerText = `Rp ${formatRupiahK(totalTeamBudgetUsed)} / Rp ${formatRupiahK(budgetSettings.monthlyBudget)}`;
+                const usagePercent = Math.min(100, Math.round((totalTeamBudgetUsed / budgetSettings.monthlyBudget) * 100));
+                document.getElementById('modalBudgetProgressBar').style.width = `${usagePercent}%`;
+
+                const listEl = document.getElementById('teamEarningsList');
+                listEl.innerHTML = '';
+
+                const userKeys = Object.keys(userEarningsMap);
+                if (userKeys.length === 0) {
+                    listEl.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-4">Belum ada tugas tercatat pada hari kerja di bulan ini.</div>';
+                } else {
+                    userKeys.forEach(uid => {
+                        const u = userEarningsMap[uid];
+                        const isMe = uid === currentUser?.id;
+                        const rank = userRanksMap[uid];
+                        let rankIcon = rank ? (rank === 1 ? '🥇 ' : (rank === 2 ? '🥈 ' : '🥉 ')) : '';
+
+                        const row = document.createElement('div');
+                        row.className = `flex items-center justify-between p-2.5 rounded-xl border ${isMe ? 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-700/60' : 'bg-slate-50 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800'}`;
+                        row.innerHTML = `
+                            <div class="flex items-center gap-2 min-w-0">
+                                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-user"></i></div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="text-[11px] font-extrabold ${isMe ? 'text-amber-800 dark:text-amber-300' : 'text-slate-800 dark:text-slate-100'} truncate">${rankIcon}${u.nama} ${isMe ? '(Saya)' : ''}</p>
+                                        ${isSuperAdmin ? `<button onclick="openEditUserNameModal('${u.userId}', '${u.email.replace(/'/g, "\\'")}', '${u.nama.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-amber-500 text-[10px] p-0.5" title="Edit Nama"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                                    </div>
+                                    <p class="text-[9px] text-slate-400">Total: Rp ${formatRupiahK(u.grossEarning)} &bull; Ditarik: Rp ${formatRupiahK(u.totalWithdrawn)} &bull; Absen: ${u.noScheduleDaysCount} hari</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-mono font-extrabold text-emerald-600 dark:text-emerald-400">Sisa: Rp ${formatRupiahK(u.totalEarning)}</span>
+                        `;
+                        listEl.appendChild(row);
+                    });
+                }
+            } else {
+                adminBudgetCard.classList.add('hidden');
+                adminListContainer.classList.add('hidden');
+                if (adminWdCard) adminWdCard.classList.add('hidden');
+            }
+            document.getElementById('earningsModal').classList.remove('hidden');
+        }
+
+        function closeEarningsModal() { 
+            const modal = document.getElementById('earningsModal');
+            if (modal) modal.classList.add('hidden');
+            setActiveTab('tabHome');
         }
 
         function goToHomeJadwal() {
@@ -2357,9 +3537,9 @@
 
         function initTheme() {
             if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
-                document.documentElement.classList.add('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
+                document.documentElement.classList.add('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
             } else { 
-                document.documentElement.classList.remove('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-moon'; 
+                document.documentElement.classList.remove('dark'); document.getElementById('theme-icon').className = 'fa-solid fa-sun'; 
             }
             const savedColor = localStorage.getItem('user-theme'); if(savedColor) applyTheme(savedColor);
             document.getElementById('dateFilter').value = todayStr; document.getElementById('input-date').value = todayStr;
@@ -2491,10 +3671,12 @@
             if (realtimeSubscription) _supabase.removeChannel(realtimeSubscription); if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
             if (globalCommentsListener) _supabase.removeChannel(globalCommentsListener); if (followsSubscription) _supabase.removeChannel(followsSubscription);
             if (followNotifyListener) _supabase.removeChannel(followNotifyListener); if (appConfigSubscription) _supabase.removeChannel(appConfigSubscription);
-            if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            if (withdrawalsSubscription) _supabase.removeChannel(withdrawalsSubscription); if (presenceChannel) _supabase.removeChannel(presenceChannel);
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
             if (globalChatSubscription) _supabase.removeChannel(globalChatSubscription);
             if (friendScheduleListener) _supabase.removeChannel(friendScheduleListener);
             if (activityNotifSubscription) _supabase.removeChannel(activityNotifSubscription);
+            if (quakePollingInterval) clearInterval(quakePollingInterval);
             await _supabase.auth.signOut(); location.reload();
         }
 
@@ -2503,8 +3685,6 @@
             document.getElementById('app-dashboard').classList.remove('hidden');
             
             await loadBudgetSettings();
-            await fetchRealtimeEarthquake();
-            setInterval(fetchRealtimeEarthquake, 5 * 60 * 1000); // Cek gempa realtime setiap 5 menit
 
             const username = getUserDisplayName(currentUser.id, currentUser.email, currentUser.user_metadata?.full_name || currentUser.user_metadata?.name);
             const avatarUrl = getAvatarUrl(currentUser);
@@ -2555,6 +3735,7 @@
 
             requestNotificationPermission(); 
             await fetchFollowRelations(); 
+            await fetchWithdrawalsSupabase();
             await fetchTasksSupabase(); 
             await fetchMyNotifications();
             checkDailyScheduleDeadline();
@@ -2564,9 +3745,12 @@
             setupFollowNotificationListener();
             setupFriendScheduleNotificationListener();
             setupAppConfigRealtime(); 
+            setupWithdrawalsRealtime(); 
             setupPresenceSync();
+            setupSuperAdminActivityListener();
             setupGlobalChatRealtime();
             setupActivityNotificationsRealtime();
+            setupEarthquakeRealtimePolling();
         }
 
         function setupPresenceSync() {
@@ -2832,6 +4016,86 @@
             setTimeout(() => { toast.classList.add('hidden'); }, 6000);
         }
 
+        function triggerAdminNotification(title, message, iconClass = 'fa-bell', iconBg = 'bg-amber-500', targetTaskId = null) {
+            playNotificationChime();
+            const toast = document.getElementById('commentNotificationToast');
+            const iconContainer = document.getElementById('notifIconContainer');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifSender = document.getElementById('notifSender');
+            const notifMessage = document.getElementById('notifMessage');
+
+            iconContainer.className = `w-8 h-8 rounded-full ${iconBg} text-white flex items-center justify-center text-sm flex-shrink-0`;
+            notifIcon.className = `fa-solid ${iconClass}`;
+            notifTitle.innerText = 'Log Aktivitas';
+            notifTitle.className = 'text-[10px] font-extrabold text-amber-500 uppercase tracking-wider';
+            notifSender.innerText = title;
+            notifMessage.innerText = message;
+            notifiedTaskId = targetTaskId;
+            
+            toast.classList.remove('hidden');
+
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: message, icon: '/icon-192.png' });
+            }
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function setupSuperAdminActivityListener() {
+            if (!isSuperAdmin) return;
+            if (superAdminActivitySubscription) _supabase.removeChannel(superAdminActivitySubscription);
+
+            superAdminActivitySubscription = _supabase.channel('admin_global_activity')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, async (payload) => {
+                    await fetchPendingApprovals();
+                    if (payload.eventType === 'INSERT' && payload.new.status_approval === 'pending') {
+                        triggerAdminNotification(
+                            `👤 User Baru: ${payload.new.nama || payload.new.email}`,
+                            `Menunggu persetujuan aktivasi akun.`,
+                            'fa-user-clock',
+                            'bg-amber-500'
+                        );
+                    }
+                })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, (payload) => {
+                    const row = payload.new;
+                    if (!row || row.user_id === currentUser.id) return;
+                    const userName = getUserDisplayName(row.user_id, row.user_email, row.nama);
+
+                    if (payload.eventType === 'INSERT') {
+                        triggerAdminNotification(
+                            `📝 Jadwal Baru: ${userName}`,
+                            `Menambahkan "${row.tugas}" (${row.jam_mulai} - ${row.jam_selesai})`,
+                            'fa-calendar-plus',
+                            'bg-blue-500',
+                            row.id
+                        );
+                    } else if (payload.eventType === 'UPDATE') {
+                        if (row.status === 'Selesai' && payload.old.status !== 'Selesai') {
+                            const isLate = isTaskExpired(row.tanggal);
+                            triggerAdminNotification(
+                                `✅ Selesai: ${userName}`,
+                                `${isLate ? '[SUSULAN] ' : ''}"${row.tugas}" telah diselesaikan (${row.keterangan || 'Tanpa catatan'})`,
+                                'fa-circle-check',
+                                'bg-emerald-600',
+                                row.id
+                            );
+                        }
+                    }
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'penarikan_insentif' }, (payload) => {
+                    const wd = payload.new;
+                    if (!wd || wd.user_id === currentUser.id) return;
+                    triggerAdminNotification(
+                        `💰 Tarik Insentif: ${wd.nama_petugas}`,
+                        `Pengajuan Rp ${formatRupiahK(wd.nominal)} via ${wd.metode_pembayaran}`,
+                        'fa-wallet',
+                        'bg-rose-500'
+                    );
+                })
+                .subscribe();
+        }
+
         async function openFollowsModal() {
             setActiveTab('tabFriends');
             unreadNotifCount = 0;
@@ -2953,8 +4217,10 @@
                 }
             } else {
                 const { error } = await _supabase.from('user_follows').insert([{ 
-                    follower_id: currentUser.id, following_id: targetUserId, 
-                    follower_email: currentUser.email, following_email: targetUserEmail 
+                    follower_id: currentUser.id, 
+                    following_id: targetUserId, 
+                    follower_email: currentUser.email, 
+                    following_email: targetUserEmail 
                 }]);
                 
                 if (!error) { 
@@ -3123,6 +4389,8 @@
             document.getElementById('inProgressCount').innerText = filteredTasks.filter(t => t.status === 'Proses').length;
             document.getElementById('completedCount').innerText = filteredTasks.filter(t => t.status === 'Selesai').length;
 
+            const { userEarningsMap } = calculateAndRenderEarnings();
+
             if (filteredTasks.length === 0) {
                 const emptyMsg = activeFriendFeedId ? `User ini belum memiliki jadwal pada tanggal yang dipilih.` : `Anda belum memiliki jadwal pada tanggal yang dipilih.`;
                 if (cardsContainer) cardsContainer.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">${emptyMsg}</p></div>`;
@@ -3221,6 +4489,10 @@
                 const taskUserId = sampleTask?.user_id;
                 const isFollowing = myFollowings.includes(taskUserId);
 
+                const uData = userEarningsMap[taskUserId];
+                const userPoints = uData ? uData.totalPoints : 0;
+                const userPointsK = (userPoints / 1000).toFixed(2).replace(/\.00$/, '') + 'k';
+
                 const feedPostCard = document.createElement('div');
                 feedPostCard.className = 'w-full bg-white dark:bg-slate-900 p-4 md:p-5 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-sm transition space-y-3 mb-3.5';
 
@@ -3242,19 +4514,23 @@
                     let timeBadgeStyle = 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
                     let statusIcon = '<i class="fa-regular fa-clock text-xs opacity-75"></i>';
                     let statusLabel = 'Belum Dimulai';
+                    let taskPointBadge = '+0.1k';
 
                     if (isCompleted) {
                         timeBadgeStyle = 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60';
                         statusIcon = '<i class="fa-solid fa-circle-check text-xs text-emerald-600 dark:text-emerald-400"></i>';
                         statusLabel = 'Selesai';
+                        taskPointBadge = isCompletedLate(item) ? '+0k (Terlambat)' : `+${(budgetSettings.pointsOnTime / 1000).toFixed(1)}k`;
                     } else if (isProcess) {
                         timeBadgeStyle = 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60';
                         statusIcon = '<i class="fa-solid fa-bolt text-xs text-amber-500 animate-pulse"></i>';
                         statusLabel = 'Sedang Dikerjakan';
+                        taskPointBadge = `+${(budgetSettings.pointsProcess / 1000).toFixed(1)}k`;
                     } else if (isPastDay) {
                         timeBadgeStyle = 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60';
                         statusIcon = '<i class="fa-solid fa-triangle-exclamation text-xs text-rose-500"></i>';
                         statusLabel = 'Lewat Hari (Expired)';
+                        taskPointBadge = `-${(Math.abs(budgetSettings.pointsExpired) / 1000).toFixed(1)}k`;
                     }
 
                     let photoEvidenceHtml = '';
@@ -3313,6 +4589,8 @@
                                 <div class="flex items-center gap-1.5">
                                     ${statusIcon}
                                     <span class="text-[11px]">${statusLabel}</span>
+                                    <span class="opacity-40">•</span>
+                                    <span class="font-mono">${taskPointBadge}</span>
                                 </div>
                             </div>
 
@@ -3382,6 +4660,11 @@
                         </div>
 
                         <div class="flex items-center gap-2 flex-shrink-0">
+                            <div class="border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full px-3 py-1.5 shadow-xs flex items-center gap-1">
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">Poin:</span>
+                                <span class="text-xs font-black text-slate-900 dark:text-white font-mono">${userPointsK}</span>
+                                <span class="text-sm">🪙</span>
+                            </div>
                             <button type="button" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-blue-600 transition active:scale-90" title="Tampilkan / Sembunyikan Jadwal">
                                 <i id="user-schedule-arrow-${taskUserId}" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
                             </button>
@@ -3608,8 +4891,7 @@
                     showToast("Gagal mengirim komentar: " + error.message);
                     input.value = commentText;
                 } else {
-                    
-    if (targetTask && targetTask.user_id !== currentUser.id) {
+                    if (targetTask && targetTask.user_id !== currentUser.id) {
                         sendAppNotification({
                             recipient_id: targetTask.user_id,
                             sender_id: currentUser.id,
@@ -3641,6 +4923,21 @@
             document.getElementById('complete-file-before').value = ''; 
             document.getElementById('complete-file-after').value = '';
             
+            const isPast = isTaskExpired(task.tanggal);
+            const warningEl = document.getElementById('complete-late-warning');
+            const starPhoto = document.getElementById('photo-required-star');
+            const starNote = document.getElementById('note-required-star');
+
+            if (isPast) {
+                warningEl.classList.remove('hidden');
+                starPhoto.classList.remove('hidden');
+                starNote.classList.remove('hidden');
+            } else {
+                warningEl.classList.add('hidden');
+                starPhoto.classList.add('hidden');
+                starNote.classList.add('hidden');
+            }
+
             const beforeContainer = document.getElementById('complete-before-preview-container'); 
             const afterContainer = document.getElementById('complete-after-preview-container');
             if (task.foto_sebelum) { 
@@ -3673,9 +4970,17 @@
 
             if (isTaskNotStartedYet(target) && !isSuperAdmin) return showToast(`Jadwal belum dimulai!`);
 
+            const isPast = isTaskExpired(target.tanggal);
             const noteText = document.getElementById('complete-task-note').value.trim();
             const beforeFileInput = document.getElementById('complete-file-before'); 
             const afterFileInput = document.getElementById('complete-file-after');
+
+            if (isPast) {
+                if (!noteText) return alert("Penyelesaian tugas susulan wajib mengisi Keterangan hasil pekerjaan!");
+                const hasExistingPhoto = !!target.foto_sesudah;
+                const hasNewPhoto = afterFileInput && afterFileInput.files && afterFileInput.files.length > 0;
+                if (!hasExistingPhoto && !hasNewPhoto) return alert("Penyelesaian tugas susulan wajib menyertakan Foto Sesudah (After) sebagai bukti!");
+            }
 
             const btn = document.getElementById('btn-submit-completion'); 
             btn.innerText = "Mengompres & Mengunggah..."; 
@@ -3717,7 +5022,7 @@
                     notifyMyFollowers('task_completed', 'Tugas Selesai ✅', `Menyelesaikan tugas: "${target.tugas}"`, target.id);
                     
                     closeCompletionNoteModal(); 
-                    showToast("Tugas Selesai & dokumentasi disimpan!"); 
+                    showToast(isPast ? "Tugas susulan diselesaikan (0 Poin, Hutang Lunas)!" : "Tugas Selesai & dokumentasi disimpan!"); 
                     renderTasks();
                 }
             } catch (err) { 
@@ -3745,6 +5050,11 @@
             if (newStatus === 'Selesai') { 
                 openCompletionNoteModal(target); 
                 return; 
+            }
+            
+            if (isTaskExpired(target.tanggal) && !isSuperAdmin) {
+                showToast("Tugas kemarin hanya bisa diselesaikan lewat Form Selesai dengan foto bukti!");
+                return;
             }
 
             const { error } = await _supabase.from('jadwal').update({ status: newStatus, completed_at: null }).eq('id', id);
@@ -3870,7 +5180,7 @@
             });
             let csvContent = "data:text/csv;charset=utf-8,PENGGUNA,TANGGAL,JAM MULAI,JAM SELESAI,KATEGORI,DETAIL TUGAS,KETERANGAN,STATUS,LIKES,KOMENTAR\n";
             Object.keys(grouped).forEach(namaPetugas => {
-                grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_selesai)).forEach(t => {
+                grouped[namaPetugas].sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai)).forEach(t => {
                     csvContent += `"${namaPetugas}","${formatTanggalIndo(t.tanggal || todayStr)}","${t.jam_mulai}","${t.jam_selesai}","${t.peran}","${t.tugas.replace(/"/g, '""')}","${(t.keterangan || '').replace(/"/g, '""')}","${t.status}","${t.likes_count || 0}","${t.comments_count || 0}"\n`;
                 });
             });
@@ -3906,7 +5216,7 @@
 
             Object.keys(grouped).forEach(namaPetugas => {
                 const list = grouped[namaPetugas]; 
-                list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_selesai));
+                list.sort((a, b) => (a.tanggal || '').localeCompare(b.tanggal || '') || a.jam_mulai.localeCompare(b.jam_mulai));
                 tableRows.push([{ content: `PENGGUNA: ${namaPetugas.toUpperCase()} - ${list.length} Kegiatan`, colSpan: 7, styles: { fillColor: [219, 234, 254], fontStyle: 'bold' } }]);
                 list.forEach(item => { 
                     tableRows.push([globalNo++, formatTanggalIndo(item.tanggal || todayStr), `${item.jam_mulai} - ${item.jam_selesai}`, getUserDisplayName(item.user_id, item.user_email, item.nama), item.peran, item.tugas + (item.keterangan ? `\n(Ket: ${item.keterangan})` : ''), item.status]); 
@@ -3941,6 +5251,7 @@
             const item = globalTasks.find(t => t.id == id); 
             if (!item) return;
             if (item.status === 'Selesai' && !isSuperAdmin) return showToast("Tugas selesai tidak dapat diedit!");
+            if (isTaskExpired(item.tanggal) && !isSuperAdmin) return showToast("Tugas hari kemarin terkunci!");
             editingTaskId = item.id;
             document.getElementById('input-date').value = item.tanggal || todayStr; 
             document.getElementById('input-name').value = getUserDisplayName(item.user_id, item.user_email, item.nama);
@@ -4110,6 +5421,12 @@
 Buatlah rancangan jadwal kegiatan harian yang REALISTIS, PRAKTIS, dan SPESIFIK untuk seorang "${role}" bernama "${name}" pada tanggal ${tanggal}.
 ${focus ? `Target / Catatan Tambahan: "${focus}".` : ''}
 
+Panduan Penyesuaian:
+- Mahasiswa / Pelajar: Kuliah, tugas, review materi, istirahat, dan aktivitas sosial/hobi.
+- Pedagang / Toko / UMKM: Buka toko, cek stok, layani pelanggan, rekap kasir/penjualan, dan closing toko.
+- Masyarakat Umum / Personal: Rutinitas harian seimbang (pekerjaan/hobi/keluarga, istirahat, belanja, urusan personal).
+- Teknisi / Gedung / Kebersihan: Cek fasilitas, alat kerja, tugas lapangan utama, closing laporan (sertakan #perbaikan jika relevan).
+
 Buat 5 pembagian slot waktu harian yang berurutan secara logis dari pagi hingga sore/malam.
 
 WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lain dan tanpa blok markdown:
@@ -4135,14 +5452,20 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                 try {
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(activeApiKey)}`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: promptText }] }],
-                            generationConfig: { temperature: 0.7, responseMimeType: "application/json" }
+                            generationConfig: {
+                                temperature: 0.7,
+                                responseMimeType: "application/json"
+                            }
                         })
                     });
 
                     const data = await response.json();
+
                     if (data.error) {
                         lastError = data.error.message || `Error pada model ${modelName}`;
                         continue;
@@ -4235,7 +5558,11 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
         }
 
         function addNewPreviewSlot() {
-            previewTasksData.push({ jam_mulai: '08:00', jam_selesai: '10:00', tugas: '' });
+            previewTasksData.push({
+                jam_mulai: '08:00',
+                jam_selesai: '10:00',
+                tugas: ''
+            });
             renderAiPreviewCards();
         }
 
@@ -4267,11 +5594,20 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
             const nowIso = new Date().toISOString();
 
             const bulkPayload = previewTasksData.map(t => ({
-                user_id: currentUser.id, user_email: currentUser.email,
-                tanggal: tanggal, nama: name, peran: role,
-                tugas: t.tugas.trim(), jam_mulai: t.jam_mulai || '07:00', jam_selesai: t.jam_selesai || '09:00',
-                status: 'Belum', likes_count: 0, liked_users: [], comments_count: 0,
-                created_at: nowIso, user_avatar: avatarUrl
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                tanggal: tanggal,
+                nama: name,
+                peran: role,
+                tugas: t.tugas.trim(),
+                jam_mulai: t.jam_mulai || '07:00',
+                jam_selesai: t.jam_selesai || '09:00',
+                status: 'Belum',
+                likes_count: 0,
+                liked_users: [],
+                comments_count: 0,
+                created_at: nowIso,
+                user_avatar: avatarUrl
             }));
 
             try {
@@ -4319,6 +5655,7 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                 showToast("Nama berhasil disimpan!");
                 closeEditUserNameModal();
                 renderTasks();
+                calculateAndRenderEarnings();
             } else {
                 showToast("Gagal menyimpan nama: " + error.message);
             }
@@ -4393,8 +5730,11 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
             btnSave.disabled = true;
 
             const { error } = await _supabase.from('profiles').upsert({
-                id: currentUser.id, email: currentUser.email,
-                nip: newNip, no_wa: newPhone, alamat: newAddress,
+                id: currentUser.id,
+                email: currentUser.email,
+                nip: newNip,
+                no_wa: newPhone,
+                alamat: newAddress,
                 updated_at: new Date().toISOString()
             });
 
