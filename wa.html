@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pembaruan - M-Ops Workspace</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        wa: {
+                            bg: '#0b141a',
+                            surface: '#111b21',
+                            card: '#1f2c34',
+                            hover: '#202c33',
+                            green: '#25d366',
+                            greenDark: '#00a884',
+                            activePill: '#103629',
+                            text: '#e9edef',
+                            subtext: '#8696a0',
+                            border: '#222d34'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+        .animate-pop { animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+<body class="bg-[#0b141a] text-[#e9edef] min-h-screen flex justify-center selection:bg-[#00a884] selection:text-white">
+
+    <!-- CONTAINER UTAMA (RESPONSIF MOBILE / DESKTOP PHONE CONTAINER) -->
+    <div class="w-full max-w-md min-h-screen bg-[#0b141a] flex flex-col relative pb-20 shadow-2xl border-x border-[#1f2c34]/40">
+
+        <!-- TOP BAR HEADER -->
+        <header class="sticky top-0 z-40 bg-[#0b141a] px-4 pt-3.5 pb-2.5 flex items-center justify-between border-b border-[#1f2c34]/50">
+            <h1 class="text-xl font-bold tracking-normal text-[#e9edef] select-none">Pembaruan</h1>
+            <div class="flex items-center gap-5 text-[#8696a0]">
+                <button onclick="toggleFilterModal()" class="hover:text-[#e9edef] active:scale-90 transition">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </button>
+                <div class="relative">
+                    <button onclick="toggleTopMenu()" class="hover:text-[#e9edef] active:scale-90 transition">
+                        <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+                    </button>
+                    <!-- DROPDOWN MENU 3-DOTS -->
+                    <div id="topDropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-[#1f2c34] rounded-2xl shadow-2xl border border-[#2a3942] py-1.5 z-50 text-xs font-medium animate-pop">
+                        <button onclick="openExportModal('pdf'); toggleTopMenu();" class="w-full text-left px-4 py-2.5 hover:bg-[#2a3942] flex items-center gap-2.5 text-[#e9edef]">
+                            <i class="fa-solid fa-file-pdf text-rose-400"></i> Export PDF Laporan
+                        </button>
+                        <button onclick="openExportModal('csv'); toggleTopMenu();" class="w-full text-left px-4 py-2.5 hover:bg-[#2a3942] flex items-center gap-2.5 text-[#e9edef]">
+                            <i class="fa-solid fa-file-csv text-emerald-400"></i> Export CSV
+                        </button>
+                        <button id="menuSuperadminBudget" onclick="openBudgetConfigModal(); toggleTopMenu();" class="hidden w-full text-left px-4 py-2.5 hover:bg-[#2a3942] flex items-center gap-2.5 text-amber-300">
+                            <i class="fa-solid fa-coins"></i> Pengaturan Anggaran
+                        </button>
+                        <div class="border-t border-[#2a3942] my-1"></div>
+                        <button onclick="logout()" class="w-full text-left px-4 py-2.5 hover:bg-rose-900/30 flex items-center gap-2.5 text-rose-400">
+                            <i class="fa-solid fa-right-from-bracket"></i> Keluar Akun
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- KONTEN UTAMA: STATUS & DAFTAR JADWAL (SALURAN) -->
+        <main class="flex-1 overflow-y-auto px-4 pt-3 pb-16 space-y-5">
+
+            <!-- SEKSI 1: STATUS (STORIES CAROUSEL HORISONTAL) -->
+            <section>
+                <h2 class="text-base font-bold text-[#e9edef] mb-3">Status</h2>
+                <div id="statusStoriesRow" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 snap-x">
+                    <!-- Status Item Ditambahkan oleh JS -->
+                    <div class="w-24 h-40 bg-[#1f2c34] rounded-2xl flex-shrink-0 flex flex-col items-center justify-center text-center p-2 border border-[#2a3942] animate-pulse">
+                        <i class="fa-solid fa-spinner fa-spin text-[#8696a0]"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEKSI 2: DAFTAR AKTIVITAS & TARGET JADWAL (SALURAN STYLE) -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-bold text-[#e9edef]">Saluran & Tugas Kerja</h2>
+                    <button onclick="openAutoGenerateModal()" class="bg-[#1f2c34] hover:bg-[#2a3942] active:scale-95 text-[#e9edef] text-xs font-bold px-3.5 py-1.5 rounded-full transition border border-[#2a3942] flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-[#25d366]"></i> AI Plan
+                    </button>
+                </div>
+
+                <!-- LIST JADWAL / SALURAN -->
+                <div id="taskChannelList" class="space-y-1 divide-y divide-[#1f2c34]/60">
+                    <div class="py-6 text-center text-[#8696a0] text-xs">
+                        <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> Memuat aktivitas harian...
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FLOATING ACTION BUTTONS (PENCIL & CAMERA) -->
+        <div class="fixed bottom-20 right-4 sm:right-[calc(50%-200px)] flex flex-col items-center gap-3.5 z-40">
+            <!-- Tombol Kecil: Input Teks / WA -->
+            <button onclick="openBulkTextModal()" title="Import Teks WA" class="w-10 h-10 rounded-xl bg-[#202c33] hover:bg-[#2a3942] active:scale-90 text-[#e9edef] flex items-center justify-center shadow-lg border border-[#2a3942] transition">
+                <i class="fa-solid fa-pen text-sm"></i>
+            </button>
+            <!-- Tombol Hijau Besar: Tambah Tugas Baru / Kamera -->
+            <button onclick="openTaskModal()" title="Tambah Single Task" class="w-14 h-14 rounded-2xl bg-[#25d366] hover:bg-[#00a884] active:scale-90 text-[#0b141a] flex items-center justify-center shadow-2xl transition">
+                <i class="fa-solid fa-camera text-xl font-bold"></i>
+            </button>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="fixed bottom-0 w-full max-w-md bg-[#0b141a] border-t border-[#1f2c34] flex items-center justify-around py-2 z-40 select-none">
+            <!-- TAB 1: CHAT -->
+            <button onclick="openGlobalChatModal()" class="flex flex-col items-center gap-0.5 group">
+                <div class="relative py-1 px-4 rounded-full transition group-active:scale-95">
+                    <i class="fa-regular fa-comment-dots text-xl text-[#8696a0]"></i>
+                    <span id="chatBadgeCount" class="absolute 1 top-0 right-1 bg-[#25d366] text-[#0b141a] text-[9.5px] font-black min-w-[17px] h-[17px] rounded-full flex items-center justify-center px-1">20</span>
+                </div>
+                <span class="text-[11px] font-semibold text-[#8696a0]">Chat</span>
+            </button>
+
+            <!-- TAB 2: PEMBARUAN (ACTIVE STATUS) -->
+            <button onclick="goToHomeJadwal()" class="flex flex-col items-center gap-0.5">
+                <div class="py-0.5 px-4 rounded-full bg-[#103629] text-[#25d366]">
+                    <i class="fa-solid fa-rotate-right text-lg font-bold"></i>
+                </div>
+                <span class="text-[11px] font-bold text-[#e9edef]">Pembaruan</span>
+            </button>
+
+            <!-- TAB 3: DOMPET INSENTIF / KOMUNITAS -->
+            <button onclick="openEarningsModal()" class="flex flex-col items-center gap-0.5 group">
+                <div class="py-1 px-4 rounded-full text-[#8696a0] group-hover:text-[#e9edef] transition group-active:scale-95">
+                    <i class="fa-solid fa-wallet text-xl"></i>
+                </div>
+                <span class="text-[11px] font-semibold text-[#8696a0]">Insentif</span>
+            </button>
+
+            <!-- TAB 4: PROFIL / RELASI -->
+            <button onclick="openProfileModal()" class="flex flex-col items-center gap-0.5 group">
+                <div class="py-1 px-4 rounded-full text-[#8696a0] group-hover:text-[#e9edef] transition group-active:scale-95">
+                    <i class="fa-regular fa-user text-xl"></i>
+                </div>
+                <span class="text-[11px] font-semibold text-[#8696a0]">Profil</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- MODAL POPUP: EXPORT & FILTER PERIODE LAPORAN -->
+    <div id="exportModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3.5 shadow-2xl animate-pop">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef]">Unduh Laporan Kerja</h3>
+                <button onclick="closeExportModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div id="pdfOptionGroup" class="space-y-1">
+                <label class="text-[10.5px] text-[#8696a0] font-bold">Format Dokumen</label>
+                <select id="exportPdfType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
+                    <option value="with_photos">📸 PDF Lengkap + Foto (Before & After)</option>
+                    <option value="text_only">📄 PDF Hanya Teks (Tabel Ringkas)</option>
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10.5px] text-[#8696a0] font-bold">Periode Waktu</label>
+                <select id="exportRangeType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
+                    <option value="daily">📅 Hari Ini</option>
+                    <option value="weekly">📆 7 Hari Terakhir</option>
+                    <option value="monthly">🗓️ Bulan Ini</option>
+                </select>
+            </div>
+
+            <button id="btnExecuteExport" onclick="processExportExecution()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
+                Unduh Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: AUTO GENERATE DENGAN AI (GEMINI) -->
+    <div id="autoGenerateModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef] flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-[#25d366]"></i> AI Smart Planner</h3>
+                <button onclick="closeAutoGenerateModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Kunci Gemini API</label>
+                <input type="password" id="userGeminiApiKey" placeholder="Tempel AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white font-mono mt-0.5">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
+                    <input type="date" id="gen-date" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Profesi</label>
+                    <select id="gen-role" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2 py-1.5 text-white mt-0.5">
+                        <option value="Teknisi Gedung">Teknisi</option>
+                        <option value="Cleaning Service">Cleaning</option>
+                        <option value="Admin Kantor">Admin</option>
+                        <option value="Personal / Mahasiswa">Personal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Fokus Aktivitas / Target</label>
+                <input type="text" id="gen-focus" placeholder="Contoh: Perbaikan AC dan pembersihan filter" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white mt-0.5">
+            </div>
+
+            <button id="btn-process-gen" onclick="generateAiSchedulePreview()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl active:scale-95 transition">
+                Rancang Jadwal AI
+            </button>
+
+            <div id="aiPreviewList" class="space-y-1.5 pt-2 hidden"></div>
+            <button id="btn-save-ai-tasks" onclick="saveAllAiTasks()" class="w-full bg-[#00a884] text-white font-bold py-2 rounded-xl hidden">Simpan ke Saluran</button>
+        </div>
+    </div>
+
+    <!-- MODAL: TAMBAH SINGLE TUGAS -->
+    <div id="scheduleModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <form id="scheduleForm" class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef]" id="modalTitle">Tambah Aktivitas Baru</h3>
+                <button type="button" onclick="toggleModal(false)" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Nama Petugas (Sesuai Akun)</label>
+                <input type="text" id="input-name" readonly class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-[#8696a0] cursor-not-allowed mt-0.5">
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Rincian Kegiatan</label>
+                <input type="text" id="input-task" required placeholder="Contoh: Perbaikan panel listrik" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Jam Mulai</label>
+                    <input type="time" id="input-start-time" value="08:00" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Jam Selesai</label>
+                    <input type="time" id="input-end-time" value="10:00" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+            </div>
+
+            <button type="submit" id="btn-save-task" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
+                Simpan Aktivitas
+            </button>
+        </form>
+    </div>
+
+    <!-- MODAL: DOKUMENTASI FOTO SELESAI (BEFORE & AFTER) -->
+    <div id="completionNoteModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <form id="formCompletionNote" class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef]">Selesaikan Tugas & Bukti Foto</h3>
+                <button type="button" onclick="closeCompletionNoteModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <input type="hidden" id="complete-task-id">
+
+            <div>
+                <p class="text-[10px] text-[#8696a0] font-bold">Tugas:</p>
+                <p id="complete-task-title" class="font-bold text-white bg-[#111b21] p-2 rounded-xl mt-0.5">-</p>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Catatan Penyelesaian</label>
+                <textarea id="complete-task-note" rows="2" placeholder="Tulis hasil pekerjaan..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5"></textarea>
+            </div>
+
+            <div class="space-y-2 pt-1 border-t border-[#2a3942]">
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold block mb-0.5">📷 Foto Sebelum (Before)</label>
+                    <input type="file" id="complete-file-before" accept="image/*" class="w-full text-[10px] text-[#8696a0] file:bg-[#111b21] file:text-white file:border-0 file:rounded-lg file:px-2 file:py-1">
+                </div>
+                <div>
+                    <label class="text-[10px] text-[#25d366] font-bold block mb-0.5">✅ Foto Sesudah (After)</label>
+                    <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[10px] text-[#8696a0] file:bg-[#25d366] file:text-[#0b141a] file:font-bold file:border-0 file:rounded-lg file:px-2 file:py-1">
+                </div>
+            </div>
+
+            <button type="submit" id="btn-submit-completion" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
+                Simpan & Upload
+            </button>
+        </form>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC LENGKAP -->
+    <script>
+        const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
+
+        let currentUser = null;
+        let globalTasks = [];
+        let previewTasksData = [];
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
+            if (userId === currentUser?.id) {
+                const name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.name;
+                if (name) return name;
+            }
+            if (fallbackName && fallbackName.trim()) return fallbackName.trim();
+            if (fallbackEmail) return fallbackEmail.split('@')[0];
+            return 'Petugas BPB';
+        }
+
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                initApp();
+            } else {
+                const email = prompt("Masukkan Email Anda untuk demo / login:", "petugas@binayasa.co.id");
+                if (email) {
+                    currentUser = { id: 'usr_' + Date.now(), email: email, user_metadata: { full_name: email.split('@')[0].toUpperCase() } };
+                    initApp();
+                }
+            }
+        }
+
+        async function initApp() {
+            document.getElementById('input-name').value = getUserDisplayName(currentUser.id, currentUser.email);
+            const savedKey = localStorage.getItem('user_gemini_api_key') || '';
+            const keyInput = document.getElementById('userGeminiApiKey');
+            if (keyInput) keyInput.value = savedKey;
+            await fetchTasks();
+        }
+
+        async function fetchTasks() {
+            const { data, error } = await _supabase.from('jadwal').select('*').order('created_at', { ascending: false }).limit(25);
+            if (!error && data) {
+                globalTasks = data;
+            } else {
+                globalTasks = [
+                    { id: '1', nama: 'Tukang Kunci', tugas: 'Duplikat kunci master pintu', peran: 'Teknisi', jam_mulai: '08:00', jam_selesai: '09:30', status: 'Selesai', created_at: new Date().toISOString() },
+                    { id: '2', nama: 'Hanif BTN', tugas: 'Cek AC Ruang Server Lantai 2', peran: 'Teknisi', jam_mulai: '09:30', jam_selesai: '11:00', status: 'Proses', created_at: new Date().toISOString() },
+                    { id: '3', nama: 'Herman Bko', tugas: 'Patroli & kontrol akses gate', peran: 'Security', jam_mulai: '07:00', jam_selesai: '15:00', status: 'Selesai', created_at: new Date().toISOString() }
+                ];
+            }
+            renderUI();
+        }
+
+        function renderUI() {
+            renderStatusStories();
+            renderChannelTasks();
+        }
+
+        function renderStatusStories() {
+            const container = document.getElementById('statusStoriesRow');
+            container.innerHTML = '';
+
+            const sampleStories = [
+                { name: 'Tukang Kunci', code: 'TD', bg: 'from-amber-700/80 to-slate-900', label: 'Dharmahusada...' },
+                { name: 'Fadli Channel', code: 'FC', bg: 'from-emerald-800/80 to-slate-900', label: 'Sepaket pin ready' },
+                { name: 'Hanif BTN', code: 'HN', bg: 'from-blue-900/80 to-slate-900', label: 'Jombang NR' },
+                { name: 'Herman Bko', code: 'HB', bg: 'from-rose-900/80 to-slate-900', label: 'Security' },
+                { name: 'Pak Syarial', code: 'PS', bg: 'from-slate-800 to-slate-900', label: 'Syariah' }
+            ];
+
+            sampleStories.forEach(s => {
+                const card = document.createElement('div');
+                card.className = `w-24 h-40 rounded-2xl flex-shrink-0 bg-gradient-to-b ${s.bg} p-2.5 flex flex-col justify-between relative overflow-hidden border border-[#2a3942] cursor-pointer active:scale-95 transition shadow-md snap-start`;
+                card.innerHTML = `
+                    <div class="w-9 h-9 rounded-full border-2 border-[#25d366] p-0.5 bg-[#0b141a] flex items-center justify-center font-bold text-xs text-[#25d366] shadow-sm">
+                        ${s.code}
+                    </div>
+                    <div class="z-10">
+                        <p class="text-[10px] text-[#e9edef] font-bold leading-tight line-clamp-2">${s.label}</p>
+                        <p class="text-[9px] text-[#8696a0] truncate mt-0.5">${s.name}</p>
+                    </div>
+                `;
+                card.onclick = () => alert(`Melihat status: ${s.name}`);
+                container.appendChild(card);
+            });
+        }
+
+        function renderChannelTasks() {
+            const container = document.getElementById('taskChannelList');
+            container.innerHTML = '';
+
+            if (globalTasks.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-xs text-[#8696a0]">Belum ada jadwal hari ini.</div>';
+                return;
+            }
+
+            globalTasks.forEach(task => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between py-3 cursor-pointer hover:bg-[#1f2c34]/40 px-1 rounded-xl transition';
+                
+                const initials = (task.nama || 'P').substring(0, 2).toUpperCase();
+                const isCompleted = task.status === 'Selesai';
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div class="w-12 h-12 rounded-full bg-[#1f2c34] border border-[#2a3942] flex items-center justify-center font-bold text-sm text-[#25d366] flex-shrink-0">
+                            ${initials}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-sm text-[#e9edef] truncate">${task.nama || 'Petugas'}</h4>
+                            <p class="text-xs text-[#8696a0] truncate mt-0.5 flex items-center gap-1">
+                                ${isCompleted ? '<i class="fa-solid fa-check-double text-[#25d366] text-[10px]"></i>' : '<i class="fa-regular fa-clock text-[10px]"></i>'}
+                                <span>${task.tugas}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right flex flex-col items-end gap-1 flex-shrink-0 pl-2">
+                        <span class="text-[11px] font-medium ${isCompleted ? 'text-[#25d366]' : 'text-[#8696a0]'}">${task.jam_mulai || 'Kemarin'}</span>
+                        <button onclick="openCompletionModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')" class="text-[10px] bg-[#1f2c34] hover:bg-[#25d366] hover:text-[#0b141a] text-[#8696a0] px-2 py-0.5 rounded-full border border-[#2a3942] transition">
+                            ${task.status}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // TOGGLE & MODALS
+        function toggleTopMenu() { document.getElementById('topDropdownMenu').classList.toggle('hidden'); }
+        function toggleModal(show) { document.getElementById('scheduleModal').classList.toggle('hidden', !show); }
+        function openTaskModal() { toggleModal(true); }
+        function openBulkTextModal() { alert("Tempel chat teks jadwal WhatsApp."); }
+        function openAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.remove('hidden'); }
+        function closeAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.add('hidden'); }
+        function openExportModal(format) { document.getElementById('exportModal').classList.remove('hidden'); }
+        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+        function openGlobalChatModal() { alert("Membuka Chat Tim Global..."); }
+        function openEarningsModal() { alert("Saldo Insentif Anda: Rp 125.000"); }
+        function openProfileModal() { alert(`Akun: ${getUserDisplayName(currentUser?.id, currentUser?.email)}`); }
+        function goToHomeJadwal() { fetchTasks(); }
+        function logout() { location.reload(); }
+
+        function openCompletionModal(id, title) {
+            document.getElementById('complete-task-id').value = id;
+            document.getElementById('complete-task-title').innerText = title;
+            document.getElementById('completionNoteModal').classList.remove('hidden');
+        }
+        function closeCompletionNoteModal() { document.getElementById('completionNoteModal').classList.add('hidden'); }
+
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const tugas = document.getElementById('input-task').value;
+            const jam_mulai = document.getElementById('input-start-time').value;
+            const jam_selesai = document.getElementById('input-end-time').value;
+            const nama = getUserDisplayName(currentUser.id, currentUser.email);
+
+            const payload = { user_id: currentUser.id, nama, tugas, jam_mulai, jam_selesai, status: 'Belum', peran: 'Teknisi', created_at: new Date().toISOString() };
+            await _supabase.from('jadwal').insert([payload]);
+            toggleModal(false);
+            fetchTasks();
+        });
+
+        document.getElementById('formCompletionNote').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('complete-task-id').value;
+            const note = document.getElementById('complete-task-note').value;
+            await _supabase.from('jadwal').update({ status: 'Selesai', keterangan: note }).eq('id', id);
+            closeCompletionNoteModal();
+            fetchTasks();
+        });
+
+        // EXPORT PDF
+        async function processExportExecution() {
+            const pdfType = document.getElementById('exportPdfType').value;
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            doc.setFontSize(14);
+            doc.text("LAPORAN AKTIVITAS & STATUS KERJA", 14, 15);
+            doc.setFontSize(9);
+            doc.text(`Unit: ${UNIT_NAME} | Format: ${pdfType}`, 14, 22);
+
+            const rows = globalTasks.map((t, idx) => [idx + 1, t.jam_mulai + ' - ' + t.jam_selesai, t.nama, t.tugas, t.status]);
+            doc.autoTable({ startY: 28, head: [['No', 'Waktu', 'Nama Petugas', 'Aktivitas', 'Status']], body: rows });
+            doc.save(`Laporan_Pembaruan_${Date.now()}.pdf`);
+            closeExportModal();
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
