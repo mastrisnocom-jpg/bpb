@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -72,11 +72,12 @@
             <p id="auth-subtitle" class="text-[10px] font-medium text-[#8696a0] mb-5">Workspace Saluran, Status & Produktivitas Kerja</p>
             
             <div id="form-container" class="space-y-2.5">
+                <input type="text" id="input-auth-name" placeholder="Nama Lengkap Petugas" class="hidden w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3.5 py-2.5 text-center text-xs text-white font-semibold focus:outline-none focus:border-[#25d366] transition">
                 <input type="email" id="input-email" placeholder="Alamat Email" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3.5 py-2.5 text-center text-xs text-white font-semibold focus:outline-none focus:border-[#25d366] transition">
                 <input type="password" id="input-password" placeholder="Kata Sandi" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3.5 py-2.5 text-center text-xs text-white font-semibold focus:outline-none focus:border-[#25d366] transition">
             </div>
             
-            <p id="auth-error" class="text-[10px] text-rose-400 font-bold mt-2.5 hidden leading-snug">Error message</p>
+            <p id="auth-error" class="text-[10px] text-rose-400 font-bold mt-2.5 hidden leading-snug"></p>
             <button id="btn-action" onclick="handleAuthSubmit()" class="w-full bg-[#25d366] text-[#0b141a] font-bold py-2.5 rounded-xl hover:bg-[#00a884] active:scale-95 transition text-xs shadow-md mt-4">Masuk</button>
             
             <div class="flex items-center my-3 text-[10px] text-[#8696a0]">
@@ -139,7 +140,10 @@
         <div id="filterSearchDrawer" class="hidden bg-[#111b21] border-b border-[#1f2c34] p-3 animate-pop space-y-2">
             <div class="grid grid-cols-2 gap-2">
                 <div>
-                    <label class="text-[9.5px] text-[#8696a0] font-bold uppercase">Tanggal:</label>
+                    <div class="flex justify-between items-center">
+                        <label class="text-[9.5px] text-[#8696a0] font-bold uppercase">Tanggal:</label>
+                        <button onclick="showAllDatesFilter()" class="text-[9px] text-[#25d366] font-bold hover:underline">Semua</button>
+                    </div>
                     <input type="date" id="dateFilter" onchange="renderTasks()" class="w-full bg-[#1f2c34] border border-[#2a3942] text-[11px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
                 </div>
                 <div>
@@ -160,8 +164,8 @@
                     <option value="Proses">⚡ Proses</option>
                     <option value="Selesai">✅ Selesai</option>
                 </select>
-                <select id="userFilter" onchange="renderTasks()" class="hidden w-full bg-[#1f2c34] border border-amber-400/40 text-[11px] font-bold rounded-lg px-2 py-1 text-amber-300 focus:outline-none">
-                    <option value="All">Semua User</option>
+                <select id="userFilter" onchange="renderTasks()" class="w-full bg-[#1f2c34] border border-[#2a3942] text-[11px] font-bold rounded-lg px-2 py-1 text-white focus:outline-none">
+                    <option value="All">Semua Rekan Tim</option>
                 </select>
             </div>
         </div>
@@ -211,7 +215,7 @@
                 <i class="fa-solid fa-pen text-sm"></i>
             </button>
             <button onclick="openTaskModal()" title="Tambah Single Task" class="w-14 h-14 rounded-2xl bg-[#25d366] hover:bg-[#00a884] active:scale-90 text-[#0b141a] flex items-center justify-center shadow-2xl transition">
-                <i class="fa-solid fa-camera text-xl font-bold"></i>
+                <i class="fa-solid fa-plus text-2xl font-bold"></i>
             </button>
         </div>
 
@@ -258,7 +262,7 @@
         </nav>
     </div>
 
-    <!-- MODAL RELASI & NOTIFIKASI -->
+    <!-- MODAL RELASI & NOTIFIKASI & REKAN TIM -->
     <div id="followsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -268,7 +272,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-white">Notifikasi & Komunitas</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Pembaruan aktivitas like, tugas, komentar & relasi</p>
+                        <p class="text-[9.5px] text-[#8696a0]">Pembaruan aktivitas & tim kerja Surabaya</p>
                     </div>
                 </div>
                 <button onclick="closeFollowsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
@@ -283,9 +287,6 @@
                 <button onclick="switchNotifModalTab('users')" id="btnTabUsers" class="flex-1 py-2.5 font-bold text-xs text-[#8696a0] hover:text-white flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-user-group"></i> Rekan Tim
                 </button>
-                <button id="btnTabApprovals" onclick="switchNotifModalTab('approvals')" class="hidden flex-1 py-2.5 font-bold text-xs text-amber-400 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-user-shield"></i> Persetujuan <span id="badgePendingApprovals" class="hidden bg-rose-500 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black">0</span>
-                </button>
             </div>
 
             <div id="notifHistorySection" class="flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-[#0b141a]">
@@ -294,16 +295,6 @@
 
             <div id="usersFollowSection" class="hidden flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-[#0b141a]">
                 <div id="usersFollowList" class="space-y-2"></div>
-            </div>
-
-            <div id="approvalsSection" class="hidden flex-1 overflow-y-auto px-4 py-3 space-y-2 text-xs bg-[#0b141a]">
-                <div class="flex items-center justify-between pb-1 border-b border-[#2a3942] mb-2">
-                    <span class="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">Antrean Persetujuan Akun</span>
-                    <button onclick="fetchPendingApprovals()" class="text-[10px] font-bold text-[#25d366] hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-rotate-right"></i> Refresh
-                    </button>
-                </div>
-                <div id="pendingUsersList" class="space-y-2"></div>
             </div>
 
             <div class="p-3 bg-[#111b21] border-t border-[#2a3942]">
@@ -326,7 +317,7 @@
                         <div class="flex items-center gap-1.5">
                             <h4 id="storyViewerName" class="text-white text-xs font-black tracking-tight drop-shadow-md">Nama User</h4>
                             <span class="bg-[#103629] text-[#25d366] text-[9px] font-bold px-1.5 py-0.5 rounded border border-[#25d366]/40 flex items-center gap-1">
-                                <i class="fa-solid fa-user-check text-[8px]"></i> Mengikuti
+                                <i class="fa-solid fa-circle-check text-[8px]"></i> BPB Surabaya
                             </span>
                         </div>
                         <p id="storyViewerTime" class="text-[9.5px] text-[#8696a0] font-medium mt-0.5">Baru saja</p>
@@ -345,7 +336,6 @@
             <img id="storyViewerImage" src="" class="w-full h-full object-contain max-h-[82vh]">
             <div class="absolute inset-y-0 left-0 w-1/3 z-10" onclick="prevStory(event)"></div>
             <div class="absolute inset-y-0 right-0 w-1/3 z-10" onclick="nextStory(event)"></div>
-            <div id="storyLiveCommentsContainer" class="absolute bottom-24 left-4 max-w-[70%] z-20 space-y-1.5 pointer-events-none"></div>
             <div id="storyFlyingHeartsContainer" class="absolute inset-0 z-20 pointer-events-none overflow-hidden"></div>
             <div class="absolute bottom-4 left-4 right-4 z-15 pointer-events-none bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
                 <p id="storyViewerTaskTitle" class="text-white text-xs font-black leading-snug line-clamp-2 drop-shadow-sm"></p>
@@ -354,18 +344,12 @@
         </div>
 
         <div class="p-3.5 z-20 bg-gradient-to-t from-black/95 via-black/70 to-transparent flex items-center gap-2.5">
-            <button onclick="shareActiveStory()" class="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 active:scale-90 transition" title="Bagikan">
-                <i class="fa-solid fa-repeat text-sm"></i>
-            </button>
             <div class="flex-1 bg-white/15 border border-white/20 rounded-full px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-[#25d366]">
                 <input type="text" id="inputStoryReply" onkeydown="if(event.key === 'Enter') sendStoryReply()" placeholder="Balas status ini..." class="w-full bg-transparent border-none text-xs text-white placeholder-white/60 focus:outline-none">
             </div>
             <div class="flex items-center gap-1.5 flex-shrink-0">
                 <button onclick="triggerStoryLoveAnimation(event)" class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-sm active:scale-125 transition" title="Love">
                     <i class="fa-solid fa-heart"></i>
-                </button>
-                <button onclick="sendStoryReaction('👍')" class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm font-black active:scale-125 transition" title="Jempol">
-                    <i class="fa-solid fa-thumbs-up"></i>
                 </button>
             </div>
         </div>
@@ -405,33 +389,6 @@
         </div>
     </div>
 
-    <!-- MODAL DISKUSI JADWAL (KOMENTAR) -->
-    <div id="commentModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-[#1f2c34] w-full h-full md:h-[80vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm font-bold shadow-md">
-                        <i class="fa-solid fa-comments"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-white">Diskusi & Komentar Saluran</h3>
-                        <p id="commentModalSubtitle" class="text-[9.5px] text-[#8696a0] truncate max-w-[220px]">Memuat tugas...</p>
-                    </div>
-                </div>
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-[#0b141a]"></div>
-            <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
-                <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="flex-1 bg-[#1f2c34] border border-[#2a3942] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#25d366]">
-                <button onclick="sendComment()" class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] font-bold flex items-center justify-center hover:bg-[#00a884] transition active:scale-90 shadow-md">
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL FORM DOKUMENTASI FOTO SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
@@ -460,7 +417,7 @@
                     
                     <div>
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Keterangan / Hasil Pekerjaan</label>
-                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-xs font-medium text-white focus:outline-none focus:border-[#25d366]"></textarea>
+                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dan diuji normal..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-xs font-medium text-white focus:outline-none focus:border-[#25d366]"></textarea>
                     </div>
 
                     <div class="pt-2 border-t border-[#2a3942] space-y-2.5">
@@ -500,7 +457,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-white">Dompet Insentif Pribadi</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Poin & reward kinerja harian</p>
+                        <p class="text-[9.5px] text-[#8696a0]">Poin & reward kinerja operasional</p>
                     </div>
                 </div>
                 <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
@@ -510,7 +467,7 @@
 
             <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-[#0b141a]">
                 <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-4 text-white shadow-md">
-                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya</p>
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Saldo Insentif Siap Tarik</p>
                     <div class="flex items-end justify-between mt-1">
                         <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold">Rp 0</h2>
                         <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="bg-[#111b21] text-[#25d366] hover:bg-[#0b141a] active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5 border border-[#25d366]/40">
@@ -518,13 +475,25 @@
                         </button>
                     </div>
                     <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
-                        <span id="modalMyPointsDetail">0 Poin</span>
-                        <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
+                        <span id="modalMyPointsDetail">0 Poin Terkumpul</span>
+                        <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Telah Ditarik: Rp 0</span>
                     </div>
                 </div>
 
                 <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942]">
-                    <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider mb-2">Histori Penarikan Insentif</h4>
+                    <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-[#25d366]"></i> Skema Poin & Reward
+                    </h4>
+                    <div class="space-y-1.5 text-[11px] text-[#8696a0]">
+                        <div class="flex justify-between"><span>Tugas Selesai Tepat Waktu</span><span class="text-white font-bold">+100 Poin</span></div>
+                        <div class="flex justify-between"><span>Dokumentasi Foto Lengkap</span><span class="text-white font-bold">+50 Poin</span></div>
+                        <div class="flex justify-between"><span>Tugas Tag #Perbaikan</span><span class="text-white font-bold">+100 Poin</span></div>
+                        <div class="flex justify-between pt-1 border-t border-[#2a3942]"><span>Konversi Poin</span><span class="text-[#25d366] font-bold">100 Poin = Rp 10,-</span></div>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942]">
+                    <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider mb-2">Histori Penarikan</h4>
                     <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5">
                         <div class="text-center text-[#8696a0] text-[10px] py-2">Belum ada riwayat penarikan.</div>
                     </div>
@@ -563,7 +532,7 @@
             </div>
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Rincian Kegiatan</label>
-                <input type="text" id="input-task" required placeholder="Contoh: Perbaikan panel listrik" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
+                <input type="text" id="input-task" required placeholder="Contoh: Perbaikan panel listrik & AC" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
             </div>
             <div class="grid grid-cols-2 gap-2">
                 <div>
@@ -592,13 +561,13 @@
             </div>
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Tempel Pesan Chat Jadwal</label>
-                <textarea id="bulk-text-area" rows="5" placeholder="08.00-10.00: Perbaikan AC" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-white font-mono mt-0.5 focus:outline-none focus:border-[#25d366]"></textarea>
+                <textarea id="bulk-text-area" rows="5" placeholder="08.00-10.00: Perbaikan AC&#10;10.00-12.00: Cek panel genset" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-white font-mono mt-0.5 focus:outline-none focus:border-[#25d366]"></textarea>
             </div>
             <button onclick="processBulkTextImport()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl active:scale-95 transition">Simpan Semua Jadwal</button>
         </div>
     </div>
 
-    <!-- MODAL EXPORT PDF / CSV -->
+    <!-- MODAL EXPORT PDF -->
     <div id="exportModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3.5 shadow-2xl animate-pop">
             <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
@@ -613,37 +582,6 @@
                 </select>
             </div>
             <button onclick="processExportExecution()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">Unduh Sekarang</button>
-        </div>
-    </div>
-
-    <!-- MODAL AI PLANNER -->
-    <div id="autoGenerateModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop max-h-[85vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
-                <h3 class="font-bold text-sm text-[#e9edef] flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-[#25d366]"></i> AI Smart Planner</h3>
-                <button onclick="closeAutoGenerateModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
-            </div>
-            <div>
-                <label class="text-[10px] text-[#8696a0] font-bold">Kunci Gemini API</label>
-                <input type="password" id="userGeminiApiKey" placeholder="Tempel AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white font-mono mt-0.5">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <div>
-                    <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
-                    <input type="date" id="gen-date" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
-                </div>
-                <div>
-                    <label class="text-[10px] text-[#8696a0] font-bold">Profesi</label>
-                    <select id="gen-role" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
-                        <option value="Teknisi Gedung">Teknisi</option>
-                        <option value="Cleaning Service">Cleaning</option>
-                        <option value="Admin Kantor">Admin</option>
-                    </select>
-                </div>
-            </div>
-            <button id="btn-process-gen" onclick="generateAiSchedulePreview()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl active:scale-95 transition">Rancang Jadwal AI</button>
-            <div id="aiPreviewList" class="space-y-1.5 pt-2 hidden"></div>
-            <button id="btn-save-ai-tasks" onclick="saveAllAiTasks()" class="w-full bg-[#00a884] text-white font-bold py-2 rounded-xl hidden">Simpan ke Saluran</button>
         </div>
     </div>
 
@@ -663,9 +601,12 @@
                     <div>
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Tujuan Bank / E-Wallet</label>
                         <select id="wd-method" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
-                            <option value="BANK_BTN">Bank BTN</option>
+                            <option value="BANK_BTN">Bank BTN (Gratis Admin)</option>
                             <option value="BANK_BCA">Bank BCA</option>
-                            <option value="EWALLET_DANA">DANA</option>
+                            <option value="BANK_BRI">Bank BRI</option>
+                            <option value="BANK_MANDIRI">Bank Mandiri</option>
+                            <option value="EWALLET_DANA">DANA (E-Wallet)</option>
+                            <option value="EWALLET_GOPAY">GoPay</option>
                         </select>
                     </div>
                     <div>
@@ -673,7 +614,7 @@
                         <input type="text" id="wd-account-number" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nama Pemilik</label>
+                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nama Pemilik Akun</label>
                         <input type="text" id="wd-account-name" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
                     </div>
                 </div>
@@ -700,17 +641,33 @@
                     <div>
                         <h4 class="text-sm font-black text-white" id="modal-user-name">Pengguna</h4>
                         <p class="text-[11px] text-[#8696a0]" id="profile-email-display">email@domain.com</p>
+                        <span class="inline-flex items-center gap-1 mt-1 bg-[#103629] text-[#25d366] px-2 py-0.5 rounded-full text-[9px] font-bold">
+                            <i class="fa-solid fa-circle-check text-[8px]"></i> Unit BSN KC Surabaya
+                        </span>
                     </div>
                 </div>
+
                 <div class="bg-[#111b21] rounded-2xl p-3.5 border border-[#2a3942] space-y-2">
+                    <div class="flex justify-between items-center pb-2 border-b border-[#2a3942]">
+                        <span class="text-[10px] font-extrabold text-[#8696a0] uppercase">Data Pegawai</span>
+                        <button onclick="toggleEditProfile()" id="btnEditProfileToggle" class="text-[10px] text-[#25d366] font-bold hover:underline">Edit</button>
+                    </div>
                     <div class="flex justify-between p-2 rounded-xl bg-[#1f2c34]">
-                        <span class="text-[10px] font-bold uppercase text-[#8696a0]">NIP</span>
+                        <span class="text-[10px] font-bold uppercase text-[#8696a0]">Nama</span>
+                        <span id="display-profile-name" class="font-bold text-white text-xs">Petugas BPB</span>
+                        <input type="text" id="edit-profile-name" class="hidden bg-[#111b21] border border-[#2a3942] rounded px-2 py-0.5 text-white text-xs text-right">
+                    </div>
+                    <div class="flex justify-between p-2 rounded-xl bg-[#1f2c34]">
+                        <span class="text-[10px] font-bold uppercase text-[#8696a0]">NIP / ID</span>
                         <span id="display-profile-nip" class="font-bold text-white text-xs">BPB-202601</span>
+                        <input type="text" id="edit-profile-nip" class="hidden bg-[#111b21] border border-[#2a3942] rounded px-2 py-0.5 text-white text-xs text-right">
                     </div>
                     <div class="flex justify-between p-2 rounded-xl bg-[#1f2c34]">
                         <span class="text-[10px] font-bold uppercase text-[#8696a0]">WhatsApp</span>
-                        <span id="display-profile-phone" class="font-bold text-white text-xs">-</span>
+                        <span id="display-profile-phone" class="font-bold text-white text-xs">+62 821-4651-1484</span>
+                        <input type="text" id="edit-profile-phone" class="hidden bg-[#111b21] border border-[#2a3942] rounded px-2 py-0.5 text-white text-xs text-right">
                     </div>
+                    <button id="btnSaveProfile" onclick="saveProfileChanges()" class="hidden w-full bg-[#25d366] text-[#0b141a] font-bold py-2 rounded-xl text-xs mt-2">Simpan Perubahan</button>
                 </div>
             </div>
             <div class="p-3.5 bg-[#111b21] border-t border-[#2a3942] flex gap-2">
@@ -733,19 +690,18 @@
 
         let currentUser = null;
         let globalTasks = [];
-        let globalWithdrawals = [];
+        let allRegisteredProfiles = [];
+        let userProfilesMap = {};
         let globalNotifications = [];
         let isSuperAdmin = false;
         let activeFriendFeedId = null;
         let activeFriendFeedName = null;
-        let userProfilesMap = {};
-        let myFollowings = [];
-        let myFollowers = [];
         let activeStoriesList = [];
         let currentStoryIndex = 0;
         let storyProgressTimer = null;
         const STORY_DURATION_MS = 6000;
         let isSignUpMode = false;
+        let isEditingProfile = false;
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
@@ -754,7 +710,7 @@
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
 
         function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
-            if (userId && userProfilesMap[userId]) return userProfilesMap[userId];
+            if (userId && userProfilesMap[userId]?.nama) return userProfilesMap[userId].nama;
             if (userId === currentUser?.id) {
                 const name = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.name;
                 if (name) return name;
@@ -764,8 +720,12 @@
             return 'Petugas BPB';
         }
 
-        function getAvatarUrl(userObj) {
-            return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
+        function getUserAvatar(userId) {
+            if (userId && userProfilesMap[userId]?.avatar_url) return userProfilesMap[userId].avatar_url;
+            if (userId === currentUser?.id) {
+                return currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture || null;
+            }
+            return null;
         }
 
         function formatTimeAgo(isoString) {
@@ -786,12 +746,14 @@
             isSignUpMode = !isSignUpMode;
             document.getElementById('auth-title').innerText = isSignUpMode ? "Daftar Akun Baru" : "Binayasa M-Ops";
             document.getElementById('btn-action').innerText = isSignUpMode ? "Daftar" : "Masuk";
+            document.getElementById('input-auth-name').classList.toggle('hidden', !isSignUpMode);
             document.getElementById('btn-switch').innerText = isSignUpMode ? "Sudah punya akun? Masuk." : "Belum punya akun? Daftar sekarang.";
         }
 
         async function handleAuthSubmit() {
             const email = document.getElementById('input-email').value.trim();
             const password = document.getElementById('input-password').value.trim();
+            const fullName = document.getElementById('input-auth-name').value.trim();
             const errEl = document.getElementById('auth-error');
             errEl.classList.add('hidden');
 
@@ -802,7 +764,11 @@
             }
 
             if (isSignUpMode) {
-                const { data, error } = await _supabase.auth.signUp({ email, password });
+                const { data, error } = await _supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: { data: { full_name: fullName || email.split('@')[0] } }
+                });
                 if (error) {
                     errEl.innerText = error.message;
                     errEl.classList.remove('hidden');
@@ -832,7 +798,7 @@
 
         async function syncUserProfile() {
             if (!currentUser) return;
-            const metaAvatar = getAvatarUrl(currentUser);
+            const metaAvatar = currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture || null;
             const displayName = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
             await _supabase.from('profiles').upsert({
                 id: currentUser.id,
@@ -845,11 +811,77 @@
 
         async function fetchAllProfiles() {
             const { data } = await _supabase.from('profiles').select('*');
+            const userFilter = document.getElementById('userFilter');
+            if (userFilter) userFilter.innerHTML = '<option value="All">Semua Rekan Tim</option>';
+            
             if (data) {
+                allRegisteredProfiles = data;
                 data.forEach(p => {
-                    userProfilesMap[p.id] = p.nama || p.email.split('@')[0];
+                    userProfilesMap[p.id] = { nama: p.nama || p.email.split('@')[0], avatar_url: p.avatar_url, nip: p.nip, no_wa: p.no_wa };
+                    if (userFilter) {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.innerText = p.nama || p.email.split('@')[0];
+                        userFilter.appendChild(opt);
+                    }
                 });
             }
+            renderTeamMembersList();
+        }
+
+        function renderTeamMembersList() {
+            const container = document.getElementById('usersFollowList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (allRegisteredProfiles.length === 0) {
+                container.innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Belum ada rekan tim terdaftar.</div>';
+                return;
+            }
+
+            allRegisteredProfiles.forEach(p => {
+                const isMe = p.id === currentUser?.id;
+                const avatar = p.avatar_url;
+                const initial = (p.nama || 'P').substring(0, 2).toUpperCase();
+
+                const card = document.createElement('div');
+                card.className = 'p-3 bg-[#111b21] rounded-2xl border border-[#2a3942] flex items-center justify-between gap-2';
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-[#1f2c34] border border-[#25d366] flex items-center justify-center font-bold text-xs text-[#25d366] flex-shrink-0">
+                            ${avatar ? `<img src="${avatar}" class="w-full h-full object-cover">` : initial}
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="font-bold text-white text-xs truncate">${p.nama || p.email.split('@')[0]} ${isMe ? '(Saya)' : ''}</h4>
+                            <p class="text-[#8696a0] text-[10px] truncate">${p.nip || 'BPB Surabaya'} • ${p.email}</p>
+                        </div>
+                    </div>
+                    <button onclick="viewFriendFeed('${p.id}', '${(p.nama || p.email.split('@')[0]).replace(/'/g, "\\'")}')" class="bg-[#1f2c34] hover:bg-[#25d366] hover:text-[#0b141a] text-[#25d366] border border-[#2a3942] px-2.5 py-1.5 rounded-xl font-bold text-[10px] active:scale-95 transition flex-shrink-0">
+                        Lihat Saluran
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function viewFriendFeed(userId, userName) {
+            activeFriendFeedId = userId;
+            activeFriendFeedName = userName;
+            closeFollowsModal();
+            renderTasks();
+            showToast(`Melihat saluran: ${userName}`);
+        }
+
+        function resetToMyFeed() {
+            activeFriendFeedId = null;
+            activeFriendFeedName = null;
+            renderTasks();
+        }
+
+        function showAllDatesFilter() {
+            document.getElementById('dateFilter').value = '';
+            renderTasks();
+            showToast("Menampilkan semua tanggal");
         }
 
         async function fetchFollowsAndNotifs() {
@@ -872,7 +904,7 @@
             if (!container) return;
             container.innerHTML = '';
             if (globalNotifications.length === 0) {
-                container.innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Belum ada notifikasi.</div>';
+                container.innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Belum ada notifikasi aktivitas.</div>';
                 return;
             }
             globalNotifications.forEach(n => {
@@ -891,6 +923,25 @@
             });
         }
 
+        function switchNotifModalTab(tab) {
+            const notifsSection = document.getElementById('notifHistorySection');
+            const usersSection = document.getElementById('usersFollowSection');
+            const btnNotifs = document.getElementById('btnTabNotifs');
+            const btnUsers = document.getElementById('btnTabUsers');
+
+            if (tab === 'notifs') {
+                notifsSection.classList.remove('hidden');
+                usersSection.classList.add('hidden');
+                btnNotifs.className = "flex-1 py-2.5 font-extrabold text-xs text-[#25d366] border-b-2 border-[#25d366] flex items-center justify-center gap-1.5";
+                btnUsers.className = "flex-1 py-2.5 font-bold text-xs text-[#8696a0] hover:text-white flex items-center justify-center gap-1.5";
+            } else {
+                notifsSection.classList.add('hidden');
+                usersSection.classList.remove('hidden');
+                btnUsers.className = "flex-1 py-2.5 font-extrabold text-xs text-[#25d366] border-b-2 border-[#25d366] flex items-center justify-center gap-1.5";
+                btnNotifs.className = "flex-1 py-2.5 font-bold text-xs text-[#8696a0] hover:text-white flex items-center justify-center gap-1.5";
+            }
+        }
+
         function renderStoriesBar() {
             const container = document.getElementById('storiesContainer');
             if (!container) return;
@@ -901,7 +952,7 @@
                 if (task.foto_sesudah || task.foto_sebelum) {
                     const taskTime = new Date(task.completed_at || task.created_at || task.tanggal).getTime();
                     if (!userStoriesMap[task.user_id] || taskTime > userStoriesMap[task.user_id].time) {
-                        const avatarUrl = userProfilesMap[task.user_id + '_avatar'] || getAvatarUrl(currentUser);
+                        const avatarUrl = getUserAvatar(task.user_id);
                         userStoriesMap[task.user_id] = {
                             taskId: task.id,
                             userId: task.user_id,
@@ -921,7 +972,7 @@
             activeStoriesList = Object.values(userStoriesMap).sort((a, b) => b.time - a.time);
 
             if (activeStoriesList.length === 0) {
-                container.innerHTML = `<div class="w-full py-4 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60">Belum ada status dokumentasi foto kerja hari ini.</div>`;
+                container.innerHTML = `<div class="w-full py-4 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60">Belum ada dokumentasi foto kerja hari ini.</div>`;
                 return;
             }
 
@@ -979,7 +1030,8 @@
             }, interval);
         }
 
-        function nextStory() {
+        function nextStory(e) {
+            if (e) e.stopPropagation();
             if (currentStoryIndex < activeStoriesList.length - 1) {
                 currentStoryIndex++;
                 showStoryContent(currentStoryIndex);
@@ -988,7 +1040,8 @@
             }
         }
 
-        function prevStory() {
+        function prevStory(e) {
+            if (e) e.stopPropagation();
             if (currentStoryIndex > 0) {
                 currentStoryIndex--;
                 showStoryContent(currentStoryIndex);
@@ -1009,6 +1062,24 @@
             document.getElementById('storyViewerModal').classList.add('hidden');
         }
 
+        function triggerStoryLoveAnimation(e) {
+            if (e) e.stopPropagation();
+            const container = document.getElementById('storyFlyingHeartsContainer');
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            container.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 1400);
+            showToast("Menyukai dokumentasi");
+        }
+
+        async function sendStoryReply() {
+            const input = document.getElementById('inputStoryReply');
+            if (!input.value.trim()) return;
+            showToast("Balasan terkirim!");
+            input.value = '';
+        }
+
         function renderTasks() {
             renderStoriesBar();
 
@@ -1016,13 +1087,13 @@
             const selectedRole = document.getElementById('roleFilter')?.value || 'All'; 
             const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
             const selectedUser = document.getElementById('userFilter')?.value || 'All'; 
-            const selectedDate = document.getElementById('dateFilter')?.value || todayStr;
+            const selectedDate = document.getElementById('dateFilter')?.value;
 
             const friendIndicator = document.getElementById('friendFeedIndicator');
             const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
             if (activeFriendFeedId && activeFriendFeedId !== currentUser?.id) {
                 if (friendIndicator) friendIndicator.classList.remove('hidden');
-                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Teman';
+                if (friendNameDisplay) friendNameDisplay.innerText = activeFriendFeedName || 'Rekan Tim';
             } else {
                 if (friendIndicator) friendIndicator.classList.add('hidden');
             }
@@ -1034,44 +1105,53 @@
                 const matchRole = selectedRole === 'All' || item.peran === selectedRole;
                 const matchStatus = selectedStatus === 'All' || item.status === selectedStatus; 
                 
-                let canView = false;
-                if (isSuperAdmin) {
-                    canView = selectedUser === 'All' || item.user_id === selectedUser;
-                } else if (activeFriendFeedId) {
-                    canView = (item.user_id === activeFriendFeedId);
-                } else {
-                    canView = (item.user_id === currentUser?.id) || activeFriendFeedId;
+                let matchUser = true;
+                if (activeFriendFeedId) {
+                    matchUser = (item.user_id === activeFriendFeedId);
+                } else if (selectedUser !== 'All') {
+                    matchUser = (item.user_id === selectedUser);
                 }
-                return matchDate && matchRole && matchStatus && canView;
+                return matchDate && matchRole && matchStatus && matchUser;
             });
 
+            calculateAndRenderEarnings();
+
             if (filteredTasks.length === 0) {
-                if (cardsContainer) cardsContainer.innerHTML = `<div class="py-8 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60 mt-2">Tidak ada aktivitas pada tanggal ini.</div>`;
+                if (cardsContainer) cardsContainer.innerHTML = `<div class="py-8 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60 mt-2">Tidak ada aktivitas pada penyaringan ini.</div>`;
                 return;
             }
 
             filteredTasks.forEach(task => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between py-3 cursor-pointer hover:bg-[#1f2c34]/40 px-1 rounded-xl transition';
+                const avatar = getUserAvatar(task.user_id);
                 const initials = (task.nama || 'P').substring(0, 2).toUpperCase();
                 const isCompleted = task.status === 'Selesai';
+                const isProcess = task.status === 'Proses';
+
+                let statusBadgeColor = 'text-[#8696a0] bg-[#111b21]';
+                if (isCompleted) statusBadgeColor = 'text-[#25d366] bg-[#103629] border border-[#25d366]/30';
+                else if (isProcess) statusBadgeColor = 'text-amber-400 bg-amber-950/40 border border-amber-800/40';
 
                 row.innerHTML = `
-                    <div class="flex items-center gap-3.5 min-w-0 flex-1" onclick="openCommentModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')">
-                        <div class="w-12 h-12 rounded-full bg-[#1f2c34] border border-[#2a3942] flex items-center justify-center font-bold text-sm text-[#25d366] flex-shrink-0">
-                            ${initials}
+                    <div class="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#1f2c34] border border-[#2a3942] flex items-center justify-center font-bold text-sm text-[#25d366] flex-shrink-0">
+                            ${avatar ? `<img src="${avatar}" class="w-full h-full object-cover">` : initials}
                         </div>
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-1.5">
                                 <h4 class="font-bold text-sm text-white truncate">${getUserDisplayName(task.user_id, task.user_email, task.nama)}</h4>
                                 <span class="text-[9px] bg-[#111b21] text-[#8696a0] px-1.5 py-0.2 rounded border border-[#2a3942]">${task.peran || 'Teknisi'}</span>
                             </div>
-                            <p class="text-xs text-[#8696a0] truncate mt-0.5">${task.tugas}</p>
+                            <p class="text-xs text-[#8696a0] truncate mt-0.5 flex items-center gap-1">
+                                ${isCompleted ? '<i class="fa-solid fa-check-double text-[#25d366] text-[10px]"></i>' : '<i class="fa-regular fa-clock text-[10px]"></i>'}
+                                <span class="${isCompleted ? 'text-slate-300' : ''}">${task.tugas}</span>
+                            </p>
                         </div>
                     </div>
                     <div class="text-right flex flex-col items-end gap-1 flex-shrink-0 pl-2">
                         <span class="text-[11px] font-medium ${isCompleted ? 'text-[#25d366]' : 'text-[#8696a0]'}">${task.jam_mulai || '08:00'}</span>
-                        <button onclick="openCompletionModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')" class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isCompleted ? 'text-[#25d366] bg-[#103629]' : 'text-[#8696a0] bg-[#111b21]'}">
+                        <button onclick="openCompletionModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')" class="text-[10px] ${statusBadgeColor} px-2.5 py-0.5 rounded-full font-bold transition">
                             ${task.status}
                         </button>
                     </div>
@@ -1080,18 +1160,12 @@
             });
         }
 
-        async function openCommentModal(taskId, title) {
-            document.getElementById('commentModalSubtitle').innerText = title;
-            document.getElementById('commentList').innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Memuat komentar...</div>';
-            document.getElementById('commentModal').classList.remove('hidden');
-        }
-
-        function closeCommentModal() { document.getElementById('commentModal').classList.add('hidden'); }
-        function sendComment() { showToast("Komentar terkirim!"); document.getElementById('inputNewComment').value = ''; }
-
         function openCompletionModal(id, title) {
+            const task = globalTasks.find(t => t.id == id);
+            if (!task) return;
             document.getElementById('complete-task-id').value = id;
             document.getElementById('complete-task-title').innerText = title;
+            document.getElementById('complete-task-note').value = task.keterangan || '';
             document.getElementById('completionNoteModal').classList.remove('hidden');
         }
 
@@ -1101,10 +1175,46 @@
             e.preventDefault();
             const id = document.getElementById('complete-task-id').value;
             const note = document.getElementById('complete-task-note').value.trim();
+            const btn = document.getElementById('btn-submit-completion');
+            btn.innerText = "Menyimpan...";
+            btn.disabled = true;
+
             await _supabase.from('jadwal').update({ status: 'Selesai', keterangan: note, completed_at: new Date().toISOString() }).eq('id', id);
             closeCompletionNoteModal();
-            showToast("Tugas selesai!");
+            showToast("Tugas ditandai selesai!");
+            btn.innerText = "Simpan Selesai";
+            btn.disabled = false;
             fetchTasks();
+        });
+
+        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const tugas = document.getElementById('input-task').value.trim();
+            const jam_mulai = document.getElementById('input-start-time').value;
+            const jam_selesai = document.getElementById('input-end-time').value;
+            const tanggal = document.getElementById('input-date').value;
+            const peran = document.getElementById('input-role').value;
+            const nama = getUserDisplayName(currentUser.id, currentUser.email);
+
+            const payload = { 
+                user_id: currentUser.id, 
+                user_email: currentUser.email,
+                nama, 
+                tugas, 
+                jam_mulai, 
+                jam_selesai, 
+                tanggal,
+                peran,
+                status: 'Belum', 
+                created_at: new Date().toISOString() 
+            };
+            
+            const { error } = await _supabase.from('jadwal').insert([payload]);
+            if (!error) {
+                toggleModal(false);
+                showToast("Aktivitas baru tersimpan!");
+                fetchTasks();
+            }
         });
 
         async function processBulkTextImport() {
@@ -1129,8 +1239,8 @@
 
             if (bulkPayload.length > 0) {
                 await _supabase.from('jadwal').insert(bulkPayload);
-                document.getElementById('bulkTextModal').classList.add('hidden');
-                showToast("Jadwal diimport!");
+                closeBulkTextModal();
+                showToast("Semua jadwal berhasil disimpan!");
                 fetchTasks();
             }
         }
@@ -1138,46 +1248,66 @@
         async function processExportExecution() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("Laporan Aktivitas Harian - BPB", 14, 15);
-            const rows = globalTasks.map((t, idx) => [idx + 1, t.tanggal, t.jam_mulai, getUserDisplayName(t.user_id, t.user_email, t.nama), t.tugas, t.status]);
-            doc.autoTable({ startY: 20, head: [['No', 'Tanggal', 'Waktu', 'Petugas', 'Kegiatan', 'Status']], body: rows });
-            doc.save(`Laporan_${Date.now()}.pdf`);
-            document.getElementById('exportModal').classList.add('hidden');
-        }
-
-        async function generateAiSchedulePreview() {
-            const apiKey = localStorage.getItem('user_gemini_api_key');
-            if (!apiKey) return alert("Tempelkan Kunci API Gemini Anda!");
-            previewTasksData = [
-                { jam_mulai: '08:00', jam_selesai: '10:00', tugas: 'Pengecekan Panel Listrik' },
-                { jam_mulai: '10:00', jam_selesai: '12:00', tugas: 'Pembersihan Ruang ATM' }
-            ];
-            const list = document.getElementById('aiPreviewList');
-            list.innerHTML = previewTasksData.map(p => `<div class="p-2 bg-[#111b21] rounded-xl text-white"><b>${p.jam_mulai}:</b> ${p.tugas}</div>`).join('');
-            list.classList.remove('hidden');
-            document.getElementById('btn-save-ai-tasks').classList.remove('hidden');
-        }
-
-        async function saveAllAiTasks() {
-            const nama = getUserDisplayName(currentUser.id, currentUser.email);
-            const tanggal = document.getElementById('gen-date').value || todayStr;
-            const payload = previewTasksData.map(p => ({
-                user_id: currentUser.id, user_email: currentUser.email, nama, tugas: p.tugas, jam_mulai: p.jam_mulai, jam_selesai: p.jam_selesai, tanggal, peran: 'Teknisi', status: 'Belum', created_at: new Date().toISOString()
-            }));
-            await _supabase.from('jadwal').insert(payload);
-            document.getElementById('autoGenerateModal').classList.add('hidden');
-            showToast("Jadwal AI tersimpan!");
-            fetchTasks();
+            doc.text("Laporan Aktivitas Harian - PT Binayasa Putrabatara", 14, 15);
+            doc.text(`Unit: ${UNIT_NAME}`, 14, 21);
+            const rows = globalTasks.map((t, idx) => [idx + 1, t.tanggal, t.jam_mulai + ' - ' + t.jam_selesai, getUserDisplayName(t.user_id, t.user_email, t.nama), t.tugas, t.status]);
+            doc.autoTable({ startY: 26, head: [['No', 'Tanggal', 'Waktu', 'Petugas', 'Kegiatan', 'Status']], body: rows });
+            doc.save(`Laporan_Kerja_${Date.now()}.pdf`);
+            closeExportModal();
+            showToast("PDF berhasil diunduh!");
         }
 
         function calculateAndRenderEarnings() {
             let points = 0;
             globalTasks.forEach(t => {
-                if (t.user_id === currentUser?.id && t.status === 'Selesai') points += 100;
+                if (t.user_id === currentUser?.id) {
+                    if (t.status === 'Selesai') points += 100;
+                    if (t.foto_sebelum && t.foto_sesudah) points += 50;
+                    if ((t.tugas || '').toLowerCase().includes('#perbaikan')) points += 100;
+                }
             });
-            const earningsRp = (points / 100) * 10;
-            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
-            document.getElementById('modalMyPointsDetail').innerText = `${points} Poin Terkumpul`;
+            const earningsRp = Math.round((points / 100) * 10);
+            const totalEl = document.getElementById('modalMyTotalEarnings');
+            const pointsEl = document.getElementById('modalMyPointsDetail');
+            if (totalEl) totalEl.innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
+            if (pointsEl) pointsEl.innerText = `${points} Poin Terkumpul`;
+        }
+
+        async function sendGlobalChatMessage() {
+            const input = document.getElementById('inputGlobalChatMessage');
+            const msg = input.value.trim();
+            if (!msg || !currentUser) return;
+            input.value = '';
+
+            const payload = {
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
+                message: msg,
+                created_at: new Date().toISOString()
+            };
+
+            await _supabase.from('global_chat_messages').insert([payload]);
+            loadChatMessages();
+        }
+
+        async function loadChatMessages() {
+            const { data } = await _supabase.from('global_chat_messages').select('*').order('created_at', { ascending: true }).limit(30);
+            const container = document.getElementById('globalChatMessages');
+            if (!container) return;
+            container.innerHTML = '';
+            if (data) {
+                data.forEach(m => {
+                    const isMe = m.user_id === currentUser?.id;
+                    container.innerHTML += `
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                            <span class="text-[9px] text-[#8696a0] px-1">${m.sender_name}</span>
+                            <div class="p-2.5 rounded-2xl text-xs font-medium max-w-[80%] break-words ${isMe ? 'bg-[#005c4b] text-white rounded-tr-xs' : 'bg-[#1f2c34] text-white rounded-tl-xs border border-[#2a3942]'}">${m.message}</div>
+                        </div>
+                    `;
+                });
+                container.scrollTop = container.scrollHeight;
+            }
         }
 
         function toggleTopMenu() { document.getElementById('topDropdownMenu')?.classList.toggle('hidden'); }
@@ -1186,11 +1316,9 @@
         function openTaskModal() { toggleModal(true); }
         function openBulkTextModal() { document.getElementById('bulkTextModal')?.classList.remove('hidden'); }
         function closeBulkTextModal() { document.getElementById('bulkTextModal')?.classList.add('hidden'); }
-        function openAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.remove('hidden'); }
-        function closeAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.add('hidden'); }
         function openExportModal() { document.getElementById('exportModal')?.classList.remove('hidden'); }
         function closeExportModal() { document.getElementById('exportModal')?.classList.add('hidden'); }
-        function openGlobalChatModal() { document.getElementById('globalChatModal')?.classList.remove('hidden'); }
+        function openGlobalChatModal() { document.getElementById('globalChatModal')?.classList.remove('hidden'); loadChatMessages(); }
         function closeGlobalChatModal() { document.getElementById('globalChatModal')?.classList.add('hidden'); }
         function openEarningsModal() { calculateAndRenderEarnings(); document.getElementById('earningsModal')?.classList.remove('hidden'); }
         function closeEarningsModal() { document.getElementById('earningsModal')?.classList.add('hidden'); }
@@ -1199,25 +1327,79 @@
         function closeFollowsModal() { document.getElementById('followsModal')?.classList.add('hidden'); }
         function openWithdrawModal() { document.getElementById('withdrawModal')?.classList.remove('hidden'); }
         function closeWithdrawModal() { document.getElementById('withdrawModal')?.classList.add('hidden'); }
-        function resetToMyFeed() { activeFriendFeedId = null; fetchTasks(); }
-        function goToHomeJadwal() { fetchTasks(); }
+        function goToHomeJadwal() { activeFriendFeedId = null; fetchTasks(); }
+
+        function toggleEditProfile() {
+            isEditingProfile = !isEditingProfile;
+            document.getElementById('btnEditProfileToggle').innerText = isEditingProfile ? "Batal" : "Edit";
+            document.getElementById('display-profile-name').classList.toggle('hidden', isEditingProfile);
+            document.getElementById('edit-profile-name').classList.toggle('hidden', !isEditingProfile);
+            document.getElementById('display-profile-nip').classList.toggle('hidden', isEditingProfile);
+            document.getElementById('edit-profile-nip').classList.toggle('hidden', !isEditingProfile);
+            document.getElementById('display-profile-phone').classList.toggle('hidden', isEditingProfile);
+            document.getElementById('edit-profile-phone').classList.toggle('hidden', !isEditingProfile);
+            document.getElementById('btnSaveProfile').classList.toggle('hidden', !isEditingProfile);
+
+            if (isEditingProfile) {
+                document.getElementById('edit-profile-name').value = document.getElementById('display-profile-name').innerText;
+                document.getElementById('edit-profile-nip').value = document.getElementById('display-profile-nip').innerText;
+                document.getElementById('edit-profile-phone').value = document.getElementById('display-profile-phone').innerText;
+            }
+        }
+
+        async function saveProfileChanges() {
+            const nama = document.getElementById('edit-profile-name').value.trim();
+            const nip = document.getElementById('edit-profile-nip').value.trim();
+            const no_wa = document.getElementById('edit-profile-phone').value.trim();
+
+            await _supabase.from('profiles').upsert({
+                id: currentUser.id,
+                email: currentUser.email,
+                nama,
+                nip,
+                no_wa,
+                updated_at: new Date().toISOString()
+            });
+
+            showToast("Profil berhasil diperbarui!");
+            toggleEditProfile();
+            await fetchAllProfiles();
+            loadProfileDetails();
+            renderTasks();
+        }
 
         async function loadProfileDetails() {
             if (!currentUser) return;
-            document.getElementById('modal-user-name').innerText = getUserDisplayName(currentUser.id, currentUser.email);
+            const profile = userProfilesMap[currentUser.id];
+            const displayName = profile?.nama || getUserDisplayName(currentUser.id, currentUser.email);
+            
+            document.getElementById('modal-user-name').innerText = displayName;
             document.getElementById('profile-email-display').innerText = currentUser.email;
-            const avatarUrl = getAvatarUrl(currentUser);
+            document.getElementById('display-profile-name').innerText = displayName;
+            if (profile?.nip) document.getElementById('display-profile-nip').innerText = profile.nip;
+            if (profile?.no_wa) document.getElementById('display-profile-phone').innerText = profile.no_wa;
+
+            const avatarUrl = getUserAvatar(currentUser.id);
             if (avatarUrl) {
                 document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
                 document.getElementById('header-user-avatar-btn').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
             }
         }
 
+        async function submitWithdrawRequest(e) {
+            e.preventDefault();
+            closeWithdrawModal();
+            showToast("Pengajuan penarikan dikirim!");
+        }
+
         async function checkAuth() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
-                if (currentUser.email === SUPER_ADMIN_EMAIL) isSuperAdmin = true;
+                if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                    isSuperAdmin = true;
+                    document.getElementById('superadmin-indicator')?.classList.remove('hidden');
+                }
                 await syncUserProfile();
                 await fetchAllProfiles();
                 await fetchFollowsAndNotifs();
@@ -1232,10 +1414,10 @@
 
         async function initApp() {
             document.getElementById('input-date').value = todayStr;
-            document.getElementById('gen-date').value = todayStr;
             document.getElementById('bulk-date').value = todayStr;
             document.getElementById('dateFilter').value = todayStr;
             document.getElementById('input-name').value = getUserDisplayName(currentUser.id, currentUser.email);
+            loadProfileDetails();
             await fetchTasks();
         }
 
@@ -1248,6 +1430,499 @@
         }
 
         checkAuth();
+  
+
+     // ==========================================
+        // LANJUTAN SKrip SISTEM & REAL-TIME M-OPS
+        // ==========================================
+
+        function setupRealtimeChannels() {
+            // Real-time pembaruan jadwal harian
+            _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, () => {
+                    fetchTasks();
+                })
+                .subscribe();
+
+            // Real-time notifikasi pengguna
+            if (currentUser) {
+                _supabase.channel(`public:app_notifications:${currentUser.id}`)
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'app_notifications', filter: `recipient_id=eq.${currentUser.id}` }, payload => {
+                        globalNotifications.unshift(payload.new);
+                        renderNotificationsList();
+                        const badge = document.getElementById('headerFriendBadge');
+                        if (badge) {
+                            badge.innerText = parseInt(badge.innerText || '0') + 1;
+                            badge.classList.remove('hidden');
+                        }
+                        showToast("🔔 " + payload.new.title);
+                    })
+                    .subscribe();
+            }
+        }
+
+        // Jalankan setup real-time setelah inisialisasi awal
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (currentUser) setupRealtimeChannels();
+            }, 1000);
+        });
+
+        // Handler tombol penarikan insentif dengan konfirmasi WhatsApp Admin
+        async function submitWithdrawRequest(e) {
+            e.preventDefault();
+            const amount = document.getElementById('wd-amount').value;
+            const method = document.getElementById('wd-method').value;
+            const accountNumber = document.getElementById('wd-account-number').value;
+            const accountName = document.getElementById('wd-account-name').value;
+            const userName = getUserDisplayName(currentUser?.id, currentUser?.email);
+
+            if (!amount || amount < 10000) {
+                return alert("Minimal penarikan saldo adalah Rp 10.000!");
+            }
+
+            const waMessage = `Halo Admin M-Ops BPB, saya ${userName} (${currentUser?.email}) ingin mengajukan penarikan insentif sebesar Rp ${Number(amount).toLocaleString('id-ID')} melalui ${method} (${accountNumber} a.n ${accountName}). Mohon verifikasinya, terima kasih.`;
+            const waUrl = `https://wa.me/6282146511484?text=${encodeURIComponent(waMessage)}`;
+
+            // Catat ke tabel withdraw supabase jika ada
+            await _supabase.from('withdrawals').insert([{
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                amount: parseInt(amount),
+                method,
+                account_number: accountNumber,
+                account_name: accountName,
+                status: 'Menunggu Konfirmasi',
+                created_at: new Date().toISOString()
+            }]).catch(() => {});
+
+            closeWithdrawModal();
+            showToast("Membuka WhatsApp Admin untuk konfirmasi...");
+            window.open(waUrl, '_blank');
+        }
+
+   // =========================================================================
+        // 1. ENGINE WATERMARK OTOMATIS & UPLOAD BUKTI FOTO (BEFORE - AFTER)
+        // =========================================================================
+
+        async function processAndWatermarkImage(file, userName) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width, height = img.height;
+                        const MAX_DIMENSION = 1200;
+
+                        if (width > height && width > MAX_DIMENSION) { 
+                            height = Math.round((height * MAX_DIMENSION) / width); 
+                            width = MAX_DIMENSION; 
+                        } else if (height > MAX_DIMENSION) { 
+                            width = Math.round((width * MAX_DIMENSION) / height); 
+                            height = MAX_DIMENSION; 
+                        }
+
+                        canvas.width = width; 
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Overlay Watermark Informasi Operasional
+                        const now = new Date();
+                        const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                        const bannerHeight = Math.max(48, Math.round(height * 0.085));
+
+                        ctx.fillStyle = 'rgba(11, 20, 26, 0.78)';
+                        ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
+
+                        // Garis Indikator Hijau WA
+                        ctx.fillStyle = '#25d366';
+                        ctx.fillRect(0, height - bannerHeight, width, 3);
+
+                        // Label Petugas & Unit
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = `bold ${Math.max(12, Math.round(bannerHeight * 0.32))}px 'Plus Jakarta Sans', sans-serif`;
+                        ctx.fillText(`👤 Petugas: ${userName} | 🏢 ${UNIT_NAME}`, 16, height - (bannerHeight * 0.52));
+
+                        // Label Waktu & Koordinat/Inisial
+                        ctx.fillStyle = '#8696a0';
+                        ctx.font = `normal ${Math.max(10, Math.round(bannerHeight * 0.24))}px 'Plus Jakarta Sans', sans-serif`;
+                        ctx.fillText(`🕒 Waktu: ${timeStr} WIB | M-Ops Validated`, 16, height - (bannerHeight * 0.18));
+
+                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.82);
+                    };
+                    img.onerror = (err) => reject(err);
+                };
+                reader.onerror = (err) => reject(err);
+            });
+        }
+
+        async function uploadEvidenceImage(blob, prefix = 'evidence') {
+            if (!blob) return null;
+            const fileName = `${prefix}_${currentUser.id}_${Date.now()}.jpg`;
+            const filePath = `evidences/${fileName}`;
+
+            const { data, error } = await _supabase.storage
+                .from('task-evidences')
+                .upload(filePath, blob, { contentType: 'image/jpeg', upsert: true });
+
+            if (error) {
+                console.error("Storage upload failed:", error);
+                return null;
+            }
+            return _supabase.storage.from('task-evidences').getPublicUrl(filePath).data?.publicUrl || null;
+        }
+
+        // Preview handler input file before & after
+        document.getElementById('complete-file-before')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('complete-before-preview-container');
+            const preview = document.getElementById('complete-before-preview');
+            if (file && container && preview) {
+                preview.src = URL.createObjectURL(file);
+                container.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('complete-file-after')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('complete-after-preview-container');
+            const preview = document.getElementById('complete-after-preview');
+            if (file && container && preview) {
+                preview.src = URL.createObjectURL(file);
+                container.classList.remove('hidden');
+            }
+        });
+
+
+        // =========================================================================
+        // 2. DISKUSI KOMENTAR JADWAL REAL-TIME & NOTIFIKASI INTERAKTIF
+        // =========================================================================
+
+        async function openCommentModal(taskId, taskTitle) {
+            activeCommentJadwalId = String(taskId);
+            const modal = document.getElementById('commentModal');
+            const titleEl = document.getElementById('commentModalSubtitle');
+            const listEl = document.getElementById('commentList');
+
+            if (titleEl) titleEl.innerText = taskTitle;
+            if (listEl) listEl.innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat diskusi saluran...</div>';
+            if (modal) modal.classList.remove('hidden');
+
+            await fetchComments(activeCommentJadwalId);
+            setupCommentsRealtime(activeCommentJadwalId);
+        }
+
+        function closeCommentModal() {
+            activeCommentJadwalId = null;
+            document.getElementById('commentModal')?.classList.add('hidden');
+            const input = document.getElementById('inputNewComment');
+            if (input) input.value = '';
+        }
+
+        async function fetchComments(taskId) {
+            const { data, error } = await _supabase
+                .from('jadwal_comments')
+                .select('*')
+                .eq('jadwal_id', String(taskId))
+                .order('created_at', { ascending: true });
+
+            const listEl = document.getElementById('commentList');
+            if (!listEl) return;
+
+            if (error || !data || data.length === 0) {
+                listEl.innerHTML = '<div class="text-center text-[#8696a0] text-[11px] py-10">Belum ada diskusi atau tanggapan pada jadwal ini.</div>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            data.forEach(c => {
+                const isMe = c.user_id === currentUser?.id;
+                const senderName = getUserDisplayName(c.user_id, c.user_email);
+                const avatar = getUserAvatar(c.user_id);
+                const initial = (senderName || 'P').substring(0, 2).toUpperCase();
+
+                const row = document.createElement('div');
+                row.className = `flex gap-2 items-end ${isMe ? 'flex-row-reverse' : 'flex-row'}`;
+                row.innerHTML = `
+                    <div class="w-6 h-6 rounded-full overflow-hidden bg-[#1f2c34] border border-[#25d366]/40 flex items-center justify-center font-bold text-[9px] text-[#25d366] flex-shrink-0 mb-1">
+                        ${avatar ? `<img src="${avatar}" class="w-full h-full object-cover">` : initial}
+                    </div>
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]">
+                        <span class="text-[9px] text-[#8696a0] px-1">${senderName} • ${formatTimeAgo(c.created_at)}</span>
+                        <div class="p-2.5 rounded-2xl text-xs font-medium break-words shadow-xs ${isMe ? 'bg-[#005c4b] text-white rounded-br-xs' : 'bg-[#1f2c34] text-[#e9edef] rounded-bl-xs border border-[#2a3942]'}">
+                            ${c.comment}
+                        </div>
+                    </div>
+                `;
+                listEl.appendChild(row);
+            });
+            listEl.scrollTop = listEl.scrollHeight;
+        }
+
+        async function sendComment() {
+            const input = document.getElementById('inputNewComment');
+            const commentText = input?.value.trim();
+            if (!commentText || !activeCommentJadwalId) return;
+
+            input.value = '';
+            const targetTask = globalTasks.find(t => String(t.id) === String(activeCommentJadwalId));
+
+            const payload = {
+                jadwal_id: String(activeCommentJadwalId),
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                comment: commentText,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
+            if (!error) {
+                if (targetTask && targetTask.user_id !== currentUser.id) {
+                    await sendAppNotification({
+                        recipient_id: targetTask.user_id,
+                        sender_id: currentUser.id,
+                        sender_name: getUserDisplayName(currentUser.id, currentUser.email),
+                        type: 'comment',
+                        title: 'Komentar Saluran 💬',
+                        message: `"${commentText}" pada: ${targetTask.tugas}`,
+                        task_id: targetTask.id
+                    });
+                }
+                fetchComments(activeCommentJadwalId);
+            }
+        }
+
+        function setupCommentsRealtime(taskId) {
+            _supabase.channel(`comments-room-${taskId}`)
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => {
+                    fetchComments(taskId);
+                })
+                .subscribe();
+        }
+
+
+        // =========================================================================
+        // 3. ENGINE PERHITUNGAN DETAIL INSENTIF, POIN & PENARIKAN
+        // =========================================================================
+
+        function calculateWithdrawFee() {
+            const amountInput = document.getElementById('wd-amount');
+            const methodSelect = document.getElementById('wd-method');
+            const calcNominal = document.getElementById('wd-calc-nominal');
+            const calcFee = document.getElementById('wd-calc-fee');
+            const calcNet = document.getElementById('wd-calc-net');
+            const otherContainer = document.getElementById('wd-other-method-container');
+
+            const amount = parseInt(amountInput?.value || '0', 10);
+            const method = methodSelect?.value || 'BANK_BTN';
+
+            if (otherContainer) {
+                otherContainer.classList.toggle('hidden', method !== 'LAINNYA');
+            }
+
+            let fee = 0;
+            if (method !== 'BANK_BTN') {
+                fee = budgetSettings.adminFeeNonBtn || 2500;
+            }
+
+            const net = Math.max(0, amount - fee);
+
+            if (calcNominal) calcNominal.innerText = `Rp ${amount.toLocaleString('id-ID')}`;
+            if (calcFee) calcFee.innerText = fee === 0 ? 'Rp 0 (Gratis)' : `Rp ${fee.toLocaleString('id-ID')}`;
+            if (calcNet) calcNet.innerText = `Rp ${net.toLocaleString('id-ID')}`;
+        }
+
+        async function fetchUserWithdrawalHistory() {
+            if (!currentUser) return;
+            const { data } = await _supabase
+                .from('withdrawals')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            const listEl = document.getElementById('myWithdrawalsList');
+            const withdrawnDetailEl = document.getElementById('modalMyWithdrawnDetail');
+            if (!listEl) return;
+
+            let totalWithdrawn = 0;
+            if (data && data.length > 0) {
+                listEl.innerHTML = '';
+                data.forEach(w => {
+                    if (w.status === 'Disetujui' || w.status === 'Selesai') {
+                        totalWithdrawn += Number(w.amount || 0);
+                    }
+                    const isPending = w.status === 'Menunggu Konfirmasi';
+                    listEl.innerHTML += `
+                        <div class="p-2 bg-[#111b21] rounded-xl border border-[#2a3942] flex justify-between items-center text-[10px]">
+                            <div>
+                                <span class="font-bold text-white block">Rp ${Number(w.amount).toLocaleString('id-ID')} (${w.method})</span>
+                                <span class="text-[#8696a0]">${formatTanggalIndo(w.created_at?.substring(0, 10))}</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full font-bold ${isPending ? 'bg-amber-950 text-amber-400 border border-amber-800/40' : 'bg-[#103629] text-[#25d366]'}">
+                                ${w.status}
+                            </span>
+                        </div>
+                    `;
+                });
+            } else {
+                listEl.innerHTML = '<div class="text-center text-[#8696a0] text-[10px] py-2">Belum ada riwayat penarikan.</div>';
+            }
+
+            if (withdrawnDetailEl) {
+                withdrawnDetailEl.innerText = `Total Telah Ditarik: Rp ${totalWithdrawn.toLocaleString('id-ID')}`;
+            }
+        }
+
+
+        // =========================================================================
+        // 4. SISTEM NOTIFIKASI SENTRAL & BROADCAST KE REKAN TIM
+        // =========================================================================
+
+        async function sendAppNotification({ recipient_id, sender_id, sender_name, type, title, message, task_id = null }) {
+            if (!recipient_id || recipient_id === sender_id) return;
+            await _supabase.from('app_notifications').insert([{
+                recipient_id,
+                sender_id,
+                sender_name,
+                type,
+                title,
+                message,
+                task_id,
+                is_read: false,
+                created_at: new Date().toISOString()
+            }]);
+        }
+
+        async function notifyTeamMembers(type, title, message, taskId = null) {
+            if (!allRegisteredProfiles || allRegisteredProfiles.length === 0) return;
+            const senderName = getUserDisplayName(currentUser.id, currentUser.email);
+
+            const payloadList = allRegisteredProfiles
+                .filter(p => p.id !== currentUser.id)
+                .map(p => ({
+                    recipient_id: p.id,
+                    sender_id: currentUser.id,
+                    sender_name: senderName,
+                    type,
+                    title,
+                    message,
+                    task_id: taskId,
+                    is_read: false,
+                    created_at: new Date().toISOString()
+                }));
+
+            if (payloadList.length > 0) {
+                await _supabase.from('app_notifications').insert(payloadList);
+            }
+        }
+
+
+        // =========================================================================
+        // 5. SUPER ADMIN: ANGGARAN, POIN & VERIFIKASI AKUN TIM
+        // =========================================================================
+
+        function openBudgetConfigModal() {
+            const modal = document.getElementById('budgetConfigModal');
+            if (!modal) return;
+            document.getElementById('inputMonthlyBudget').value = budgetSettings.monthlyBudget;
+            document.getElementById('inputRatePerTask').value = budgetSettings.ratePerTask;
+            document.getElementById('inputMaxDailyTasks').value = budgetSettings.maxDailyTasks;
+            document.getElementById('inputPointsEarly').value = budgetSettings.pointsEarly;
+            document.getElementById('inputPointsOnTime').value = budgetSettings.pointsOnTime;
+            document.getElementById('inputPointsProcess').value = budgetSettings.pointsProcess;
+            document.getElementById('inputPointsExpired').value = budgetSettings.pointsExpired;
+            modal.classList.remove('hidden');
+        }
+
+        function closeBudgetConfigModal() {
+            document.getElementById('budgetConfigModal')?.classList.add('hidden');
+        }
+
+        document.getElementById('formBudgetConfig')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            budgetSettings.monthlyBudget = parseInt(document.getElementById('inputMonthlyBudget').value || '100000', 10);
+            budgetSettings.ratePerTask = parseInt(document.getElementById('inputRatePerTask').value || '10', 10);
+            budgetSettings.maxDailyTasks = parseInt(document.getElementById('inputMaxDailyTasks').value || '5', 10);
+            budgetSettings.pointsEarly = parseInt(document.getElementById('inputPointsEarly').value || '100', 10);
+            budgetSettings.pointsOnTime = parseInt(document.getElementById('inputPointsOnTime').value || '100', 10);
+            budgetSettings.pointsProcess = parseInt(document.getElementById('inputPointsProcess').value || '50', 10);
+            budgetSettings.pointsExpired = parseInt(document.getElementById('inputPointsExpired').value || '50', 10);
+
+            localStorage.setItem('mops_budget_settings', JSON.stringify(budgetSettings));
+            closeBudgetConfigModal();
+            showToast("Pengaturan anggaran & skema poin tersimpan!");
+            calculateAndRenderEarnings();
+        });
+
+
+        // =========================================================================
+        // 6. INITIALIZATION HOOK & DATA REFRESH CYCLE
+        // =========================================================================
+
+        function refreshAllData() {
+            fetchAllProfiles();
+            fetchTasks();
+            fetchFollowsAndNotifs();
+            fetchUserWithdrawalHistory();
+        }
+
+        // Listener saat form penarikan dibuka
+        function openWithdrawModal() {
+            const modal = document.getElementById('withdrawModal');
+            const availableInput = document.getElementById('wd-available-balance');
+            const { earningsRp } = calculateAndRenderEarnings();
+
+            if (availableInput) {
+                availableInput.value = `Rp ${earningsRp.toLocaleString('id-ID')}`;
+            }
+            if (modal) modal.classList.remove('hidden');
+            calculateWithdrawFee();
+        }
+
+        // Load persisted budget settings jika ada
+        try {
+            const savedSettings = localStorage.getItem('mops_budget_settings');
+            if (savedSettings) budgetSettings = Object.assign(budgetSettings, JSON.parse(savedSettings));
+        } catch (e) {}
+
+    // =========================================================================
+        // 7. EVENT LISTENERS & INITIALIZATION BOOTSTRAP
+        // =========================================================================
+
+        // Sinkronisasi input form saat pengetikan penarikan insentif
+        document.getElementById('wd-amount')?.addEventListener('input', calculateWithdrawFee);
+        document.getElementById('wd-method')?.addEventListener('change', calculateWithdrawFee);
+
+        // Global Click Listener untuk menutup dropdown menu saat klik di luar
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('topDropdownMenu');
+            const menuBtn = e.target.closest('button[title="Menu Opsi"]');
+            if (dropdown && !dropdown.classList.contains('hidden') && !menuBtn && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Inisialisasi utama saat dokumen siap
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            
+            // Periodic background sync setiap 60 detik untuk memperbarui status task & notifikasi
+            setInterval(() => {
+                if (currentUser) {
+                    fetchTasks();
+                    fetchFollowsAndNotifs();
+                }
+            }, 60000);
+        });
+
+        // Handler global untuk menangkap error tak terduga agar UI tidak freeze
+        window.addEventListener('error', function(event) {
+            console.warn("M-Ops Runtime Notice:", event.message);
+        });
     </script>
 </body>
 </html>
