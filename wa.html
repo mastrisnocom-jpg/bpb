@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pembaruan - Binayasa M-Ops</title>
     
-    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan AI Auto Generate Multi-Profesi, Chat Global, Sistem Follow, Dompet Insentif Poin, dan Dokumentasi Before-After.">
+    <meta name="description" content="Sistem manajemen jadwal harian terintegrasi Supabase dengan tema WhatsApp Updates, AI Auto Generate, Chat Global, Sistem Follow, Dompet Insentif, dan Dokumentasi Before-After.">
     <link rel="manifest" href="/manifest.json">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -60,13 +60,6 @@
             z-index: 50;
             filter: drop-shadow(0 4px 10px rgba(244,63,94,0.6));
         }
-        @keyframes liveCommentFade {
-            0% { transform: translateY(20px); opacity: 0; }
-            15% { transform: translateY(0); opacity: 1; }
-            85% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-20px); opacity: 0; }
-        }
-        .live-comment-bubble { animation: liveCommentFade 4.5s ease-in-out forwards; }
     </style>
 </head>
 <body class="min-h-screen bg-[#0b141a] text-[#e9edef] flex justify-center selection:bg-[#00a884] selection:text-white">
@@ -1073,17 +1066,6 @@
         let editingTaskId = null;
         let isSuperAdmin = false;
         let activeExportFormat = 'pdf';
-        let realtimeSubscription = null;
-        let commentsSubscription = null;
-        let globalCommentsListener = null;
-        let followsSubscription = null;
-        let followNotifyListener = null;
-        let appConfigSubscription = null;
-        let withdrawalsSubscription = null;
-        let superAdminActivitySubscription = null;
-        let globalChatSubscription = null;
-        let friendScheduleListener = null;
-        let activityNotifSubscription = null;
         let deleteTargetId = null;
         let activeCommentJadwalId = null;
         let editingCommentId = null;
@@ -1106,7 +1088,6 @@
         let myFollowings = []; 
         let myFollowers = [];  
         let onlineUsersState = {};
-        let presenceChannel = null;
         let userProfilesMap = {};
 
         let activeStoriesList = [];
@@ -1460,10 +1441,10 @@
             renderStoriesBar();
 
             const cardsContainer = document.getElementById('scheduleCardsMobile');
-            const selectedRole = document.getElementById('roleFilter').value; 
+            const selectedRole = document.getElementById('roleFilter')?.value || 'All'; 
             const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
-            const selectedUser = document.getElementById('userFilter').value; 
-            const selectedDate = document.getElementById('dateFilter').value;
+            const selectedUser = document.getElementById('userFilter')?.value || 'All'; 
+            const selectedDate = document.getElementById('dateFilter')?.value || todayStr;
 
             const friendIndicator = document.getElementById('friendFeedIndicator');
             const friendNameDisplay = document.getElementById('friendFeedNameDisplay');
@@ -1495,7 +1476,7 @@
             calculateAndRenderEarnings();
 
             if (filteredTasks.length === 0) {
-                cardsContainer.innerHTML = `<div class="py-8 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60 mt-2">Tidak ada aktivitas pada tanggal ini.</div>`;
+                if (cardsContainer) cardsContainer.innerHTML = `<div class="py-8 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60 mt-2">Tidak ada aktivitas pada tanggal ini.</div>`;
                 return;
             }
 
@@ -1506,7 +1487,6 @@
                 const initials = (task.nama || 'P').substring(0, 2).toUpperCase();
                 const isCompleted = task.status === 'Selesai';
                 const isProcess = task.status === 'Proses';
-                const isOwner = (task.user_id === currentUser?.id);
                 const likedUsers = Array.isArray(task.liked_users) ? task.liked_users : [];
                 const isLiked = likedUsers.includes(currentUser?.id);
 
@@ -1542,7 +1522,7 @@
                         </div>
                     </div>
                 `;
-                cardsContainer.appendChild(row);
+                if (cardsContainer) cardsContainer.appendChild(row);
             });
         }
 
@@ -1587,7 +1567,6 @@
         function closeCommentModal() {
             activeCommentJadwalId = null;
             cancelReplyOrEdit();
-            if (commentsSubscription) { _supabase.removeChannel(commentsSubscription); commentsSubscription = null; }
             document.getElementById('commentModal').classList.add('hidden');
         }
 
@@ -1595,7 +1574,7 @@
             const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
             const commentList = document.getElementById('commentList');
             if (error || !data || data.length === 0) {
-                commentList.innerHTML = '<div class="text-center text-[#8696a0] text-[11px] py-10">Belum ada komentar pada saluran ini.</div>';
+                if (commentList) commentList.innerHTML = '<div class="text-center text-[#8696a0] text-[11px] py-10">Belum ada komentar pada saluran ini.</div>';
                 return;
             }
             renderCommentList(data);
@@ -1603,6 +1582,7 @@
 
         function renderCommentList(comments) {
             const commentList = document.getElementById('commentList');
+            if (!commentList) return;
             commentList.innerHTML = '';
 
             comments.forEach(c => {
@@ -1653,8 +1633,7 @@
         }
 
         function setupCommentsRealtime(taskId) {
-            if (commentsSubscription) _supabase.removeChannel(commentsSubscription);
-            commentsSubscription = _supabase.channel(`comments-${taskId}`)
+            _supabase.channel(`comments-${taskId}`)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => { fetchComments(taskId); })
                 .subscribe();
         }
@@ -1929,8 +1908,10 @@
                 }
             });
             const earningsRp = Math.round((points / 100) * budgetSettings.ratePerTask);
-            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
-            document.getElementById('modalMyPointsDetail').innerText = `${points} Poin Terkumpul`;
+            const totalEl = document.getElementById('modalMyTotalEarnings');
+            const pointsEl = document.getElementById('modalMyPointsDetail');
+            if (totalEl) totalEl.innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
+            if (pointsEl) pointsEl.innerText = `${points} Poin Terkumpul`;
             return { points, earningsRp };
         }
 
@@ -1955,6 +1936,7 @@
         async function loadChatMessages() {
             const { data } = await _supabase.from('global_chat_messages').select('*').order('created_at', { ascending: true }).limit(40);
             const container = document.getElementById('globalChatMessages');
+            if (!container) return;
             container.innerHTML = '';
             if (data) {
                 data.forEach(m => {
@@ -1986,31 +1968,33 @@
             await _supabase.from('app_notifications').insert(inserts);
         }
 
-        function toggleTopMenu() { document.getElementById('topDropdownMenu').classList.toggle('hidden'); }
-        function toggleFilterDrawer() { document.getElementById('filterSearchDrawer').classList.toggle('hidden'); }
-        function toggleModal(show) { document.getElementById('scheduleModal').classList.toggle('hidden', !show); }
+        function toggleTopMenu() { document.getElementById('topDropdownMenu')?.classList.toggle('hidden'); }
+        function toggleFilterDrawer() { document.getElementById('filterSearchDrawer')?.classList.toggle('hidden'); }
+        function toggleModal(show) { document.getElementById('scheduleModal')?.classList.toggle('hidden', !show); }
         function openTaskModal() { toggleModal(true); }
-        function openBulkTextModal() { document.getElementById('bulkTextModal').classList.remove('hidden'); }
-        function closeBulkTextModal() { document.getElementById('bulkTextModal').classList.add('hidden'); }
-        function openAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.remove('hidden'); }
-        function closeAutoGenerateModal() { document.getElementById('autoGenerateModal').classList.add('hidden'); }
-        function openExportModal(format) { document.getElementById('exportModal').classList.remove('hidden'); }
-        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
-        function openGlobalChatModal() { document.getElementById('globalChatModal').classList.remove('hidden'); loadChatMessages(); }
-        function closeGlobalChatModal() { document.getElementById('globalChatModal').classList.add('hidden'); }
-        function openEarningsModal() { calculateAndRenderEarnings(); document.getElementById('earningsModal').classList.remove('hidden'); }
-        function closeEarningsModal() { document.getElementById('earningsModal').classList.add('hidden'); }
-        function openProfileModal() { loadProfileCorporateDetails(); document.getElementById('form-profile-modal').classList.remove('hidden'); }
-        function openFollowsModal() { document.getElementById('followsModal').classList.remove('hidden'); }
-        function closeFollowsModal() { document.getElementById('followsModal').classList.add('hidden'); }
+        function openBulkTextModal() { document.getElementById('bulkTextModal')?.classList.remove('hidden'); }
+        function closeBulkTextModal() { document.getElementById('bulkTextModal')?.classList.add('hidden'); }
+        function openAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.remove('hidden'); }
+        function closeAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.add('hidden'); }
+        function openExportModal(format) { document.getElementById('exportModal')?.classList.remove('hidden'); }
+        function closeExportModal() { document.getElementById('exportModal')?.classList.add('hidden'); }
+        function openGlobalChatModal() { document.getElementById('globalChatModal')?.classList.remove('hidden'); loadChatMessages(); }
+        function closeGlobalChatModal() { document.getElementById('globalChatModal')?.classList.add('hidden'); }
+        function openEarningsModal() { calculateAndRenderEarnings(); document.getElementById('earningsModal')?.classList.remove('hidden'); }
+        function closeEarningsModal() { document.getElementById('earningsModal')?.classList.add('hidden'); }
+        function openProfileModal() { loadProfileCorporateDetails(); document.getElementById('form-profile-modal')?.classList.remove('hidden'); }
+        function openFollowsModal() { document.getElementById('followsModal')?.classList.remove('hidden'); }
+        function closeFollowsModal() { document.getElementById('followsModal')?.classList.add('hidden'); }
+        function resetToMyFeed() { activeFriendFeedId = null; activeFriendFeedName = null; goToHomeJadwal(); }
         function goToHomeJadwal() { fetchTasks(); }
-        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2200); }
+        function showToast(msg) { const t = document.getElementById('toast'); if(t){ t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2200); } }
         async function logout() { await _supabase.auth.signOut(); location.reload(); }
 
         async function loadProfileCorporateDetails() {
             if (!currentUser) return;
             const currentName = getUserDisplayName(currentUser.id, currentUser.email);
-            document.getElementById('display-profile-name').innerText = currentName;
+            const nameEl = document.getElementById('display-profile-name');
+            if(nameEl) nameEl.innerText = currentName;
             const { data } = await _supabase.from('profiles').select('nip, no_wa, alamat, nama').eq('id', currentUser.id).maybeSingle();
             if (data) {
                 if (data.nip) document.getElementById('display-profile-nip').innerText = data.nip;
@@ -2048,24 +2032,24 @@
             const addressInput = document.getElementById('input-profile-address');
 
             if (isEditingProfile) {
-                btnToggle.innerHTML = '<i class="fa-solid fa-xmark"></i> Batal';
-                btnSave.classList.remove('hidden');
-                nameInput.value = nameDisplay.innerText.trim();
-                nipInput.value = nipDisplay.innerText.trim();
-                phoneInput.value = phoneDisplay.innerText.trim();
-                addressInput.value = addressDisplay.innerText.trim();
+                if(btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-xmark"></i> Batal';
+                btnSave?.classList.remove('hidden');
+                if(nameInput && nameDisplay) nameInput.value = nameDisplay.innerText.trim();
+                if(nipInput && nipDisplay) nipInput.value = nipDisplay.innerText.trim();
+                if(phoneInput && phoneDisplay) phoneInput.value = phoneDisplay.innerText.trim();
+                if(addressInput && addressDisplay) addressInput.value = addressDisplay.innerText.trim();
 
-                nameDisplay.classList.add('hidden'); nameInput.classList.remove('hidden');
-                nipDisplay.classList.add('hidden'); nipInput.classList.remove('hidden');
-                phoneDisplay.classList.add('hidden'); phoneInput.classList.remove('hidden');
-                addressDisplay.classList.add('hidden'); addressInput.classList.remove('hidden');
+                nameDisplay?.classList.add('hidden'); nameInput?.classList.remove('hidden');
+                nipDisplay?.classList.add('hidden'); nipInput?.classList.remove('hidden');
+                phoneDisplay?.classList.add('hidden'); phoneInput?.classList.remove('hidden');
+                addressDisplay?.classList.add('hidden'); addressInput?.classList.remove('hidden');
             } else {
-                btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Data';
-                btnSave.classList.add('hidden');
-                nameDisplay.classList.remove('hidden'); nameInput.classList.add('hidden');
-                nipDisplay.classList.remove('hidden'); nipInput.classList.add('hidden');
-                phoneDisplay.classList.remove('hidden'); phoneInput.classList.add('hidden');
-                addressDisplay.classList.remove('hidden'); addressInput.classList.add('hidden');
+                if(btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Data';
+                btnSave?.classList.add('hidden');
+                nameDisplay?.classList.remove('hidden'); nameInput?.classList.add('hidden');
+                nipDisplay?.classList.remove('hidden'); nipInput?.classList.add('hidden');
+                phoneDisplay?.classList.remove('hidden'); phoneInput?.classList.add('hidden');
+                addressDisplay?.classList.remove('hidden'); addressInput?.classList.add('hidden');
             }
         }
 
@@ -2093,11 +2077,17 @@
         }
 
         async function initApp() {
-            document.getElementById('input-date').value = todayStr;
-            document.getElementById('gen-date').value = todayStr;
-            document.getElementById('bulk-date').value = todayStr;
-            document.getElementById('dateFilter').value = todayStr;
-            document.getElementById('input-name').value = getUserDisplayName(currentUser.id, currentUser.email);
+            const inDate = document.getElementById('input-date');
+            const genDate = document.getElementById('gen-date');
+            const bulkDate = document.getElementById('bulk-date');
+            const dtFilter = document.getElementById('dateFilter');
+            const inName = document.getElementById('input-name');
+
+            if (inDate) inDate.value = todayStr;
+            if (genDate) genDate.value = todayStr;
+            if (bulkDate) bulkDate.value = todayStr;
+            if (dtFilter) dtFilter.value = todayStr;
+            if (inName && currentUser) inName.value = getUserDisplayName(currentUser.id, currentUser.email);
             
             const savedKey = localStorage.getItem('user_gemini_api_key') || '';
             const keyInput = document.getElementById('userGeminiApiKey');
