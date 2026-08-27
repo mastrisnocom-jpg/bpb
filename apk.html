@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Downloader WebApp</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 580px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a73e8;
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #1a73e8;
+        }
+
+        button.btn-fetch {
+            background-color: #1a73e8;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.btn-fetch:hover {
+            background-color: #1557b0;
+        }
+
+        .result-card {
+            display: none;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fafafa;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background-color: #e0e0e0;
+            object-fit: cover;
+        }
+
+        .app-details h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .app-details p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .meta-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        .meta-table td {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .meta-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .btn-download {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #34a853;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-download:hover {
+            background-color: #2b8844;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .status-msg.error {
+            color: #d93025;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PlayStore APK Downloader</h1>
+    <p class="subtitle">Tempel link Google Play Store atau Package ID aplikasi</p>
+
+    <div class="input-group">
+        <input type="text" id="appInput" placeholder="Contoh: https://play.google.com/store/apps/details?id=com.whatsapp" />
+        <button class="btn-fetch" onclick="processDownload()">Generate</button>
+    </div>
+
+    <div id="statusMsg" class="status-msg"></div>
+
+    <div id="resultCard" class="result-card">
+        <div class="app-header">
+            <img id="appIcon" src="" alt="App Icon" class="app-icon" />
+            <div class="app-details">
+                <h3 id="appName">App Name</h3>
+                <p id="appPackage">com.example.app</p>
+            </div>
+        </div>
+
+        <table class="meta-table">
+            <tr>
+                <td>Versi</td>
+                <td id="appVersion">-</td>
+            </tr>
+            <tr>
+                <td>Ukuran File</td>
+                <td id="appSize">-</td>
+            </tr>
+            <tr>
+                <td>Format</td>
+                <td id="appFormat">APK Direct</td>
+            </tr>
+        </table>
+
+        <a href="#" id="downloadBtn" class="btn-download" target="_blank" download>Unduh APK</a>
+    </div>
+</div>
+
+<script>
+    function extractPackageId(input) {
+        input = input.trim();
+        if (input.includes('id=')) {
+            const urlParams = new URLSearchParams(input.split('?')[1]);
+            return urlParams.get('id');
+        }
+        return input;
+    }
+
+    async function processDownload() {
+        const inputVal = document.getElementById('appInput').value;
+        const statusMsg = document.getElementById('statusMsg');
+        const resultCard = document.getElementById('resultCard');
+        
+        const packageId = extractPackageId(inputVal);
+
+        if (!packageId) {
+            showStatus("Harap masukkan URL atau Package ID yang valid.", true);
+            return;
+        }
+
+        showStatus("Mengambil data aplikasi...", false);
+        resultCard.style.display = 'none';
+
+        try {
+            // CATATAN: Ganti URL di bawah dengan endpoint Backend API Anda
+            // Contoh endpoint: http://localhost:3000/api/download?packageId=${packageId}
+            
+            /*
+            const response = await fetch(`http://localhost:3000/api/download?packageId=${packageId}`);
+            if (!response.ok) throw new Error("Gagal mengambil data dari server");
+            const data = await response.json();
+            */
+
+            // Simulasi response data dari backend:
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const mockData = {
+                name: packageId.split('.').pop().toUpperCase() + " App",
+                packageId: packageId,
+                version: "2.24.1.10",
+                size: "45.8 MB",
+                icon: "https://via.placeholder.com/64?text=APK",
+                downloadUrl: "https://example.com/sample.apk"
+            };
+
+            // Menampilkan hasil ke kartu
+            document.getElementById('appName').innerText = mockData.name;
+            document.getElementById('appPackage').innerText = mockData.packageId;
+            document.getElementById('appVersion').innerText = mockData.version;
+            document.getElementById('appSize').innerText = mockData.size;
+            document.getElementById('appIcon').src = mockData.icon;
+            document.getElementById('downloadBtn').href = mockData.downloadUrl;
+
+            statusMsg.style.display = 'none';
+            resultCard.style.display = 'block';
+
+        } catch (err) {
+            showStatus("Terjadi kesalahan: " + err.message, true);
+        }
+    }
+
+    function showStatus(text, isError) {
+        const statusMsg = document.getElementById('statusMsg');
+        statusMsg.innerText = text;
+        statusMsg.className = isError ? 'status-msg error' : 'status-msg';
+        statusMsg.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
