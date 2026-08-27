@@ -77,7 +77,7 @@
             </div>
             
             <p id="auth-error" class="text-[10px] text-rose-400 font-bold mt-2.5 hidden leading-snug">Error message</p>
-            <button id="btn-action" class="w-full bg-[#25d366] text-[#0b141a] font-bold py-2.5 rounded-xl hover:bg-[#00a884] active:scale-95 transition text-xs shadow-md mt-4">Masuk</button>
+            <button id="btn-action" onclick="handleAuthSubmit()" class="w-full bg-[#25d366] text-[#0b141a] font-bold py-2.5 rounded-xl hover:bg-[#00a884] active:scale-95 transition text-xs shadow-md mt-4">Masuk</button>
             
             <div class="flex items-center my-3 text-[10px] text-[#8696a0]">
                 <div class="flex-1 h-px bg-[#2a3942]"></div><span class="px-2">atau</span><div class="flex-1 h-px bg-[#2a3942]"></div>
@@ -92,7 +92,7 @@
                 </svg>
                 Masuk dengan Google
             </button>
-            <button id="btn-switch" class="text-[#8696a0] text-[10px] font-bold mt-4 hover:text-[#25d366] transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
+            <button id="btn-switch" onclick="toggleAuthMode()" class="text-[#8696a0] text-[10px] font-bold mt-4 hover:text-[#25d366] transition block mx-auto">Belum punya akun? Daftar sekarang.</button>
         </div>
     </div>
 
@@ -405,6 +405,33 @@
         </div>
     </div>
 
+    <!-- MODAL DISKUSI JADWAL (KOMENTAR) -->
+    <div id="commentModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
+        <div class="bg-[#1f2c34] w-full h-full md:h-[80vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
+            <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm font-bold shadow-md">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-white">Diskusi & Komentar Saluran</h3>
+                        <p id="commentModalSubtitle" class="text-[9.5px] text-[#8696a0] truncate max-w-[220px]">Memuat tugas...</p>
+                    </div>
+                </div>
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-base font-bold"></i>
+                </button>
+            </div>
+            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-[#0b141a]"></div>
+            <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
+                <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Tulis komentar..." class="flex-1 bg-[#1f2c34] border border-[#2a3942] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#25d366]">
+                <button onclick="sendComment()" class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] font-bold flex items-center justify-center hover:bg-[#00a884] transition active:scale-90 shadow-md">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL FORM DOKUMENTASI FOTO SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
@@ -430,15 +457,10 @@
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Tugas</label>
                         <p id="complete-task-title" class="text-xs font-bold text-white bg-[#111b21] p-2.5 rounded-xl border border-[#2a3942] leading-snug">-</p>
                     </div>
-
-                    <div id="complete-late-warning" class="hidden p-3 bg-amber-950/40 rounded-xl border border-amber-800 text-amber-300 text-[10px] space-y-1">
-                        <p class="font-extrabold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Penyelesaian Tugas Susulan (Lewat Hari)</p>
-                        <p class="opacity-90 leading-tight">Wajib melampirkan foto kerja & catatan. Tugas ini <b>tidak akan mendapat poin tambahan (0 Poin)</b>, namun <b>hutang penalti (-50 Poin) akan otomatis dihapus/lunas</b>.</p>
-                    </div>
                     
                     <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Keterangan / Hasil Pekerjaan <span id="note-required-star" class="text-rose-400 hidden">*</span></label>
-                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik, pengujian normal..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-xs font-medium text-white focus:outline-none focus:border-[#25d366]"></textarea>
+                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Keterangan / Hasil Pekerjaan</label>
+                        <textarea id="complete-task-note" rows="3" placeholder="Contoh: Pekerjaan telah diselesaikan dengan baik..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-xs font-medium text-white focus:outline-none focus:border-[#25d366]"></textarea>
                     </div>
 
                     <div class="pt-2 border-t border-[#2a3942] space-y-2.5">
@@ -447,33 +469,19 @@
                         </p>
 
                         <div class="p-2.5 bg-[#111b21] rounded-xl border border-[#2a3942] space-y-1.5">
-                            <label class="block text-[9.5px] font-extrabold text-[#8696a0]">
-                                📷 Foto Sebelum Dikerjakan (Before)
-                            </label>
+                            <label class="block text-[9.5px] font-extrabold text-[#8696a0]">📷 Foto Sebelum Dikerjakan (Before)</label>
                             <input type="file" id="complete-file-before" accept="image/*" class="w-full text-[11px] text-[#8696a0] file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-[#1f2c34] file:text-white cursor-pointer">
-                            <div id="complete-before-preview-container" class="hidden pt-1">
-                                <img id="complete-before-preview" class="w-full h-28 object-cover rounded-lg border border-[#2a3942]">
-                            </div>
                         </div>
 
                         <div class="p-2.5 bg-[#111b21] rounded-xl border border-[#2a3942] space-y-1.5">
-                            <label class="block text-[9.5px] font-extrabold text-[#25d366]">
-                                ✅ Foto Sesudah Dikerjakan (After) <span id="photo-required-star" class="text-rose-400 hidden">*</span>
-                            </label>
+                            <label class="block text-[9.5px] font-extrabold text-[#25d366]">✅ Foto Sesudah Dikerjakan (After)</label>
                             <input type="file" id="complete-file-after" accept="image/*" class="w-full text-[11px] text-[#8696a0] file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-extrabold file:bg-[#25d366] file:text-[#0b141a] hover:file:bg-[#00a884] cursor-pointer">
-                            <div id="complete-after-preview-container" class="hidden pt-1">
-                                <img id="complete-after-preview" class="w-full h-28 object-cover rounded-lg border border-[#2a3942]">
-                            </div>
                         </div>
-                    </div>
-
-                    <div class="p-2 bg-[#103629] rounded-xl text-[#25d366] text-[9.5px] leading-tight border border-[#25d366]/30">
-                        <i class="fa-solid fa-circle-info mr-1"></i> Foto otomatis dikompres &le; 200KB dan dibubuhi watermark nama petugas, waktu, serta BPB Unit BSN KC Surabaya.
                     </div>
                 </div>
 
                 <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
-                    <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-[#1f2c34] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Batal / Tutup</button>
+                    <button type="button" onclick="closeCompletionNoteModal()" class="flex-1 bg-[#1f2c34] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Batal</button>
                     <button type="submit" id="btn-submit-completion" class="flex-[2] bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
                         <i class="fa-solid fa-check"></i> Simpan Selesai
                     </button>
@@ -492,7 +500,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-extrabold text-white">Dompet Insentif Pribadi</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Poin & reward kinerja harian (Senin - Jumat)</p>
+                        <p class="text-[9.5px] text-[#8696a0]">Poin & reward kinerja harian</p>
                     </div>
                 </div>
                 <button onclick="closeEarningsModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
@@ -502,73 +510,24 @@
 
             <div class="space-y-3 flex-1 overflow-y-auto px-4 py-3 text-xs bg-[#0b141a]">
                 <div class="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-4 text-white shadow-md">
-                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya (Bulan Ini)</p>
+                    <p class="text-[10px] font-semibold text-amber-100 uppercase tracking-wider">Estimasi Insentif Saya</p>
                     <div class="flex items-end justify-between mt-1">
                         <h2 id="modalMyTotalEarnings" class="text-2xl font-extrabold">Rp 0</h2>
-                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="hidden bg-[#111b21] text-[#25d366] hover:bg-[#0b141a] active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5 border border-[#25d366]/40">
+                        <button id="btnWithdrawEarning" onclick="openWithdrawModal()" class="bg-[#111b21] text-[#25d366] hover:bg-[#0b141a] active:scale-95 text-[11px] font-extrabold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5 border border-[#25d366]/40">
                             <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> Tarik Dana
                         </button>
                     </div>
-
-                    <p id="withdrawNotice" class="text-[9px] text-amber-100/90 mt-1 font-medium italic">
-                        * Minimal penarikan saldo adalah Rp 10.000 (10k)
-                    </p>
-
                     <div class="flex flex-col gap-0.5 text-[9px] text-amber-100 mt-2 pt-2 border-t border-amber-400/40">
                         <span id="modalMyPointsDetail">0 Poin</span>
                         <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
-                        <span id="modalCurrentRate" class="opacity-90">Tarif: Rp 10 / 100 Poin</span>
                     </div>
                 </div>
 
-                <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942] shadow-xs">
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> Histori Penarikan Insentif
-                        </h4>
-                        <span id="myWithdrawalBadge" class="text-[9px] font-bold text-[#8696a0]">0 Data</span>
-                    </div>
+                <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942]">
+                    <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider mb-2">Histori Penarikan Insentif</h4>
                     <div id="myWithdrawalsList" class="space-y-1.5 max-h-36 overflow-y-auto pr-0.5">
                         <div class="text-center text-[#8696a0] text-[10px] py-2">Belum ada riwayat penarikan.</div>
                     </div>
-                </div>
-
-                <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942] shadow-xs">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-circle-info text-[#25d366]"></i> Ketentuan Skema Poin & Waktu
-                        </h4>
-                        <button id="btnEditPointScheme" onclick="closeEarningsModal(); openBudgetConfigModal();" class="hidden text-[10px] font-extrabold text-amber-400 hover:underline">
-                            <i class="fa-solid fa-pen mr-0.5"></i> Edit
-                        </button>
-                    </div>
-                    <ul id="pointSchemeList" class="text-[10px] space-y-1 text-[#8696a0]"></ul>
-                </div>
-
-                <div id="adminWithdrawalManagementCard" class="hidden p-3 bg-rose-950/30 rounded-xl border border-rose-800">
-                    <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-[10px] font-extrabold text-rose-300 uppercase tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-money-bill-transfer text-rose-400"></i> Verifikasi Penarikan Tim (Admin)
-                        </h4>
-                    </div>
-                    <div id="adminWithdrawalsList" class="space-y-2 max-h-48 overflow-y-auto pr-0.5">
-                        <div class="text-center text-[#8696a0] text-[10px] py-2">Tidak ada pengajuan penarikan baru.</div>
-                    </div>
-                </div>
-
-                <div id="adminTeamBudgetCard" class="hidden p-3 bg-amber-950/30 rounded-xl border border-amber-800">
-                    <div class="flex items-center justify-between text-[10px] font-bold text-amber-200 mb-1">
-                        <span>Total Realisasi Tim (Admin)</span>
-                        <span id="modalTeamBudgetUsage">Rp 0 / Rp 100.000</span>
-                    </div>
-                    <div class="w-full bg-[#111b21] h-2 rounded-full overflow-hidden border border-[#2a3942]">
-                        <div id="modalBudgetProgressBar" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div id="adminTeamListContainer" class="hidden">
-                    <h4 class="text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
-                    <div id="teamEarningsList" class="space-y-1.5"></div>
                 </div>
             </div>
 
@@ -585,17 +544,14 @@
                 <h3 class="font-bold text-sm text-[#e9edef]" id="modalTitle">Tambah Aktivitas Baru</h3>
                 <button type="button" onclick="toggleModal(false)" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
                 <input type="date" id="input-date" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
             </div>
-
             <div>
-                <label class="text-[10px] text-[#8696a0] font-bold">Nama Petugas (Sesuai Akun)</label>
+                <label class="text-[10px] text-[#8696a0] font-bold">Nama Petugas</label>
                 <input type="text" id="input-name" readonly class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-[#8696a0] cursor-not-allowed mt-0.5">
             </div>
-
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Kategori / Peran</label>
                 <select id="input-role" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
@@ -605,12 +561,10 @@
                     <option value="Personal">Personal / Umum</option>
                 </select>
             </div>
-
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Rincian Kegiatan</label>
                 <input type="text" id="input-task" required placeholder="Contoh: Perbaikan panel listrik" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
             </div>
-
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-[10px] text-[#8696a0] font-bold">Jam Mulai</label>
@@ -621,10 +575,7 @@
                     <input type="time" id="input-end-time" value="10:00" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
                 </div>
             </div>
-
-            <button type="submit" id="btn-save-task" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
-                Simpan Aktivitas
-            </button>
+            <button type="submit" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">Simpan Aktivitas</button>
         </form>
     </div>
 
@@ -641,11 +592,9 @@
             </div>
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Tempel Pesan Chat Jadwal</label>
-                <textarea id="bulk-text-area" rows="5" placeholder="08.00-10.00: Perbaikan AC&#10;10.00-12.00: Cek panel genset" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-white font-mono mt-0.5 focus:outline-none focus:border-[#25d366]"></textarea>
+                <textarea id="bulk-text-area" rows="5" placeholder="08.00-10.00: Perbaikan AC" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-white font-mono mt-0.5 focus:outline-none focus:border-[#25d366]"></textarea>
             </div>
-            <button onclick="processBulkTextImport()" id="btn-process-bulk" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl active:scale-95 transition">
-                Simpan Semua Jadwal
-            </button>
+            <button onclick="processBulkTextImport()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl active:scale-95 transition">Simpan Semua Jadwal</button>
         </div>
     </div>
 
@@ -656,7 +605,6 @@
                 <h3 class="font-bold text-sm text-[#e9edef]">Unduh Laporan Kerja</h3>
                 <button onclick="closeExportModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-            
             <div class="space-y-1">
                 <label class="text-[10.5px] text-[#8696a0] font-bold">Format Dokumen</label>
                 <select id="exportPdfType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
@@ -664,35 +612,21 @@
                     <option value="text_only">📄 PDF Hanya Teks (Tabel Ringkas)</option>
                 </select>
             </div>
-
-            <div class="space-y-1">
-                <label class="text-[10.5px] text-[#8696a0] font-bold">Periode Waktu</label>
-                <select id="exportRangeType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
-                    <option value="daily">📅 Hari Ini</option>
-                    <option value="weekly">📆 7 Hari Terakhir</option>
-                    <option value="monthly">🗓️ Bulan Ini</option>
-                </select>
-            </div>
-
-            <button id="btnExecuteExport" onclick="processExportExecution()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
-                Unduh Sekarang
-            </button>
+            <button onclick="processExportExecution()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">Unduh Sekarang</button>
         </div>
     </div>
 
-    <!-- MODAL AI PLANNER GEMINI -->
+    <!-- MODAL AI PLANNER -->
     <div id="autoGenerateModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop max-h-[85vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
                 <h3 class="font-bold text-sm text-[#e9edef] flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-[#25d366]"></i> AI Smart Planner</h3>
                 <button onclick="closeAutoGenerateModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-            
             <div>
                 <label class="text-[10px] text-[#8696a0] font-bold">Kunci Gemini API</label>
                 <input type="password" id="userGeminiApiKey" placeholder="Tempel AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white font-mono mt-0.5">
             </div>
-
             <div class="grid grid-cols-2 gap-2">
                 <div>
                     <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
@@ -704,20 +638,10 @@
                         <option value="Teknisi Gedung">Teknisi</option>
                         <option value="Cleaning Service">Cleaning</option>
                         <option value="Admin Kantor">Admin</option>
-                        <option value="Personal / Mahasiswa">Personal</option>
                     </select>
                 </div>
             </div>
-
-            <div>
-                <label class="text-[10px] text-[#8696a0] font-bold">Fokus Aktivitas / Target</label>
-                <input type="text" id="gen-focus" placeholder="Contoh: Perbaikan AC dan pembersihan filter" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white mt-0.5">
-            </div>
-
-            <button id="btn-process-gen" onclick="generateAiSchedulePreview()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl active:scale-95 transition">
-                Rancang Jadwal AI
-            </button>
-
+            <button id="btn-process-gen" onclick="generateAiSchedulePreview()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl active:scale-95 transition">Rancang Jadwal AI</button>
             <div id="aiPreviewList" class="space-y-1.5 pt-2 hidden"></div>
             <button id="btn-save-ai-tasks" onclick="saveAllAiTasks()" class="w-full bg-[#00a884] text-white font-bold py-2 rounded-xl hidden">Simpan ke Saluran</button>
         </div>
@@ -727,196 +651,35 @@
     <div id="withdrawModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm shadow-md font-bold">
-                        <i class="fa-brands fa-whatsapp"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-white">Form Penarikan Insentif</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Pengajuan klaim insentif ke bendahara</p>
-                    </div>
-                </div>
-                <button onclick="closeWithdrawModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
+                <h3 class="text-sm font-extrabold text-white">Form Penarikan Insentif</h3>
+                <button onclick="closeWithdrawModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
-
-            <form id="formWithdrawRequest" class="flex-1 flex flex-col justify-between overflow-hidden">
+            <form id="formWithdrawRequest" class="flex-1 flex flex-col justify-between overflow-hidden" onsubmit="submitWithdrawRequest(event)">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 text-xs bg-[#0b141a]">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Saldo Siap Tarik</label>
-                        <input type="text" id="wd-available-balance" disabled class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-extrabold text-[#25d366]">
-                    </div>
-
-                    <div>
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Jumlah Penarikan (Rp)</label>
-                        <input type="number" id="wd-amount" min="10000" step="1000" required oninput="calculateWithdrawFee()" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366]">
-                        <span id="wd-min-info" class="text-[9px] text-[#8696a0] block mt-0.5">* Minimal Rp 10.000 (10k)</span>
+                        <input type="number" id="wd-amount" min="10000" step="1000" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366]">
                     </div>
-
                     <div>
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Tujuan Bank / E-Wallet</label>
-                        <select id="wd-method" required onchange="calculateWithdrawFee()" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366]">
-                            <option value="BANK_BTN">🏦 Bank BTN (Gratis Admin Rp 0)</option>
-                            <option value="BANK_BCA">🏦 Bank BCA</option>
-                            <option value="BANK_BRI">🏦 Bank BRI</option>
-                            <option value="BANK_MANDIRI">🏦 Bank Mandiri</option>
-                            <option value="BANK_BNI">🏦 Bank BNI</option>
-                            <option value="BANK_BSI">🏦 Bank Syariah Indonesia (BSI)</option>
-                            <option value="EWALLET_DANA">📱 DANA (E-Wallet)</option>
-                            <option value="EWALLET_GOPAY">📱 GoPay (E-Wallet)</option>
-                            <option value="EWALLET_OVO">📱 OVO (E-Wallet)</option>
-                            <option value="EWALLET_SHOPEEPAY">📱 ShopeePay (E-Wallet)</option>
-                            <option value="EWALLET_LINKAJA">📱 LinkAJA (E-Wallet)</option>
-                            <option value="LAINNYA">💳 Bank / E-Wallet Lainnya</option>
+                        <select id="wd-method" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
+                            <option value="BANK_BTN">Bank BTN</option>
+                            <option value="BANK_BCA">Bank BCA</option>
+                            <option value="EWALLET_DANA">DANA</option>
                         </select>
                     </div>
-
-                    <div id="wd-other-method-container" class="hidden">
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nama Bank/E-Wallet Lainnya</label>
-                        <input type="text" id="wd-other-method-name" placeholder="Contoh: Bank Jatim / Seabank" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-xs font-bold text-white">
-                    </div>
-
                     <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nomor Rekening / No. HP E-Wallet</label>
-                        <input type="text" id="wd-account-number" required placeholder="Contoh: 001234567890 / 08123456789" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366] font-mono">
+                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nomor Rekening / No. HP</label>
+                        <input type="text" id="wd-account-number" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
                     </div>
-
                     <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nama Pemilik Rekening / Akun</label>
-                        <input type="text" id="wd-account-name" required placeholder="Nama sesuai buku tabungan / akun" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366]">
-                    </div>
-
-                    <div class="p-2.5 bg-[#111b21] rounded-xl border border-[#2a3942] space-y-1">
-                        <div class="flex justify-between text-[10px] text-[#8696a0]">
-                            <span>Nominal Tarik:</span>
-                            <span id="wd-calc-nominal" class="font-bold text-white">Rp 0</span>
-                        </div>
-                        <div class="flex justify-between text-[10px] text-[#8696a0]">
-                            <span>Biaya Admin:</span>
-                            <span id="wd-calc-fee" class="font-bold text-rose-400">Rp 0</span>
-                        </div>
-                        <div class="flex justify-between text-xs font-extrabold pt-1 border-t border-[#2a3942] text-[#25d366]">
-                            <span>Total Bersih Diterima:</span>
-                            <span id="wd-calc-net">Rp 0</span>
-                        </div>
-                    </div>
-
-                    <div class="p-2 bg-amber-950/40 rounded-xl text-amber-300 text-[9.5px] leading-snug border border-amber-800/40">
-                        <i class="fa-solid fa-circle-info mr-0.5"></i> Pengajuan akan langsung terhubung ke WhatsApp Admin (+6282146511484).
+                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-0.5">Nama Pemilik</label>
+                        <input type="text" id="wd-account-name" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white">
                     </div>
                 </div>
-
                 <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
-                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-[#1f2c34] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Batal</button>
-                    <button type="submit" id="btnSubmitWithdraw" class="flex-[2] bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> Kirim Pengajuan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL EDIT NAMA USER -->
-    <div id="editUserNameModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-[#1f2c34] w-full h-full md:h-auto md:max-w-xs md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-amber-500 text-[#0b141a] flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-solid fa-user-pen"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-white">Edit Nama Petugas</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Pengaturan Super Admin</p>
-                    </div>
-                </div>
-                <button onclick="closeEditUserNameModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <form id="formEditUserName" class="p-4 space-y-3 text-xs bg-[#0b141a] flex-1 flex flex-col justify-between">
-                <div class="space-y-3">
-                    <input type="hidden" id="edit-user-target-id">
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Email User</label>
-                        <input type="text" id="edit-user-email-display" disabled class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-medium text-[#8696a0]">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Nama Tampilan</label>
-                        <input type="text" id="edit-user-new-name" required placeholder="Masukkan nama..." class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366]">
-                    </div>
-                </div>
-                <div class="flex gap-2 pt-2 border-t border-[#2a3942]">
-                    <button type="button" onclick="closeEditUserNameModal()" class="flex-1 bg-[#1f2c34] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Tutup</button>
-                    <button type="submit" class="flex-1 bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL ANGGARAN & POIN (SUPER ADMIN) -->
-    <div id="budgetConfigModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-amber-500 text-[#0b141a] flex items-center justify-center text-sm shadow-md">
-                        <i class="fa-solid fa-coins"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-white">Pengaturan Anggaran & Poin</h3>
-                        <p class="text-[9.5px] text-[#8696a0]">Konfigurasi batas insentif & poin reward</p>
-                    </div>
-                </div>
-                <button onclick="closeBudgetConfigModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <form id="formBudgetConfig" class="flex-1 flex flex-col justify-between overflow-hidden">
-                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-[#0b141a]">
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Total Anggaran Bulanan (Rp)</label>
-                        <input type="number" id="inputMonthlyBudget" min="0" step="1000" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-400">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Tarif / 100 Poin (Rp)</label>
-                            <input type="number" id="inputRatePerTask" min="1" step="1" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-400">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Max Tugas/Hari</label>
-                            <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-400">
-                        </div>
-                    </div>
-
-                    <div class="pt-2 border-t border-[#2a3942]">
-                        <label class="block text-[10px] font-extrabold text-amber-400 uppercase mb-2">Penyesuaian Nilai Poin</label>
-                        <div class="grid grid-cols-2 gap-2.5">
-                            <div>
-                                <span class="text-[9.5px] font-bold text-[#8696a0] block mb-0.5">🌅 Buat &lt;06:00</span>
-                                <input type="number" id="inputPointsEarly" class="w-full bg-[#111b21] border border-[#2a3942] rounded-lg px-2.5 py-1.5 text-xs font-bold text-white">
-                            </div>
-                            <div>
-                                <span class="text-[9.5px] font-bold text-[#8696a0] block mb-0.5">✅ Selesai Tepat Jam</span>
-                                <input type="number" id="inputPointsOnTime" class="w-full bg-[#111b21] border border-[#2a3942] rounded-lg px-2.5 py-1.5 text-xs font-bold text-white">
-                            </div>
-                            <div>
-                                <span class="text-[9.5px] font-bold text-[#8696a0] block mb-0.5">⚡ Status Proses</span>
-                                <input type="number" id="inputPointsProcess" class="w-full bg-[#111b21] border border-[#2a3942] rounded-lg px-2.5 py-1.5 text-xs font-bold text-white">
-                            </div>
-                            <div>
-                                <span class="text-[9.5px] font-bold text-[#8696a0] block mb-0.5">❌ Expired Penalti</span>
-                                <input type="number" id="inputPointsExpired" class="w-full bg-[#111b21] border border-[#2a3942] rounded-lg px-2.5 py-1.5 text-xs font-bold text-white">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
-                    <button type="button" onclick="closeBudgetConfigModal()" class="flex-1 bg-[#1f2c34] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Tutup</button>
-                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-600 text-[#0b141a] font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Simpan</button>
+                    <button type="button" onclick="closeWithdrawModal()" class="flex-1 bg-[#1f2c34] text-white py-2.5 rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="flex-[2] bg-[#25d366] text-[#0b141a] font-bold py-2.5 rounded-xl text-xs">Kirim Pengajuan</button>
                 </div>
             </form>
         </div>
@@ -926,127 +689,38 @@
     <div id="form-profile-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:max-h-[90vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-5 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-[#25d366] text-[#0b141a] flex items-center justify-center text-base font-bold shadow-md">
-                        <i class="fa-solid fa-id-badge"></i>
+                <h3 class="text-sm font-extrabold text-white">Profil Pegawai & Preferensi</h3>
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <div class="p-4 md:p-5 overflow-y-auto space-y-4 bg-[#0b141a] text-xs flex-1">
+                <div class="flex items-center gap-3 bg-[#111b21] p-4 rounded-2xl border border-[#2a3942]">
+                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-[#1f2c34] border-2 border-[#25d366] flex items-center justify-center text-xl font-bold text-white" id="modal-user-avatar">
+                        <i class="fa-solid fa-user text-[#8696a0]"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-extrabold text-white tracking-tight">Profil Pegawai & Preferensi</h3>
-                        <p class="text-[10px] text-[#8696a0] font-medium">M-Ops Corporate Workspace</p>
+                        <h4 class="text-sm font-black text-white" id="modal-user-name">Pengguna</h4>
+                        <p class="text-[11px] text-[#8696a0]" id="profile-email-display">email@domain.com</p>
                     </div>
                 </div>
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition active:scale-90">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <div class="p-4 md:p-5 overflow-y-auto space-y-4 bg-[#0b141a] text-xs flex-1">
-                <div class="relative overflow-hidden rounded-2xl bg-[#111b21] p-4 text-white shadow-lg border border-[#2a3942]">
-                    <div class="flex items-start justify-between relative z-10">
-                        <div class="flex items-center gap-3">
-                            <div class="relative">
-                                <div class="w-16 h-16 rounded-2xl overflow-hidden bg-[#1f2c34] border-2 border-[#25d366] flex items-center justify-center text-2xl font-bold shadow-md" id="modal-user-avatar">
-                                    <i class="fa-solid fa-user text-[#8696a0]"></i>
-                                </div>
-                                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#25d366] border-2 border-[#111b21]" title="Online Status"></span>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h4 class="text-sm font-black text-white leading-tight tracking-tight" id="modal-user-name">Pengguna</h4>
-                                    <span id="profile-superadmin-badge" class="hidden bg-amber-400 text-slate-950 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">SUPER ADMIN</span>
-                                </div>
-                                <p class="text-[11px] font-medium text-[#8696a0] flex items-center gap-1 mt-0.5" id="profile-email-display">
-                                    <i class="fa-regular fa-envelope text-[10px] text-[#25d366]"></i> email@domain.com
-                                </p>
-                                <span class="inline-flex items-center gap-1 mt-1.5 bg-[#103629] text-[#25d366] border border-[#25d366]/40 px-2 py-0.5 rounded-full text-[9px] font-bold">
-                                    <i class="fa-solid fa-circle-check text-[8px]"></i> Akun Terverifikasi BPB
-                                </span>
-                            </div>
-                        </div>
+                <div class="bg-[#111b21] rounded-2xl p-3.5 border border-[#2a3942] space-y-2">
+                    <div class="flex justify-between p-2 rounded-xl bg-[#1f2c34]">
+                        <span class="text-[10px] font-bold uppercase text-[#8696a0]">NIP</span>
+                        <span id="display-profile-nip" class="font-bold text-white text-xs">BPB-202601</span>
                     </div>
-                </div>
-
-                <div class="bg-[#111b21] rounded-2xl p-3.5 border border-[#2a3942] shadow-xs space-y-2.5">
-                    <div class="flex items-center justify-between border-b border-[#2a3942] pb-2">
-                        <h4 class="text-[10.5px] font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
-                            <i class="fa-solid fa-address-card text-[#25d366]"></i> Detail Pegawai
-                        </h4>
-                        <button type="button" onclick="toggleEditProfileFields()" id="btnToggleEditProfile" class="text-[10px] font-extrabold text-[#25d366] hover:underline flex items-center gap-1">
-                            <i class="fa-solid fa-pen-to-square text-[9px]"></i> Edit Data
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-between p-2 rounded-xl bg-[#1f2c34] border border-[#2a3942]">
-                        <div class="flex items-center gap-2 text-[#8696a0]">
-                            <i class="fa-solid fa-user-tag text-xs text-[#25d366] w-4 text-center"></i>
-                            <span class="text-[10px] font-bold uppercase">Nama</span>
-                        </div>
-                        <span id="display-profile-name" class="font-bold text-white text-xs truncate max-w-[160px] text-right">Nama</span>
-                        <input type="text" id="input-profile-name" class="hidden w-1/2 bg-[#111b21] border border-[#2a3942] rounded-lg px-2 py-1 text-xs font-bold text-white focus:outline-none focus:border-[#25d366] text-right" placeholder="Nama Lengkap">
-                    </div>
-
-                    <div class="flex items-center justify-between p-2 rounded-xl bg-[#1f2c34] border border-[#2a3942]">
-                        <div class="flex items-center gap-2 text-[#8696a0]">
-                            <i class="fa-solid fa-id-card text-xs text-[#25d366] w-4 text-center"></i>
-                            <span class="text-[10px] font-bold uppercase">NIP / ID</span>
-                        </div>
-                        <span id="display-profile-nip" class="font-mono font-extrabold text-white text-xs">BPB-202601</span>
-                        <input type="text" id="input-profile-nip" class="hidden w-1/2 bg-[#111b21] border border-[#2a3942] rounded-lg px-2 py-1 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#25d366] text-right" placeholder="Masukkan NIP">
-                    </div>
-
-                    <div class="flex items-center justify-between p-2 rounded-xl bg-[#1f2c34] border border-[#2a3942]">
-                        <div class="flex items-center gap-2 text-[#8696a0]">
-                            <i class="fa-brands fa-whatsapp text-xs text-emerald-400 w-4 text-center"></i>
-                            <span class="text-[10px] font-bold uppercase">WhatsApp</span>
-                        </div>
-                        <span id="display-profile-phone" class="font-mono font-extrabold text-white text-xs">+62 821-4651-1484</span>
-                        <input type="tel" id="input-profile-phone" class="hidden w-1/2 bg-[#111b21] border border-[#2a3942] rounded-lg px-2 py-1 text-xs font-mono font-bold text-white focus:outline-none focus:border-[#25d366] text-right" placeholder="08xxxxxxxxxx">
-                    </div>
-
-                    <div class="p-2 rounded-xl bg-[#1f2c34] border border-[#2a3942] space-y-1">
-                        <div class="flex items-center gap-2 text-[#8696a0]">
-                            <i class="fa-solid fa-building-shield text-xs text-amber-400 w-4 text-center"></i>
-                            <span class="text-[10px] font-bold uppercase">Unit & Alamat Kantor</span>
-                        </div>
-                        <p id="display-profile-address" class="text-xs font-bold text-white leading-snug pl-6">
-                            PT. Binayasa Putrabatara &bull; Unit BSN KC Surabaya, Jawa Timur
-                        </p>
-                        <textarea id="input-profile-address" rows="2" class="hidden w-full bg-[#111b21] border border-[#2a3942] rounded-lg p-2 text-xs font-bold text-white focus:outline-none focus:border-[#25d366] mt-1" placeholder="Masukkan alamat lengkap"></textarea>
-                    </div>
-
-                    <button id="btnSaveProfileDetails" onclick="saveProfileCorporateDetails()" class="hidden w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl text-xs transition active:scale-95 shadow-md flex items-center justify-center gap-1.5 mt-2">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pegawai
-                    </button>
-                </div>
-
-                <div class="bg-[#111b21] p-3.5 rounded-2xl border border-[#2a3942] shadow-xs space-y-1.5">
-                    <div class="flex items-center justify-between">
-                        <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-key text-amber-400"></i> Kunci Gemini AI Device
-                        </label>
-                        <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[9px] font-bold text-[#25d366] hover:underline flex items-center gap-0.5">
-                            Dapatkan Key <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                        </a>
-                    </div>
-                    <div class="relative flex items-center">
-                        <input type="password" id="profileGeminiApiKey" placeholder="AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-[#1f2c34] border border-[#2a3942] rounded-xl px-3 py-2 pr-8 text-xs font-mono text-white focus:outline-none focus:border-[#25d366]">
-                        <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 text-[#8696a0] hover:text-white">
-                            <i class="fa-solid fa-eye text-xs"></i>
-                        </button>
+                    <div class="flex justify-between p-2 rounded-xl bg-[#1f2c34]">
+                        <span class="text-[10px] font-bold uppercase text-[#8696a0]">WhatsApp</span>
+                        <span id="display-profile-phone" class="font-bold text-white text-xs">-</span>
                     </div>
                 </div>
             </div>
-
-            <div class="p-3.5 md:p-4 bg-[#111b21] border-t border-[#2a3942] flex items-center gap-2">
-                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-[#1f2c34] text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Tutup Profil</button>
-                <button onclick="logout()" class="flex-1 bg-rose-950/40 hover:bg-rose-900/50 text-rose-400 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition border border-rose-800/40">
-                    <i class="fa-solid fa-right-from-bracket text-[11px]"></i> Keluar
-                </button>
+            <div class="p-3.5 bg-[#111b21] border-t border-[#2a3942] flex gap-2">
+                <button onclick="document.getElementById('form-profile-modal').classList.add('hidden')" class="flex-1 bg-[#1f2c34] text-white py-2.5 rounded-xl text-xs">Tutup</button>
+                <button onclick="logout()" class="flex-1 bg-rose-950/40 text-rose-400 py-2.5 rounded-xl text-xs font-bold">Keluar</button>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFIKASI STANDARD -->
+    <!-- TOAST -->
     <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-[#1f2c34] border border-[#2a3942] text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
     <script>
@@ -1055,79 +729,29 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const SUPER_ADMIN_EMAIL = 'mastrisnocom@gmail.com';
-        const ADMIN_WA_PHONE = '6282146511484';
         const UNIT_NAME = 'BPB Unit BSN KC Surabaya';
 
         let currentUser = null;
         let globalTasks = [];
         let globalWithdrawals = [];
         let globalNotifications = [];
-        let pendingApprovalUsers = [];
-        let editingTaskId = null;
         let isSuperAdmin = false;
-        let activeExportFormat = 'pdf';
-        let deleteTargetId = null;
-        let activeCommentJadwalId = null;
-        let editingCommentId = null;
-        let replyingToUser = null;
-        let notifiedTaskId = null;
-        let audioCtx = null;
-        let cachedMyEarningsData = null;
-        let userRanksMap = {};
-        let isEditingProfile = false;
-
         let activeFriendFeedId = null;
         let activeFriendFeedName = null;
-        let previewTasksData = [];
-
-        let globalChatMessagesList = [];
-        let unreadGlobalChatCount = 0;
-        let unreadNotifCount = 0;
-        let isGlobalChatOpen = false;
-
-        let myFollowings = []; 
-        let myFollowers = [];  
-        let onlineUsersState = {};
         let userProfilesMap = {};
-
+        let myFollowings = [];
+        let myFollowers = [];
         let activeStoriesList = [];
         let currentStoryIndex = 0;
         let storyProgressTimer = null;
         const STORY_DURATION_MS = 6000;
-
-        let budgetSettings = {
-            monthlyBudget: 100000,
-            ratePerTask: 10,
-            maxDailyTasks: 5,
-            pointsEarly: 100,
-            pointsOnTime: 100,
-            pointsProcess: 50,
-            pointsLate: 0,
-            pointsExpired: 50,
-            pointsStreak: 200,
-            pointsNewUser: 1000,
-            pointsMutual: 500,
-            pointsPhoto: 50,
-            pointsPerbaikan: 100,
-            pointsComment: 10,
-            adminFeeNonBtn: 2500,
-            minWithdrawal: 10000
-        };
+        let isSignUpMode = false;
 
         const localNow = new Date();
         const yearNow = localNow.getFullYear();
         const monthNow = String(localNow.getMonth() + 1).padStart(2, '0');
         const dayNow = String(localNow.getDate()).padStart(2, '0');
         const todayStr = `${yearNow}-${monthNow}-${dayNow}`;
-
-        function formatRupiahK(amount) {
-            const num = Number(amount) || 0;
-            if (num >= 1000) {
-                const inK = num / 1000;
-                return (inK % 1 === 0 ? inK : inK.toFixed(1)) + 'k';
-            }
-            return num.toString();
-        }
 
         function getUserDisplayName(userId, fallbackEmail = '', fallbackName = '') {
             if (userId && userProfilesMap[userId]) return userProfilesMap[userId];
@@ -1144,16 +768,6 @@
             return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
         }
 
-        function formatTanggalIndo(dateStr) {
-            if (!dateStr) return '-';
-            const parts = dateStr.split('-');
-            if (parts.length === 3) {
-                const date = new Date(parts[0], parts[1] - 1, parts[2]);
-                return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-            }
-            return dateStr;
-        }
-
         function formatTimeAgo(isoString) {
             if (!isoString) return 'Baru saja';
             const diff = Math.floor((new Date() - new Date(isoString)) / 1000);
@@ -1163,68 +777,118 @@
             return new Date(isoString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         }
 
-        function isTaskExpired(taskDate) {
-            if (!taskDate) return false;
-            return taskDate < todayStr;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            if(t){ t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2200); }
         }
 
-        function isTaskNotStartedYet(task) {
-            if (!task || !task.tanggal) return false;
-            if (task.tanggal > todayStr) return true;
-            if (task.tanggal === todayStr && task.jam_mulai) {
-                const now = new Date();
-                const curHours = String(now.getHours()).padStart(2, '0');
-                const curMinutes = String(now.getMinutes()).padStart(2, '0');
-                return `${curHours}:${curMinutes}` < task.jam_mulai;
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-title').innerText = isSignUpMode ? "Daftar Akun Baru" : "Binayasa M-Ops";
+            document.getElementById('btn-action').innerText = isSignUpMode ? "Daftar" : "Masuk";
+            document.getElementById('btn-switch').innerText = isSignUpMode ? "Sudah punya akun? Masuk." : "Belum punya akun? Daftar sekarang.";
+        }
+
+        async function handleAuthSubmit() {
+            const email = document.getElementById('input-email').value.trim();
+            const password = document.getElementById('input-password').value.trim();
+            const errEl = document.getElementById('auth-error');
+            errEl.classList.add('hidden');
+
+            if (!email || !password) {
+                errEl.innerText = "Email dan password wajib diisi!";
+                errEl.classList.remove('hidden');
+                return;
             }
-            return false;
+
+            if (isSignUpMode) {
+                const { data, error } = await _supabase.auth.signUp({ email, password });
+                if (error) {
+                    errEl.innerText = error.message;
+                    errEl.classList.remove('hidden');
+                } else {
+                    showToast("Pendaftaran berhasil! Silakan masuk.");
+                    toggleAuthMode();
+                }
+            } else {
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    errEl.innerText = error.message;
+                    errEl.classList.remove('hidden');
+                } else {
+                    location.reload();
+                }
+            }
         }
 
-        async function processAndWatermarkImage(file, userName) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width, height = img.height;
-                        const MAX_DIMENSION = 1200;
-                        if (width > height && width > MAX_DIMENSION) { height = Math.round((height * MAX_DIMENSION) / width); width = MAX_DIMENSION; } 
-                        else if (height > MAX_DIMENSION) { width = Math.round((width * MAX_DIMENSION) / height); height = MAX_DIMENSION; }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
+        async function loginWithGoogle() {
+            await _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
+        }
 
-                        const now = new Date();
-                        const timeStr = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID');
-                        const bannerHeight = Math.max(45, Math.round(height * 0.08));
-                        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)'; 
-                        ctx.fillRect(0, height - bannerHeight, width, bannerHeight);
-                        ctx.fillStyle = '#25d366'; 
-                        ctx.fillRect(0, height - bannerHeight, width, 3);
-                        ctx.fillStyle = '#ffffff'; 
-                        ctx.font = `bold ${Math.max(12, Math.round(bannerHeight * 0.3))}px sans-serif`;
-                        ctx.fillText(`👤 Petugas: ${userName} | 🏢 ${UNIT_NAME}`, 14, height - (bannerHeight * 0.55));
-                        ctx.font = `normal ${Math.max(10, Math.round(bannerHeight * 0.25))}px sans-serif`;
-                        ctx.fillText(`🕒 Waktu: ${timeStr}`, 14, height - (bannerHeight * 0.2));
+        async function logout() {
+            await _supabase.auth.signOut();
+            location.reload();
+        }
 
-                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.8);
-                    };
-                    img.onerror = (e) => reject(e);
-                };
-                reader.onerror = (e) => reject(e);
+        async function syncUserProfile() {
+            if (!currentUser) return;
+            const metaAvatar = getAvatarUrl(currentUser);
+            const displayName = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
+            await _supabase.from('profiles').upsert({
+                id: currentUser.id,
+                email: currentUser.email,
+                nama: displayName,
+                avatar_url: metaAvatar,
+                updated_at: new Date().toISOString()
             });
         }
 
-        async function uploadEvidenceImage(blob, prefix = 'evidence') {
-            if (!blob) return null;
-            const fileName = `${prefix}_${currentUser.id}_${Date.now()}.jpg`;
-            const filePath = `evidences/${fileName}`;
-            const { error } = await _supabase.storage.from('task-evidences').upload(filePath, blob, { contentType: 'image/jpeg', upsert: true });
-            if (error) return null;
-            return _supabase.storage.from('task-evidences').getPublicUrl(filePath).data?.publicUrl || null;
+        async function fetchAllProfiles() {
+            const { data } = await _supabase.from('profiles').select('*');
+            if (data) {
+                data.forEach(p => {
+                    userProfilesMap[p.id] = p.nama || p.email.split('@')[0];
+                });
+            }
+        }
+
+        async function fetchFollowsAndNotifs() {
+            if (!currentUser) return;
+            const { data: notifs } = await _supabase.from('app_notifications').select('*').eq('recipient_id', currentUser.id).order('created_at', { ascending: false });
+            if (notifs) {
+                globalNotifications = notifs;
+                const unread = notifs.filter(n => !n.is_read).length;
+                const badge = document.getElementById('headerFriendBadge');
+                if (badge) {
+                    if (unread > 0) { badge.innerText = unread; badge.classList.remove('hidden'); }
+                    else { badge.classList.add('hidden'); }
+                }
+                renderNotificationsList();
+            }
+        }
+
+        function renderNotificationsList() {
+            const container = document.getElementById('notifListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            if (globalNotifications.length === 0) {
+                container.innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Belum ada notifikasi.</div>';
+                return;
+            }
+            globalNotifications.forEach(n => {
+                container.innerHTML += `
+                    <div class="p-3 bg-[#111b21] rounded-xl border border-[#2a3942] flex items-start gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-[#25d366]/20 text-[#25d366] flex items-center justify-center font-bold text-xs flex-shrink-0">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-white text-xs">${n.title}</h4>
+                            <p class="text-[#8696a0] text-[11px] truncate mt-0.5">${n.message}</p>
+                            <span class="text-[9px] text-[#8696a0] mt-1 block">${formatTimeAgo(n.created_at)}</span>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         function renderStoriesBar() {
@@ -1237,6 +901,7 @@
                 if (task.foto_sesudah || task.foto_sebelum) {
                     const taskTime = new Date(task.completed_at || task.created_at || task.tanggal).getTime();
                     if (!userStoriesMap[task.user_id] || taskTime > userStoriesMap[task.user_id].time) {
+                        const avatarUrl = userProfilesMap[task.user_id + '_avatar'] || getAvatarUrl(currentUser);
                         userStoriesMap[task.user_id] = {
                             taskId: task.id,
                             userId: task.user_id,
@@ -1246,7 +911,8 @@
                             peran: task.peran || 'Petugas',
                             time: taskTime,
                             isoDate: task.completed_at || task.created_at,
-                            initials: (task.nama || 'P').substring(0, 2).toUpperCase()
+                            initials: (task.nama || 'P').substring(0, 2).toUpperCase(),
+                            avatar: avatarUrl
                         };
                     }
                 }
@@ -1255,27 +921,22 @@
             activeStoriesList = Object.values(userStoriesMap).sort((a, b) => b.time - a.time);
 
             if (activeStoriesList.length === 0) {
-                container.innerHTML = `
-                    <div class="w-full py-4 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60">
-                        Belum ada status dokumentasi foto kerja hari ini.
-                    </div>
-                `;
+                container.innerHTML = `<div class="w-full py-4 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60">Belum ada status dokumentasi foto kerja hari ini.</div>`;
                 return;
             }
 
             activeStoriesList.forEach((s, index) => {
-                const isMe = s.userId === currentUser?.id;
                 const card = document.createElement('div');
                 card.className = `w-24 h-40 rounded-2xl flex-shrink-0 bg-[#1f2c34] p-2 flex flex-col justify-between relative overflow-hidden border border-[#2a3942] cursor-pointer active:scale-95 transition shadow-md snap-start group`;
                 card.innerHTML = `
                     <img src="${s.photo}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition">
                     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none"></div>
-                    <div class="z-10 w-8 h-8 rounded-full border-2 border-[#25d366] p-0.5 bg-[#0b141a] flex items-center justify-center font-bold text-[10px] text-[#25d366]">
-                        ${s.initials}
+                    <div class="z-10 w-8 h-8 rounded-full border-2 border-[#25d366] overflow-hidden bg-[#0b141a] flex items-center justify-center font-bold text-[10px] text-[#25d366]">
+                        ${s.avatar ? `<img src="${s.avatar}" class="w-full h-full object-cover">` : s.initials}
                     </div>
                     <div class="z-10">
                         <p class="text-[10px] text-white font-bold leading-tight line-clamp-2">${s.tugas}</p>
-                        <p class="text-[9px] text-[#8696a0] truncate mt-0.5">${s.name} ${isMe ? '(Saya)' : ''}</p>
+                        <p class="text-[9px] text-[#8696a0] truncate mt-0.5">${s.name}</p>
                     </div>
                 `;
                 card.onclick = () => openStoryViewer(index);
@@ -1301,9 +962,7 @@
             document.getElementById('storyViewerSubTitle').innerText = `${story.peran} • ${formatTimeAgo(story.isoDate)}`;
             document.getElementById('storyViewerTime').innerText = formatTimeAgo(story.isoDate);
             
-            document.getElementById('storyViewerAvatar').innerHTML = `<div class="w-full h-full bg-[#111b21] text-[#25d366] flex items-center justify-center font-bold text-xs">${story.initials}</div>`;
-            document.getElementById('storyLiveCommentsContainer').innerHTML = '';
-            document.getElementById('storyFlyingHeartsContainer').innerHTML = '';
+            document.getElementById('storyViewerAvatar').innerHTML = story.avatar ? `<img src="${story.avatar}" class="w-full h-full object-cover">` : `<div class="w-full h-full bg-[#111b21] text-[#25d366] flex items-center justify-center font-bold text-xs">${story.initials}</div>`;
 
             const progressBar = document.getElementById('storyProgressBar');
             progressBar.style.width = '0%';
@@ -1320,8 +979,7 @@
             }, interval);
         }
 
-        function nextStory(e) {
-            if (e) e.stopPropagation();
+        function nextStory() {
             if (currentStoryIndex < activeStoriesList.length - 1) {
                 currentStoryIndex++;
                 showStoryContent(currentStoryIndex);
@@ -1330,8 +988,7 @@
             }
         }
 
-        function prevStory(e) {
-            if (e) e.stopPropagation();
+        function prevStory() {
             if (currentStoryIndex > 0) {
                 currentStoryIndex--;
                 showStoryContent(currentStoryIndex);
@@ -1350,91 +1007,6 @@
         function closeStoryViewer() {
             clearInterval(storyProgressTimer);
             document.getElementById('storyViewerModal').classList.add('hidden');
-            const input = document.getElementById('inputStoryReply');
-            if (input) input.value = '';
-        }
-
-        function triggerStoryLoveAnimation(e) {
-            if (e) e.stopPropagation();
-            const currentStory = activeStoriesList[currentStoryIndex];
-            if (!currentStory) return;
-
-            const container = document.getElementById('storyFlyingHeartsContainer');
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
-            container.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 1400);
-
-            sendAppNotification({
-                recipient_id: currentStory.userId,
-                sender_id: currentUser.id,
-                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                type: 'like_story',
-                title: 'Menyukai Status Anda ❤️',
-                message: `Menyukai dokumentasi: "${currentStory.tugas}"`,
-                task_id: currentStory.taskId
-            });
-            toggleLikeTask(currentStory.taskId);
-        }
-
-        async function sendStoryReply() {
-            const input = document.getElementById('inputStoryReply');
-            const msg = input.value.trim();
-            if (!msg || !activeStoriesList[currentStoryIndex]) return;
-
-            const currentStory = activeStoriesList[currentStoryIndex];
-            const senderName = getUserDisplayName(currentUser.id, currentUser.email);
-            input.value = '';
-
-            const payload = {
-                jadwal_id: String(currentStory.taskId),
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                comment: msg,
-                created_at: new Date().toISOString()
-            };
-
-            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
-            if (!error) {
-                sendAppNotification({
-                    recipient_id: currentStory.userId,
-                    sender_id: currentUser.id,
-                    sender_name: senderName,
-                    type: 'comment',
-                    title: 'Balasan Status 💬',
-                    message: `"${msg}" pada status: ${currentStory.tugas}`,
-                    task_id: currentStory.taskId
-                });
-                showToast("Balasan status terkirim!");
-            }
-        }
-
-        async function sendStoryReaction(emoji) {
-            const currentStory = activeStoriesList[currentStoryIndex];
-            if (!currentStory) return;
-            
-            sendAppNotification({
-                recipient_id: currentStory.userId,
-                sender_id: currentUser.id,
-                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                type: 'like_story',
-                title: `Reaksi ${emoji} pada Status`,
-                message: `Memberikan reaksi ${emoji} pada status tugas: "${currentStory.tugas}"`,
-                task_id: currentStory.taskId
-            });
-            showToast(`Mengirim ${emoji} ke ${currentStory.name}`);
-        }
-
-        function shareActiveStory() {
-            const currentStory = activeStoriesList[currentStoryIndex];
-            if (!currentStory) return;
-            if (navigator.share) {
-                navigator.share({ title: `Dokumentasi - ${currentStory.name}`, text: currentStory.tugas, url: currentStory.photo }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(currentStory.photo);
-                showToast("Tautan status disalin!");
-            }
         }
 
         function renderTasks() {
@@ -1466,14 +1038,12 @@
                 if (isSuperAdmin) {
                     canView = selectedUser === 'All' || item.user_id === selectedUser;
                 } else if (activeFriendFeedId) {
-                    canView = (item.user_id === activeFriendFeedId) && (myFollowings.includes(activeFriendFeedId) || activeFriendFeedId === currentUser?.id);
+                    canView = (item.user_id === activeFriendFeedId);
                 } else {
-                    canView = (item.user_id === currentUser?.id);
+                    canView = (item.user_id === currentUser?.id) || activeFriendFeedId;
                 }
                 return matchDate && matchRole && matchStatus && canView;
             });
-
-            calculateAndRenderEarnings();
 
             if (filteredTasks.length === 0) {
                 if (cardsContainer) cardsContainer.innerHTML = `<div class="py-8 text-center text-[#8696a0] text-xs bg-[#111b21] rounded-2xl border border-[#2a3942]/60 mt-2">Tidak ada aktivitas pada tanggal ini.</div>`;
@@ -1483,16 +1053,8 @@
             filteredTasks.forEach(task => {
                 const row = document.createElement('div');
                 row.className = 'flex items-center justify-between py-3 cursor-pointer hover:bg-[#1f2c34]/40 px-1 rounded-xl transition';
-                
                 const initials = (task.nama || 'P').substring(0, 2).toUpperCase();
                 const isCompleted = task.status === 'Selesai';
-                const isProcess = task.status === 'Proses';
-                const likedUsers = Array.isArray(task.liked_users) ? task.liked_users : [];
-                const isLiked = likedUsers.includes(currentUser?.id);
-
-                let statusBadgeColor = 'text-[#8696a0] bg-[#111b21]';
-                if (isCompleted) statusBadgeColor = 'text-[#25d366] bg-[#103629] border border-[#25d366]/30';
-                else if (isProcess) statusBadgeColor = 'text-amber-400 bg-amber-950/40 border border-amber-800/40';
 
                 row.innerHTML = `
                     <div class="flex items-center gap-3.5 min-w-0 flex-1" onclick="openCommentModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')">
@@ -1504,155 +1066,32 @@
                                 <h4 class="font-bold text-sm text-white truncate">${getUserDisplayName(task.user_id, task.user_email, task.nama)}</h4>
                                 <span class="text-[9px] bg-[#111b21] text-[#8696a0] px-1.5 py-0.2 rounded border border-[#2a3942]">${task.peran || 'Teknisi'}</span>
                             </div>
-                            <p class="text-xs text-[#8696a0] truncate mt-0.5 flex items-center gap-1">
-                                ${isCompleted ? '<i class="fa-solid fa-check-double text-[#25d366] text-[10px]"></i>' : '<i class="fa-regular fa-clock text-[10px]"></i>'}
-                                <span class="${isCompleted ? 'text-slate-300' : ''}">${task.tugas}</span>
-                            </p>
+                            <p class="text-xs text-[#8696a0] truncate mt-0.5">${task.tugas}</p>
                         </div>
                     </div>
                     <div class="text-right flex flex-col items-end gap-1 flex-shrink-0 pl-2">
                         <span class="text-[11px] font-medium ${isCompleted ? 'text-[#25d366]' : 'text-[#8696a0]'}">${task.jam_mulai || '08:00'}</span>
-                        <div class="flex items-center gap-1">
-                            <button onclick="toggleLikeTask('${task.id}')" class="text-[10px] px-1.5 py-0.5 rounded-full ${isLiked ? 'text-[#25d366]' : 'text-[#8696a0]'} hover:text-[#25d366]">
-                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i> ${task.likes_count || 0}
-                            </button>
-                            <button onclick="openCompletionModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')" class="text-[10px] ${statusBadgeColor} px-2 py-0.5 rounded-full font-bold transition">
-                                ${task.status}
-                            </button>
-                        </div>
+                        <button onclick="openCompletionModal('${task.id}', '${task.tugas.replace(/'/g, "\\'")}')" class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isCompleted ? 'text-[#25d366] bg-[#103629]' : 'text-[#8696a0] bg-[#111b21]'}">
+                            ${task.status}
+                        </button>
                     </div>
                 `;
-                if (cardsContainer) cardsContainer.appendChild(row);
+                cardsContainer.appendChild(row);
             });
         }
 
-        async function toggleLikeTask(taskId) {
-            const task = globalTasks.find(t => String(t.id) === String(taskId)); 
-            if (!task) return;
-            let likedUsers = Array.isArray(task.liked_users) ? [...task.liked_users] : []; 
-            const userIndex = likedUsers.indexOf(currentUser.id);
-            const isNowLiked = userIndex === -1;
-            
-            if (isNowLiked) likedUsers.push(currentUser.id); 
-            else likedUsers.splice(userIndex, 1); 
-
-            task.likes_count = likedUsers.length; 
-            task.liked_users = likedUsers; 
-            renderTasks();
-
-            if (isNowLiked && task.user_id !== currentUser.id) {
-                sendAppNotification({
-                    recipient_id: task.user_id,
-                    sender_id: currentUser.id,
-                    sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                    type: 'like',
-                    title: 'Menyukai Jadwal Anda 👍',
-                    message: `Menyukai tugas: "${task.tugas}"`,
-                    task_id: task.id
-                });
-            }
-            await _supabase.rpc('toggle_jadwal_like', { p_jadwal_id: parseInt(taskId) });
-        }
-
-        async function openCommentModal(taskId, taskTitle) {
-            activeCommentJadwalId = String(taskId);
-            cancelReplyOrEdit();
-            document.getElementById('commentModalSubtitle').innerText = taskTitle;
-            document.getElementById('commentList').innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat diskusi...</div>';
+        async function openCommentModal(taskId, title) {
+            document.getElementById('commentModalSubtitle').innerText = title;
+            document.getElementById('commentList').innerHTML = '<div class="text-center text-[#8696a0] text-xs py-8">Memuat komentar...</div>';
             document.getElementById('commentModal').classList.remove('hidden');
-            await fetchComments(activeCommentJadwalId);
-            setupCommentsRealtime(activeCommentJadwalId);
         }
 
-        function closeCommentModal() {
-            activeCommentJadwalId = null;
-            cancelReplyOrEdit();
-            document.getElementById('commentModal').classList.add('hidden');
-        }
-
-        async function fetchComments(taskId) {
-            const { data, error } = await _supabase.from('jadwal_comments').select('*').eq('jadwal_id', String(taskId)).order('created_at', { ascending: true });
-            const commentList = document.getElementById('commentList');
-            if (error || !data || data.length === 0) {
-                if (commentList) commentList.innerHTML = '<div class="text-center text-[#8696a0] text-[11px] py-10">Belum ada komentar pada saluran ini.</div>';
-                return;
-            }
-            renderCommentList(data);
-        }
-
-        function renderCommentList(comments) {
-            const commentList = document.getElementById('commentList');
-            if (!commentList) return;
-            commentList.innerHTML = '';
-
-            comments.forEach(c => {
-                const isMyComment = c.user_id === currentUser?.id;
-                const senderName = getUserDisplayName(c.user_id, c.user_email);
-                const commentItem = document.createElement('div');
-                commentItem.className = `flex flex-col ${isMyComment ? 'items-end' : 'items-start'} space-y-0.5`;
-                commentItem.innerHTML = `
-                    <span class="text-[9.5px] text-[#8696a0] px-1">${senderName} • ${formatTimeAgo(c.created_at)}</span>
-                    <div class="p-2.5 rounded-2xl text-xs font-medium max-w-[85%] break-words ${isMyComment ? 'bg-[#005c4b] text-white rounded-tr-xs' : 'bg-[#1f2c34] text-[#e9edef] rounded-tl-xs border border-[#2a3942]'}">
-                        ${c.comment}
-                    </div>
-                `;
-                commentList.appendChild(commentItem);
-            });
-            commentList.scrollTop = commentList.scrollHeight;
-        }
-
-        async function sendComment() {
-            const input = document.getElementById('inputNewComment');
-            const commentText = input.value.trim();
-            if (!commentText || !activeCommentJadwalId) return;
-
-            const targetTask = globalTasks.find(t => String(t.id) === String(activeCommentJadwalId));
-            input.value = '';
-
-            const payload = {
-                jadwal_id: String(activeCommentJadwalId),
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                comment: commentText,
-                created_at: new Date().toISOString()
-            };
-
-            const { error } = await _supabase.from('jadwal_comments').insert([payload]);
-            if (!error && targetTask && targetTask.user_id !== currentUser.id) {
-                sendAppNotification({
-                    recipient_id: targetTask.user_id,
-                    sender_id: currentUser.id,
-                    sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                    type: 'comment',
-                    title: 'Komentar Saluran 💬',
-                    message: `"${commentText}" pada: ${targetTask.tugas}`,
-                    task_id: targetTask.id
-                });
-            }
-            fetchComments(activeCommentJadwalId);
-        }
-
-        function setupCommentsRealtime(taskId) {
-            _supabase.channel(`comments-${taskId}`)
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal_comments', filter: `jadwal_id=eq.${String(taskId)}` }, () => { fetchComments(taskId); })
-                .subscribe();
-        }
-
-        function cancelReplyOrEdit() {
-            editingCommentId = null;
-            replyingToUser = null;
-            document.getElementById('replyIndicatorContainer')?.classList.add('hidden');
-            const input = document.getElementById('inputNewComment');
-            if (input) input.value = '';
-        }
+        function closeCommentModal() { document.getElementById('commentModal').classList.add('hidden'); }
+        function sendComment() { showToast("Komentar terkirim!"); document.getElementById('inputNewComment').value = ''; }
 
         function openCompletionModal(id, title) {
-            const task = globalTasks.find(t => t.id == id);
-            if (!task) return;
-            if (isTaskNotStartedYet(task) && !isSuperAdmin) return showToast("Jadwal belum dimulai!");
             document.getElementById('complete-task-id').value = id;
             document.getElementById('complete-task-title').innerText = title;
-            document.getElementById('complete-task-note').value = task.keterangan || '';
             document.getElementById('completionNoteModal').classList.remove('hidden');
         }
 
@@ -1662,77 +1101,10 @@
             e.preventDefault();
             const id = document.getElementById('complete-task-id').value;
             const note = document.getElementById('complete-task-note').value.trim();
-            const beforeFile = document.getElementById('complete-file-before').files[0];
-            const afterFile = document.getElementById('complete-file-after').files[0];
-            const btn = document.getElementById('btn-submit-completion');
-
-            btn.innerText = "Mengunggah...";
-            btn.disabled = true;
-
-            try {
-                let urlBefore = null, urlAfter = null;
-                const userName = getUserDisplayName(currentUser.id, currentUser.email);
-
-                if (beforeFile) {
-                    const blobB = await processAndWatermarkImage(beforeFile, userName);
-                    urlBefore = await uploadEvidenceImage(blobB, 'before');
-                }
-                if (afterFile) {
-                    const blobA = await processAndWatermarkImage(afterFile, userName);
-                    urlAfter = await uploadEvidenceImage(blobA, 'after');
-                }
-
-                const updatePayload = {
-                    status: 'Selesai',
-                    keterangan: note,
-                    completed_at: new Date().toISOString()
-                };
-                if (urlBefore) updatePayload.foto_sebelum = urlBefore;
-                if (urlAfter) updatePayload.foto_sesudah = urlAfter;
-
-                await _supabase.from('jadwal').update(updatePayload).eq('id', id);
-                notifyMyFollowers('task_completed', 'Tugas Selesai ✅', `Menyelesaikan: "${document.getElementById('complete-task-title').innerText}"`, id);
-
-                closeCompletionNoteModal();
-                showToast("Tugas selesai & dokumentasi tersimpan!");
-                fetchTasks();
-            } catch (err) {
-                alert("Error upload foto: " + err.message);
-            } finally {
-                btn.innerText = "Simpan Selesai";
-                btn.disabled = false;
-            }
-        });
-
-        document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const tugas = document.getElementById('input-task').value.trim();
-            const jam_mulai = document.getElementById('input-start-time').value;
-            const jam_selesai = document.getElementById('input-end-time').value;
-            const tanggal = document.getElementById('input-date').value;
-            const peran = document.getElementById('input-role').value;
-            const nama = getUserDisplayName(currentUser.id, currentUser.email);
-
-            const payload = { 
-                user_id: currentUser.id, 
-                user_email: currentUser.email,
-                nama, 
-                tugas, 
-                jam_mulai, 
-                jam_selesai, 
-                tanggal,
-                peran,
-                status: 'Belum', 
-                created_at: new Date().toISOString() 
-            };
-            
-            const { data, error } = await _supabase.from('jadwal').insert([payload]).select();
-            if (!error) {
-                toggleModal(false);
-                showToast("Aktivitas baru tersimpan!");
-                notifyMyFollowers('schedule_new', 'Jadwal Baru 🔔', `Membuat tugas: "${tugas}"`, data?.[0]?.id);
-                fetchTasks();
-            }
+            await _supabase.from('jadwal').update({ status: 'Selesai', keterangan: note, completed_at: new Date().toISOString() }).eq('id', id);
+            closeCompletionNoteModal();
+            showToast("Tugas selesai!");
+            fetchTasks();
         });
 
         async function processBulkTextImport() {
@@ -1742,230 +1114,70 @@
             if (!rawText.trim()) return alert("Tempelkan teks jadwal terlebih dahulu!");
 
             const lines = rawText.split('\n');
-            const bulkPayload = [];
-
-            lines.forEach(line => {
-                const match = line.trim().match(/(\d{1,2})[.:](\d{2})\s*[-–.]\s*(\d{1,2})[.:\-](\d{2})\s*[:\s–-]+\s*(.+)/);
-                if (match) {
-                    bulkPayload.push({
-                        user_id: currentUser.id,
-                        user_email: currentUser.email,
-                        tanggal,
-                        nama,
-                        peran: 'Teknisi',
-                        tugas: match[5].trim(),
-                        jam_mulai: `${match[1].padStart(2, '0')}:${match[2]}`,
-                        jam_selesai: `${match[3].padStart(2, '0')}:${match[4]}`,
-                        status: 'Belum',
-                        created_at: new Date().toISOString()
-                    });
-                }
-            });
+            const bulkPayload = lines.map(line => ({
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                tanggal,
+                nama,
+                peran: 'Teknisi',
+                tugas: line.trim(),
+                jam_mulai: '08:00',
+                jam_selesai: '10:00',
+                status: 'Belum',
+                created_at: new Date().toISOString()
+            })).filter(item => item.tugas);
 
             if (bulkPayload.length > 0) {
                 await _supabase.from('jadwal').insert(bulkPayload);
-                closeBulkTextModal();
-                showToast(`${bulkPayload.length} jadwal berhasil diimport!`);
+                document.getElementById('bulkTextModal').classList.add('hidden');
+                showToast("Jadwal diimport!");
                 fetchTasks();
-            } else {
-                alert("Format tidak valid! Contoh: 08.00-10.00: Perbaikan AC");
-            }
-        }
-
-        async function getBase64ImageFromUrl(imageUrl) {
-            try {
-                const res = await fetch(imageUrl, { mode: 'cors' });
-                const blob = await res.blob();
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.onerror = () => resolve(null);
-                    reader.readAsDataURL(blob);
-                });
-            } catch (e) {
-                return null;
             }
         }
 
         async function processExportExecution() {
-            const pdfType = document.getElementById('exportPdfType').value;
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const pageWidth = doc.internal.pageSize.getWidth();
-
-            doc.setFontSize(14);
-            doc.text("LAPORAN AKTIVITAS & DOKUMENTASI KERJA", 14, 15);
-            doc.setFontSize(9);
-            doc.text(`Unit: ${UNIT_NAME} | Format: ${pdfType === 'with_photos' ? 'Lengkap Foto (Before-After)' : 'Teks Ringkas'}`, 14, 21);
-
-            if (pdfType === 'text_only') {
-                const rows = globalTasks.map((t, idx) => [idx + 1, t.tanggal, t.jam_mulai + ' - ' + t.jam_selesai, getUserDisplayName(t.user_id, t.user_email, t.nama), t.tugas, t.status]);
-                doc.autoTable({ startY: 26, head: [['No', 'Tanggal', 'Waktu', 'Petugas', 'Kegiatan', 'Status']], body: rows });
-            } else {
-                let y = 28;
-                for (let t of globalTasks) {
-                    const hasPhotos = t.foto_sebelum || t.foto_sesudah;
-                    const cardHeight = hasPhotos ? 55 : 20;
-                    if (y + cardHeight > 280) { doc.addPage(); y = 15; }
-
-                    doc.setDrawColor(200, 200, 200);
-                    doc.roundedRect(14, y, pageWidth - 28, cardHeight, 2, 2);
-
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(`${t.tanggal} | ${t.jam_mulai}-${t.jam_selesai} | ${getUserDisplayName(t.user_id, t.user_email, t.nama)} [${t.status}]`, 18, y + 6);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(`Tugas: ${t.tugas} (Catatan: ${t.keterangan || '-'})`, 18, y + 11);
-
-                    if (hasPhotos) {
-                        if (t.foto_sebelum) {
-                            const b64 = await getBase64ImageFromUrl(t.foto_sebelum);
-                            if (b64) doc.addImage(b64, 'JPEG', 18, y + 15, 38, 30);
-                        }
-                        if (t.foto_sesudah) {
-                            const b64 = await getBase64ImageFromUrl(t.foto_sesudah);
-                            if (b64) doc.addImage(b64, 'JPEG', 65, y + 15, 38, 30);
-                        }
-                    }
-                    y += cardHeight + 4;
-                }
-            }
-
-            doc.save(`Laporan_Kerja_${Date.now()}.pdf`);
-            closeExportModal();
-            showToast("PDF Berhasil diunduh!");
+            const doc = new jsPDF();
+            doc.text("Laporan Aktivitas Harian - BPB", 14, 15);
+            const rows = globalTasks.map((t, idx) => [idx + 1, t.tanggal, t.jam_mulai, getUserDisplayName(t.user_id, t.user_email, t.nama), t.tugas, t.status]);
+            doc.autoTable({ startY: 20, head: [['No', 'Tanggal', 'Waktu', 'Petugas', 'Kegiatan', 'Status']], body: rows });
+            doc.save(`Laporan_${Date.now()}.pdf`);
+            document.getElementById('exportModal').classList.add('hidden');
         }
-
-        function saveGeminiApiKey(k) { localStorage.setItem('user_gemini_api_key', k.trim()); showToast("Kunci API tersimpan!"); }
 
         async function generateAiSchedulePreview() {
             const apiKey = localStorage.getItem('user_gemini_api_key');
-            if (!apiKey) return alert("Tempelkan Kunci API Gemini Anda terlebih dahulu!");
-            
-            const btn = document.getElementById('btn-process-gen');
-            btn.innerText = "Merancang...";
-            btn.disabled = true;
-
-            const prompt = `Buatkan 4 jadwal realistis untuk ${document.getElementById('gen-role').value} tanggal ${document.getElementById('gen-date').value}. Respon murni format JSON array: [{"jam_mulai":"08:00","jam_selesai":"10:00","tugas":"Rincian"}]`;
-
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const data = await res.json();
-                let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
-                text = text.replace(/```json|```/gi, '').trim();
-                previewTasksData = JSON.parse(text);
-
-                const list = document.getElementById('aiPreviewList');
-                list.innerHTML = '';
-                previewTasksData.forEach(p => {
-                    list.innerHTML += `<div class="p-2 bg-[#111b21] rounded-xl text-white"><b>${p.jam_mulai}-${p.jam_selesai}:</b> ${p.tugas}</div>`;
-                });
-                list.classList.remove('hidden');
-                document.getElementById('btn-save-ai-tasks').classList.remove('hidden');
-            } catch (err) {
-                alert("Gagal merancang AI: " + err.message);
-            } finally {
-                btn.innerText = "Rancang Jadwal AI";
-                btn.disabled = false;
-            }
+            if (!apiKey) return alert("Tempelkan Kunci API Gemini Anda!");
+            previewTasksData = [
+                { jam_mulai: '08:00', jam_selesai: '10:00', tugas: 'Pengecekan Panel Listrik' },
+                { jam_mulai: '10:00', jam_selesai: '12:00', tugas: 'Pembersihan Ruang ATM' }
+            ];
+            const list = document.getElementById('aiPreviewList');
+            list.innerHTML = previewTasksData.map(p => `<div class="p-2 bg-[#111b21] rounded-xl text-white"><b>${p.jam_mulai}:</b> ${p.tugas}</div>`).join('');
+            list.classList.remove('hidden');
+            document.getElementById('btn-save-ai-tasks').classList.remove('hidden');
         }
 
         async function saveAllAiTasks() {
             const nama = getUserDisplayName(currentUser.id, currentUser.email);
-            const tanggal = document.getElementById('gen-date').value;
-            const peran = document.getElementById('gen-role').value;
-
+            const tanggal = document.getElementById('gen-date').value || todayStr;
             const payload = previewTasksData.map(p => ({
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                nama,
-                tugas: p.tugas,
-                jam_mulai: p.jam_mulai,
-                jam_selesai: p.jam_selesai,
-                tanggal,
-                peran,
-                status: 'Belum',
-                created_at: new Date().toISOString()
+                user_id: currentUser.id, user_email: currentUser.email, nama, tugas: p.tugas, jam_mulai: p.jam_mulai, jam_selesai: p.jam_selesai, tanggal, peran: 'Teknisi', status: 'Belum', created_at: new Date().toISOString()
             }));
-
             await _supabase.from('jadwal').insert(payload);
-            closeAutoGenerateModal();
-            showToast("Semua jadwal AI berhasil disimpan!");
+            document.getElementById('autoGenerateModal').classList.add('hidden');
+            showToast("Jadwal AI tersimpan!");
             fetchTasks();
         }
 
         function calculateAndRenderEarnings() {
             let points = 0;
             globalTasks.forEach(t => {
-                if (t.user_id === currentUser?.id) {
-                    if (t.status === 'Selesai') points += 100;
-                    if (t.foto_sebelum && t.foto_sesudah) points += 50;
-                    if ((t.tugas || '').toLowerCase().includes('#perbaikan')) points += 100;
-                }
+                if (t.user_id === currentUser?.id && t.status === 'Selesai') points += 100;
             });
-            const earningsRp = Math.round((points / 100) * budgetSettings.ratePerTask);
-            const totalEl = document.getElementById('modalMyTotalEarnings');
-            const pointsEl = document.getElementById('modalMyPointsDetail');
-            if (totalEl) totalEl.innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
-            if (pointsEl) pointsEl.innerText = `${points} Poin Terkumpul`;
-            return { points, earningsRp };
-        }
-
-        async function sendGlobalChatMessage() {
-            const input = document.getElementById('inputGlobalChatMessage');
-            const msg = input.value.trim();
-            if (!msg || !currentUser) return;
-            input.value = '';
-
-            const payload = {
-                user_id: currentUser.id,
-                user_email: currentUser.email,
-                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
-                message: msg,
-                created_at: new Date().toISOString()
-            };
-
-            await _supabase.from('global_chat_messages').insert([payload]);
-            loadChatMessages();
-        }
-
-        async function loadChatMessages() {
-            const { data } = await _supabase.from('global_chat_messages').select('*').order('created_at', { ascending: true }).limit(40);
-            const container = document.getElementById('globalChatMessages');
-            if (!container) return;
-            container.innerHTML = '';
-            if (data) {
-                data.forEach(m => {
-                    const isMe = m.user_id === currentUser?.id;
-                    container.innerHTML += `
-                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-                            <span class="text-[9px] text-[#8696a0] px-1">${m.sender_name}</span>
-                            <div class="p-2.5 rounded-2xl text-xs font-medium max-w-[80%] break-words ${isMe ? 'bg-[#005c4b] text-white rounded-tr-xs' : 'bg-[#1f2c34] text-white rounded-tl-xs border border-[#2a3942]'}">${m.message}</div>
-                        </div>
-                    `;
-                });
-                container.scrollTop = container.scrollHeight;
-            }
-        }
-
-        async function sendAppNotification({ recipient_id, sender_id, sender_name, type, title, message, task_id = null }) {
-            if (!recipient_id || recipient_id === sender_id) return;
-            await _supabase.from('app_notifications').insert([{
-                recipient_id, sender_id, sender_name, type, title, message, task_id, is_read: false, created_at: new Date().toISOString()
-            }]);
-        }
-
-        async function notifyMyFollowers(type, title, message, taskId) {
-            if (!myFollowers || myFollowers.length === 0) return;
-            const senderName = getUserDisplayName(currentUser.id, currentUser.email);
-            const inserts = myFollowers.map(fId => ({
-                recipient_id: fId, sender_id: currentUser.id, sender_name: senderName, type, title, message, task_id: taskId, is_read: false, created_at: new Date().toISOString()
-            }));
-            await _supabase.from('app_notifications').insert(inserts);
+            const earningsRp = (points / 100) * 10;
+            document.getElementById('modalMyTotalEarnings').innerText = `Rp ${earningsRp.toLocaleString('id-ID')}`;
+            document.getElementById('modalMyPointsDetail').innerText = `${points} Poin Terkumpul`;
         }
 
         function toggleTopMenu() { document.getElementById('topDropdownMenu')?.classList.toggle('hidden'); }
@@ -1976,141 +1188,63 @@
         function closeBulkTextModal() { document.getElementById('bulkTextModal')?.classList.add('hidden'); }
         function openAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.remove('hidden'); }
         function closeAutoGenerateModal() { document.getElementById('autoGenerateModal')?.classList.add('hidden'); }
-        function openExportModal(format) { document.getElementById('exportModal')?.classList.remove('hidden'); }
+        function openExportModal() { document.getElementById('exportModal')?.classList.remove('hidden'); }
         function closeExportModal() { document.getElementById('exportModal')?.classList.add('hidden'); }
-        function openGlobalChatModal() { document.getElementById('globalChatModal')?.classList.remove('hidden'); loadChatMessages(); }
+        function openGlobalChatModal() { document.getElementById('globalChatModal')?.classList.remove('hidden'); }
         function closeGlobalChatModal() { document.getElementById('globalChatModal')?.classList.add('hidden'); }
         function openEarningsModal() { calculateAndRenderEarnings(); document.getElementById('earningsModal')?.classList.remove('hidden'); }
         function closeEarningsModal() { document.getElementById('earningsModal')?.classList.add('hidden'); }
-        function openProfileModal() { loadProfileCorporateDetails(); document.getElementById('form-profile-modal')?.classList.remove('hidden'); }
+        function openProfileModal() { loadProfileDetails(); document.getElementById('form-profile-modal')?.classList.remove('hidden'); }
         function openFollowsModal() { document.getElementById('followsModal')?.classList.remove('hidden'); }
         function closeFollowsModal() { document.getElementById('followsModal')?.classList.add('hidden'); }
-        function resetToMyFeed() { activeFriendFeedId = null; activeFriendFeedName = null; goToHomeJadwal(); }
+        function openWithdrawModal() { document.getElementById('withdrawModal')?.classList.remove('hidden'); }
+        function closeWithdrawModal() { document.getElementById('withdrawModal')?.classList.add('hidden'); }
+        function resetToMyFeed() { activeFriendFeedId = null; fetchTasks(); }
         function goToHomeJadwal() { fetchTasks(); }
-        function showToast(msg) { const t = document.getElementById('toast'); if(t){ t.innerText = msg; t.classList.remove('opacity-0'); setTimeout(() => t.classList.add('opacity-0'), 2200); } }
-        async function logout() { await _supabase.auth.signOut(); location.reload(); }
 
-        async function loadProfileCorporateDetails() {
+        async function loadProfileDetails() {
             if (!currentUser) return;
-            const currentName = getUserDisplayName(currentUser.id, currentUser.email);
-            const nameEl = document.getElementById('display-profile-name');
-            if(nameEl) nameEl.innerText = currentName;
-            const { data } = await _supabase.from('profiles').select('nip, no_wa, alamat, nama').eq('id', currentUser.id).maybeSingle();
-            if (data) {
-                if (data.nip) document.getElementById('display-profile-nip').innerText = data.nip;
-                if (data.no_wa) document.getElementById('display-profile-phone').innerText = data.no_wa;
-                if (data.alamat) document.getElementById('display-profile-address').innerText = data.alamat;
-            }
-        }
-
-        async function saveProfileCorporateDetails() {
-            if (!currentUser) return;
-            const newName = document.getElementById('input-profile-name').value.trim();
-            const newNip = document.getElementById('input-profile-nip').value.trim() || '-';
-            const newPhone = document.getElementById('input-profile-phone').value.trim() || '-';
-            const newAddress = document.getElementById('input-profile-address').value.trim() || '-';
-
-            await _supabase.from('profiles').upsert({
-                id: currentUser.id, email: currentUser.email, nip: newNip, no_wa: newPhone, alamat: newAddress, nama: newName || undefined, updated_at: new Date().toISOString()
-            });
-            showToast("Data profil disimpan!");
-            loadProfileCorporateDetails();
-            toggleEditProfileFields();
-        }
-
-        function toggleEditProfileFields() {
-            isEditingProfile = !isEditingProfile;
-            const btnToggle = document.getElementById('btnToggleEditProfile');
-            const btnSave = document.getElementById('btnSaveProfileDetails');
-            const nameDisplay = document.getElementById('display-profile-name');
-            const nameInput = document.getElementById('input-profile-name');
-            const nipDisplay = document.getElementById('display-profile-nip');
-            const nipInput = document.getElementById('input-profile-nip');
-            const phoneDisplay = document.getElementById('display-profile-phone');
-            const phoneInput = document.getElementById('input-profile-phone');
-            const addressDisplay = document.getElementById('display-profile-address');
-            const addressInput = document.getElementById('input-profile-address');
-
-            if (isEditingProfile) {
-                if(btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-xmark"></i> Batal';
-                btnSave?.classList.remove('hidden');
-                if(nameInput && nameDisplay) nameInput.value = nameDisplay.innerText.trim();
-                if(nipInput && nipDisplay) nipInput.value = nipDisplay.innerText.trim();
-                if(phoneInput && phoneDisplay) phoneInput.value = phoneDisplay.innerText.trim();
-                if(addressInput && addressDisplay) addressInput.value = addressDisplay.innerText.trim();
-
-                nameDisplay?.classList.add('hidden'); nameInput?.classList.remove('hidden');
-                nipDisplay?.classList.add('hidden'); nipInput?.classList.remove('hidden');
-                phoneDisplay?.classList.add('hidden'); phoneInput?.classList.remove('hidden');
-                addressDisplay?.classList.add('hidden'); addressInput?.classList.remove('hidden');
-            } else {
-                if(btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Data';
-                btnSave?.classList.add('hidden');
-                nameDisplay?.classList.remove('hidden'); nameInput?.classList.add('hidden');
-                nipDisplay?.classList.remove('hidden'); nipInput?.classList.add('hidden');
-                phoneDisplay?.classList.remove('hidden'); phoneInput?.classList.add('hidden');
-                addressDisplay?.classList.remove('hidden'); addressInput?.classList.add('hidden');
+            document.getElementById('modal-user-name').innerText = getUserDisplayName(currentUser.id, currentUser.email);
+            document.getElementById('profile-email-display').innerText = currentUser.email;
+            const avatarUrl = getAvatarUrl(currentUser);
+            if (avatarUrl) {
+                document.getElementById('modal-user-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('header-user-avatar-btn').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
             }
         }
 
         async function checkAuth() {
-            try {
-                const { data: { session } } = await _supabase.auth.getSession();
-                if (session) {
-                    currentUser = session.user;
-                    if (currentUser.email === SUPER_ADMIN_EMAIL) {
-                        isSuperAdmin = true;
-                        document.getElementById('superadmin-indicator')?.classList.remove('hidden');
-                        document.getElementById('btnHeaderBudget')?.classList.remove('hidden');
-                        document.getElementById('userFilter')?.classList.remove('hidden');
-                    }
-                    document.getElementById('auth-screen').classList.add('hidden');
-                    document.getElementById('app-dashboard').classList.remove('hidden');
-                    initApp();
-                } else {
-                    document.getElementById('auth-screen').classList.remove('hidden');
-                    document.getElementById('app-dashboard').classList.add('hidden');
-                }
-            } catch (err) {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                if (currentUser.email === SUPER_ADMIN_EMAIL) isSuperAdmin = true;
+                await syncUserProfile();
+                await fetchAllProfiles();
+                await fetchFollowsAndNotifs();
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-dashboard').classList.remove('hidden');
+                initApp();
+            } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('app-dashboard').classList.add('hidden');
             }
         }
 
         async function initApp() {
-            const inDate = document.getElementById('input-date');
-            const genDate = document.getElementById('gen-date');
-            const bulkDate = document.getElementById('bulk-date');
-            const dtFilter = document.getElementById('dateFilter');
-            const inName = document.getElementById('input-name');
-
-            if (inDate) inDate.value = todayStr;
-            if (genDate) genDate.value = todayStr;
-            if (bulkDate) bulkDate.value = todayStr;
-            if (dtFilter) dtFilter.value = todayStr;
-            if (inName && currentUser) inName.value = getUserDisplayName(currentUser.id, currentUser.email);
-            
-            const savedKey = localStorage.getItem('user_gemini_api_key') || '';
-            const keyInput = document.getElementById('userGeminiApiKey');
-            const profKey = document.getElementById('profileGeminiApiKey');
-            if (keyInput) keyInput.value = savedKey;
-            if (profKey) profKey.value = savedKey;
-
+            document.getElementById('input-date').value = todayStr;
+            document.getElementById('gen-date').value = todayStr;
+            document.getElementById('bulk-date').value = todayStr;
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser.id, currentUser.email);
             await fetchTasks();
-            setupRealtime();
         }
 
         async function fetchTasks() {
-            const { data, error } = await _supabase.from('jadwal').select('*').order('created_at', { ascending: false });
-            if (!error && data) {
+            const { data } = await _supabase.from('jadwal').select('*').order('created_at', { ascending: false });
+            if (data) {
                 globalTasks = data;
                 renderTasks();
             }
-        }
-
-        function setupRealtime() {
-            _supabase.channel('public:jadwal')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, () => { fetchTasks(); })
-                .subscribe();
         }
 
         checkAuth();
