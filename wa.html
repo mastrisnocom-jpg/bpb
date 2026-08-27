@@ -1,4 +1,4 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -72,7 +72,7 @@
 <body class="min-h-screen bg-[#0b141a] text-[#e9edef] flex justify-center selection:bg-[#00a884] selection:text-white">
 
     <!-- SCREEN AUTHENTICATION -->
-    <div id="auth-screen" class="fixed inset-0 bg-[#0b141a]/95 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden p-4">
+    <div id="auth-screen" class="fixed inset-0 bg-[#0b141a]/95 backdrop-blur-md z-[100] flex flex-col items-center justify-center p-4">
         <div class="bg-[#1f2c34] p-6 rounded-[28px] shadow-2xl w-full max-w-xs text-center border border-[#2a3942] animate-pop">
             <div class="w-12 h-12 bg-[#25d366] text-[#0b141a] rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-md font-black">B</div>
             <h2 id="auth-title" class="text-lg font-extrabold text-white mb-0.5">Binayasa M-Ops</h2>
@@ -175,17 +175,12 @@
 
         <!-- AREA KONTEN SCROLLABLE -->
         <main class="flex-1 overflow-y-auto px-4 pt-3 pb-16 space-y-5">
-
             <!-- SEKSI 1: STATUS STORIES CAROUSEL -->
             <section>
                 <div class="flex items-center justify-between mb-2.5">
                     <h2 class="text-base font-bold text-white">Status</h2>
                 </div>
-                <div id="storiesContainer" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 snap-x">
-                    <div class="w-24 h-40 bg-[#1f2c34] rounded-2xl flex-shrink-0 flex flex-col items-center justify-center text-center p-2 border border-[#2a3942] animate-pulse">
-                        <i class="fa-solid fa-spinner fa-spin text-[#8696a0]"></i>
-                    </div>
-                </div>
+                <div id="storiesContainer" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1 snap-x"></div>
             </section>
 
             <!-- INDIKATOR JADWAL TEMAN -->
@@ -213,15 +208,11 @@
                     </button>
                 </div>
 
-                <!-- DESKTOP HIDDEN TABLE COMPATIBILITY -->
-                <tbody id="scheduleTableDesktop" class="hidden"></tbody>
-
-                <!-- LIST JADWAL SALURAN MOBILE -->
                 <div id="scheduleCardsMobile" class="space-y-1 divide-y divide-[#1f2c34]/60"></div>
             </section>
         </main>
 
-        <!-- FLOATING ACTION BUTTONS (PENCIL & CAMERA) -->
+        <!-- FLOATING ACTION BUTTONS -->
         <div class="fixed bottom-20 right-4 sm:right-[calc(50%-200px)] flex flex-col items-center gap-3.5 z-40">
             <button onclick="openBulkTextModal()" title="Import Teks WA" class="w-10 h-10 rounded-xl bg-[#202c33] hover:bg-[#2a3942] active:scale-90 text-white flex items-center justify-center shadow-lg border border-[#2a3942] transition">
                 <i class="fa-solid fa-pen text-sm"></i>
@@ -231,9 +222,8 @@
             </button>
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR (CHAT, PEMBARUAN, INSENTIF, PROFIL) -->
+        <!-- BOTTOM NAVIGATION BAR -->
         <nav class="fixed bottom-0 w-full max-w-md bg-[#0b141a] border-t border-[#1f2c34] flex items-center justify-around py-2 z-40 select-none">
-            <!-- TAB 1: CHAT -->
             <button onclick="openGlobalChatModal()" class="flex flex-col items-center gap-0.5 group">
                 <div class="relative py-1 px-4 rounded-full transition group-active:scale-95">
                     <i class="fa-regular fa-comment-dots text-xl text-[#8696a0]"></i>
@@ -242,7 +232,6 @@
                 <span class="text-[11px] font-semibold text-[#8696a0]">Chat</span>
             </button>
 
-            <!-- TAB 2: PEMBARUAN -->
             <button onclick="goToHomeJadwal()" id="tabHome" class="flex flex-col items-center gap-0.5">
                 <div class="py-0.5 px-4 rounded-full bg-[#103629] text-[#25d366]">
                     <i class="fa-solid fa-rotate-right text-lg font-bold"></i>
@@ -250,7 +239,6 @@
                 <span class="text-[11px] font-bold text-white">Pembaruan</span>
             </button>
 
-            <!-- TAB 3: INSENTIF / DOMPET -->
             <button onclick="openEarningsModal()" id="tabWallet" class="flex flex-col items-center gap-0.5 group">
                 <div class="py-1 px-4 rounded-full text-[#8696a0] group-hover:text-white transition group-active:scale-95">
                     <i class="fa-solid fa-wallet text-xl"></i>
@@ -258,7 +246,6 @@
                 <span class="text-[11px] font-semibold text-[#8696a0]">Insentif</span>
             </button>
 
-            <!-- TAB 4: RELASI / NOTIFIKASI -->
             <button onclick="openFollowsModal()" id="tabFriends" class="flex flex-col items-center gap-0.5 group">
                 <div class="relative py-1 px-4 rounded-full text-[#8696a0] group-hover:text-white transition group-active:scale-95">
                     <i class="fa-regular fa-bell text-xl"></i>
@@ -267,7 +254,6 @@
                 <span class="text-[11px] font-semibold text-[#8696a0]">Komunitas</span>
             </button>
 
-            <!-- TAB 5: PROFIL -->
             <button onclick="openProfileModal()" id="tabProfile" class="flex flex-col items-center gap-0.5 group">
                 <div class="py-1 px-4 rounded-full text-[#8696a0] group-hover:text-white transition group-active:scale-95">
                     <div class="w-6 h-6 rounded-full overflow-hidden bg-[#1f2c34] border border-[#2a3942] flex items-center justify-center text-[10px]" id="header-user-avatar-btn">
@@ -279,7 +265,7 @@
         </nav>
     </div>
 
-<!-- MODAL RELASI FOLLOW & PUSAT NOTIFIKASI AKTIVITAS (LONCENG / KOMUNITAS) -->
+    <!-- MODAL RELASI & NOTIFIKASI -->
     <div id="followsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -297,7 +283,6 @@
                 </button>
             </div>
 
-            <!-- TAB SWITCHER NOTIFIKASI -->
             <div class="flex border-b border-[#2a3942] bg-[#111b21]">
                 <button onclick="switchNotifModalTab('notifs')" id="btnTabNotifs" class="flex-1 py-2.5 font-extrabold text-xs text-[#25d366] border-b-2 border-[#25d366] flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-bell"></i> Notifikasi
@@ -334,7 +319,7 @@
         </div>
     </div>
 
-    <!-- MODAL FULLSCREEN STORY VIEWER (STATUS WHATSAPP) -->
+    <!-- MODAL STORY VIEWER -->
     <div id="storyViewerModal" class="fixed inset-0 bg-black z-[140] hidden flex flex-col justify-between select-none">
         <div class="p-3.5 z-20 bg-gradient-to-b from-black/90 via-black/50 to-transparent">
             <div class="w-full bg-white/30 h-1 rounded-full overflow-hidden mb-3">
@@ -365,13 +350,10 @@
 
         <div class="relative flex-1 flex items-center justify-center overflow-hidden bg-black" onclick="handleStoryTap(event)">
             <img id="storyViewerImage" src="" class="w-full h-full object-contain max-h-[82vh]">
-            
             <div class="absolute inset-y-0 left-0 w-1/3 z-10" onclick="prevStory(event)"></div>
             <div class="absolute inset-y-0 right-0 w-1/3 z-10" onclick="nextStory(event)"></div>
-
             <div id="storyLiveCommentsContainer" class="absolute bottom-24 left-4 max-w-[70%] z-20 space-y-1.5 pointer-events-none"></div>
             <div id="storyFlyingHeartsContainer" class="absolute inset-0 z-20 pointer-events-none overflow-hidden"></div>
-
             <div class="absolute bottom-4 left-4 right-4 z-15 pointer-events-none bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
                 <p id="storyViewerTaskTitle" class="text-white text-xs font-black leading-snug line-clamp-2 drop-shadow-sm"></p>
                 <p id="storyViewerSubTitle" class="text-[10px] text-[#8696a0] font-semibold mt-0.5"></p>
@@ -382,11 +364,9 @@
             <button onclick="shareActiveStory()" class="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 active:scale-90 transition" title="Bagikan">
                 <i class="fa-solid fa-repeat text-sm"></i>
             </button>
-
             <div class="flex-1 bg-white/15 border border-white/20 rounded-full px-4 py-2 flex items-center focus-within:ring-1 focus-within:ring-[#25d366]">
                 <input type="text" id="inputStoryReply" onkeydown="if(event.key === 'Enter') sendStoryReply()" placeholder="Balas status ini..." class="w-full bg-transparent border-none text-xs text-white placeholder-white/60 focus:outline-none">
             </div>
-
             <div class="flex items-center gap-1.5 flex-shrink-0">
                 <button onclick="triggerStoryLoveAnimation(event)" class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center text-sm active:scale-125 transition" title="Love">
                     <i class="fa-solid fa-heart"></i>
@@ -398,7 +378,7 @@
         </div>
     </div>
 
-    <!-- MODAL CHAT GLOBAL TIM -->
+    <!-- MODAL CHAT GLOBAL -->
     <div id="globalChatModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-lg md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -417,15 +397,12 @@
                     <i class="fa-solid fa-xmark text-base font-bold"></i>
                 </button>
             </div>
-
             <div id="globalChatMessages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-[#0b141a]"></div>
-
             <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex flex-col gap-2">
                 <div class="flex items-center gap-2">
                     <div class="flex-1 flex items-center bg-[#1f2c34] border border-[#2a3942] rounded-full px-3.5 py-1.5 focus-within:border-[#25d366] transition">
                         <input type="text" id="inputGlobalChatMessage" onkeydown="if(event.key === 'Enter') sendGlobalChatMessage()" placeholder="Ketik pesan untuk seluruh tim..." class="w-full bg-transparent border-none text-xs text-white placeholder-[#8696a0] focus:outline-none py-1">
                     </div>
-
                     <button id="btnSendGlobalChat" onclick="sendGlobalChatMessage()" class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] hover:bg-[#00a884] flex items-center justify-center transition active:scale-90 flex-shrink-0 shadow-md">
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
@@ -435,7 +412,7 @@
         </div>
     </div>
 
-    <!-- MODAL FORM KETERANGAN & UPLOAD FOTO DOKUMENTASI SELESAI -->
+    <!-- MODAL FORM DOKUMENTASI FOTO SELESAI -->
     <div id="completionNoteModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -456,7 +433,6 @@
             <form id="formCompletionNote" class="flex-1 flex flex-col justify-between overflow-hidden">
                 <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs bg-[#0b141a]">
                     <input type="hidden" id="complete-task-id">
-                    
                     <div>
                         <label class="block text-[10px] font-extrabold text-[#8696a0] uppercase mb-1">Tugas</label>
                         <p id="complete-task-title" class="text-xs font-bold text-white bg-[#111b21] p-2.5 rounded-xl border border-[#2a3942] leading-snug">-</p>
@@ -513,7 +489,7 @@
         </div>
     </div>
 
-    <!-- MODAL DOMPET INSENTIF PRIBADI & POIN REWARD -->
+    <!-- MODAL DOMPET INSENTIF -->
     <div id="earningsModal" onclick="if(event.target === this) closeEarningsModal()" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop" onclick="event.stopPropagation()">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -609,12 +585,157 @@
         </div>
     </div>
 
-    <!-- MODAL FORM PENARIKAN -->
+    <!-- MODAL FORM SINGLE TASK -->
+    <div id="scheduleModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <form id="scheduleForm" class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef]" id="modalTitle">Tambah Aktivitas Baru</h3>
+                <button type="button" onclick="toggleModal(false)" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
+                <input type="date" id="input-date" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Nama Petugas (Sesuai Akun)</label>
+                <input type="text" id="input-name" readonly class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-[#8696a0] cursor-not-allowed mt-0.5">
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Kategori / Peran</label>
+                <select id="input-role" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                    <option value="Teknisi">Teknisi</option>
+                    <option value="Cleaning">Cleaning Service</option>
+                    <option value="Admin Teknik">Admin</option>
+                    <option value="Personal">Personal / Umum</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Rincian Kegiatan</label>
+                <input type="text" id="input-task" required placeholder="Contoh: Perbaikan panel listrik" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#25d366] mt-0.5">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Jam Mulai</label>
+                    <input type="time" id="input-start-time" value="08:00" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Jam Selesai</label>
+                    <input type="time" id="input-end-time" value="10:00" required class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+            </div>
+
+            <button type="submit" id="btn-save-task" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
+                Simpan Aktivitas
+            </button>
+        </form>
+    </div>
+
+    <!-- MODAL IMPORT TEKS WA -->
+    <div id="bulkTextModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef] flex items-center gap-1.5"><i class="fa-solid fa-paste text-[#25d366]"></i> Import Teks Chat WA</h3>
+                <button onclick="closeBulkTextModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
+                <input type="date" id="bulk-date" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+            </div>
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Tempel Pesan Chat Jadwal</label>
+                <textarea id="bulk-text-area" rows="5" placeholder="08.00-10.00: Perbaikan AC&#10;10.00-12.00: Cek panel genset" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl p-2.5 text-white font-mono mt-0.5 focus:outline-none focus:border-[#25d366]"></textarea>
+            </div>
+            <button onclick="processBulkTextImport()" id="btn-process-bulk" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl active:scale-95 transition">
+                Simpan Semua Jadwal
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL EXPORT PDF / CSV -->
+    <div id="exportModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3.5 shadow-2xl animate-pop">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef]">Unduh Laporan Kerja</h3>
+                <button onclick="closeExportModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div class="space-y-1">
+                <label class="text-[10.5px] text-[#8696a0] font-bold">Format Dokumen</label>
+                <select id="exportPdfType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
+                    <option value="with_photos">📸 PDF Lengkap + Foto (Before & After)</option>
+                    <option value="text_only">📄 PDF Hanya Teks (Tabel Ringkas)</option>
+                </select>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10.5px] text-[#8696a0] font-bold">Periode Waktu</label>
+                <select id="exportRangeType" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-2 text-[#e9edef] font-semibold focus:outline-none">
+                    <option value="daily">📅 Hari Ini</option>
+                    <option value="weekly">📆 7 Hari Terakhir</option>
+                    <option value="monthly">🗓️ Bulan Ini</option>
+                </select>
+            </div>
+
+            <button id="btnExecuteExport" onclick="processExportExecution()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2.5 rounded-xl transition active:scale-95 shadow-md">
+                Unduh Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL AI PLANNER GEMINI -->
+    <div id="autoGenerateModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[#1f2c34] w-full max-w-sm rounded-[24px] border border-[#2a3942] p-4 text-xs space-y-3 shadow-2xl animate-pop max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-2 border-b border-[#2a3942]">
+                <h3 class="font-bold text-sm text-[#e9edef] flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-[#25d366]"></i> AI Smart Planner</h3>
+                <button onclick="closeAutoGenerateModal()" class="text-[#8696a0] hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Kunci Gemini API</label>
+                <input type="password" id="userGeminiApiKey" placeholder="Tempel AIzaSy..." onchange="saveGeminiApiKey(this.value)" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white font-mono mt-0.5">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Tanggal</label>
+                    <input type="date" id="gen-date" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                </div>
+                <div>
+                    <label class="text-[10px] text-[#8696a0] font-bold">Profesi</label>
+                    <select id="gen-role" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-2.5 py-1.5 text-white mt-0.5">
+                        <option value="Teknisi Gedung">Teknisi</option>
+                        <option value="Cleaning Service">Cleaning</option>
+                        <option value="Admin Kantor">Admin</option>
+                        <option value="Personal / Mahasiswa">Personal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-[#8696a0] font-bold">Fokus Aktivitas / Target</label>
+                <input type="text" id="gen-focus" placeholder="Contoh: Perbaikan AC dan pembersihan filter" class="w-full bg-[#111b21] border border-[#2a3942] rounded-xl px-3 py-1.5 text-white mt-0.5">
+            </div>
+
+            <button id="btn-process-gen" onclick="generateAiSchedulePreview()" class="w-full bg-[#25d366] hover:bg-[#00a884] text-[#0b141a] font-bold py-2 rounded-xl active:scale-95 transition">
+                Rancang Jadwal AI
+            </button>
+
+            <div id="aiPreviewList" class="space-y-1.5 pt-2 hidden"></div>
+            <button id="btn-save-ai-tasks" onclick="saveAllAiTasks()" class="w-full bg-[#00a884] text-white font-bold py-2 rounded-xl hidden">Simpan ke Saluran</button>
+        </div>
+    </div>
+
+    <!-- MODAL PENARIKAN INSENTIF -->
     <div id="withdrawModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[92] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm shadow-md">
+                    <div class="w-9 h-9 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm shadow-md font-bold">
                         <i class="fa-brands fa-whatsapp"></i>
                     </div>
                     <div>
@@ -703,7 +824,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NAMA USER (SUPER ADMIN) -->
+    <!-- MODAL EDIT NAMA USER -->
     <div id="editUserNameModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[95] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-auto md:max-w-xs md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -741,7 +862,7 @@
         </div>
     </div>
 
-    <!-- MODAL SETTING ANGGARAN & SKEMA POIN (SUPER ADMIN) -->
+    <!-- MODAL ANGGARAN & POIN (SUPER ADMIN) -->
     <div id="budgetConfigModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[90] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -808,99 +929,7 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFIKASI INTERAKTIF -->
-    <div id="commentNotificationToast" onclick="handleNotificationClick()" class="fixed top-4 right-4 z-[120] hidden bg-[#1f2c34] border-2 border-[#25d366] text-white p-3.5 rounded-2xl shadow-2xl max-w-xs cursor-pointer animate-pop">
-        <div class="flex items-start gap-2.5">
-            <div id="notifIconContainer" class="w-8 h-8 rounded-full bg-[#25d366] text-[#0b141a] flex items-center justify-center text-sm flex-shrink-0 font-bold">
-                <i id="notifIcon" class="fa-solid fa-bell"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-                <div class="flex items-center justify-between">
-                    <p id="notifTitle" class="text-[10px] font-extrabold text-[#25d366] uppercase tracking-wider">Notifikasi</p>
-                    <span class="text-[8px] text-[#8696a0]">Baru saja</span>
-                </div>
-                <p id="notifSender" class="text-xs font-bold truncate">User</p>
-                <p id="notifMessage" class="text-[11px] text-[#8696a0] leading-snug line-clamp-2 mt-0.5">-</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL KOMENTAR POSTINGAN -->
-    <div id="commentModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-[#1f2c34] w-full h-full md:h-[85vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
-            <div class="px-4 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center text-[#8696a0] hover:text-white transition active:scale-90">
-                    <i class="fa-solid fa-chevron-left text-base font-bold"></i>
-                </button>
-                <div class="text-center">
-                    <h3 class="text-sm font-extrabold text-white tracking-tight">Detail Diskusi</h3>
-                    <p id="commentModalSubtitle" class="text-[9.5px] text-[#8696a0] truncate max-w-[200px]"></p>
-                </div>
-                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-
-            <div id="commentList" class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-xs bg-[#0b141a]"></div>
-
-            <div id="replyIndicatorContainer" class="hidden px-4 py-1.5 bg-[#111b21] border-t border-[#2a3942] flex items-center justify-between text-[11px]">
-                <span id="replyIndicatorText" class="text-[#25d366] font-bold truncate"></span>
-                <button onclick="cancelReplyOrEdit()" class="text-[#8696a0] hover:text-rose-400 font-bold ml-2">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="p-3 bg-[#111b21] border-t border-[#2a3942] flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                    <div class="flex-1 flex items-center bg-[#1f2c34] border border-[#2a3942] rounded-full px-3.5 py-1.5 focus-within:border-[#25d366] transition">
-                        <input type="text" id="inputNewComment" onkeydown="if(event.key === 'Enter') sendComment()" placeholder="Silakan tulis komentar..." class="w-full bg-transparent border-none text-xs text-white placeholder-[#8696a0] focus:outline-none py-1">
-                    </div>
-
-                    <button id="btnSendComment" onclick="sendComment()" class="w-8 h-8 rounded-full bg-[#1f2c34] text-[#8696a0] hover:bg-[#25d366] hover:text-[#0b141a] flex items-center justify-center transition active:scale-90 flex-shrink-0">
-                        <i class="fa-solid fa-paper-plane text-xs"></i>
-                    </button>
-                </div>
-                <button onclick="closeCommentModal()" class="w-full bg-[#1f2c34] text-white font-bold py-2 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Tutup Diskusi</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL KONFIRMASI HAPUS JADWAL -->
-    <div id="confirmModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[99] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
-        <div class="bg-[#1f2c34] w-full h-auto md:max-w-xs md:rounded-[32px] rounded-t-[28px] shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
-            <div class="p-5 text-center">
-                <div class="w-12 h-12 bg-rose-950/60 text-rose-500 rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-sm border border-rose-800/50">
-                    <i class="fa-solid fa-trash-can"></i>
-                </div>
-                <h3 class="text-sm font-extrabold text-white mb-1">Hapus Jadwal?</h3>
-                <p class="text-xs text-[#8696a0] mb-5">Tugas yang dihapus tidak dapat dipulihkan kembali dari sistem.</p>
-                <div class="flex gap-2">
-                    <button onclick="closeConfirmModal()" class="flex-1 bg-[#111b21] text-[#8696a0] hover:text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Batal</button>
-                    <button id="btn-confirm-delete" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md active:scale-95">Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL PREVIEW FOTO BESAR -->
-    <div id="imagePreviewModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[130] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4" onclick="this.classList.add('hidden')">
-        <div class="relative w-full h-full md:h-auto md:max-w-lg bg-[#1f2c34] md:rounded-[32px] rounded-none overflow-hidden shadow-2xl border border-[#2a3942] flex flex-col animate-pop" onclick="event.stopPropagation()">
-            <div class="px-4 py-3.5 flex justify-between items-center border-b border-[#2a3942]">
-                <h4 id="previewImageTitle" class="text-xs font-extrabold text-white">Dokumentasi Kerja</h4>
-                <button onclick="document.getElementById('imagePreviewModal').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#202c33] text-[#8696a0] hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base font-bold"></i>
-                </button>
-            </div>
-            <div class="p-3 flex-1 flex items-center justify-center bg-black min-h-[260px]">
-                <img id="previewImageLarge" src="" class="max-h-[75vh] w-auto object-contain rounded-xl">
-            </div>
-            <div class="p-3 bg-[#111b21] border-t border-[#2a3942]">
-                <button onclick="document.getElementById('imagePreviewModal').classList.add('hidden')" class="w-full bg-[#1f2c34] text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 transition border border-[#2a3942]">Tutup Gambar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL PROFIL & DATA PEGAWAI -->
+    <!-- MODAL PROFIL -->
     <div id="form-profile-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[85] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
         <div class="bg-[#1f2c34] w-full h-full md:max-h-[90vh] md:max-w-md md:rounded-[32px] rounded-none shadow-2xl flex flex-col overflow-hidden border border-[#2a3942] animate-pop">
             <div class="px-5 py-3.5 flex items-center justify-between border-b border-[#2a3942] bg-[#111b21] sticky top-0 z-20">
@@ -1027,7 +1056,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-[#1f2c34] border border-[#2a3942] text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
- <script>
+    <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1134,14 +1163,6 @@
             return userObj?.user_metadata?.avatar_url || userObj?.user_metadata?.picture || null;
         }
 
-        function renderAvatarHtml(avatarUrl, name, sizeClass = "w-9 h-9", userId = null) {
-            const initials = (name || 'P').substring(0, 2).toUpperCase();
-            if (avatarUrl) {
-                return `<img src="${avatarUrl}" alt="${name}" class="${sizeClass} rounded-full object-cover border border-[#2a3942]" onerror="this.outerHTML='<div class=\\'${sizeClass} rounded-full bg-[#111b21] border border-[#2a3942] text-[#25d366] flex items-center justify-center font-bold text-xs\\'>${initials}</div>'">`;
-            }
-            return `<div class="${sizeClass} rounded-full bg-[#111b21] border border-[#2a3942] text-[#25d366] flex items-center justify-center font-bold text-xs shadow-sm">${initials}</div>`;
-        }
-
         function formatTanggalIndo(dateStr) {
             if (!dateStr) return '-';
             const parts = dateStr.split('-');
@@ -1176,23 +1197,6 @@
                 return `${curHours}:${curMinutes}` < task.jam_mulai;
             }
             return false;
-        }
-
-        function isCompletedLate(task) {
-            if (task.status !== 'Selesai') return false;
-            if (!task.completed_at || !task.tanggal || !task.jam_selesai) return false;
-            const compTime = new Date(task.completed_at);
-            const compDateStr = `${compTime.getFullYear()}-${String(compTime.getMonth() + 1).padStart(2, '0')}-${String(compTime.getDate()).padStart(2, '0')}`;
-            const compTimeStr = `${String(compTime.getHours()).padStart(2, '0')}:${String(compTime.getMinutes()).padStart(2, '0')}`;
-            if (compDateStr > task.tanggal) return true;
-            if (compDateStr === task.tanggal && compTimeStr > task.jam_selesai) return true;
-            return false;
-        }
-
-        function isCreatedBefore6AM(task) {
-            if (!task.created_at) return false;
-            const createDate = new Date(task.created_at);
-            return (createDate.getHours() < 6) || (createDate.getHours() === 6 && createDate.getMinutes() === 0);
         }
 
         async function processAndWatermarkImage(file, userName) {
@@ -1240,13 +1244,6 @@
             const { error } = await _supabase.storage.from('task-evidences').upload(filePath, blob, { contentType: 'image/jpeg', upsert: true });
             if (error) return null;
             return _supabase.storage.from('task-evidences').getPublicUrl(filePath).data?.publicUrl || null;
-        }
-
-        function showLargeImage(url, title = "Dokumentasi Kerja") {
-            if (!url) return;
-            document.getElementById('previewImageTitle').innerText = title;
-            document.getElementById('previewImageLarge').src = url;
-            document.getElementById('imagePreviewModal').classList.remove('hidden');
         }
 
         function renderStoriesBar() {
@@ -2070,6 +2067,60 @@
                 phoneDisplay.classList.remove('hidden'); phoneInput.classList.add('hidden');
                 addressDisplay.classList.remove('hidden'); addressInput.classList.add('hidden');
             }
+        }
+
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await _supabase.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    if (currentUser.email === SUPER_ADMIN_EMAIL) {
+                        isSuperAdmin = true;
+                        document.getElementById('superadmin-indicator')?.classList.remove('hidden');
+                        document.getElementById('btnHeaderBudget')?.classList.remove('hidden');
+                        document.getElementById('userFilter')?.classList.remove('hidden');
+                    }
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('app-dashboard').classList.remove('hidden');
+                    initApp();
+                } else {
+                    document.getElementById('auth-screen').classList.remove('hidden');
+                    document.getElementById('app-dashboard').classList.add('hidden');
+                }
+            } catch (err) {
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        }
+
+        async function initApp() {
+            document.getElementById('input-date').value = todayStr;
+            document.getElementById('gen-date').value = todayStr;
+            document.getElementById('bulk-date').value = todayStr;
+            document.getElementById('dateFilter').value = todayStr;
+            document.getElementById('input-name').value = getUserDisplayName(currentUser.id, currentUser.email);
+            
+            const savedKey = localStorage.getItem('user_gemini_api_key') || '';
+            const keyInput = document.getElementById('userGeminiApiKey');
+            const profKey = document.getElementById('profileGeminiApiKey');
+            if (keyInput) keyInput.value = savedKey;
+            if (profKey) profKey.value = savedKey;
+
+            await fetchTasks();
+            setupRealtime();
+        }
+
+        async function fetchTasks() {
+            const { data, error } = await _supabase.from('jadwal').select('*').order('created_at', { ascending: false });
+            if (!error && data) {
+                globalTasks = data;
+                renderTasks();
+            }
+        }
+
+        function setupRealtime() {
+            _supabase.channel('public:jadwal')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'jadwal' }, () => { fetchTasks(); })
+                .subscribe();
         }
 
         checkAuth();
