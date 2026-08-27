@@ -3,115 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pengambilan Barang Cleaning Service</title>
+    <title>Sistem Manajemen Stok & Pengambilan Barang</title>
     <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            font-size: 13px;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
-        .header h3, .header h4 {
+        .header h2, .header h3 {
             margin: 4px 0;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-left: 5px solid #ccc;
+        }
+        .card.in { border-left-color: #28a745; }
+        .card.out { border-left-color: #dc3545; }
+        .card.stock { border-left-color: #007bff; }
+        .card.items { border-left-color: #ffc107; }
+        .card h4 {
+            margin: 0 0 10px 0;
+            color: #666;
+            font-size: 14px;
             text-transform: uppercase;
         }
-        .meta-info {
-            margin-bottom: 10px;
+        .card .value {
+            font-size: 28px;
             font-weight: bold;
+            color: #222;
         }
+
+        /* Layout Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        /* Forms & Containers */
+        .box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .box h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #f4f6f9;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        /* Canvas TTD */
+        .signature-pad-wrapper {
+            border: 1px dashed #999;
+            border-radius: 4px;
+            background: #fafafa;
+            position: relative;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 120px;
+            cursor: crosshair;
+        }
+        .btn-clear {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 11px;
+            padding: 2px 6px;
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        /* Buttons */
+        .btn-submit {
+            width: 100%;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+
+        /* Tables */
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 13px;
         }
         th, td {
-            border: 1px solid #000;
-            padding: 5px 6px;
+            border: 1px solid #e9ecef;
+            padding: 8px 10px;
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background: #f8f9fa;
+            font-weight: 600;
             text-align: center;
         }
-        .center {
-            text-align: center;
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .badge-in { background-color: #28a745; }
+        .badge-out { background-color: #dc3545; }
+        .sig-preview {
+            max-height: 25px;
+            max-width: 60px;
+            display: block;
+            margin: auto;
         }
     </style>
 </head>
 <body>
 
+<div class="container">
     <div class="header">
-        <h3>Form Pengambilan Barang Cleaning Service</h3>
-        <h4>PT. SURABAYA PLAZA</h4>
+        <h2>MANAJEMEN BARANG CLEANING SERVICE</h2>
+        <h3>PT. SURABAYA PLAZA</h3>
     </div>
 
-    <div class="meta-info">
-        Bulan : 
+    <!-- 1. Dashboard Ringkasan -->
+    <div class="dashboard">
+        <div class="card items">
+            <h4>Total Transaksi</h4>
+            <div class="value" id="card-total-transaksi">0</div>
+        </div>
+        <div class="card in">
+            <h4>Total Barang Masuk</h4>
+            <div class="value" id="card-masuk">0</div>
+        </div>
+        <div class="card out">
+            <h4>Total Barang Keluar</h4>
+            <div class="value" id="card-keluar">0</div>
+        </div>
+        <div class="card stock">
+            <h4>Sisa Stok Bersih</h4>
+            <div class="value" id="card-sisa">0</div>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 4%;">No</th>
-                <th style="width: 25%;">Nama Barang</th>
-                <th style="width: 5%;">Jml</th>
-                <th style="width: 10%;">Tanggal</th>
-                <th style="width: 8%;">Jam</th>
-                <th style="width: 28%;">Lokasi</th>
-                <th style="width: 12%;">Petugas</th>
-                <th style="width: 8%;">TTD</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td class="center">1</td><td>Tissu Rol</td><td class="center">2</td><td class="center">12/8/26</td><td class="center">14:00</td><td>Toilet Nasabah Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">2</td><td>Tissu Handtowel</td><td class="center">2</td><td class="center">12/8/26</td><td class="center">14:00</td><td>Toilet Nasabah Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">3</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">13/8/26</td><td class="center">14:00</td><td>Lantai 1 Dan 2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">4</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">13/8/26</td><td class="center">08:00</td><td>Toilet Nasabah Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">5</td><td>Tisu Minirol</td><td class="center">2</td><td class="center">13/8/26</td><td class="center">08:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">6</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">13/8/26</td><td class="center">13:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">7</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">13/8/26</td><td class="center">13:00</td><td>Toilet D219</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">8</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">14/8/26</td><td class="center">08:00</td><td>Toilet Belakang 1 Dan 2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">9</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">14/8/26</td><td class="center">08:00</td><td>Toilet Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">10</td><td>Tisu Minirol</td><td class="center">2</td><td class="center">14/8/26</td><td class="center">08:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">11</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">14/8/26</td><td class="center">16:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">12</td><td>Tisu Minirol</td><td class="center">2</td><td class="center">14/8/26</td><td class="center">13:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">13</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">18/8/26</td><td class="center">08:00</td><td>Toilet BLKG & Lt. 2</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">14</td><td>Tisu Minirol</td><td class="center">3</td><td class="center">18/8/26</td><td class="center">08:00</td><td>Toilet Pria & Wanita</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">15</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">18/8/26</td><td class="center">08:00</td><td>Toilet Pria & Wanita</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">16</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">18/8/26</td><td class="center">13:00</td><td>Nasabah Wanita</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">17</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">19/8/26</td><td class="center">08:00</td><td>Toilet Blkg & Lantai 2</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">18</td><td>Tisu Kotak & Roll</td><td class="center">9</td><td class="center">20/8/26</td><td class="center">13:00</td><td>Toilet Nasabah 1/2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">19</td><td>Tisu Kotak & Roll Mini</td><td class="center">2</td><td class="center">20/8/2026</td><td class="center">08:00</td><td>Toilet Nasabah Pria & Wnt</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">20</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">20/8/26</td><td class="center">08:00</td><td>Toilet Blkg & Lt. 2</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">21</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">21/8/26</td><td class="center">08:00</td><td>Toilet Blkg & Lt. 2</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">22</td><td>Tisu Kotak & Roll / Kotak 2 Roll</td><td class="center">5</td><td class="center">21/8/26</td><td class="center">08:00</td><td>Toilet Nasabah Wanita/Pria</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">23</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">24/8/26</td><td class="center">08:00</td><td>Toilet Nasabah Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">24</td><td>Tisu Mini</td><td class="center">2</td><td class="center">24/8/26</td><td class="center">08:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">25</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">24/8/26</td><td class="center">08:00</td><td>Toilet BLKG & Lt. 2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">26</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">24/8/26</td><td class="center">14:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">27</td><td>Tisu Mini</td><td class="center">2</td><td class="center">24/8/26</td><td class="center">14:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">28</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">26/8/26</td><td class="center">08:00</td><td>Toilet Lantai 1 Dan 2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">29</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">26/8/26</td><td class="center">08:00</td><td>Toilet Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">30</td><td>Tisu Mini</td><td class="center">3</td><td class="center">26/8/26</td><td class="center">08:00</td><td>Toilet Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">31</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">26/8/26</td><td class="center">12:00</td><td>Toilet Pria & Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">32</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">26/8/26</td><td class="center">16:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">33</td><td>Tisu Mini</td><td class="center">2</td><td class="center">26/8/26</td><td class="center">16:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">34</td><td>Tisu Kotak</td><td class="center">1</td><td class="center">27/8/26</td><td class="center">08:00</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">35</td><td>Tisu Mini</td><td class="center">2</td><td class="center">27/8/26</td><td class="center">07:50</td><td>Toilet Wanita</td><td>Saiful</td><td></td></tr>
-            <tr><td class="center">36</td><td>Tisu Kotak</td><td class="center">2</td><td class="center">27/8/26</td><td class="center">08:00</td><td>Toilet Lantai 1 Dan 2</td><td>Anang</td><td></td></tr>
-            <tr><td class="center">37</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">38</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">39</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">40</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">41</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">42</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">43</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">44</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td class="center">45</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-        </tbody>
-    </table>
+    <div class="grid">
+        <!-- 2. Form Input Masuk/Keluar + TTD -->
+        <div class="box">
+            <h3>Input Transaksi Barang</h3>
+            <form id="transaksiForm">
+                <div class="form-group">
+                    <label>Jenis Transaksi</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="jenis" value="MASUK" required> Masuk</label>
+                        <label><input type="radio" name="jenis" value="KELUAR" checked required> Keluar</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="namaBarang">Nama Barang</label>
+                    <input type="text" id="namaBarang" placeholder="cth: Tisu Kotak, Tissu Roll" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="jumlah">Jumlah (Qty)</label>
+                    <input type="number" id="jumlah" min="1" placeholder="cth: 2" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal">Tanggal & Waktu</label>
+                    <input type="datetime-local" id="tanggal" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lokasi">Lokasi / Keterangan</label>
+                    <input type="text" id="lokasi" placeholder="cth: Toilet Pria Lantai 1 / Gudang" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="petugas">Nama Petugas</label>
+                    <input type="text" id="petugas" placeholder="cth: Saiful / Anang" required>
+                </div>
+
+                <!-- 3. TTD Online Canvas -->
+                <div class="form-group">
+                    <label>Tanda Tangan Digital</label>
+                    <div class="signature-pad-wrapper">
+                        <button type="button" class="btn-clear" id="clearPad">Clear</button>
+                        <canvas id="signaturePad" width="300" height="120"></canvas>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Simpan Transaksi</button>
+            </form>
+        </div>
+
+        <!-- 4. Tabel Riwayat Transaksi -->
+        <div class="box" style="overflow-x: auto;">
+            <h3>Daftar Riwayat Transaksi</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Status</th>
+                        <th>Nama Barang</th>
+                        <th>Jml</th>
+                        <th>Waktu</th>
+                        <th>Lokasi</th>
+                        <th>Petugas</th>
+                        <th>TTD</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data transaksi akan otomatis muncul di sini -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Inisialisasi Data Default
+    let transaksiList = [
+        { id: 1, jenis: 'MASUK', barang: 'Tisu Kotak', qty: 50, waktu: '2026-08-10 07:00', lokasi: 'Gudang Utama', petugas: 'Admin', ttd: '' },
+        { id: 2, jenis: 'MASUK', barang: 'Tisu Roll', qty: 50, waktu: '2026-08-10 07:00', lokasi: 'Gudang Utama', petugas: 'Admin', ttd: '' },
+        { id: 3, jenis: 'KELUAR', barang: 'Tissu Rol', qty: 2, waktu: '2026-08-12 14:00', lokasi: 'Toilet Nasabah Pria & Wanita', petugas: 'Saiful', ttd: '' },
+        { id: 4, jenis: 'KELUAR', barang: 'Tisu Kotak', qty: 2, waktu: '2026-08-13 14:00', lokasi: 'Lantai 1 Dan 2', petugas: 'Anang', ttd: '' }
+    ];
+
+    // Set Default Waktu Sekarang ke Form
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('tanggal').value = now.toISOString().slice(0, 16);
+
+    // Signature Pad Logic
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    // Menyesuaikan resolusi canvas
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function startDraw(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+        ctx.moveTo(x, y);
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+
+    function endDraw() {
+        isDrawing = false;
+    }
+
+    // Event Listener Mouse & Touch
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', draw);
+    window.addEventListener('mouseup', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', endDraw);
+
+    document.getElementById('clearPad').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Render Dashboard & Table
+    function renderApp() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        let totalMasuk = 0;
+        let totalKeluar = 0;
+
+        transaksiList.forEach((item, index) => {
+            if (item.jenis === 'MASUK') {
+                totalMasuk += parseInt(item.qty);
+            } else {
+                totalKeluar += parseInt(item.qty);
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="text-align:center;"><span class="badge ${item.jenis === 'MASUK' ? 'badge-in' : 'badge-out'}">${item.jenis}</span></td>
+                <td>${item.barang}</td>
+                <td style="text-align:center;">${item.qty}</td>
+                <td style="text-align:center;">${item.waktu}</td>
+                <td>${item.lokasi}</td>
+                <td>${item.petugas}</td>
+                <td style="text-align:center;">
+                    ${item.ttd ? `<img src="${item.ttd}" class="sig-preview" alt="TTD">` : '-'}
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Update Dashboard Metrik
+        document.getElementById('card-total-transaksi').innerText = transaksiList.length;
+        document.getElementById('card-masuk').innerText = totalMasuk;
+        document.getElementById('card-keluar').innerText = totalKeluar;
+        document.getElementById('card-sisa').innerText = (totalMasuk - totalKeluar);
+    }
+
+    // Handle Form Submit
+    document.getElementById('transaksiForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const jenis = document.querySelector('input[name="jenis"]:checked').value;
+        const barang = document.getElementById('namaBarang').value;
+        const qty = parseInt(document.getElementById('jumlah').value);
+        const waktu = document.getElementById('tanggal').value.replace('T', ' ');
+        const lokasi = document.getElementById('lokasi').value;
+        const petugas = document.getElementById('petugas').value;
+        
+        // Export TTD Canvas ke Base64 Data URL (jika ada goresan)
+        const ttd = canvas.toDataURL();
+
+        // Tambah ke array
+        transaksiList.push({
+            id: Date.now(),
+            jenis,
+            barang,
+            qty,
+            waktu,
+            lokasi,
+            petugas,
+            ttd
+        });
+
+        // Reset Form & Canvas
+        this.reset();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('tanggal').value = new Date().toISOString().slice(0, 16);
+        document.querySelector('input[name="jenis"][value="KELUAR"]').checked = true;
+
+        renderApp();
+    });
+
+    // Jalankan render awal
+    renderApp();
+</script>
 
 </body>
 </html>
