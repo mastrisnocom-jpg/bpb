@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -92,7 +92,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#f0f2f5] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-20 md:pb-8">
+<body class="min-h-screen bg-[#f0f2f5] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-28 md:pb-12">
 
     <!-- SCREEN AUTHENTICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center hidden p-4">
@@ -198,7 +198,7 @@
                         </div>
                         <p class="text-[11px] font-bold text-white truncate" id="user-display-side">User</p>
                     </div>
-                    <i class="fa-solid fa-user-gear text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-gear text-slate-400 text-xs"></i>
                 </div>
             </div>
         </aside>
@@ -236,7 +236,7 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM TAB ROW -->
+                <!-- TOP / MOBILE TABS -->
                 <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 px-2 md:px-6">
                     <button onclick="switchFeedView('home')" id="tabHome" class="flex-1 py-2 flex justify-center items-center text-xl transition active:scale-95 tab-active" title="Beranda">
                         <i class="fa-solid fa-house text-lg"></i>
@@ -309,12 +309,12 @@
                 </div>
             </header>
 
-            <!-- KONTEN INLINE FEED CONTAINER (SELURUH MENU BERGANTI DI SINI) -->
+            <!-- KONTEN INLINE FEED CONTAINER (SEMUA HALAMAN DITAMPILKAN DI SINI) -->
             <div id="mainFeedContainer" class="w-full max-w-4xl mx-auto px-0 md:px-4 pt-3 flex-grow">
                 
                 <!-- 1. VIEW BERANDA FEED JADWAL -->
                 <div id="view-feed-home" class="space-y-3.5">
-                    <!-- BANNER REAL-TIME NOTIFIKASI GEMPA BUMI BMKG -->
+                    <!-- BANNER GEMPA TERKINI BMKG -->
                     <div id="liveQuakeBanner" class="hidden mx-3.5 md:mx-0 bg-gradient-to-r from-rose-600 via-rose-700 to-red-800 text-white rounded-2xl p-3 shadow-lg border border-rose-500/40 relative overflow-hidden animate-view-fade">
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex items-center gap-3 min-w-0 cursor-pointer flex-1" onclick="switchFeedView('quake')">
@@ -342,7 +342,7 @@
                         </div>
                     </div>
 
-                    <!-- BANNER PERINGATAN BELUM MEMBUAT JADWAL SAMPAI JAM 9 PAGI -->
+                    <!-- BANNER PERINGATAN DEADLINE JAM 9 PAGI -->
                     <div id="scheduleDeadlineBanner" class="hidden mx-3.5 md:mx-0 p-3.5 bg-rose-50 dark:bg-rose-950/70 border-2 border-rose-400 dark:border-rose-700 rounded-2xl flex items-center justify-between shadow-sm animate-view-fade">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0 animate-bounce">
@@ -360,7 +360,7 @@
                         </button>
                     </div>
 
-                    <!-- INDIKATOR MELIHAT JADWAL USER YANG DIIKUTI -->
+                    <!-- INDIKATOR FEED RELASI/TEMAN -->
                     <div id="friendFeedIndicator" class="hidden mx-3.5 md:mx-0 p-3 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl flex items-center justify-between shadow-xs animate-view-fade">
                         <div class="flex items-center gap-2 min-w-0">
                             <div class="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
@@ -376,7 +376,7 @@
                         </button>
                     </div>
 
-                    <!-- BARIS INPUT CEPAT -->
+                    <!-- INPUT CEPAT KEGIATAN -->
                     <div class="bg-white dark:bg-slate-900 border-b md:border border-slate-200 dark:border-slate-800 md:rounded-2xl p-3 shadow-xs">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-300 dark:bg-slate-700 flex-shrink-0 cursor-pointer" onclick="switchFeedView('profile')" id="feed-user-avatar-btn">
@@ -401,7 +401,7 @@
                         </div>
                     </div>
 
-                    <!-- KARTU STATUS BAR (HANYA 3: TOTAL, PROSES, SELESAI) -->
+                    <!-- KARTU STATUS BAR -->
                     <div class="px-3.5 md:px-0">
                         <section class="grid grid-cols-3 gap-2.5">
                             <div class="bg-gradient-to-br from-blue-50/90 to-indigo-50/50 dark:from-slate-900 dark:to-blue-950/30 rounded-[22px] p-3 border border-blue-200/80 dark:border-blue-900/50 shadow-xs flex items-center gap-2.5">
@@ -436,7 +436,7 @@
                         </section>
                     </div>
 
-                    <!-- CONTAINER TABEL DESKTOP & MOBILE CARDS -->
+                    <!-- TABEL DESKTOP & MOBILE FEED -->
                     <section class="space-y-3">
                         <div class="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden mx-3.5 md:mx-0">
                             <div class="overflow-x-auto">
@@ -461,7 +461,7 @@
                     </section>
                 </div>
 
-                <!-- 2. VIEW CHAT GLOBAL -->
+                <!-- 2. VIEW CHAT GLOBAL TIM -->
                 <div id="view-feed-chat" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[78vh]">
                     <div class="px-5 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900">
                         <div class="flex items-center gap-2.5">
@@ -492,8 +492,8 @@
                     </div>
                 </div>
 
-                <!-- 3. VIEW DOMPET INSENTIF -->
-                <div id="view-feed-wallet" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+                <!-- 3. VIEW DOMPET INSENTIF (LENGKAP SAMPAI VERIFIKASI ADMIN) -->
+                <div id="view-feed-wallet" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 p-4 md:p-6 shadow-sm space-y-4 mb-24 md:mb-12">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
                             <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 text-white flex items-center justify-center text-sm shadow-md">
@@ -504,8 +504,8 @@
                                 <p class="text-[10px] text-slate-400">Poin & reward kinerja harian (Senin - Jumat)</p>
                             </div>
                         </div>
-                        <button onclick="switchFeedView('home')" class="text-xs font-bold text-blue-600 hover:underline">
-                            <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Feed
+                        <button onclick="switchFeedView('home')" class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-left"></i> Kembali ke Feed
                         </button>
                     </div>
 
@@ -517,7 +517,9 @@
                                 <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Tarik Dana
                             </button>
                         </div>
-                        <p id="withdrawNotice" class="text-[10px] text-amber-100/90 mt-1 font-medium italic">* Minimal penarikan saldo adalah Rp 10.000 (10k)</p>
+                        <p id="withdrawNotice" class="text-[10px] text-amber-100/90 mt-1 font-medium italic">
+                            * Minimal penarikan saldo adalah Rp 10.000 (10k)
+                        </p>
                         <div class="flex flex-col gap-0.5 text-[10px] text-amber-100 mt-3 pt-2 border-t border-amber-400/40">
                             <span id="modalMyPointsDetail">0 Poin</span>
                             <span id="modalMyWithdrawnDetail" class="text-rose-200 font-bold">Total Ditarik: Rp 0</span>
@@ -525,56 +527,66 @@
                         </div>
                     </div>
 
-                    <div id="penaltyDetailCard" class="hidden p-3 bg-rose-50/70 dark:bg-rose-950/40 rounded-xl border border-rose-200 dark:border-rose-800/80 shadow-xs">
+                    <div id="penaltyDetailCard" class="hidden p-3.5 bg-rose-50/70 dark:bg-rose-950/40 rounded-2xl border border-rose-200 dark:border-rose-800/80 shadow-xs">
                         <h4 class="text-[10px] font-extrabold text-rose-700 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1 mb-1.5">
                             <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> Rincian Hari Kerja Tanpa Jadwal (Sejak 18 Ags 2026)
                         </h4>
-                        <div id="penaltyDatesList" class="space-y-1 max-h-28 overflow-y-auto text-[10px] text-rose-800 dark:text-rose-200 font-medium"></div>
+                        <div id="penaltyDatesList" class="space-y-1 max-h-36 overflow-y-auto text-[10px] text-rose-800 dark:text-rose-200 font-medium"></div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         <div class="p-3.5 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
                             <div class="flex items-center justify-between mb-2">
                                 <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
-                                    <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan
+                                    <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Histori Penarikan Insentif
                                 </h4>
                                 <span id="myWithdrawalBadge" class="text-[9px] font-bold text-slate-400">0 Data</span>
                             </div>
-                            <div id="myWithdrawalsList" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5 text-xs">
+                            <div id="myWithdrawalsList" class="space-y-1.5 max-h-56 overflow-y-auto pr-0.5 text-xs">
                                 <div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>
                             </div>
                         </div>
 
                         <div class="p-3.5 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-                            <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1 mb-2">
-                                <i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin & Waktu
-                            </h4>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <h4 class="text-[10px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-info text-blue-500"></i> Ketentuan Skema Poin & Waktu
+                                </h4>
+                            </div>
                             <ul id="pointSchemeList" class="text-[10px] space-y-1 text-slate-600 dark:text-slate-300"></ul>
                         </div>
                     </div>
 
-                    <div id="adminWithdrawalManagementCard" class="hidden p-3.5 bg-rose-50/50 dark:bg-rose-950/30 rounded-2xl border border-rose-200 dark:border-rose-800">
-                        <h4 class="text-[10px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1 mb-2">
-                            <i class="fa-solid fa-money-bill-transfer text-rose-500"></i> Verifikasi Penarikan Tim (Admin)
-                        </h4>
-                        <div id="adminWithdrawalsList" class="space-y-2 max-h-48 overflow-y-auto pr-0.5">
-                            <div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan baru.</div>
+                    <!-- VERIFIKASI PENARIKAN TIM (ADMIN) -->
+                    <div id="adminWithdrawalManagementCard" class="hidden p-4 bg-rose-50/60 dark:bg-rose-950/40 rounded-2xl border border-rose-200 dark:border-rose-800/80 shadow-xs space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-rose-200/60 dark:border-rose-900/50 pb-2">
+                            <h4 class="text-[11px] font-extrabold text-rose-800 dark:text-rose-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-money-bill-transfer text-rose-600"></i> Verifikasi Penarikan Tim (Admin)
+                            </h4>
+                            <span class="text-[9.5px] text-rose-500 font-bold">Persetujuan Pencairan</span>
+                        </div>
+                        <div id="adminWithdrawalsList" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            <div class="text-center text-slate-400 text-[10px] py-3">Tidak ada pengajuan penarikan baru.</div>
                         </div>
                     </div>
 
-                    <div id="adminTeamBudgetCard" class="hidden p-3.5 bg-amber-50/50 dark:bg-amber-950/30 rounded-2xl border border-amber-200 dark:border-amber-800">
-                        <div class="flex items-center justify-between text-[10px] font-bold text-amber-900 dark:text-amber-200 mb-1">
-                            <span>Total Realisasi Tim (Admin)</span>
-                            <span id="modalTeamBudgetUsage">Rp 0 / Rp 100.000</span>
+                    <!-- TOTAL REALISASI ANGGARAN TIM (ADMIN) -->
+                    <div id="adminTeamBudgetCard" class="hidden p-4 bg-amber-50/60 dark:bg-amber-950/40 rounded-2xl border border-amber-200 dark:border-amber-800/80 shadow-xs space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-extrabold text-amber-900 dark:text-amber-200">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chart-pie text-amber-500"></i> Total Realisasi Tim (Admin)</span>
+                            <span id="modalTeamBudgetUsage" class="font-mono">Rp 0 / Rp 100k</span>
                         </div>
-                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
                             <div id="modalBudgetProgressBar" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <div id="adminTeamListContainer" class="hidden">
-                        <h4 class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-2">Rincian Anggaran Seluruh Tim (Admin View)</h4>
-                        <div id="teamEarningsList" class="space-y-1.5"></div>
+                    <!-- RINCIAN ANGGARAN SELURUH TIM (ADMIN VIEW) -->
+                    <div id="adminTeamListContainer" class="hidden pt-2 space-y-2">
+                        <h4 class="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                            <i class="fa-solid fa-users text-blue-500"></i> Rincian Anggaran Seluruh Tim (Admin View)
+                        </h4>
+                        <div id="teamEarningsList" class="space-y-2"></div>
                     </div>
                 </div>
 
@@ -748,7 +760,7 @@
                 <div id="view-feed-bulk" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
+                            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
                                 <i class="fa-solid fa-paste"></i>
                             </div>
                             <div>
@@ -889,7 +901,7 @@
                 <div id="view-feed-budget" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-sm shadow-md">
+                            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 flex items-center justify-center text-base shadow-md shadow-amber-500/20">
                                 <i class="fa-solid fa-sliders"></i>
                             </div>
                             <div>
@@ -998,7 +1010,7 @@
                 <div id="view-feed-profile" class="hidden animate-view-fade bg-white dark:bg-slate-900 md:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-sm shadow-md">
+                            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md">
                                 <i class="fa-solid fa-id-badge"></i>
                             </div>
                             <div>
@@ -1081,12 +1093,12 @@
             </div>
 
             <footer class="hidden md:block w-full py-3 mt-auto text-center border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-400 text-[10px] font-medium">
-                <div>PT. Binayasa Putrabatara; M-Ops Workspace</div>
+                <div>PT. Binayasa Putrabatara &bull; M-Ops Workspace</div>
             </footer>
         </main>
     </div>
 
-<!-- MODAL KHUSUS INTERAKSI POPUP & PREVIEW FOTO -->
+    <!-- MODAL KHUSUS INTERAKSI POPUP & PREVIEW FOTO -->
 
     <!-- MODAL KOMENTAR POSTINGAN -->
     <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[80] hidden flex flex-col justify-end md:justify-center md:items-center p-0 md:p-4">
@@ -1422,7 +1434,7 @@
     <!-- MODAL EXPORT PERIODE -->
     <div id="exportModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-[85] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[28px] shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800 p-4 space-y-3">
-            <div class="flex items-center justify-between border-b pb-2">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <h3 class="text-xs font-extrabold text-slate-900 dark:text-white">Rentang Waktu Export</h3>
                 <button onclick="closeExportModal()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -3067,8 +3079,9 @@
 
             if (myListContainer) {
                 myListContainer.innerHTML = '';
-                if (myWithdrawals.length === 0) myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
-                else {
+                if (myWithdrawals.length === 0) {
+                    myListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Belum ada riwayat penarikan.</div>';
+                } else {
                     myWithdrawals.forEach(w => {
                         let statusColor = 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300';
                         let statusIcon = 'fa-hourglass-half';
@@ -3084,7 +3097,7 @@
                         }
 
                         const item = document.createElement('div');
-                        item.className = 'p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5';
+                        item.className = 'p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10.5px] mb-1.5 shadow-xs';
                         item.innerHTML = `
                             <div class="flex items-center justify-between font-bold">
                                 <span class="text-slate-800 dark:text-white">Rp ${formatRupiahK(w.nominal)} (Rp ${Number(w.nominal).toLocaleString('id-ID')})</span>
@@ -3105,28 +3118,44 @@
 
             if (isSuperAdmin && adminListContainer) {
                 adminListContainer.innerHTML = '';
-                if (globalWithdrawals.length === 0) adminListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-2">Tidak ada pengajuan penarikan.</div>';
-                else {
+                if (globalWithdrawals.length === 0) {
+                    adminListContainer.innerHTML = '<div class="text-center text-slate-400 text-[10px] py-3">Tidak ada pengajuan penarikan baru.</div>';
+                } else {
                     globalWithdrawals.forEach(w => {
                         const item = document.createElement('div');
-                        item.className = 'p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 text-[10px] space-y-1 mb-2';
+                        item.className = 'p-3 rounded-2xl bg-white dark:bg-slate-900 border border-rose-200/80 dark:border-rose-900/60 text-[10.5px] space-y-1.5 shadow-xs mb-2';
                         const isPending = w.status === 'Pending';
                         
+                        let badgeStatusHtml = '';
+                        if (w.status === 'Sukses') {
+                            badgeStatusHtml = '<span class="bg-emerald-500 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full">Telah Dibayar ✅</span>';
+                        } else if (w.status === 'Ditolak') {
+                            badgeStatusHtml = '<span class="bg-rose-500 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full">Ditolak</span>';
+                        } else {
+                            badgeStatusHtml = '<span class="bg-amber-500 text-slate-950 font-extrabold text-[9px] px-2 py-0.5 rounded-full">Pending</span>';
+                        }
+
                         item.innerHTML = `
-                            <div class="flex items-center justify-between font-extrabold">
+                            <div class="flex items-center justify-between font-black">
                                 <span class="text-slate-900 dark:text-white text-xs">${w.nama_petugas || 'Pengguna'}</span>
-                                <span class="px-1.5 py-0.5 rounded text-[8.5px] ${w.status === 'Sukses' ? 'bg-emerald-500 text-white' : (w.status === 'Ditolak' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950')} font-extrabold">${w.status === 'Sukses' ? 'Telah Dibayar ✅' : w.status}</span>
+                                ${badgeStatusHtml}
                             </div>
-                            <p class="text-slate-600 dark:text-slate-300"><b>Tujuan:</b> ${w.metode_pembayaran} - ${w.nomor_rekening} a.n <b>${w.nama_pemilik}</b></p>
-                            <div class="flex items-center justify-between text-slate-500">
-                                <span>Nominal: <b>Rp ${formatRupiahK(w.nominal)}</b></span>
+                            <p class="text-slate-600 dark:text-slate-300 text-[10px]">
+                                <b>Tujuan:</b> ${w.metode_pembayaran} - <span class="font-mono font-bold">${w.nomor_rekening}</span> a.n <b>${w.nama_pemilik}</b>
+                            </p>
+                            <div class="flex items-center justify-between text-slate-500 text-[9.5px] pt-1 border-t border-slate-100 dark:border-slate-800">
+                                <span>Nominal: <b class="text-slate-800 dark:text-white">Rp ${formatRupiahK(w.nominal)}</b></span>
                                 <span>Admin: <b class="text-rose-500">Rp ${formatRupiahK(w.biaya_admin)}</b></span>
-                                <span>Bersih: <b class="text-emerald-600">Rp ${formatRupiahK(w.total_diterima)}</b></span>
+                                <span>Bersih: <b class="text-emerald-600 font-extrabold">Rp ${formatRupiahK(w.total_diterima)}</b></span>
                             </div>
                             ${isPending ? `
-                                <div class="flex gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
-                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Sukses')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Setujui & Bayar</button>
-                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Ditolak')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-1 rounded-lg text-[9.5px]">Tolak</button>
+                                <div class="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Sukses')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-1.5 rounded-xl text-[10px] transition shadow-xs">
+                                        <i class="fa-solid fa-check mr-1"></i> Setujui & Bayar
+                                    </button>
+                                    <button onclick="updateWithdrawalStatus('${w.id}', 'Ditolak')" class="flex-1 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold py-1.5 rounded-xl text-[10px] transition shadow-xs">
+                                        <i class="fa-solid fa-xmark mr-1"></i> Tolak
+                                    </button>
                                 </div>
                             ` : ''}
                         `;
@@ -3541,7 +3570,7 @@
             playNotificationChime();
             const senderName = getUserDisplayName(task.user_id, task.user_email, task.nama);
             const toast = document.getElementById('commentNotificationToast');
-            document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm flex-shrink-0';
+             document.getElementById('notifIconContainer').className = 'w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm flex-shrink-0';
             document.getElementById('notifIcon').className = 'fa-solid fa-calendar-check'; 
             document.getElementById('notifTitle').innerText = 'Jadwal Baru 🔔';
             document.getElementById('notifTitle').className = 'text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider';
@@ -4649,6 +4678,269 @@
             btnSave.disabled = false;
         }
 
+        function getActiveGeminiApiKey() {
+            return (localStorage.getItem('user_gemini_api_key') || budgetSettings.geminiApiKey || '').trim();
+        }
+
+        function saveUserApiKey() {
+            const keyVal = document.getElementById('userGeminiApiKey')?.value.trim();
+            if (keyVal) {
+                localStorage.setItem('user_gemini_api_key', keyVal);
+                showToast("Key pribadi disimpan!");
+            }
+        }
+
+        function toggleUserApiKeyVisibility() {
+            const input = document.getElementById('userGeminiApiKey');
+            if (input) input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        async function generateAiSchedulePreview() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const focus = document.getElementById('gen-focus')?.value.trim() || '';
+            const activeApiKey = getActiveGeminiApiKey();
+            const btnGen = document.getElementById('btn-process-gen');
+
+            if (!name) return alert("Silakan isi nama pengguna!");
+            if (!activeApiKey) return alert("Gemini API Key belum diatur!");
+
+            btnGen.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i> AI sedang merancang...';
+            btnGen.disabled = true;
+
+            const promptText = `Buat rancangan 5 slot kegiatan kerja/kuliah realistis untuk peran "${role}" bernama "${name}" pada ${tanggal}. ${focus ? `Fokus: ${focus}` : ''}. Respon HANYA JSON array murni: [{"jam_mulai":"08:00","jam_selesai":"10:00","tugas":"Deskripsi kegiatan"}]`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(activeApiKey)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], generationConfig: { responseMimeType: "application/json" } })
+                });
+                const data = await response.json();
+                let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+                previewTasksData = JSON.parse(rawText.replace(/```json|```/gi, '').trim());
+                renderAiPreviewCards();
+                document.getElementById('aiPreviewSection')?.classList.remove('hidden');
+            } catch (err) {
+                alert("Gagal merancang jadwal AI: " + err.message);
+            } finally {
+                btnGen.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 1. Rancang Ulang AI';
+                btnGen.disabled = false;
+            }
+        }
+
+        function renderAiPreviewCards() {
+            const container = document.getElementById('aiPreviewList');
+            if (!container) return;
+            container.innerHTML = '';
+            previewTasksData.forEach((slot, index) => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-white dark:bg-slate-800 border rounded-2xl space-y-2';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-purple-600">Slot ${index + 1}</span>
+                        <div class="flex gap-1">
+                            <input type="time" value="${slot.jam_mulai}" onchange="previewTasksData[${index}].jam_mulai = this.value" class="border rounded px-1.5 py-0.5 text-xs">
+                            <span>-</span>
+                            <input type="time" value="${slot.jam_selesai}" onchange="previewTasksData[${index}].jam_selesai = this.value" class="border rounded px-1.5 py-0.5 text-xs">
+                        </div>
+                    </div>
+                    <textarea rows="2" oninput="previewTasksData[${index}].tugas = this.value" class="w-full border rounded-xl p-2 text-xs">${slot.tugas}</textarea>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function saveAllAiTasks() {
+            const tanggal = document.getElementById('gen-date').value || todayStr; 
+            const name = document.getElementById('gen-name').value || getUserDisplayName(currentUser?.id, currentUser?.email); 
+            const role = document.getElementById('gen-role').value;
+            const bulkPayload = previewTasksData.map(t => ({
+                user_id: currentUser.id, user_email: currentUser.email, tanggal, nama: name, peran: role,
+                tugas: t.tugas.trim(), jam_mulai: t.jam_mulai, jam_selesai: t.jam_selesai, status: 'Belum',
+                likes_count: 0, liked_users: [], comments_count: 0, created_at: new Date().toISOString()
+            }));
+            const { error } = await _supabase.from('jadwal').insert(bulkPayload);
+            if (!error) {
+                showToast("Jadwal AI tersimpan!");
+                switchFeedView('home');
+            } else {
+                alert("Gagal menyimpan: " + error.message);
+            }
+        }
+
+        async function sendGlobalChatMessage() {
+            const input = document.getElementById('inputGlobalChatMessage');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
+            input.value = '';
+            const payload = {
+                user_id: currentUser.id,
+                user_email: currentUser.email,
+                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
+                user_avatar: getAvatarUrl(currentUser),
+                message: message,
+                created_at: new Date().toISOString()
+            };
+            await _supabase.from('global_chat_messages').insert([payload]);
+        }
+
+        async function fetchGlobalChatMessages() {
+            const { data } = await _supabase.from('global_chat_messages').select('*').order('created_at', { ascending: true }).limit(100);
+            if (data) {
+                globalChatMessagesList = data;
+                renderGlobalChatMessages();
+            }
+        }
+
+        function renderGlobalChatMessages() {
+            const container = document.getElementById('globalChatMessages');
+            container.innerHTML = '';
+            globalChatMessagesList.forEach(msg => {
+                const isMe = msg.user_id === currentUser?.id;
+                const div = document.createElement('div');
+                div.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
+                div.innerHTML = `
+                    <div class="${isMe ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border'} rounded-2xl px-3.5 py-2 max-w-[80%] text-xs shadow-xs">
+                        ${!isMe ? `<p class="text-[9px] font-extrabold text-blue-500 mb-0.5">${msg.sender_name}</p>` : ''}
+                        <p>${msg.message}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function setupGlobalChatRealtime() {
+            if (globalChatSubscription) _supabase.removeChannel(globalChatSubscription);
+            globalChatSubscription = _supabase.channel('public:global_chat_messages')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'global_chat_messages' }, payload => {
+                    const newMsg = payload.new;
+                    globalChatMessagesList.push(newMsg);
+
+                    if (isGlobalChatOpen) {
+                        renderGlobalChatMessages();
+                    } else if (newMsg.user_id !== currentUser?.id) {
+                        unreadGlobalChatCount++;
+                        updateGlobalChatBadge();
+                        playNotificationChime();
+                    }
+                }).subscribe();
+        }
+
+        function updateGlobalChatBadge() {
+            const side = document.getElementById('sideGlobalChatBadge');
+            const header = document.getElementById('headerGlobalChatBadge');
+            if (unreadGlobalChatCount > 0) {
+                if (side) { side.innerText = unreadGlobalChatCount; side.classList.remove('hidden'); }
+                if (header) { header.innerText = unreadGlobalChatCount; header.classList.remove('hidden'); }
+            } else {
+                if (side) side.classList.add('hidden');
+                if (header) header.classList.add('hidden');
+            }
+        }
+
+        async function fetchTasksSupabase() {
+            let query = _supabase.from('jadwal').select('*');
+            if (!isSuperAdmin) query = query.or(`user_email.neq.${SUPER_ADMIN_EMAIL},user_email.is.null`);
+            const { data, error } = await query.order('jam_mulai', { ascending: true });
+            if (!error && data) {
+                globalTasks = data;
+                if (isSuperAdmin) populateUserFilterDropdown();
+                renderTasks();
+            }
+        }
+
+        function renderTasks() {
+            renderStoriesBar();
+            checkDailyScheduleDeadline();
+            const cardsContainer = document.getElementById('scheduleCardsMobile');
+            const tableDesktop = document.getElementById('scheduleTableDesktop');
+            const selectedRole = document.getElementById('roleFilter').value; 
+            const selectedStatus = document.getElementById('statusFilter')?.value || 'All';
+            const selectedDate = document.getElementById('dateFilter').value;
+
+            if (tableDesktop) tableDesktop.innerHTML = ''; 
+            if (cardsContainer) cardsContainer.innerHTML = '';
+
+            const filtered = globalTasks.filter(item => {
+                const matchDate = !selectedDate || item.tanggal === selectedDate; 
+                const matchRole = selectedRole === 'All' || item.peran === selectedRole;
+                const matchStatus = selectedStatus === 'All' || item.status === selectedStatus;
+                let canView = isSuperAdmin ? true : (activeFriendFeedId ? item.user_id === activeFriendFeedId : item.user_id === currentUser?.id);
+                return matchDate && matchRole && matchStatus && canView;
+            });
+
+            document.getElementById('totalTaskCount').innerText = filtered.length;
+            document.getElementById('inProgressCount').innerText = filtered.filter(t => t.status === 'Proses').length;
+            document.getElementById('completedCount').innerText = filtered.filter(t => t.status === 'Selesai').length;
+
+            if (filtered.length === 0) {
+                if (cardsContainer) cardsContainer.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-[28px] border border-slate-200 dark:border-slate-800 shadow-sm mx-3.5 md:mx-0"><i class="fa-solid fa-calendar-xmark text-3xl mb-2 opacity-40"></i><p class="text-xs font-semibold">Tidak ada jadwal pada tanggal ini.</p></div>`;
+                return;
+            }
+
+            if (tableDesktop) {
+                filtered.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50/50 dark:hover:bg-slate-800/30';
+                    row.innerHTML = `
+                        <td class="p-3 text-slate-500 whitespace-nowrap">${item.tanggal || todayStr}</td>
+                        <td class="p-3 font-bold whitespace-nowrap">${item.jam_mulai} - ${item.jam_selesai}</td>
+                        <td class="p-3 font-extrabold">${getUserDisplayName(item.user_id, item.user_email, item.nama)}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 text-[10px] font-bold">${item.peran}</span></td>
+                        <td class="p-3 font-bold">${item.tugas}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${item.status === 'Selesai' ? 'bg-emerald-100 text-emerald-800' : (item.status === 'Proses' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700')}">${item.status}</span></td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="toggleLikeTask('${item.id}')" class="text-xs text-slate-400 hover:text-blue-600"><i class="fa-regular fa-thumbs-up"></i> ${item.likes_count || 0}</button>
+                                <button onclick="openCommentModal('${item.id}', '${item.tugas.replace(/'/g, "\\'")}')" class="text-xs text-slate-400 hover:text-blue-600"><i class="fa-regular fa-comment"></i> ${item.comments_count || 0}</button>
+                            </div>
+                        </td>
+                    `;
+                    tableDesktop.appendChild(row);
+                });
+            }
+
+            const groupedByUser = {};
+            filtered.forEach(task => {
+                const uid = task.user_id || 'unknown';
+                if (!groupedByUser[uid]) groupedByUser[uid] = [];
+                groupedByUser[uid].push(task);
+            });
+
+            Object.keys(groupedByUser).forEach(uid => {
+                const tasksOfUser = groupedByUser[uid];
+                const sample = tasksOfUser[0];
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs mb-3';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center gap-2">
+                            ${renderAvatarHtml(sample.user_avatar, sample.nama, "w-8 h-8", sample.user_id)}
+                            <div>
+                                <h4 class="font-extrabold text-xs text-slate-900 dark:text-white">${getUserDisplayName(sample.user_id, sample.user_email, sample.nama)}</h4>
+                                <p class="text-[9.5px] text-slate-400">${sample.peran} &bull; ${tasksOfUser.length} Kegiatan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2 pt-2">
+                        ${tasksOfUser.map(t => `
+                            <div class="p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl">
+                                <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 mb-1">
+                                    <span>${t.jam_mulai} - ${t.jam_selesai}</span>
+                                    <span class="px-1.5 py-0.2 rounded ${t.status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${t.status}</span>
+                                </div>
+                                <p class="font-bold text-xs text-slate-800 dark:text-slate-100">${t.tugas}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                if (cardsContainer) cardsContainer.appendChild(card);
+            });
+        }
+
         function showToast(msg) { 
             const t = document.getElementById('toast'); 
             t.innerText = msg; 
@@ -4656,7 +4948,6 @@
             setTimeout(() => t.classList.add('opacity-0'), 2500); 
         }
 
-        // Init Aplikasi
         initTheme(); 
         checkAuth();
     </script>
