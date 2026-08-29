@@ -12,10 +12,10 @@
       color: #000;
     }
 
-    /* Panel Kontrol */
+    /* Panel Pilihan */
     .controls-panel {
       display: flex;
-      gap: 12px;
+      gap: 15px;
       align-items: center;
       background: #f1f3f4;
       padding: 10px 15px;
@@ -25,6 +25,8 @@
     .controls-panel select, .controls-panel input {
       padding: 4px 8px;
       font-size: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
     .header-container {
@@ -87,7 +89,6 @@
       padding-left: 4px !important;
     }
 
-    /* Edit Mode Focus */
     [contenteditable="true"]:hover {
       background-color: #eef5ff;
     }
@@ -96,7 +97,7 @@
       outline: 1px solid #0056b3;
     }
 
-    /* Bagian Footer */
+    /* Footer & Kontak */
     .footer-container {
       display: flex;
       justify-content: space-between;
@@ -129,17 +130,15 @@
       height: 95px;
     }
 
-    .btn {
-      padding: 5px 12px;
+    .btn-print {
+      padding: 5px 14px;
       font-size: 11px;
+      background: #007bff;
       color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-    .btn-generate { background: #28a745; }
-    .btn-print { background: #007bff; }
-    .btn-clear { background: #6c757d; }
 
     @media print {
       .no-print { display: none; }
@@ -150,11 +149,11 @@
 </head>
 <body>
 
-  <!-- Panel Aksi -->
+  <!-- Menu Ganti Bulan & Tahun -->
   <div class="controls-panel no-print">
     <div>
-      <label><strong>Bulan:</strong></label>
-      <select id="selectMonth" onchange="renderSchedule()">
+      <label><strong>Pilih Bulan:</strong></label>
+      <select id="selectMonth" onchange="updateAll()">
         <option value="1">Januari</option>
         <option value="2">Februari</option>
         <option value="3">Maret</option>
@@ -171,11 +170,9 @@
     </div>
     <div>
       <label><strong>Tahun:</strong></label>
-      <input type="number" id="inputYear" value="2026" style="width: 70px;" onchange="renderSchedule()">
+      <input type="number" id="inputYear" value="2026" style="width: 70px;" onchange="updateAll()">
     </div>
-    <button class="btn btn-generate" onclick="generateAutoShifts()">⚡ Isi Jadwal Otomatis</button>
-    <button class="btn btn-clear" onclick="clearShifts()">Kosongkan Shift</button>
-    <button class="btn btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
   </div>
 
   <!-- Header Dokumen -->
@@ -193,7 +190,7 @@
     <div style="width: 70px;"></div>
   </div>
 
-  <!-- Tabel Jadwal -->
+  <!-- Tabel Jadwal Dinamis -->
   <div class="table-container">
     <table class="schedule-table">
       <thead>
@@ -253,17 +250,26 @@
 
   <script>
     const staffList = [
-      { id: 'sutrisno', category: 'TEKNISI', nik: '2086', name: 'Sutrisno', rule: 'fixed_d1' },
-      { id: 'andi', category: 'TEKNISI', nik: '2988', name: 'Andi Dwi Surya', rule: 'fixed_d1' },
-      { id: 'yusuf', category: 'TEKNISI', nik: '2372', name: 'Yusuf Zulfikri', rule: 'shift_yusuf' },
-      { id: 'sopyan', category: 'TEKNISI', nik: '2530', name: 'Sopyan Sulistiyo', rule: 'shift_sopyan' },
-      { id: 'saiful', category: 'CLEANING SERVICE', nik: '202402001261', name: 'Moh Saiful', rule: 'fixed_p10' },
-      { id: 'anang', category: 'CLEANING SERVICE', nik: '202402001262', name: 'Anang', rule: 'fixed_p10' }
+      { id: 'sutrisno', category: 'TEKNISI', nik: '2086', name: 'Sutrisno', type: 'tetap_d1' },
+      { id: 'andi', category: 'TEKNISI', nik: '2988', name: 'Andi Dwi Surya', type: 'tetap_d1' },
+      { id: 'yusuf', category: 'TEKNISI', nik: '2372', name: 'Yusuf Zulfikri', type: 'shift_yusuf' },
+      { id: 'sopyan', category: 'TEKNISI', nik: '2530', name: 'Sopyan Sulistiyo', type: 'shift_sopyan' },
+      { id: 'saiful', category: 'CLEANING SERVICE', nik: '202402001261', name: 'Moh Saiful', type: 'tetap_p10' },
+      { id: 'anang', category: 'CLEANING SERVICE', nik: '202402001262', name: 'Anang', type: 'tetap_p10' }
     ];
 
     const dayNames = ['Mgg', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
-    function renderSchedule() {
+    // Menghitung nomor minggu kalender agar rotasi shift Yusuf & Sopyan selaras sepanjang tahun
+    function getWeekNumber(date) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function updateAll() {
       const month = parseInt(document.getElementById('selectMonth').value);
       const year = parseInt(document.getElementById('inputYear').value);
 
@@ -272,8 +278,7 @@
 
       const totalDays = new Date(year, month, 0).getDate();
       
-      const headerDateCol = document.getElementById('headerHariTanggal');
-      headerDateCol.setAttribute('colspan', totalDays);
+      document.getElementById('headerHariTanggal').setAttribute('colspan', totalDays);
 
       const rowDates = document.getElementById('rowDates');
       rowDates.innerHTML = '';
@@ -310,7 +315,6 @@
         }
 
         const tr = document.createElement('tr');
-        tr.id = `row-${person.id}`;
         
         const tdNik = document.createElement('td');
         tdNik.contentEditable = "true";
@@ -323,11 +327,45 @@
         tdName.innerText = person.name;
         tr.appendChild(tdName);
 
+        // Isi otomatis setiap tanggal
         for (let day = 1; day <= totalDays; day++) {
           const td = document.createElement('td');
           td.contentEditable = "true";
-          td.dataset.day = day;
+          
+          const dateObj = new Date(year, month - 1, day);
+          const dayIdx = dateObj.getDay(); // 0: Mgg, 1: Sen, ..., 6: Sab
+          const weekNum = getWeekNumber(dateObj);
+
           if (isWeekend[day - 1]) td.classList.add('weekend');
+
+          let val = '';
+
+          // 1. D1 Tetap (Senin - Jumat)
+          if (person.type === 'tetap_d1') {
+            if (dayIdx >= 1 && dayIdx <= 5) val = 'D1';
+          }
+          // 2. P10 Cleaning Service (Senin - Jumat)
+          else if (person.type === 'tetap_p10') {
+            if (dayIdx >= 1 && dayIdx <= 5) val = 'P10';
+          }
+          // 3. Yusuf Zulfikri (Rotasi S1 & P6 per minggu + OC Sabtu)
+          else if (person.type === 'shift_yusuf') {
+            if (dayIdx >= 1 && dayIdx <= 5) {
+              val = (weekNum % 2 === 0) ? 'S1' : 'P6';
+            } else if (dayIdx === 6) {
+              val = 'OC';
+            }
+          }
+          // 4. Sopyan Sulistiyo (Kebalikan Yusuf + OC Minggu)
+          else if (person.type === 'shift_sopyan') {
+            if (dayIdx >= 1 && dayIdx <= 5) {
+              val = (weekNum % 2 === 0) ? 'P6' : 'S1';
+            } else if (dayIdx === 0) {
+              val = 'OC';
+            }
+          }
+
+          td.innerText = val;
           tr.appendChild(td);
         }
 
@@ -335,68 +373,8 @@
       });
     }
 
-    // Logika Pengisian Otomatis
-    function generateAutoShifts() {
-      const month = parseInt(document.getElementById('selectMonth').value);
-      const year = parseInt(document.getElementById('inputYear').value);
-      const totalDays = new Date(year, month, 0).getDate();
-
-      staffList.forEach(person => {
-        const row = document.getElementById(`row-${person.id}`);
-        const cells = row.querySelectorAll('td[data-day]');
-
-        let weekBlock = 0; // Menghitung pergantian siklus mingguan
-
-        cells.forEach((cell, idx) => {
-          const day = idx + 1;
-          const dateObj = new Date(year, month - 1, day);
-          const dayIdx = dateObj.getDay(); // 0: Mgg, 1: Sen, ..., 6: Sab
-
-          if (dayIdx === 1 && day > 1) {
-            weekBlock++;
-          }
-
-          let val = '';
-
-          // 1. Aturan Teknisi Tetap (D1)
-          if (person.rule === 'fixed_d1') {
-            if (dayIdx >= 1 && dayIdx <= 5) val = 'D1';
-          }
-          
-          // 2. Aturan Cleaning Service (P10)
-          else if (person.rule === 'fixed_p10') {
-            if (dayIdx >= 1 && dayIdx <= 5) val = 'P10';
-          }
-
-          // 3. Aturan Yusuf Zulfikri (Rotasi S1 / P6 dan OC Sabtu)
-          else if (person.rule === 'shift_yusuf') {
-            if (dayIdx >= 1 && dayIdx <= 5) {
-              val = (weekBlock % 2 === 0) ? 'S1' : 'P6';
-            } else if (dayIdx === 6) {
-              val = 'OC'; // On Call hari Sabtu
-            }
-          }
-
-          // 4. Aturan Sopyan Sulistiyo (Rotasi P6 / S1 dan OC Minggu)
-          else if (person.rule === 'shift_sopyan') {
-            if (dayIdx >= 1 && dayIdx <= 5) {
-              val = (weekBlock % 2 === 0) ? 'P6' : 'S1';
-            } else if (dayIdx === 0) {
-              val = 'OC'; // On Call hari Minggu
-            }
-          }
-
-          cell.innerText = val;
-        });
-      });
-    }
-
-    function clearShifts() {
-      document.querySelectorAll('tbody td[data-day]').forEach(cell => cell.innerText = '');
-    }
-
-    renderSchedule();
-    generateAutoShifts();
+    // Jalankan langsung saat web dibuka
+    updateAll();
   </script>
 </body>
 </html>
