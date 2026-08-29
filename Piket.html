@@ -3,14 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jadwal Kerja Shift</title>
+  <title>Jadwal Kerja Otomatis</title>
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 11px;
-      margin: 15px;
+      font-size: 10px;
+      margin: 10px;
       color: #000;
     }
+
+    /* Kontrol Pilihan Bulan/Tahun */
+    .controls-panel {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background: #f1f3f4;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .controls-panel select, .controls-panel input {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
     .header-container {
       display: flex;
       justify-content: space-between;
@@ -23,23 +39,21 @@
     }
     .title-box h2 {
       margin: 0;
-      font-size: 14px;
+      font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
     .title-box h3 {
       margin: 2px 0 0 0;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 11px;
     }
     .meta-box table {
       border-collapse: collapse;
       font-weight: bold;
-      font-size: 11px;
+      font-size: 10px;
     }
     .meta-box td {
       border: 1px solid #000;
-      padding: 3px 8px;
+      padding: 2px 6px;
     }
 
     /* Tabel Jadwal Utama */
@@ -55,234 +69,143 @@
     table.schedule-table th, 
     table.schedule-table td {
       border: 1px solid #000;
-      padding: 3px 2px;
-      min-width: 22px;
+      padding: 3px 1px;
+      min-width: 20px;
     }
     .header-category {
       background-color: #1a4480;
       color: #fff;
       font-weight: bold;
-      text-align: center;
-      padding: 4px !important;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      padding: 3px !important;
     }
     .weekend {
       background-color: #e06666 !important;
-      color: #000;
     }
     .text-left {
       text-align: left;
-      padding-left: 5px !important;
+      padding-left: 4px !important;
     }
 
-    /* Editable cell styling */
+    /* Edit Mode Focus */
     [contenteditable="true"]:hover {
-      outline: 1px dashed #007bff;
-      background-color: #f0f7ff;
+      background-color: #eef5ff;
     }
     [contenteditable="true"]:focus {
-      outline: 2px solid #007bff;
       background-color: #fff;
+      outline: 1px solid #0056b3;
     }
 
-    /* Footer & Keterangan */
+    /* Bagian Footer */
     .footer-container {
       display: flex;
       justify-content: space-between;
-      margin-top: 15px;
-      gap: 20px;
-    }
-    .legend-box, .contact-box, .sign-box {
-      border-collapse: collapse;
+      margin-top: 12px;
+      gap: 15px;
     }
     .legend-box table, .contact-box table {
       border-collapse: collapse;
-      font-size: 10px;
+      font-size: 9.5px;
     }
     .contact-box table th, .contact-box table td {
       border: 1px solid #000;
-      padding: 2px 6px;
+      padding: 2px 5px;
     }
     .legend-title {
       font-weight: bold;
       text-decoration: underline;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .sign-section {
       display: flex;
       justify-content: space-around;
       width: 45%;
       text-align: center;
-      margin-top: 10px;
     }
     .sign-col {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 110px;
+      height: 95px;
     }
 
-    /* Tombol Aksi */
-    .no-print {
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
-    }
-    .btn {
-      padding: 6px 14px;
-      font-size: 12px;
-      cursor: pointer;
+    .btn-print {
+      padding: 5px 12px;
+      font-size: 11px;
       background: #007bff;
       color: #fff;
       border: none;
       border-radius: 4px;
+      cursor: pointer;
     }
+
     @media print {
       .no-print { display: none; }
       body { margin: 0; }
-      @page { size: landscape; }
+      @page { size: landscape; margin: 8mm; }
     }
   </style>
 </head>
 <body>
 
-  <div class="no-print">
-    <button class="btn" onclick="window.print()">Cetak / Simpan PDF</button>
-    <span style="color: #666; align-self: center;">💡 <em>Klik langsung pada sel teks/angka untuk mengedit isi tabel.</em></span>
+  <!-- Panel Pemilih Bulan & Tahun -->
+  <div class="controls-panel no-print">
+    <div>
+      <label><strong>Bulan:</strong></label>
+      <select id="selectMonth" onchange="renderSchedule()">
+        <option value="1">Januari</option>
+        <option value="2">Februari</option>
+        <option value="3">Maret</option>
+        <option value="4">April</option>
+        <option value="5">Mei</option>
+        <option value="6">Juni</option>
+        <option value="7">Juli</option>
+        <option value="8">Agustus</option>
+        <option value="9" selected>September</option>
+        <option value="10">Oktober</option>
+        <option value="11">November</option>
+        <option value="12">Desember</option>
+      </select>
+    </div>
+    <div>
+      <label><strong>Tahun:</strong></label>
+      <input type="number" id="inputYear" value="2026" style="width: 70px;" onchange="renderSchedule()">
+    </div>
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
   </div>
 
-  <!-- Header -->
+  <!-- Header Dokumen -->
   <div class="header-container">
     <div class="meta-box">
       <table>
-        <tr><td>BULAN</td><td contenteditable="true">9</td></tr>
-        <tr><td>TAHUN</td><td contenteditable="true">2026</td></tr>
+        <tr><td>BULAN</td><td id="metaBulan">9</td></tr>
+        <tr><td>TAHUN</td><td id="metaTahun">2026</td></tr>
       </table>
     </div>
     <div class="title-box">
       <h2 contenteditable="true">JADWAL PT. BINAYASA PUTRABATARA</h2>
       <h3 contenteditable="true">BSN KANTOR CABANG SURABAYA</h3>
     </div>
-    <div style="width: 80px;"></div>
+    <div style="width: 70px;"></div>
   </div>
 
-  <!-- Tabel Jadwal -->
+  <!-- Tabel Jadwal Dinamis -->
   <div class="table-container">
     <table class="schedule-table">
       <thead>
         <tr>
-          <th rowspan="2" style="width: 90px;">NIK</th>
-          <th rowspan="2" style="width: 140px;">NAMA</th>
-          <th colspan="30">HARI / TANGGAL</th>
+          <th rowspan="2" style="width: 85px;">NIK</th>
+          <th rowspan="2" style="width: 130px;">NAMA</th>
+          <th id="headerHariTanggal" colspan="30">HARI / TANGGAL</th>
         </tr>
-        <tr>
-          <!-- Header Hari & Tanggal (1-30) -->
-          <th>Sel<br>01</th><th>Rab<br>02</th><th>Kam<br>03</th><th>Jum<br>04</th>
-          <th class="weekend">Sab<br>05</th><th class="weekend">Mgg<br>06</th>
-          <th>Sen<br>07</th><th>Sel<br>08</th><th>Rab<br>09</th><th>Kam<br>10</th><th>Jum<br>11</th>
-          <th class="weekend">Sab<br>12</th><th class="weekend">Mgg<br>13</th>
-          <th>Sen<br>14</th><th>Sel<br>15</th><th>Rab<br>16</th><th>Kam<br>17</th><th>Jum<br>18</th>
-          <th class="weekend">Sab<br>19</th><th class="weekend">Mgg<br>20</th>
-          <th>Sen<br>21</th><th>Sel<br>22</th><th>Rab<br>23</th><th>Kam<br>24</th><th>Jum<br>25</th>
-          <th class="weekend">Sab<br>26</th><th class="weekend">Mgg<br>27</th>
-          <th>Sen<br>28</th><th>Sel<br>29</th><th>Rab<br>30</th>
-        </tr>
+        <tr id="rowDates"></tr>
       </thead>
-      <tbody>
-        <!-- Grup Teknisi -->
-        <tr>
-          <td colspan="32" class="header-category">JADWAL TEKNISI</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">2086</td>
-          <td contenteditable="true" class="text-left">Sutrisno</td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">2988</td>
-          <td contenteditable="true" class="text-left">Andi Dwi Surya</td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">D1</td><td contenteditable="true">D1</td><td contenteditable="true">D1</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">2372</td>
-          <td contenteditable="true" class="text-left">Yusuf Zulfikri</td>
-          <td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td>
-          <td class="weekend" contenteditable="true">OC</td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td>
-          <td class="weekend" contenteditable="true">OC</td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td>
-          <td class="weekend" contenteditable="true">OC</td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td>
-          <td class="weekend" contenteditable="true">OC</td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">2530</td>
-          <td contenteditable="true" class="text-left">Sopyan Sulistiyo</td>
-          <td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true">OC</td>
-          <td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true">OC</td>
-          <td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true">OC</td>
-          <td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td><td contenteditable="true">S1</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true">OC</td>
-          <td contenteditable="true">P6</td><td contenteditable="true">P6</td><td contenteditable="true">P6</td>
-        </tr>
-
-        <!-- Grup Cleaning Service -->
-        <tr>
-          <td colspan="32" class="header-category">JADWAL CLEANING SERVICE</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">202402001261</td>
-          <td contenteditable="true" class="text-left">Moh Saiful</td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-        </tr>
-        <tr>
-          <td contenteditable="true">202402001262</td>
-          <td contenteditable="true" class="text-left">Anang</td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-          <td class="weekend" contenteditable="true"></td><td class="weekend" contenteditable="true"></td>
-          <td contenteditable="true">P10</td><td contenteditable="true">P10</td><td contenteditable="true">P10</td>
-        </tr>
-      </tbody>
+      <tbody id="tableBody"></tbody>
     </table>
   </div>
 
-  <!-- Keterangan, Kontak & Tanda Tangan -->
+  <!-- Footer Keterangan & TTD -->
   <div class="footer-container">
-    <!-- Keterangan Jam Kerja -->
     <div class="legend-box">
       <div class="legend-title">KETERANGAN</div>
       <table contenteditable="true">
@@ -297,12 +220,9 @@
       </table>
     </div>
 
-    <!-- Kontak -->
     <div class="contact-box">
       <table contenteditable="true">
-        <thead>
-          <tr><th colspan="2">TEKNISI</th></tr>
-        </thead>
+        <thead><tr><th colspan="2">TEKNISI</th></tr></thead>
         <tbody>
           <tr><td>Sutrisno</td><td>082146511484</td></tr>
           <tr><td>Andi Dwi Surya</td><td>081329843589</td></tr>
@@ -315,18 +235,112 @@
       </table>
     </div>
 
-    <!-- Tanda Tangan -->
     <div class="sign-section" contenteditable="true">
       <div class="sign-col">
         <div>Mengetahui<br>BSN Kantor Cabang Surabaya</div>
         <div><strong><u>MULYANTO</u></strong><br>DBM SUPPORTING</div>
       </div>
       <div class="sign-col">
-        <div>Surabaya, 25 Agustus 2026<br>BPB Unit BSN Surabaya</div>
+        <div id="signDate">Surabaya, 25 Agustus 2026<br>BPB Unit BSN Surabaya</div>
         <div><strong><u>Sutrisno</u></strong><br>Pimpinan Unit</div>
       </div>
     </div>
   </div>
 
+  <script>
+    // Data Personil Awal
+    const staffList = [
+      { category: 'TEKNISI', nik: '2086', name: 'Sutrisno' },
+      { category: 'TEKNISI', nik: '2988', name: 'Andi Dwi Surya' },
+      { category: 'TEKNISI', nik: '2372', name: 'Yusuf Zulfikri' },
+      { category: 'TEKNISI', nik: '2530', name: 'Sopyan Sulistiyo' },
+      { category: 'CLEANING SERVICE', nik: '202402001261', name: 'Moh Saiful' },
+      { category: 'CLEANING SERVICE', nik: '202402001262', name: 'Anang' }
+    ];
+
+    const dayNames = ['Mgg', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+
+    function renderSchedule() {
+      const month = parseInt(document.getElementById('selectMonth').value);
+      const year = parseInt(document.getElementById('inputYear').value);
+
+      document.getElementById('metaBulan').innerText = month;
+      document.getElementById('metaTahun').innerText = year;
+
+      // Hitung total hari dalam bulan yang dipilih
+      const totalDays = new Date(year, month, 0).getDate();
+      
+      const headerDateCol = document.getElementById('headerHariTanggal');
+      headerDateCol.setAttribute('colspan', totalDays);
+
+      const rowDates = document.getElementById('rowDates');
+      rowDates.innerHTML = '';
+
+      const isWeekend = [];
+
+      // Render Baris Tanggal & Hari
+      for (let day = 1; day <= totalDays; day++) {
+        const dateObj = new Date(year, month - 1, day);
+        const dayIdx = dateObj.getDay(); // 0: Mgg, 6: Sab
+        const weekendCheck = (dayIdx === 0 || dayIdx === 6);
+        isWeekend.push(weekendCheck);
+
+        const th = document.createElement('th');
+        th.innerHTML = `${dayNames[dayIdx]}<br>${day < 10 ? '0' + day : day}`;
+        if (weekendCheck) {
+          th.classList.add('weekend');
+        }
+        rowDates.appendChild(th);
+      }
+
+      // Render Baris Pekerja
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      let currentCategory = '';
+
+      staffList.forEach(person => {
+        if (person.category !== currentCategory) {
+          currentCategory = person.category;
+          const catRow = document.createElement('tr');
+          const catCell = document.createElement('td');
+          catCell.setAttribute('colspan', totalDays + 2);
+          catCell.className = 'header-category';
+          catCell.innerText = `JADWAL ${currentCategory}`;
+          catRow.appendChild(catCell);
+          tbody.appendChild(catRow);
+        }
+
+        const tr = document.createElement('tr');
+        
+        // NIK & Nama
+        const tdNik = document.createElement('td');
+        tdNik.contentEditable = "true";
+        tdNik.innerText = person.nik;
+        tr.appendChild(tdNik);
+
+        const tdName = document.createElement('td');
+        tdName.contentEditable = "true";
+        tdName.className = "text-left";
+        tdName.innerText = person.name;
+        tr.appendChild(tdName);
+
+        // Kolom Shift Tanggal 1 - Selesai
+        for (let day = 1; day <= totalDays; day++) {
+          const td = document.createElement('td');
+          td.contentEditable = "true";
+          if (isWeekend[day - 1]) {
+            td.classList.add('weekend');
+          }
+          tr.appendChild(td);
+        }
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Jalankan pertama kali saat dibuka
+    renderSchedule();
+  </script>
 </body>
 </html>
