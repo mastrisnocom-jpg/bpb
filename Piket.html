@@ -190,7 +190,7 @@
     <div style="width: 70px;"></div>
   </div>
 
-  <!-- Tabel Jadwal Dinamis -->
+  <!-- Tabel Jadwal -->
   <div class="table-container">
     <table class="schedule-table">
       <thead>
@@ -260,13 +260,17 @@
 
     const dayNames = ['Mgg', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
-    // Menghitung nomor minggu kalender agar rotasi shift Yusuf & Sopyan selaras sepanjang tahun
-    function getWeekNumber(date) {
-      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-      const dayNum = d.getUTCDay() || 7;
-      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    // Mengelompokkan tanggal ke dalam siklus mingguan (dimulai setiap Senin)
+    function getWeekCycleIndex(year, month, day) {
+      // Menghitung jumlah hari Senin yang sudah terlewati di bulan tersebut
+      let mondayCount = 0;
+      for (let d = 1; d <= day; d++) {
+        const dt = new Date(year, month - 1, d);
+        if (dt.getDay() === 1 && d > 1) {
+          mondayCount++;
+        }
+      }
+      return mondayCount;
     }
 
     function updateAll() {
@@ -327,41 +331,41 @@
         tdName.innerText = person.name;
         tr.appendChild(tdName);
 
-        // Isi otomatis setiap tanggal
         for (let day = 1; day <= totalDays; day++) {
           const td = document.createElement('td');
           td.contentEditable = "true";
           
           const dateObj = new Date(year, month - 1, day);
           const dayIdx = dateObj.getDay(); // 0: Mgg, 1: Sen, ..., 6: Sab
-          const weekNum = getWeekNumber(dateObj);
+          const cycleIdx = getWeekCycleIndex(year, month, day);
+          const isShiftS1Yusuf = (cycleIdx % 2 === 0);
 
           if (isWeekend[day - 1]) td.classList.add('weekend');
 
           let val = '';
 
-          // 1. D1 Tetap (Senin - Jumat)
+          // 1. D1 Tetap
           if (person.type === 'tetap_d1') {
             if (dayIdx >= 1 && dayIdx <= 5) val = 'D1';
           }
-          // 2. P10 Cleaning Service (Senin - Jumat)
+          // 2. P10 Tetap
           else if (person.type === 'tetap_p10') {
             if (dayIdx >= 1 && dayIdx <= 5) val = 'P10';
           }
-          // 3. Yusuf Zulfikri (Rotasi S1 & P6 per minggu + OC Sabtu)
+          // 3. Yusuf Zulfikri (S1 -> OC Sabtu | P6 -> Weekend Libur)
           else if (person.type === 'shift_yusuf') {
             if (dayIdx >= 1 && dayIdx <= 5) {
-              val = (weekNum % 2 === 0) ? 'S1' : 'P6';
-            } else if (dayIdx === 6) {
-              val = 'OC';
+              val = isShiftS1Yusuf ? 'S1' : 'P6';
+            } else if (dayIdx === 6 && isShiftS1Yusuf) {
+              val = 'OC'; // Hanya OC jika minggu tersebut berdinas S1
             }
           }
-          // 4. Sopyan Sulistiyo (Kebalikan Yusuf + OC Minggu)
+          // 4. Sopyan Sulistiyo (S1 -> OC Minggu | P6 -> Weekend Libur)
           else if (person.type === 'shift_sopyan') {
             if (dayIdx >= 1 && dayIdx <= 5) {
-              val = (weekNum % 2 === 0) ? 'P6' : 'S1';
-            } else if (dayIdx === 0) {
-              val = 'OC';
+              val = isShiftS1Yusuf ? 'P6' : 'S1';
+            } else if (dayIdx === 0 && !isShiftS1Yusuf) {
+              val = 'OC'; // Hanya OC jika minggu tersebut berdinas S1
             }
           }
 
@@ -373,7 +377,6 @@
       });
     }
 
-    // Jalankan langsung saat web dibuka
     updateAll();
   </script>
 </body>
