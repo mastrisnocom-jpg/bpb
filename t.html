@@ -6031,7 +6031,7 @@
             }
         }
 
-     // ================= SISTEM AI SMART SCHEDULE (FIXED MODEL ENDPOINTS) =================
+    // ================= SISTEM AI SMART SCHEDULE (GEMINI 3.6 FLASH RESMI) =================
 
 function extractCleanJsonArray(rawText) {
     if (!rawText) throw new Error("Respons teks kosong.");
@@ -6100,12 +6100,11 @@ Contoh struktur:
   {"jam_mulai": "13:00", "jam_selesai": "15:00", "tugas": "Penyusunan laporan progres dan tindak lanjut"}
 ]`;
 
-    // Daftar model resmi terdaftar di Google AI Studio
+    // Daftar model versi 3.6 sesuai rekomendasi API terbaru
     const availableEndpoints = [
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash-latest:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-pro:generateContent"
     ];
 
     let lastError = null;
@@ -6160,7 +6159,7 @@ Contoh struktur:
             successData = validatedSlots;
             break;
         } catch (err) {
-            console.warn(`Gagal memanggil endpoint ${endpointUrl}:`, err.message);
+            console.warn(`Gagal pada endpoint ${endpointUrl}:`, err.message);
             lastError = err;
         }
     }
