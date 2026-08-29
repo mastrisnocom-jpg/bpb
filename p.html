@@ -5800,6 +5800,48 @@ Format output HARUS HANYA berupa JSON Array murni tanpa markdown/backticks/prosa
             initTheme(); 
             checkAuth();
         });
+  // ================= FUNGSI HAPUS JADWAL =================
+function askDeleteTask(id) {
+    deleteTargetId = id;
+    const modal = document.getElementById('confirmModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeConfirmModal() {
+    deleteTargetId = null;
+    const modal = document.getElementById('confirmModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+document.getElementById('btn-confirm-delete')?.addEventListener('click', async function() {
+    if (!deleteTargetId) return;
+
+    const btn = document.getElementById('btn-confirm-delete');
+    btn.innerText = "Menghapus...";
+    btn.disabled = true;
+
+    const { error } = await _supabase
+        .from('jadwal')
+        .delete()
+        .eq('id', deleteTargetId);
+
+    btn.innerText = "Hapus";
+    btn.disabled = false;
+
+    if (!error) {
+        showToast("✅ Jadwal berhasil dihapus!");
+        closeConfirmModal();
+        await fetchTasksSupabase();
+    } else {
+        showToast("Gagal menghapus: " + error.message);
+        console.error("Delete task error:", error);
+    }
+});
+
     </script>
 </body>
 </html>
