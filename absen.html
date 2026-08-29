@@ -4,96 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Presensi App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #f2f4f8;
+            background-color: #eef2f7;
             display: flex;
             justify-content: center;
             min-height: 100vh;
         }
 
-        /* Container Mobile */
-        .mobile-container {
+        .app-container {
             width: 100%;
             max-width: 414px;
-            background-color: #f6f8fb;
-            position: relative;
+            background-color: #f7f9fc;
             min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0,0,0,0.08);
             padding-bottom: 90px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Header Atas */
+        /* Header Area */
         .header {
-            background-color: #123363;
+            background-color: #123466;
             padding: 24px 20px 36px 20px;
             border-bottom-left-radius: 28px;
             border-bottom-right-radius: 28px;
-            position: relative;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .greeting {
-            color: #d89c38;
+            color: #ebb343;
             font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 4px;
+            font-weight: 600;
+            margin-bottom: 2px;
         }
 
         .user-name {
             color: #ffffff;
             font-size: 26px;
             font-weight: 700;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.2px;
         }
 
         .info-btn {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
-            padding: 4px;
+            padding: 2px;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
-        /* Kartu Shift & Clock In/Out */
+        /* Status Card */
         .status-card {
             background: #ffffff;
             border-radius: 16px;
             padding: 18px 16px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
         }
 
         .shift-status {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a1a1a;
+            font-size: 19px;
+            font-weight: 800;
+            color: #1e293b;
             margin-bottom: 4px;
         }
 
         .shift-time {
-            font-size: 13px;
-            color: #333333;
+            font-size: 13.5px;
+            color: #334155;
             font-weight: 500;
             margin-bottom: 16px;
         }
@@ -109,38 +102,29 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background-color: #143564;
+            background-color: #153565;
             color: #ffffff;
             border: none;
             border-radius: 8px;
-            padding: 10px 0;
+            padding: 11px 0;
             font-size: 13.5px;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
         .btn-action:active {
-            opacity: 0.85;
-        }
-
-        .btn-action.clock-in i {
-            color: #26b37a;
-        }
-
-        .btn-action.clock-out i {
-            color: #eb5757;
+            opacity: 0.9;
         }
 
         /* Menu Grid */
         .menu-section {
-            padding: 24px 16px 16px;
+            padding: 28px 16px 20px;
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            row-gap: 20px;
+            row-gap: 22px;
             column-gap: 8px;
         }
 
@@ -149,43 +133,36 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            text-decoration: none;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .menu-icon-wrapper {
-            width: 66px;
-            height: 66px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
-            background: linear-gradient(180deg, #3aaad6 0%, #35539e 100%);
+            background: linear-gradient(180deg, #3aaad6 0%, #3a54a4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(53, 83, 158, 0.2);
             margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(58, 84, 164, 0.22);
             transition: transform 0.15s ease;
         }
 
         .menu-item:active .menu-icon-wrapper {
-            transform: scale(0.94);
-        }
-
-        .menu-icon-wrapper i {
-            color: #ffffff;
-            stroke-width: 1.8;
-            width: 32px;
-            height: 32px;
+            transform: scale(0.93);
         }
 
         .menu-label {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: #143564;
-            line-height: 1.3;
+            font-size: 12px;
+            font-weight: 700;
+            color: #153565;
+            line-height: 1.25;
             max-width: 75px;
         }
 
-        /* Bottom Navigation Bar */
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -196,9 +173,9 @@
             background-color: #ffffff;
             display: flex;
             justify-content: space-around;
-            padding: 8px 0 10px;
-            border-top: 1px solid #eef1f6;
-            box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.04);
+            padding: 10px 0 8px;
+            border-top: 1px solid #eef2f6;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
             z-index: 100;
         }
 
@@ -207,36 +184,39 @@
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: #4a5568;
+            color: #4b5563;
             font-size: 11px;
             font-weight: 500;
-            gap: 3px;
+            gap: 4px;
             width: 20%;
         }
 
         .nav-item.active {
-            color: #143564;
-            font-weight: 600;
+            color: #153565;
+            font-weight: 700;
         }
 
-        .nav-item i {
+        .nav-item svg {
             width: 22px;
             height: 22px;
-            stroke-width: 1.8;
         }
     </style>
 </head>
 <body>
 
-    <div class="mobile-container">
+    <div class="app-container">
         <header class="header">
             <div class="header-top">
                 <div>
                     <p class="greeting">Selamat bekerja,</p>
                     <h1 class="user-name">Sutrisno</h1>
                 </div>
-                <button class="info-btn" aria-label="Informasi">
-                    <i data-lucide="info" style="width: 22px; height: 22px;"></i>
+                <button class="info-btn" aria-label="Info">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6889b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
                 </button>
             </div>
 
@@ -244,12 +224,20 @@
                 <h2 class="shift-status">OFF</h2>
                 <p class="shift-time">29 Agustus 2026 (00:00 - 00:00)</p>
                 <div class="action-buttons">
-                    <button class="btn-action clock-in">
-                        <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+                    <button class="btn-action">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26b37a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="11 16 15 12 11 8"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
                         Clock In
                     </button>
-                    <button class="btn-action clock-out">
-                        <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+                    <button class="btn-action">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#eb5757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"/>
+                            <polyline points="13 8 17 12 13 16"/>
+                            <line x1="17" y1="12" x2="5" y2="12"/>
+                        </svg>
                         Clock Out
                     </button>
                 </div>
@@ -260,49 +248,108 @@
             <div class="menu-grid">
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="clipboard-list"></i>
+                        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 10h12v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v3z"/>
+                            <rect x="11" y="9" width="26" height="32" rx="3"/>
+                            <polyline points="15 17 17 19 21 15"/>
+                            <line x1="24" y1="17" x2="32" y2="17"/>
+                            <polyline points="15 25 17 27 21 23"/>
+                            <line x1="24" y1="25" x2="32" y2="25"/>
+                            <polyline points="15 33 17 35 21 31"/>
+                            <line x1="24" y1="33" x2="32" y2="33"/>
+                        </svg>
                     </div>
                     <span class="menu-label">Daftar Pengajuan</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="user-round-cog"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 24a12 12 0 0 1 20.4-8.5l-1.4 3.5"/>
+                            <path d="M36 24a12 12 0 0 1-20.4 8.5l1.4-3.5"/>
+                            <circle cx="24" cy="20" r="4" fill="#ffffff"/>
+                            <path d="M18 30c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="#ffffff"/>
+                        </svg>
                     </div>
                     <span class="menu-label">Request Absensi</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="clock"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="24" cy="11" r="1" fill="#ffffff"/>
+                            <circle cx="37" cy="24" r="1" fill="#ffffff"/>
+                            <circle cx="11" cy="24" r="1" fill="#ffffff"/>
+                            <circle cx="24" cy="37" r="1" fill="#ffffff"/>
+                            <circle cx="33" cy="15" r="1" fill="#ffffff"/>
+                            <circle cx="15" cy="15" r="1" fill="#ffffff"/>
+                            <circle cx="33" cy="33" r="1" fill="#ffffff"/>
+                            <circle cx="15" cy="33" r="1" fill="#ffffff"/>
+                            <circle cx="24" cy="24" r="2" fill="#ffffff"/>
+                            <line x1="24" y1="24" x2="32" y2="16"/>
+                            <line x1="24" y1="24" x2="18" y2="18"/>
+                            <rect x="20" y="29" width="8" height="3" rx="1.5"/>
+                        </svg>
                     </div>
                     <span class="menu-label">Request Lembur</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="arrow-left-right"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="24" cy="24" r="17"/>
+                            <line x1="17" y1="18" x2="31" y2="18"/>
+                            <polyline points="21 15 17 18 21 21"/>
+                            <line x1="31" y1="21" x2="17" y2="21"/>
+                            <polyline points="27 24 31 21 27 18"/>
+                            <circle cx="17" cy="30" r="2.5"/>
+                            <path d="M13 38c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
+                            <circle cx="31" cy="30" r="2.5"/>
+                            <path d="M27 38c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
+                        </svg>
                     </div>
                     <span class="menu-label">Request Cuti</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="users"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="#ffffff">
+                            <path d="M24 10a4 4 0 0 0-4 4c0 1.5.8 2.8 2 3.5V19h4v-1.5c1.2-.7 2-2 2-3.5a4 4 0 0 0-4-4zm-1.5 10h3v1h-3z" fill="#ffffff"/>
+                            <circle cx="15.5" cy="22" r="3.5"/>
+                            <path d="M10 32v-2.5c0-2.2 1.8-4 4-4h3c2.2 0 4 1.8 4 4V32H10z"/>
+                            <circle cx="32.5" cy="22" r="3.5"/>
+                            <path d="M27 32v-2.5c0-2.2 1.8-4 4-4h3c2.2 0 4 1.8 4 4V32H27z"/>
+                        </svg>
                     </div>
                     <span class="menu-label">Tim Kami</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="key-round"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="none">
+                            <path d="M18 21v-4a6 6 0 0 1 12 0v4" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                            <rect x="14" y="21" width="20" height="14" rx="4" fill="#ffffff"/>
+                            <rect x="10" y="27" width="28" height="11" rx="5.5" fill="#ffffff"/>
+                            <text x="14.5" y="36.5" fill="#3a54a4" font-size="14" font-weight="900" font-family="monospace">*</text>
+                            <text x="20.5" y="36.5" fill="#3a54a4" font-size="14" font-weight="900" font-family="monospace">*</text>
+                            <text x="26.5" y="36.5" fill="#3a54a4" font-size="14" font-weight="900" font-family="monospace">*</text>
+                            <text x="32.5" y="36.5" fill="#3a54a4" font-size="14" font-weight="900" font-family="monospace">*</text>
+                        </svg>
                     </div>
                     <span class="menu-label">Ganti Kata Sandi</span>
                 </div>
 
                 <div class="menu-item">
                     <div class="menu-icon-wrapper">
-                        <i data-lucide="badge-dollar-sign"></i>
+                        <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="10" y="14" width="28" height="20" rx="2" fill="#ffffff" fill-opacity="0.1"/>
+                            <line x1="10" y1="19" x2="38" y2="19"/>
+                            <circle cx="13" cy="16.5" r="0.8" fill="#ffffff"/>
+                            <circle cx="16" cy="16.5" r="0.8" fill="#ffffff"/>
+                            <circle cx="19" cy="16.5" r="0.8" fill="#ffffff"/>
+                            <circle cx="24" cy="27" r="7" fill="#3768b4" stroke="#ffffff" stroke-width="1.8"/>
+                            <text x="21" y="31" fill="#ffffff" font-size="11" font-weight="700" stroke="none">$</text>
+                        </svg>
                     </div>
                     <span class="menu-label">Slip Gaji</span>
                 </div>
@@ -311,30 +358,46 @@
 
         <nav class="bottom-nav">
             <a href="#" class="nav-item active">
-                <i data-lucide="home"></i>
+                <svg viewBox="0 0 24 24" fill="#153565">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
                 <span>Home</span>
             </a>
             <a href="#" class="nav-item">
-                <i data-lucide="users"></i>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#153565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
                 <span>Karyawan</span>
             </a>
             <a href="#" class="nav-item">
-                <i data-lucide="calendar-days"></i>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#153565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                </svg>
                 <span>Absen Log</span>
             </a>
             <a href="#" class="nav-item">
-                <i data-lucide="mail"></i>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#153565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
                 <span>Inbox</span>
             </a>
             <a href="#" class="nav-item">
-                <i data-lucide="user"></i>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#153565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
                 <span>Profil</span>
             </a>
         </nav>
     </div>
 
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>
