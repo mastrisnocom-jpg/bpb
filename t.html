@@ -6031,19 +6031,16 @@
             }
         }
 
-      // ================= SISTEM AI SMART SCHEDULE (GEMINI AI TERBARU & ROBUST JSON) =================
+     // ================= SISTEM AI SMART SCHEDULE (FIXED MODEL ENDPOINTS) =================
 
-// Helper untuk membersihkan & mengekstrak JSON murni dari output Gemini
 function extractCleanJsonArray(rawText) {
     if (!rawText) throw new Error("Respons teks kosong.");
 
-    // 1. Bersihkan markdown code fences
     let cleaned = rawText
         .replace(/```(?:json)?/gi, '')
         .replace(/```/g, '')
         .trim();
 
-    // 2. Ambil substring dari kurung siku '[' pertama hingga ']' terakhir
     const startIdx = cleaned.indexOf('[');
     const endIdx = cleaned.lastIndexOf(']');
 
@@ -6055,10 +6052,9 @@ function extractCleanJsonArray(rawText) {
         const parsed = JSON.parse(cleaned);
         if (Array.isArray(parsed)) return parsed;
     } catch (e) {
-        console.warn("Direct JSON parse gagal, mencoba sanitasi karakter kontrol...", e);
+        console.warn("Direct JSON parse gagal, mencoba sanitasi karakter...", e);
     }
 
-    // 3. Fallback sanitasi: tangani karakter kontrol/newline yang tidak ter-escape
     cleaned = cleaned.replace(/[\u0000-\u001F]+/g, (match) => {
         if (match === '\n') return '\\n';
         if (match === '\r') return '';
@@ -6076,7 +6072,8 @@ function extractCleanJsonArray(rawText) {
 async function generateAiSchedulePreview() {
     const apiKey = getActiveGeminiApiKey();
     if (!apiKey) {
-        return alert("Silakan masukkan dan simpan Gemini API Key Anda terlebih dahulu pada form di atas!");
+        alert("Silakan masukkan dan simpan Gemini API Key Anda terlebih dahulu pada form di atas!");
+        return;
     }
 
     const role = document.getElementById('gen-role')?.value || 'Masyarakat Umum / Personal';
@@ -6103,21 +6100,22 @@ Contoh struktur:
   {"jam_mulai": "13:00", "jam_selesai": "15:00", "tugas": "Penyusunan laporan progres dan tindak lanjut"}
 ]`;
 
-    // Multi-model fallback otomatis jika model pertama limit / error
-    const availableModels = [
-        "gemini-2.5-flash",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro"
+    // Daftar model resmi terdaftar di Google AI Studio
+    const availableEndpoints = [
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
     ];
 
     let lastError = null;
     let successData = null;
 
-    for (const model of availableModels) {
+    for (const endpointUrl of availableEndpoints) {
         try {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            const url = `${endpointUrl}?key=${apiKey}`;
             
-            const response = await fetch(endpoint, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -6139,15 +6137,14 @@ Contoh struktur:
             const result = await response.json();
 
             if (!response.ok || result.error) {
-                throw new Error(result.error?.message || `HTTP ${response.status} pada ${model}`);
+                throw new Error(result.error?.message || `HTTP ${response.status}`);
             }
 
             const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!rawText) throw new Error("Respons teks kosong dari Gemini.");
+            if (!rawText) throw new Error("Respons teks kosong.");
 
             const parsedSlots = extractCleanJsonArray(rawText);
 
-            // Validasi & normalisasi jam titik (.) menjadi titik dua (:) agar sesuai dengan <input type="time">
             const validatedSlots = parsedSlots.filter(item => {
                 return item && typeof item === 'object' && item.jam_mulai && item.jam_selesai && item.tugas;
             }).map(item => ({
@@ -6161,9 +6158,9 @@ Contoh struktur:
             }
 
             successData = validatedSlots;
-            break; // Berhasil, keluar dari loop model fallback
+            break;
         } catch (err) {
-            console.warn(`Model ${model} gagal:`, err.message);
+            console.warn(`Gagal memanggil endpoint ${endpointUrl}:`, err.message);
             lastError = err;
         }
     }
