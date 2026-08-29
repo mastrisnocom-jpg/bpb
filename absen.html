@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Presensi App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #f2f4f8;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Container Mobile */
+        .mobile-container {
+            width: 100%;
+            max-width: 414px;
+            background-color: #f6f8fb;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 90px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Atas */
+        .header {
+            background-color: #123363;
+            padding: 24px 20px 36px 20px;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .greeting {
+            color: #d89c38;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .user-name {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .info-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Kartu Shift & Clock In/Out */
+        .status-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 18px 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .shift-status {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .shift-time {
+            font-size: 13px;
+            color: #333333;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #143564;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:active {
+            opacity: 0.85;
+        }
+
+        .btn-action.clock-in i {
+            color: #26b37a;
+        }
+
+        .btn-action.clock-out i {
+            color: #eb5757;
+        }
+
+        /* Menu Grid */
+        .menu-section {
+            padding: 24px 16px 16px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            row-gap: 20px;
+            column-gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .menu-icon-wrapper {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #3aaad6 0%, #35539e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(53, 83, 158, 0.2);
+            margin-bottom: 8px;
+            transition: transform 0.15s ease;
+        }
+
+        .menu-item:active .menu-icon-wrapper {
+            transform: scale(0.94);
+        }
+
+        .menu-icon-wrapper i {
+            color: #ffffff;
+            stroke-width: 1.8;
+            width: 32px;
+            height: 32px;
+        }
+
+        .menu-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #143564;
+            line-height: 1.3;
+            max-width: 75px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 10px;
+            border-top: 1px solid #eef1f6;
+            box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.04);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #4a5568;
+            font-size: 11px;
+            font-weight: 500;
+            gap: 3px;
+            width: 20%;
+        }
+
+        .nav-item.active {
+            color: #143564;
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <header class="header">
+            <div class="header-top">
+                <div>
+                    <p class="greeting">Selamat bekerja,</p>
+                    <h1 class="user-name">Sutrisno</h1>
+                </div>
+                <button class="info-btn" aria-label="Informasi">
+                    <i data-lucide="info" style="width: 22px; height: 22px;"></i>
+                </button>
+            </div>
+
+            <div class="status-card">
+                <h2 class="shift-status">OFF</h2>
+                <p class="shift-time">29 Agustus 2026 (00:00 - 00:00)</p>
+                <div class="action-buttons">
+                    <button class="btn-action clock-in">
+                        <i data-lucide="log-in" style="width: 18px; height: 18px;"></i>
+                        Clock In
+                    </button>
+                    <button class="btn-action clock-out">
+                        <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+                        Clock Out
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="menu-section">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="clipboard-list"></i>
+                    </div>
+                    <span class="menu-label">Daftar Pengajuan</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="user-round-cog"></i>
+                    </div>
+                    <span class="menu-label">Request Absensi</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <span class="menu-label">Request Lembur</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="arrow-left-right"></i>
+                    </div>
+                    <span class="menu-label">Request Cuti</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <span class="menu-label">Tim Kami</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="key-round"></i>
+                    </div>
+                    <span class="menu-label">Ganti Kata Sandi</span>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon-wrapper">
+                        <i data-lucide="badge-dollar-sign"></i>
+                    </div>
+                    <span class="menu-label">Slip Gaji</span>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i data-lucide="home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="users"></i>
+                <span>Karyawan</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="calendar-days"></i>
+                <span>Absen Log</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="mail"></i>
+                <span>Inbox</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="user"></i>
+                <span>Profil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
