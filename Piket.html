@@ -149,7 +149,7 @@
 </head>
 <body>
 
-  <!-- Menu Ganti Bulan & Tahun -->
+  <!-- Menu Pilihan Bulan & Tahun -->
   <div class="controls-panel no-print">
     <div>
       <label><strong>Pilih Bulan:</strong></label>
@@ -260,12 +260,12 @@
 
     const dayNames = ['Mgg', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
-    // Mengelompokkan tanggal ke dalam siklus mingguan (dimulai setiap Senin)
+    // Mengelompokkan minggu siklus kerja (Minggu dihitung sebagai bagian penutup siklus minggu sebelumnya)
     function getWeekCycleIndex(year, month, day) {
-      // Menghitung jumlah hari Senin yang sudah terlewati di bulan tersebut
       let mondayCount = 0;
       for (let d = 1; d <= day; d++) {
         const dt = new Date(year, month - 1, d);
+        // Setiap bertemu hari Senin (selain tanggal 1), siklus berganti
         if (dt.getDay() === 1 && d > 1) {
           mondayCount++;
         }
@@ -338,7 +338,7 @@
           const dateObj = new Date(year, month - 1, day);
           const dayIdx = dateObj.getDay(); // 0: Mgg, 1: Sen, ..., 6: Sab
           const cycleIdx = getWeekCycleIndex(year, month, day);
-          const isShiftS1Yusuf = (cycleIdx % 2 === 0);
+          const isOddWeek = (cycleIdx % 2 === 0); // Minggu 1, 3, 5...
 
           if (isWeekend[day - 1]) td.classList.add('weekend');
 
@@ -352,20 +352,24 @@
           else if (person.type === 'tetap_p10') {
             if (dayIdx >= 1 && dayIdx <= 5) val = 'P10';
           }
-          // 3. Yusuf Zulfikri (S1 -> OC Sabtu | P6 -> Weekend Libur)
+          // 3. Yusuf Zulfikri (Minggu 1: S1 & OC Sabtu | Minggu 2: P6 & OC Minggu)
           else if (person.type === 'shift_yusuf') {
-            if (dayIdx >= 1 && dayIdx <= 5) {
-              val = isShiftS1Yusuf ? 'S1' : 'P6';
-            } else if (dayIdx === 6 && isShiftS1Yusuf) {
-              val = 'OC'; // Hanya OC jika minggu tersebut berdinas S1
+            if (isOddWeek) {
+              if (dayIdx >= 1 && dayIdx <= 5) val = 'S1';
+              else if (dayIdx === 6) val = 'OC'; // Sabtu OC
+            } else {
+              if (dayIdx >= 1 && dayIdx <= 5) val = 'P6';
+              else if (dayIdx === 0) val = 'OC'; // Minggu OC
             }
           }
-          // 4. Sopyan Sulistiyo (S1 -> OC Minggu | P6 -> Weekend Libur)
+          // 4. Sopyan Sulistiyo (Minggu 1: P6 & OC Minggu | Minggu 2: S1 & OC Sabtu)
           else if (person.type === 'shift_sopyan') {
-            if (dayIdx >= 1 && dayIdx <= 5) {
-              val = isShiftS1Yusuf ? 'P6' : 'S1';
-            } else if (dayIdx === 0 && !isShiftS1Yusuf) {
-              val = 'OC'; // Hanya OC jika minggu tersebut berdinas S1
+            if (isOddWeek) {
+              if (dayIdx >= 1 && dayIdx <= 5) val = 'P6';
+              else if (dayIdx === 0) val = 'OC'; // Minggu OC
+            } else {
+              if (dayIdx >= 1 && dayIdx <= 5) val = 'S1';
+              else if (dayIdx === 6) val = 'OC'; // Sabtu OC
             }
           }
 
