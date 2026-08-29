@@ -2489,14 +2489,18 @@
                 target.classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-
             if (viewKey === 'feed-schedule') setActiveTab('tabHome');
             else if (viewKey === 'feed-bulk') { setActiveTab('tabBulk'); syncLockedFormValues(); }
             else if (viewKey === 'feed-wallet' || viewKey === 'feed-withdraw') setActiveTab('tabWallet');
-            else if (viewKey === 'feed-ai') { setActiveTab('tabAuto'); syncLockedFormValues(); }
+            else if (viewKey === 'feed-ai') { 
+                setActiveTab('tabAuto'); 
+                syncLockedFormValues(); 
+                loadUserApiKeyInput(); 
+            }
             else if (viewKey === 'feed-notif') setActiveTab('tabFriends');
             else if (viewKey === 'feed-profile') setActiveTab('tabProfile');
             else setActiveTab(null);
+
 
             const sideButtons = {
                 'feed-schedule': 'sideNavFeed',
@@ -3004,6 +3008,13 @@
             } else {
                 localStorage.setItem('user_gemini_api_key', keyVal);
                 showToast("✅ Gemini API Key pribadi berhasil disimpan!");
+            }
+        }
+        function loadUserApiKeyInput() {
+            const savedKey = localStorage.getItem('user_gemini_api_key') || budgetSettings.geminiApiKey || '';
+            const inputKey = document.getElementById('userGeminiApiKey');
+            if (inputKey && savedKey) {
+                inputKey.value = savedKey;
             }
         }
 
