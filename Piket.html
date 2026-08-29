@@ -81,7 +81,7 @@
       letter-spacing: 0.5px;
       padding: 3px !important;
     }
-    .weekend {
+    .holiday-red {
       background-color: #e06666 !important;
     }
     .text-left {
@@ -149,7 +149,7 @@
 </head>
 <body>
 
-  <!-- Menu Pilihan Bulan & Tahun -->
+  <!-- Menu Ganti Bulan & Tahun -->
   <div class="controls-panel no-print">
     <div>
       <label><strong>Pilih Bulan:</strong></label>
@@ -258,14 +258,33 @@
       { id: 'anang', category: 'CLEANING SERVICE', nik: '202402001262', name: 'Anang', type: 'tetap_p10' }
     ];
 
+    const monthNames = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
     const dayNames = ['Mgg', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
-    // Mengelompokkan minggu siklus kerja (Minggu dihitung sebagai bagian penutup siklus minggu sebelumnya)
+    // Database Tanggal Merah Nasional Indonesia (Format: YYYY-MM-DD)
+    const nationalHolidays = [
+      // 2025
+      "2025-01-01", "2025-01-27", "2025-01-29", "2025-03-29", "2025-03-31", 
+      "2025-04-01", "2025-04-18", "2025-05-01", "2025-05-12", "2025-05-29", 
+      "2025-06-07", "2025-06-27", "2025-08-17", "2025-09-05", "2025-12-25",
+      // 2026
+      "2026-01-01", "2026-01-16", "2026-02-17", "2026-03-19", "2026-03-20", 
+      "2026-03-21", "2026-04-03", "2026-05-01", "2026-05-14", "2026-05-27", 
+      "2026-05-31", "2026-06-16", "2026-08-17", "2026-08-25", "2026-12-25",
+      // 2027
+      "2027-01-01", "2027-01-06", "2027-02-06", "2027-03-09", "2027-03-10",
+      "2027-03-26", "2027-05-01", "2027-05-06", "2027-05-16", "2027-05-20",
+      "2027-06-06", "2027-08-17", "2027-12-25"
+    ];
+
     function getWeekCycleIndex(year, month, day) {
       let mondayCount = 0;
       for (let d = 1; d <= day; d++) {
         const dt = new Date(year, month - 1, d);
-        // Setiap bertemu hari Senin (selain tanggal 1), siklus berganti
         if (dt.getDay() === 1 && d > 1) {
           mondayCount++;
         }
@@ -280,27 +299,43 @@
       document.getElementById('metaBulan').innerText = month;
       document.getElementById('metaTahun').innerText = year;
 
+      // 1. Update Tanggal Tanda Tangan (Tanggal 25 Bulan Sebelumnya)
+      let prevMonth = month - 1;
+      let prevYear = year;
+      if (prevMonth === 0) {
+        prevMonth = 12;
+        prevYear = year - 1;
+      }
+      document.getElementById('signDate').innerHTML = `Surabaya, 25 ${monthNames[prevMonth - 1]} ${prevYear}<br>BPB Unit BSN Surabaya`;
+
       const totalDays = new Date(year, month, 0).getDate();
-      
       document.getElementById('headerHariTanggal').setAttribute('colspan', totalDays);
 
       const rowDates = document.getElementById('rowDates');
       rowDates.innerHTML = '';
 
-      const isWeekend = [];
+      const isHoliday = [];
 
+      // 2. Render Header Hari & Tanggal + Deteksi Tanggal Merah
       for (let day = 1; day <= totalDays; day++) {
         const dateObj = new Date(year, month - 1, day);
-        const dayIdx = dateObj.getDay();
-        const weekendCheck = (dayIdx === 0 || dayIdx === 6);
-        isWeekend.push(weekendCheck);
+        const dayIdx = dateObj.getDay(); // 0: Mgg, 6: Sab
+        
+        const mStr = month < 10 ? '0' + month : '' + month;
+        const dStr = day < 10 ? '0' + day : '' + day;
+        const dateKey = `${year}-${mStr}-${dStr}`;
+
+        // Cek apakah Sabtu, Minggu, atau Tanggal Merah Nasional
+        const isRedDay = (dayIdx === 0 || dayIdx === 6 || nationalHolidays.includes(dateKey));
+        isHoliday.push(isRedDay);
 
         const th = document.createElement('th');
-        th.innerHTML = `${dayNames[dayIdx]}<br>${day < 10 ? '0' + day : day}`;
-        if (weekendCheck) th.classList.add('weekend');
+        th.innerHTML = `${dayNames[dayIdx]}<br>${dStr}`;
+        if (isRedDay) th.classList.add('holiday-red');
         rowDates.appendChild(th);
       }
 
+      // 3. Render Baris Anggota
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
 
@@ -336,40 +371,45 @@
           td.contentEditable = "true";
           
           const dateObj = new Date(year, month - 1, day);
-          const dayIdx = dateObj.getDay(); // 0: Mgg, 1: Sen, ..., 6: Sab
+          const dayIdx = dateObj.getDay(); 
           const cycleIdx = getWeekCycleIndex(year, month, day);
-          const isOddWeek = (cycleIdx % 2 === 0); // Minggu 1, 3, 5...
+          const isOddWeek = (cycleIdx % 2 === 0);
 
-          if (isWeekend[day - 1]) td.classList.add('weekend');
+          const mStr = month < 10 ? '0' + month : '' + month;
+          const dStr = day < 10 ? '0' + day : '' + day;
+          const dateKey = `${year}-${mStr}-${dStr}`;
+          const isNatHoliday = nationalHolidays.includes(dateKey);
+
+          if (isHoliday[day - 1]) td.classList.add('holiday-red');
 
           let val = '';
 
-          // 1. D1 Tetap
+          // 1. D1 Tetap (Libur di Weekend & Hari Libur Nasional)
           if (person.type === 'tetap_d1') {
-            if (dayIdx >= 1 && dayIdx <= 5) val = 'D1';
+            if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'D1';
           }
-          // 2. P10 Tetap
+          // 2. P10 Tetap (Libur di Weekend & Hari Libur Nasional)
           else if (person.type === 'tetap_p10') {
-            if (dayIdx >= 1 && dayIdx <= 5) val = 'P10';
+            if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'P10';
           }
           // 3. Yusuf Zulfikri (Minggu 1: S1 & OC Sabtu | Minggu 2: P6 & OC Minggu)
           else if (person.type === 'shift_yusuf') {
             if (isOddWeek) {
-              if (dayIdx >= 1 && dayIdx <= 5) val = 'S1';
-              else if (dayIdx === 6) val = 'OC'; // Sabtu OC
+              if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'S1';
+              else if (dayIdx === 6) val = 'OC';
             } else {
-              if (dayIdx >= 1 && dayIdx <= 5) val = 'P6';
-              else if (dayIdx === 0) val = 'OC'; // Minggu OC
+              if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'P6';
+              else if (dayIdx === 0) val = 'OC';
             }
           }
           // 4. Sopyan Sulistiyo (Minggu 1: P6 & OC Minggu | Minggu 2: S1 & OC Sabtu)
           else if (person.type === 'shift_sopyan') {
             if (isOddWeek) {
-              if (dayIdx >= 1 && dayIdx <= 5) val = 'P6';
-              else if (dayIdx === 0) val = 'OC'; // Minggu OC
+              if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'P6';
+              else if (dayIdx === 0) val = 'OC';
             } else {
-              if (dayIdx >= 1 && dayIdx <= 5) val = 'S1';
-              else if (dayIdx === 6) val = 'OC'; // Sabtu OC
+              if (dayIdx >= 1 && dayIdx <= 5 && !isNatHoliday) val = 'S1';
+              else if (dayIdx === 6) val = 'OC';
             }
           }
 
