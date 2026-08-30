@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Scheduler & Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen py-8 px-4 sm:px-6">
+
+  <div class="max-w-2xl mx-auto">
+    <header class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-rose-400 bg-clip-text text-transparent">
+            Jadwal Ngonten Harian
+          </h1>
+          <p class="text-sm text-slate-400 mt-1">FB Reels & YouTube Shorts Planner</p>
+        </div>
+        <input 
+          type="date" 
+          id="datePicker" 
+          class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+        />
+      </div>
+
+      <div class="mt-6 bg-slate-900/80 border border-slate-800 p-4 rounded-xl shadow-lg">
+        <div class="flex justify-between items-center text-sm font-medium mb-2">
+          <span class="text-slate-300">Progress Konten Hari Ini</span>
+          <span id="progressText" class="text-indigo-400 font-semibold">0 / 0 Selesai (0%)</span>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+          <div id="progressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-slate-200">Daftar Jadwal</h2>
+      <button 
+        onclick="openAddModal()" 
+        class="flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-1.5 rounded-lg transition-colors">
+        <i data-lucide="plus" class="w-4 h-4"></i> Tambah Slot
+      </button>
+    </div>
+
+    <div id="scheduleContainer" class="space-y-4">
+      </div>
+  </div>
+
+  <div id="modalBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-4">Tambah Slot Konten</h3>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Jam Tayang</label>
+          <input type="time" id="newTime" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Platform</label>
+          <select id="newPlatform" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <option value="ALL">FB Reels & YT Shorts</option>
+            <option value="FB">FB Reels Saja</option>
+            <option value="YT">YT Shorts Saja</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Judul / Ide Konten</label>
+          <input type="text" id="newTitle" placeholder="Contoh: Tips Cepat Part 1" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="closeAddModal()" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 transition">Batal</button>
+        <button onclick="addNewSchedule()" class="px-4 py-2 rounded-lg text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Slot waktu default
+    const DEFAULT_TEMPLATES = [
+      { time: '07:00', platform: 'ALL', title: 'Konten Pagi (FB Reels & YT Shorts)' },
+      { time: '17:00', platform: 'ALL', title: 'Konten Sore (FB Reels & YT Shorts)' },
+      { time: '23:00', platform: 'ALL', title: 'Konten Malam (FB Reels & YT Shorts)' }
+    ];
+
+    let currentDate = new Date().toISOString().split('T')[0];
+    const datePicker = document.getElementById('datePicker');
+    datePicker.value = currentDate;
+
+    // Load data dari LocalStorage
+    function getStoredData() {
+      const data = localStorage.getItem('content_schedules');
+      return data ? JSON.parse(data) : {};
+    }
+
+    // Save data ke LocalStorage
+    function saveData(data) {
+      localStorage.setItem('content_schedules', JSON.stringify(data));
+    }
+
+    // Mengambil jadwal untuk tanggal tertentu
+    function getSchedulesForDate(dateStr) {
+      const allData = getStoredData();
+      if (!allData[dateStr]) {
+        // Buat jadwal default jika belum ada
+        allData[dateStr] = DEFAULT_TEMPLATES.map((tpl, idx) => ({
+          id: 'item_' + Date.now() + '_' + idx,
+          time: tpl.time,
+          platform: tpl.platform,
+          title: tpl.title,
+          isApproved: false,
+          approvedAt: null
+        }));
+        saveData(allData);
+      }
+      return allData[dateStr];
+    }
+
+    // Render tampilan kartu jadwal
+    function render() {
+      const schedules = getSchedulesForDate(currentDate);
+      const container = document.getElementById('scheduleContainer');
+      container.innerHTML = '';
+
+      let approvedCount = 0;
+
+      schedules.sort((a, b) => a.time.localeCompare(b.time));
+
+      schedules.forEach(item => {
+        if (item.isApproved) approvedCount++;
+
+        const card = document.createElement('div');
+        card.className = `p-4 sm:p-5 rounded-2xl border transition-all duration-200 ${
+          item.isApproved 
+            ? 'bg-emerald-950/20 border-emerald-900/60 text-slate-300' 
+            : 'bg-slate-900/90 border-slate-800 hover:border-slate-700 shadow-md'
+        }`;
+
+        // Badge platform
+        let badgeHtml = '';
+        if (item.platform === 'ALL' || item.platform === 'FB') {
+          badgeHtml += `<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md">FB Reels</span> `;
+        }
+        if (item.platform === 'ALL' || item.platform === 'YT') {
+          badgeHtml += `<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded-md">YT Shorts</span>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <div class="p-2.5 rounded-xl ${item.isApproved ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-800 text-indigo-400'}">
+                <i data-lucide="${item.isApproved ? 'check-circle-2' : 'clock'}" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-base text-white">${item.time} WIB</span>
+                  <div class="flex gap-1">${badgeHtml}</div>
+                </div>
+                <p class="text-sm text-slate-300 mt-1 font-medium">${item.title}</p>
+                ${
+                  item.isApproved 
+                    ? `<p class="text-xs text-emerald-400 mt-1 flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Approved pada ${item.approvedAt}</p>` 
+                    : `<p class="text-xs text-slate-500 mt-1">Status: Siap Posting</p>`
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <button 
+                onclick="toggleApprove('${item.id}')"
+                class="px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
+                  item.isApproved 
+                    ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' 
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/30'
+                }">
+                <i data-lucide="${item.isApproved ? 'rotate-ccw' : 'check'}" class="w-4 h-4"></i>
+                ${item.isApproved ? 'Batal Approve' : 'Approve & Posted'}
+              </button>
+              
+              <button onclick="deleteSchedule('${item.id}')" class="p-2 text-slate-500 hover:text-rose-400 transition" title="Hapus Slot">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Update Progress Bar
+      const total = schedules.length;
+      const percentage = total > 0 ? Math.round((approvedCount / total) * 100) : 0;
+      document.getElementById('progressText').innerText = `${approvedCount} / ${total} Selesai (${percentage}%)`;
+      document.getElementById('progressBar').style.width = `${percentage}%`;
+
+      lucide.createIcons();
+    }
+
+    // Toggle status approve
+    function toggleApprove(id) {
+      const allData = getStoredData();
+      const list = allData[currentDate] || [];
+      const item = list.find(x => x.id === id);
+      if (item) {
+        item.isApproved = !item.isApproved;
+        if (item.isApproved) {
+          const now = new Date();
+          item.approvedAt = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        } else {
+          item.approvedAt = null;
+        }
+        saveData(allData);
+        render();
+      }
+    }
+
+    // Hapus jadwal
+    function deleteSchedule(id) {
+      const allData = getStoredData();
+      if (allData[currentDate]) {
+        allData[currentDate] = allData[currentDate].filter(x => x.id !== id);
+        saveData(allData);
+        render();
+      }
+    }
+
+    // Modal Handler
+    function openAddModal() {
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+      document.getElementById('modalBackdrop').classList.add('flex');
+    }
+    function closeAddModal() {
+      document.getElementById('modalBackdrop').classList.add('hidden');
+      document.getElementById('modalBackdrop').classList.remove('flex');
+    }
+
+    // Tambah jadwal baru
+    function addNewSchedule() {
+      const time = document.getElementById('newTime').value;
+      const platform = document.getElementById('newPlatform').value;
+      const title = document.getElementById('newTitle').value.trim() || 'Konten Harian';
+
+      if (!time) {
+        alert('Silakan pilih jam tayang.');
+        return;
+      }
+
+      const allData = getStoredData();
+      if (!allData[currentDate]) {
+        getSchedulesForDate(currentDate);
+      }
+
+      allData[currentDate].push({
+        id: 'item_' + Date.now(),
+        time,
+        platform,
+        title,
+        isApproved: false,
+        approvedAt: null
+      });
+
+      saveData(allData);
+      closeAddModal();
+      document.getElementById('newTime').value = '';
+      document.getElementById('newTitle').value = '';
+      render();
+    }
+
+    // Event listener ganti tanggal
+    datePicker.addEventListener('change', (e) => {
+      currentDate = e.target.value;
+      render();
+    });
+
+    // Inisialisasi awal
+    render();
+  </script>
+</body>
+</html>
