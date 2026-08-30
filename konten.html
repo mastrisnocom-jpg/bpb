@@ -9,7 +9,6 @@
   <style>
     body { font-size: 11px; }
     .font-signature { font-family: 'Brush Script MT', cursive, sans-serif; }
-    /* Sembunyikan scrollbar tapi tetap bisa scroll */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -28,11 +27,29 @@
           <span class="text-[10px] text-indigo-300 font-signature italic font-bold">bpb</span>
         </div>
       </div>
-      <input 
-        type="date" 
-        id="datePicker" 
-        class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-[11px] text-slate-200 focus:outline-none focus:border-indigo-500"
-      />
+
+      <!-- Navigasi Tanggal dengan Tombol Icon Prev & Next -->
+      <div class="flex items-center gap-1 bg-slate-800/90 border border-slate-700 p-0.5 rounded-lg shadow-inner">
+        <button 
+          onclick="changeDate(-1)" 
+          title="Hari Sebelumnya"
+          class="p-1 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition active:scale-95">
+          <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+        </button>
+
+        <input 
+          type="date" 
+          id="datePicker" 
+          class="bg-transparent border-0 px-1 py-0.5 text-[10px] text-slate-200 focus:outline-none cursor-pointer"
+        />
+
+        <button 
+          onclick="changeDate(1)" 
+          title="Hari Berikutnya"
+          class="p-1 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition active:scale-95">
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Mini Progress -->
@@ -47,7 +64,7 @@
     </div>
   </header>
 
-  <!-- Matriks Kalender 30 Hari (Mini Cell Grid) -->
+  <!-- Matriks Kalender 30 Hari -->
   <section class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl mb-3 shadow-lg">
     <div class="flex justify-between items-center mb-1.5">
       <div class="flex items-center gap-1.5">
@@ -57,12 +74,8 @@
       <span id="monthlyStatsText" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-indigo-300 border border-slate-700">0% Selesai</span>
     </div>
 
-    <!-- 30 Hari Mini Boxes Grid -->
-    <div id="calendar30Grid" class="grid grid-cols-10 gap-1 pt-1 pb-1">
-      <!-- Injected via JS -->
-    </div>
+    <div id="calendar30Grid" class="grid grid-cols-10 gap-1 pt-1 pb-1"></div>
 
-    <!-- Mini Legend -->
     <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[8.5px] text-slate-400">
       <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-emerald-500 inline-block"></span> 100% OK</span>
       <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-indigo-500 inline-block"></span> Sebagian</span>
@@ -162,6 +175,15 @@
       return allData[dateStr];
     }
 
+    // Fungsi Navigasi Hari (Prev / Next)
+    function changeDate(offsetDays) {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() + offsetDays);
+      currentDate = d.toISOString().split('T')[0];
+      datePicker.value = currentDate;
+      render();
+    }
+
     function getRemainingTimeText(targetTimeStr, targetDateStr) {
       const now = new Date();
       const [hours, minutes] = targetTimeStr.split(':').map(Number);
@@ -181,7 +203,6 @@
       };
     }
 
-    // Render 30 Kotak Mini Kalender
     function render30DayGrid() {
       const allData = getStoredData();
       const grid = document.getElementById('calendar30Grid');
