@@ -2,185 +2,133 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Scheduler & Multi-Channel Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Content Scheduler Mobile Mini</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    .font-signature {
-      font-family: 'Brush Script MT', cursive, sans-serif;
-    }
+    body { font-size: 11px; }
+    .font-signature { font-family: 'Brush Script MT', cursive, sans-serif; }
+    /* Sembunyikan scrollbar tapi tetap bisa scroll */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-[#0b0f19] text-slate-100 min-h-screen py-8 px-4 sm:px-6">
+<body class="bg-[#0b0f19] text-slate-200 min-h-screen p-3 max-w-md mx-auto">
 
-  <div class="max-w-2xl mx-auto space-y-6">
-    <!-- Header -->
-    <header class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-5 rounded-2xl shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-3">
-            <h1 class="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-400 via-indigo-300 to-rose-400 bg-clip-text text-transparent">
-              Jadwal Ngonten
-            </h1>
-            <!-- Mini Signature Badge -->
-            <div class="border border-slate-700 bg-slate-800/70 px-2.5 py-0.5 rounded-md flex flex-col items-center">
-              <span class="text-[9px] text-slate-400 uppercase tracking-tighter">Tanda Tangan</span>
-              <span class="text-xs text-indigo-300 font-signature italic font-bold">bpb</span>
-            </div>
-          </div>
-          <p class="text-xs text-slate-400 mt-0.5 font-medium">FB Reels & YouTube Shorts Multi-Channel Planner</p>
-        </div>
-
-        <input 
-          type="date" 
-          id="datePicker" 
-          class="bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 shadow-inner"
-        />
-      </div>
-
-      <!-- Progress Card -->
-      <div class="mt-5 bg-slate-950/70 border border-slate-800/90 p-4 rounded-xl">
-        <div class="flex justify-between items-center text-xs font-semibold mb-2">
-          <span class="text-slate-300">Progress Konten Hari Ini</span>
-          <div class="flex items-center gap-2">
-            <span id="progressText" class="text-indigo-400">0 / 0 Selesai (0%)</span>
-            <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium">Status: Hadir & Aktif</span>
-          </div>
-        </div>
-        <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
-          <div id="progressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+  <!-- Header Ringkas -->
+  <header class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl mb-3 shadow-lg">
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <h1 class="text-sm font-bold bg-gradient-to-r from-blue-400 via-indigo-300 to-rose-400 bg-clip-text text-transparent">
+          Jadwal Ngonten
+        </h1>
+        <div class="border border-slate-700 bg-slate-800/80 px-1.5 py-0.2 rounded flex items-center gap-1">
+          <span class="text-[8px] text-slate-400">TTD</span>
+          <span class="text-[10px] text-indigo-300 font-signature italic font-bold">bpb</span>
         </div>
       </div>
-    </header>
-
-    <!-- 7-Day History Chart Card -->
-    <section class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-5 rounded-2xl shadow-xl">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h3 class="text-sm font-bold text-slate-200">Riwayat Approval 7 Hari Terakhir</h3>
-          <p class="text-[11px] text-slate-400">Evaluasi ketepatan jadwal tayang & posting</p>
-        </div>
-        <div class="text-right">
-          <span id="avgRateBadge" class="text-xs bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-2.5 py-1 rounded-lg font-semibold">
-            Rata-rata: 0% Selesai
-          </span>
-        </div>
-      </div>
-
-      <!-- Bar Chart Container -->
-      <div class="h-28 flex items-end justify-between gap-2 pt-2 px-2 pb-1 border-b border-slate-800" id="weeklyChart">
-        <!-- Bars generated dynamically via JS -->
-      </div>
-
-      <!-- Legend & Monthly Report Button -->
-      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-[11px]">
-        <div class="flex flex-wrap items-center gap-3">
-          <span class="flex items-center gap-1 text-slate-300"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Tepat Waktu</span>
-          <span class="flex items-center gap-1 text-slate-300"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Terlambat</span>
-          <span class="flex items-center gap-1 text-slate-300"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Kosong / Terlewat</span>
-        </div>
-        <button onclick="openReportModal()" class="px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white font-medium rounded-lg transition text-xs flex items-center gap-1 shadow">
-          <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Laporan Akhir Bulan
-        </button>
-      </div>
-    </section>
-
-    <!-- Schedule List Header -->
-    <div class="flex justify-between items-center pt-2">
-      <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
-        <i data-lucide="list-todo" class="w-5 h-5 text-indigo-400"></i> Daftar Jadwal & Akun
-      </h2>
-      <button 
-        onclick="openAddModal()" 
-        class="flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-3.5 py-2 rounded-xl transition shadow-lg shadow-indigo-600/20">
-        <i data-lucide="plus" class="w-4 h-4"></i> Tambah Slot
-      </button>
+      <input 
+        type="date" 
+        id="datePicker" 
+        class="bg-slate-800 border border-slate-700 rounded-md px-2 py-1 text-[11px] text-slate-200 focus:outline-none focus:border-indigo-500"
+      />
     </div>
 
-    <!-- Schedule Items -->
-    <div id="scheduleContainer" class="space-y-4"></div>
+    <!-- Mini Progress -->
+    <div class="mt-2.5 pt-2 border-t border-slate-800/80">
+      <div class="flex justify-between items-center text-[10px] mb-1">
+        <span class="text-slate-400">Progress Konten Hari Ini</span>
+        <span id="progressText" class="text-indigo-400 font-bold">0/0 (0%)</span>
+      </div>
+      <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+        <div id="progressBar" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Matriks Kalender 30 Hari (Mini Cell Grid) -->
+  <section class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl mb-3 shadow-lg">
+    <div class="flex justify-between items-center mb-1.5">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="calendar" class="w-3.5 h-3.5 text-indigo-400"></i>
+        <span class="text-[11px] font-bold text-slate-200">Riwayat 30 Hari Terakhir</span>
+      </div>
+      <span id="monthlyStatsText" class="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-indigo-300 border border-slate-700">0% Selesai</span>
+    </div>
+
+    <!-- 30 Hari Mini Boxes Grid -->
+    <div id="calendar30Grid" class="grid grid-cols-10 gap-1 pt-1 pb-1">
+      <!-- Injected via JS -->
+    </div>
+
+    <!-- Mini Legend -->
+    <div class="mt-2 pt-1.5 border-t border-slate-800/80 flex justify-between items-center text-[8.5px] text-slate-400">
+      <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-emerald-500 inline-block"></span> 100% OK</span>
+      <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-indigo-500 inline-block"></span> Sebagian</span>
+      <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-amber-400 inline-block"></span> Telat</span>
+      <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-rose-600/80 inline-block"></span> Kosong</span>
+    </div>
+  </section>
+
+  <!-- Header List Jadwal -->
+  <div class="flex justify-between items-center mb-2 px-0.5">
+    <div class="flex items-center gap-1.5">
+      <i data-lucide="list-todo" class="w-3.5 h-3.5 text-indigo-400"></i>
+      <span class="text-xs font-bold text-slate-200">Daftar Slot Harian</span>
+    </div>
+    <button 
+      onclick="openAddModal()" 
+      class="flex items-center gap-1 text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-2.5 py-1 rounded-lg transition shadow">
+      <i data-lucide="plus" class="w-3 h-3"></i> Tambah Slot
+    </button>
   </div>
 
+  <!-- Container List Jadwal -->
+  <div id="scheduleContainer" class="space-y-2 mb-6"></div>
+
   <!-- Modal Tambah Slot -->
-  <div id="modalBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl">
-      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-        <i data-lucide="calendar-plus" class="w-5 h-5 text-indigo-400"></i> Tambah Slot & Akun Konten
+  <div id="modalBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-xs p-4 shadow-2xl">
+      <h3 class="text-xs font-bold text-white mb-3 flex items-center gap-1.5">
+        <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-indigo-400"></i> Tambah Jadwal Baru
       </h3>
       
-      <div class="space-y-4">
+      <div class="space-y-2.5">
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Jam Tayang</label>
-          <input type="time" id="newTime" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+          <label class="block text-[10px] text-slate-400 mb-0.5">Jam Tayang</label>
+          <input type="time" id="newTime" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Platform</label>
-          <select id="newPlatform" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+          <label class="block text-[10px] text-slate-400 mb-0.5">Platform</label>
+          <select id="newPlatform" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500">
             <option value="ALL">FB Reels & YT Shorts</option>
             <option value="FB">FB Reels Saja</option>
             <option value="YT">YT Shorts Saja</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Nama Fanpage / Akun FB / Channel YT</label>
-          <input type="text" id="newChannel" placeholder="Contoh: @BisnisPraktis / Channel Utama" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+          <label class="block text-[10px] text-slate-400 mb-0.5">Nama Fanpage / Akun Channel</label>
+          <input type="text" id="newChannel" placeholder="@FanpageFB / @ChannelYT" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Judul / Ide Konten</label>
-          <input type="text" id="newTitle" placeholder="Contoh: 3 Trik Algoritma Baru" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+          <label class="block text-[10px] text-slate-400 mb-0.5">Judul / Ide Konten</label>
+          <input type="text" id="newTitle" placeholder="Contoh: Tutorial Ringkas Part 1" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500" />
         </div>
       </div>
 
-      <div class="flex justify-end gap-2 mt-6">
-        <button onclick="closeAddModal()" class="px-4 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-800 transition">Batal</button>
-        <button onclick="addNewSchedule()" class="px-4 py-2 rounded-lg text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30">Simpan</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Laporan Akhir Bulan -->
-  <div id="reportModalBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i data-lucide="file-check" class="w-5 h-5 text-indigo-400"></i> Ringkasan Performa Bulanan
-        </h3>
-        <button onclick="closeReportModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      
-      <div class="space-y-4 text-xs text-slate-300">
-        <p>Laporan rekapan postingan untuk bulan berjalan berdasarkan data tersimpan:</p>
-        <div class="grid grid-cols-3 gap-3 text-center">
-          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-            <span class="block text-slate-400 text-[10px]">Total Jadwal</span>
-            <span id="repTotal" class="text-lg font-bold text-white">0</span>
-          </div>
-          <div class="bg-slate-800/80 p-3 rounded-xl border border-emerald-900/40">
-            <span class="block text-emerald-400 text-[10px]">Berhasil Dipost</span>
-            <span id="repApproved" class="text-lg font-bold text-emerald-400">0</span>
-          </div>
-          <div class="bg-slate-800/80 p-3 rounded-xl border border-indigo-900/40">
-            <span class="block text-indigo-400 text-[10px]">Disiplin Tepat Waktu</span>
-            <span id="repRate" class="text-lg font-bold text-indigo-300">0%</span>
-          </div>
-        </div>
-        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-[11px] leading-relaxed">
-          💡 <strong>Tips Optimasi:</strong> Menjaga rasio approval di atas 90% secara konsisten terbukti memaksimalkan algoritma rekomendasi pada Facebook Reels dan YouTube Shorts.
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2 mt-6">
-        <button onclick="closeReportModal()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-white transition">Tutup</button>
+      <div class="flex justify-end gap-2 mt-4 pt-2 border-t border-slate-800">
+        <button onclick="closeAddModal()" class="px-3 py-1 rounded-md text-[10px] text-slate-400 hover:bg-slate-800">Batal</button>
+        <button onclick="addNewSchedule()" class="px-3 py-1 rounded-md text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow">Simpan</button>
       </div>
     </div>
   </div>
 
   <script>
     const DEFAULT_TEMPLATES = [
-      { time: '07:00', platform: 'ALL', channel: 'Halaman Utama', title: 'Konten Pagi (FB Reels & YT Shorts)' },
-      { time: '17:00', platform: 'ALL', channel: 'Halaman Utama', title: 'Konten Sore (FB Reels & YT Shorts)' },
-      { time: '23:00', platform: 'ALL', channel: 'Halaman Utama', title: 'Konten Malam (FB Reels & YT Shorts)' }
+      { time: '07:00', platform: 'ALL', channel: 'Akun Utama', title: 'Konten Pagi' },
+      { time: '17:00', platform: 'ALL', channel: 'Akun Utama', title: 'Konten Sore' },
+      { time: '23:00', platform: 'ALL', channel: 'Akun Utama', title: 'Konten Malam' }
     ];
 
     let currentDate = new Date().toISOString().split('T')[0];
@@ -188,12 +136,12 @@
     datePicker.value = currentDate;
 
     function getStoredData() {
-      const data = localStorage.getItem('content_schedules');
+      const data = localStorage.getItem('content_schedules_mini');
       return data ? JSON.parse(data) : {};
     }
 
     function saveData(data) {
-      localStorage.setItem('content_schedules', JSON.stringify(data));
+      localStorage.setItem('content_schedules_mini', JSON.stringify(data));
     }
 
     function getSchedulesForDate(dateStr) {
@@ -203,7 +151,7 @@
           id: 'item_' + Date.now() + '_' + idx,
           time: tpl.time,
           platform: tpl.platform,
-          channel: tpl.channel || 'Akun Utama',
+          channel: tpl.channel,
           title: tpl.title,
           isApproved: false,
           approvedAt: null,
@@ -221,7 +169,7 @@
       target.setHours(hours, minutes, 0, 0);
 
       const diff = target - now;
-      if (diff <= 0) return { isPassed: true, text: 'Jadwal telah lewat' };
+      if (diff <= 0) return { isPassed: true, text: 'Lewat' };
 
       const diffHrs = Math.floor(diff / (1000 * 60 * 60));
       const diffMins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -233,62 +181,60 @@
       };
     }
 
-    function renderWeeklyChart() {
+    // Render 30 Kotak Mini Kalender
+    function render30DayGrid() {
       const allData = getStoredData();
-      const chartContainer = document.getElementById('weeklyChart');
-      chartContainer.innerHTML = '';
+      const grid = document.getElementById('calendar30Grid');
+      grid.innerHTML = '';
 
-      const today = new Date(currentDate);
-      let totalApprovedRate = 0;
-      let countedDays = 0;
+      const targetRefDate = new Date(currentDate);
+      let totalSlotsCount = 0;
+      let totalApprovedCount = 0;
 
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(today);
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(targetRefDate);
         d.setDate(d.getDate() - i);
         const dateStr = d.toISOString().split('T')[0];
-        const dayLabel = d.getDate();
-        
+        const dayNumber = d.getDate();
+
         const schedules = allData[dateStr] || [];
         const total = schedules.length;
         const approved = schedules.filter(s => s.isApproved).length;
         const hasLate = schedules.some(s => s.isApproved && s.isLate);
 
-        let heightPercent = total > 0 ? (approved / total) * 100 : 0;
-        if (total === 0) heightPercent = 10;
+        totalSlotsCount += total;
+        totalApprovedCount += approved;
 
-        let barColor = 'bg-slate-700';
+        let statusBg = 'bg-slate-800 text-slate-500 border-slate-700/60';
         if (total > 0) {
-          countedDays++;
-          totalApprovedRate += (approved / total);
-          if (approved === total && total > 0) {
-            barColor = hasLate ? 'bg-amber-400' : 'bg-emerald-500';
+          if (approved === total) {
+            statusBg = hasLate ? 'bg-amber-400 text-slate-950 font-bold border-amber-300' : 'bg-emerald-500 text-slate-950 font-bold border-emerald-400';
           } else if (approved > 0) {
-            barColor = 'bg-indigo-500';
+            statusBg = 'bg-indigo-600 text-white font-medium border-indigo-400';
           } else {
-            barColor = 'bg-rose-500/80';
+            statusBg = 'bg-rose-900/60 text-rose-300 border-rose-800';
           }
         }
 
-        const barCol = document.createElement('div');
-        barCol.className = 'flex-1 flex flex-col items-center gap-1.5 h-full justify-end group relative cursor-pointer';
-        barCol.onclick = () => {
+        const isCurrentActive = (dateStr === currentDate);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = `h-7 rounded flex flex-col items-center justify-center cursor-pointer border transition text-[9px] select-none ${statusBg} ${
+          isCurrentActive ? 'ring-2 ring-white scale-105 z-10' : 'hover:opacity-80'
+        }`;
+        dayCell.title = `${dateStr} (${approved}/${total} Selesai)`;
+        dayCell.innerHTML = `<span>${dayNumber}</span>`;
+        dayCell.onclick = () => {
           datePicker.value = dateStr;
           currentDate = dateStr;
           render();
         };
 
-        barCol.innerHTML = `
-          <div class="absolute -top-7 opacity-0 group-hover:opacity-100 bg-slate-800 text-[10px] text-slate-200 px-2 py-0.5 rounded border border-slate-700 pointer-events-none transition z-20 whitespace-nowrap">
-            ${dateStr}: ${approved}/${total} Selesai
-          </div>
-          <div class="w-full max-w-[28px] ${barColor} rounded-t-md transition-all duration-500 shadow-lg" style="height: ${Math.max(heightPercent, 12)}%"></div>
-          <span class="text-[10px] ${dateStr === currentDate ? 'text-indigo-400 font-bold' : 'text-slate-500'}">${dayLabel}</span>
-        `;
-        chartContainer.appendChild(barCol);
+        grid.appendChild(dayCell);
       }
 
-      const avgPercent = countedDays > 0 ? Math.round((totalApprovedRate / countedDays) * 100) : 0;
-      document.getElementById('avgRateBadge').innerText = `Rata-rata: ${avgPercent}% Selesai`;
+      const totalRate = totalSlotsCount > 0 ? Math.round((totalApprovedCount / totalSlotsCount) * 100) : 0;
+      document.getElementById('monthlyStatsText').innerText = `30 Hari: ${totalApprovedCount}/${totalSlotsCount} (${totalRate}%)`;
     }
 
     function render() {
@@ -306,90 +252,62 @@
         const isScheduleLate = !item.isApproved && countdown.isPassed;
 
         const card = document.createElement('div');
-        card.className = `p-4 sm:p-5 rounded-2xl border transition-all duration-200 ${
+        card.className = `p-2.5 rounded-xl border transition-all ${
           item.isApproved 
-            ? 'bg-emerald-950/20 border-emerald-900/60 text-slate-300' 
+            ? 'bg-emerald-950/20 border-emerald-900/50 text-slate-300' 
             : isScheduleLate
-              ? 'bg-rose-950/20 border-rose-900/50 shadow-md'
-              : 'bg-slate-900/90 border-slate-800 hover:border-slate-700 shadow-md'
+              ? 'bg-rose-950/20 border-rose-900/40 shadow-sm'
+              : 'bg-slate-900/90 border-slate-800 shadow-sm'
         }`;
 
         let badgeHtml = '';
         if (item.platform === 'ALL' || item.platform === 'FB') {
-          badgeHtml += `<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md">FB Reels</span> `;
+          badgeHtml += `<span class="text-[9px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 px-1 py-0.2 rounded">FB</span> `;
         }
         if (item.platform === 'ALL' || item.platform === 'YT') {
-          badgeHtml += `<span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded-md">YT Shorts</span>`;
+          badgeHtml += `<span class="text-[9px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 px-1 py-0.2 rounded">YT</span>`;
         }
 
-        const channelHtml = item.channel ? `
-          <div class="flex items-center gap-1.5 text-xs text-indigo-300/90 bg-indigo-950/40 border border-indigo-800/40 px-2 py-0.5 rounded-md w-fit mt-1">
-            <i data-lucide="tv-2" class="w-3 h-3 text-indigo-400"></i>
-            <span class="font-medium">${item.channel}</span>
-          </div>
-        ` : '';
-
-        let statusBottomHtml = '';
+        let statusTextHtml = '';
         if (item.isApproved) {
-          statusBottomHtml = `
-            <div class="flex items-center gap-2 text-xs text-emerald-400 mt-2 font-medium">
-              <span class="flex items-center gap-1"><i data-lucide="check-check" class="w-4 h-4"></i> Approved pada ${item.approvedAt} WIB</span>
-              ${item.isLate ? '<span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded">Terlambat</span>' : '<span class="text-[10px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-1.5 py-0.5 rounded">Tepat Waktu</span>'}
+          statusTextHtml = `
+            <div class="flex items-center gap-1 text-[9.5px] text-emerald-400 mt-1">
+              <i data-lucide="check" class="w-3 h-3"></i> Approved ${item.approvedAt} WIB
+              ${item.isLate ? '<span class="text-[8px] bg-amber-500/20 text-amber-300 px-1 py-0.2 rounded ml-1">Telat</span>' : ''}
             </div>
           `;
         } else if (isScheduleLate) {
-          statusBottomHtml = `
-            <div class="flex items-center gap-1.5 text-xs text-rose-400 mt-2 font-semibold">
-              <i data-lucide="alert-circle" class="w-4 h-4"></i> Waktu posting terlewat! Segera tayangkan & approve.
-            </div>
-          `;
+          statusTextHtml = `<div class="text-[9.5px] text-rose-400 mt-1 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Terlewat! Segera Posting</div>`;
         } else {
-          statusBottomHtml = `
-            <div class="flex items-center gap-2 text-xs text-slate-400 mt-2">
-              <span class="text-amber-400/90 font-mono font-medium flex items-center gap-1">
-                <i data-lucide="timer" class="w-3.5 h-3.5"></i> Menghitung mundur: <strong>${countdown.text}</strong>
-              </span>
-            </div>
-          `;
+          statusTextHtml = `<div class="text-[9.5px] text-amber-400/90 font-mono mt-1 flex items-center gap-1"><i data-lucide="timer" class="w-3 h-3"></i> Hitung mundur: <strong>${countdown.text}</strong></div>`;
         }
 
         card.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-start gap-3.5">
-              <div class="p-3 rounded-xl ${
-                item.isApproved 
-                  ? 'bg-emerald-500/10 text-emerald-400' 
-                  : isScheduleLate 
-                    ? 'bg-rose-500/10 text-rose-400' 
-                    : 'bg-slate-800 text-indigo-400'
-              }">
-                <i data-lucide="${item.isApproved ? 'check-circle-2' : isScheduleLate ? 'alert-triangle' : 'clock'}" class="w-5 h-5"></i>
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-xs text-white">${item.time} WIB</span>
+                <div class="flex gap-0.5">${badgeHtml}</div>
+                <span class="text-[9px] bg-slate-800 text-indigo-300 border border-slate-700 px-1.5 py-0.2 rounded truncate max-w-[110px]">${item.channel || 'Akun Utama'}</span>
               </div>
-              <div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-bold text-base text-white">${item.time} WIB</span>
-                  <div class="flex gap-1">${badgeHtml}</div>
-                </div>
-                ${channelHtml}
-                <p class="text-sm text-slate-300 mt-1 font-medium">${item.title}</p>
-                ${statusBottomHtml}
-              </div>
+              <p class="text-[11px] text-slate-200 mt-0.5 font-medium truncate">${item.title}</p>
+              ${statusTextHtml}
             </div>
 
-            <div class="flex items-center gap-2 self-end sm:self-center">
+            <div class="flex items-center gap-1.5 shrink-0">
               <button 
                 onclick="toggleApprove('${item.id}')"
-                class="px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
+                class="px-2.5 py-1.5 rounded-lg text-[10px] font-semibold flex items-center gap-1 transition ${
                   item.isApproved 
-                    ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' 
-                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/40'
+                    ? 'bg-slate-800 text-slate-300' 
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow'
                 }">
-                <i data-lucide="${item.isApproved ? 'rotate-ccw' : 'check'}" class="w-4 h-4"></i>
-                ${item.isApproved ? 'Batal Approve' : 'Approve & Posted'}
+                <i data-lucide="${item.isApproved ? 'rotate-ccw' : 'check'}" class="w-3 h-3"></i>
+                ${item.isApproved ? 'Batal' : 'Approve'}
               </button>
               
-              <button onclick="deleteSchedule('${item.id}')" class="p-2 text-slate-500 hover:text-rose-400 transition" title="Hapus Slot">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <button onclick="deleteSchedule('${item.id}')" class="p-1 text-slate-500 hover:text-rose-400 transition" title="Hapus">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
           </div>
@@ -399,10 +317,10 @@
 
       const total = schedules.length;
       const percentage = total > 0 ? Math.round((approvedCount / total) * 100) : 0;
-      document.getElementById('progressText').innerText = `${approvedCount} / ${total} Selesai (${percentage}%)`;
+      document.getElementById('progressText').innerText = `${approvedCount}/${total} (${percentage}%)`;
       document.getElementById('progressBar').style.width = `${percentage}%`;
 
-      renderWeeklyChart();
+      render30DayGrid();
       lucide.createIcons();
     }
 
@@ -414,8 +332,7 @@
         item.isApproved = !item.isApproved;
         if (item.isApproved) {
           const now = new Date();
-          const approvedTimeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-          item.approvedAt = approvedTimeStr;
+          item.approvedAt = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
           const [schHour, schMin] = item.time.split(':').map(Number);
           const currentHour = now.getHours();
@@ -455,7 +372,7 @@
       const title = document.getElementById('newTitle').value.trim() || 'Konten Harian';
 
       if (!time) {
-        alert('Silakan pilih jam tayang.');
+        alert('Pilih jam tayang.');
         return;
       }
 
@@ -483,33 +400,6 @@
       render();
     }
 
-    function openReportModal() {
-      const allData = getStoredData();
-      let totalSlots = 0;
-      let totalApproved = 0;
-
-      Object.values(allData).forEach(list => {
-        list.forEach(slot => {
-          totalSlots++;
-          if (slot.isApproved) totalApproved++;
-        });
-      });
-
-      const rate = totalSlots > 0 ? Math.round((totalApproved / totalSlots) * 100) : 0;
-      document.getElementById('repTotal').innerText = totalSlots;
-      document.getElementById('repApproved').innerText = totalApproved;
-      document.getElementById('repRate').innerText = `${rate}%`;
-
-      document.getElementById('reportModalBackdrop').classList.remove('hidden');
-      document.getElementById('reportModalBackdrop').classList.add('flex');
-      lucide.createIcons();
-    }
-
-    function closeReportModal() {
-      document.getElementById('reportModalBackdrop').classList.add('hidden');
-      document.getElementById('reportModalBackdrop').classList.remove('flex');
-    }
-
     datePicker.addEventListener('change', (e) => {
       currentDate = e.target.value;
       render();
@@ -517,8 +407,7 @@
 
     setInterval(() => {
       const schedules = getStoredData()[currentDate] || [];
-      const hasUnapproved = schedules.some(s => !s.isApproved);
-      if (hasUnapproved) {
+      if (schedules.some(s => !s.isApproved)) {
         render();
       }
     }, 1000);
