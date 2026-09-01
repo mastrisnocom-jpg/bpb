@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Watermark Studio 9:16</title>
+    <title>Fast Video Watermark Studio 9:16</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Montserrat:wght@700&family=Playfair+Display:wght@700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,94 +17,29 @@
             --border: #334155;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 1.25rem 2rem;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .container {
-            display: flex;
-            flex: 1;
-            padding: 1.5rem 2rem;
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* --- Panel Preview --- */
-        .preview-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        header { padding: 1.25rem 2rem; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        header h1 { font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .container { display: flex; flex: 1; padding: 1.5rem 2rem; gap: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .preview-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
         .canvas-wrapper {
             position: relative;
             width: 360px;
-            height: 640px; /* Rasio 9:16 */
+            height: 640px;
             background: #000;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        #previewCanvas {
-            width: 100%;
-            height: 100%;
-            cursor: grab;
-        }
+        #previewCanvas { width: 100%; height: 100%; cursor: grab; }
+        #previewCanvas:active { cursor: grabbing; }
 
-        #previewCanvas:active {
-            cursor: grabbing;
-        }
-
-        .hint {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* --- Control Sidebar --- */
+        .hint { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+        
         .controls-panel {
             width: 380px;
             background-color: var(--bg-panel);
@@ -112,32 +47,15 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1.1rem;
             border: 1px solid var(--border);
             overflow-y: auto;
-            max-height: 80vh;
+            max-height: 85vh;
         }
 
-        .section-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+        .section-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 700; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        label { font-size: 0.85rem; color: var(--text-muted); }
 
         input[type="text"], select {
             background-color: var(--bg-input);
@@ -146,18 +64,9 @@
             padding: 0.6rem 0.8rem;
             color: var(--text-main);
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        input[type="text"]:focus, select:focus {
-            border-color: var(--accent);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
         .custom-file-upload {
             border: 1px dashed var(--border);
@@ -168,40 +77,13 @@
             background: rgba(51, 65, 85, 0.3);
             font-size: 0.85rem;
             color: var(--text-muted);
-            transition: all 0.2s;
         }
 
-        .custom-file-upload:hover {
-            border-color: var(--accent);
-            color: var(--text-main);
-        }
+        input[type="file"] { display: none; }
+        input[type="color"] { width: 100%; height: 38px; border-radius: 8px; border: none; background: transparent; cursor: pointer; }
+        input[type="range"] { accent-color: var(--accent); }
 
-        input[type="file"] {
-            display: none;
-        }
-
-        input[type="color"] {
-            -webkit-appearance: none;
-            border: none;
-            width: 100%;
-            height: 38px;
-            border-radius: 8px;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        input[type="range"] {
-            accent-color: var(--accent);
-        }
-
-        /* Buttons */
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
+        .btn-group { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
         .btn {
             background-color: var(--accent);
             color: #0f172a;
@@ -214,68 +96,43 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: all 0.2s;
         }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background-color: var(--bg-input); color: var(--text-main); }
 
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
             background-color: var(--bg-input);
-            color: var(--text-main);
+            border-radius: 4px;
+            overflow: hidden;
+            display: none;
+            margin-top: 0.5rem;
         }
+        .progress-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.1s linear; }
 
-        .btn-secondary:hover {
-            background-color: #475569;
-        }
-
-        #exportStatus {
-            font-size: 0.85rem;
-            text-align: center;
-            color: var(--accent);
-            min-height: 1.2rem;
-        }
-
-        @media (max-width: 850px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .controls-panel {
-                width: 100%;
-                max-width: 360px;
-            }
-        }
+        #exportStatus { font-size: 0.85rem; text-align: center; color: var(--accent); min-height: 1.2rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1><span>✦</span> Watermark Studio (9:16)</h1>
+        <h1>✦ Video Watermark Studio (Fast Export 9:16)</h1>
     </header>
 
     <div class="container">
         <div class="preview-section">
             <div class="canvas-wrapper">
-                <canvas id="previewCanvas" width="720" height="1280"></canvas>
+                <canvas id="previewCanvas" width="1080" height="1920"></canvas>
             </div>
-            <div class="hint">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
-                Klik & seret watermark di canvas untuk mengatur posisinya
-            </div>
+            <div class="hint">Geser watermark langsung di layar preview</div>
         </div>
 
         <div class="controls-panel">
             <div class="form-group">
                 <div class="section-title">1. Sumber Video</div>
                 <label class="custom-file-upload">
-                    <span id="videoLabel">Pilih Video (MP4 / WebM)</span>
+                    <span id="videoLabel">Pilih Video</span>
                     <input type="file" id="videoInput" accept="video/*">
                 </label>
             </div>
@@ -291,10 +148,10 @@
 
             <div id="textControls">
                 <div class="form-group">
-                    <label>Teks Watermark</label>
-                    <input type="text" id="wmText" value="@username_anda">
+                    <label>Teks</label>
+                    <input type="text" id="wmText" value="@nama_kamu">
                 </div>
-                <div class="grid-2" style="margin-top:0.75rem;">
+                <div class="grid-2" style="margin-top:0.5rem;">
                     <div class="form-group">
                         <label>Font</label>
                         <select id="wmFont">
@@ -306,7 +163,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Warna Teks</label>
+                        <label>Warna</label>
                         <input type="color" id="wmColor" value="#ffffff">
                     </div>
                 </div>
@@ -314,58 +171,62 @@
 
             <div id="imageControls" style="display: none;">
                 <div class="form-group">
-                    <label>Upload Logo (PNG Transparan)</label>
+                    <label>Upload Logo</label>
                     <label class="custom-file-upload">
-                        <span id="logoLabel">Pilih File Logo</span>
+                        <span id="logoLabel">Pilih Logo</span>
                         <input type="file" id="logoInput" accept="image/*">
                     </label>
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top:0.5rem;">
-                <label>Ukuran: <span id="sizeValue">36</span>px</label>
-                <input type="range" id="wmSize" min="16" max="150" value="36">
+            <div class="form-group">
+                <label>Ukuran: <span id="sizeValue">54</span>px</label>
+                <input type="range" id="wmSize" min="20" max="250" value="54">
             </div>
 
             <div class="form-group">
-                <label>Transparansi (Opasitas): <span id="opacityValue">80</span>%</label>
-                <input type="range" id="wmOpacity" min="10" max="100" value="80">
+                <label>Opasitas: <span id="opacityValue">85</span>%</label>
+                <input type="range" id="wmOpacity" min="10" max="100" value="85">
             </div>
 
             <div class="btn-group">
                 <button class="btn btn-secondary" id="playPauseBtn" disabled>▶ Putar Preview</button>
-                <button class="btn" id="exportBtn" disabled>💾 Proses & Download Video</button>
+                <button class="btn" id="exportBtn" disabled>⚡ Download Video Cepat (HD)</button>
+                <div class="progress-bar-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
                 <div id="exportStatus"></div>
             </div>
         </div>
     </div>
 
-    <video id="sourceVideo" style="display: none;" playsinline loop muted></video>
+    <video id="sourceVideo" style="display: none;" playsinline muted></video>
 
     <script>
         const canvas = document.getElementById('previewCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false });
         const video = document.getElementById('sourceVideo');
 
-        // State Watermark
+        // Resolusi Full HD 9:16 (1080x1920) untuk output tajam
+        canvas.width = 1080;
+        canvas.height = 1920;
+
         let watermark = {
             type: 'text',
-            text: '@username_anda',
+            text: '@nama_kamu',
             font: 'Plus Jakarta Sans',
             color: '#ffffff',
-            x: 360, 
-            y: 120, // Default dekat bagian atas
-            size: 36,
-            opacity: 0.8,
+            x: 540,
+            y: 220,
+            size: 54,
+            opacity: 0.85,
             image: null
         };
 
         let isDragging = false;
         let isVideoLoaded = false;
-        let mediaRecorder;
-        let recordedChunks = [];
+        let isExporting = false;
 
-        // Elements
         const videoInput = document.getElementById('videoInput');
         const logoInput = document.getElementById('logoInput');
         const watermarkType = document.getElementById('watermarkType');
@@ -379,32 +240,29 @@
         const playPauseBtn = document.getElementById('playPauseBtn');
         const exportBtn = document.getElementById('exportBtn');
         const exportStatus = document.getElementById('exportStatus');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
 
-        // Render Canvas
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Render Video / Background
+        function renderFrame() {
             if (isVideoLoaded && video.readyState >= 2) {
-                // Menyesuaikan rasio pengisian video 9:16
                 const hRatio = canvas.width / video.videoWidth;
                 const vRatio = canvas.height / video.videoHeight;
                 const ratio = Math.max(hRatio, vRatio);
-                const centerShiftX = (canvas.width - video.videoWidth * ratio) / 2;
-                const centerShiftY = (canvas.height - video.videoHeight * ratio) / 2;
+                const shiftX = (canvas.width - video.videoWidth * ratio) / 2;
+                const shiftY = (canvas.height - video.videoHeight * ratio) / 2;
                 
                 ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight,
-                             centerShiftX, centerShiftY, video.videoWidth * ratio, video.videoHeight * ratio);
+                             shiftX, shiftY, video.videoWidth * ratio, video.videoHeight * ratio);
             } else {
                 ctx.fillStyle = "#1e293b";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#64748b";
-                ctx.font = "24px 'Plus Jakarta Sans'";
+                ctx.font = "36px 'Plus Jakarta Sans'";
                 ctx.textAlign = "center";
                 ctx.fillText("Upload video untuk memulai", canvas.width / 2, canvas.height / 2);
             }
 
-            // 2. Render Watermark
+            // Watermark Drawing
             ctx.save();
             ctx.globalAlpha = watermark.opacity;
 
@@ -413,30 +271,27 @@
                 ctx.fillStyle = watermark.color;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
-                // Tambahkan efek shadow tipis agar terbaca di segala latar
-                ctx.shadowColor = 'rgba(0,0,0,0.6)';
-                ctx.shadowBlur = 6;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 2;
-
+                ctx.shadowColor = 'rgba(0,0,0,0.7)';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetY = 4;
                 ctx.fillText(watermark.text, watermark.x, watermark.y);
             } else if (watermark.type === 'image' && watermark.image) {
                 const img = watermark.image;
                 const aspect = img.width / img.height;
-                const width = watermark.size * 3;
+                const width = watermark.size * 3.5;
                 const height = width / aspect;
-                
                 ctx.drawImage(img, watermark.x - width/2, watermark.y - height/2, width, height);
             }
             ctx.restore();
+        }
 
-            if (!video.paused && !video.ended) {
-                requestAnimationFrame(draw);
+        function previewLoop() {
+            if (!video.paused && !video.ended && !isExporting) {
+                renderFrame();
+                requestAnimationFrame(previewLoop);
             }
         }
 
-        // Event: Upload Video
         videoInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -446,42 +301,32 @@
                     isVideoLoaded = true;
                     playPauseBtn.disabled = false;
                     exportBtn.disabled = false;
-                    draw();
+                    renderFrame();
                 };
             }
         });
 
-        // Event: Switch Tipe Watermark
         watermarkType.addEventListener('change', (e) => {
             watermark.type = e.target.value;
-            if (watermark.type === 'text') {
-                textControls.style.display = 'block';
-                imageControls.style.display = 'none';
-            } else {
-                textControls.style.display = 'none';
-                imageControls.style.display = 'block';
-            }
-            draw();
+            textControls.style.display = watermark.type === 'text' ? 'block' : 'none';
+            imageControls.style.display = watermark.type === 'image' ? 'block' : 'none';
+            renderFrame();
         });
 
-        // Event: Update Form Teks & Styling
-        wmText.addEventListener('input', (e) => { watermark.text = e.target.value; draw(); });
-        wmFont.addEventListener('change', (e) => { watermark.font = e.target.value; draw(); });
-        wmColor.addEventListener('input', (e) => { watermark.color = e.target.value; draw(); });
-        
+        wmText.addEventListener('input', (e) => { watermark.text = e.target.value; renderFrame(); });
+        wmFont.addEventListener('change', (e) => { watermark.font = e.target.value; renderFrame(); });
+        wmColor.addEventListener('input', (e) => { watermark.color = e.target.value; renderFrame(); });
         wmSize.addEventListener('input', (e) => { 
             watermark.size = parseInt(e.target.value); 
             document.getElementById('sizeValue').innerText = watermark.size;
-            draw(); 
+            renderFrame(); 
         });
-
         wmOpacity.addEventListener('input', (e) => { 
             watermark.opacity = parseInt(e.target.value) / 100; 
             document.getElementById('opacityValue').innerText = e.target.value;
-            draw(); 
+            renderFrame(); 
         });
 
-        // Event: Upload Logo
         logoInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -490,118 +335,126 @@
                 img.src = URL.createObjectURL(file);
                 img.onload = () => {
                     watermark.image = img;
-                    draw();
+                    renderFrame();
                 };
             }
         });
 
-        // Drag & Drop Watermark pada Canvas
         function getCanvasCoordinates(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
             return {
                 x: (clientX - rect.left) * scaleX,
                 y: (clientY - rect.top) * scaleY
             };
         }
 
-        function startDrag(e) {
-            isDragging = true;
-            moveWatermark(e);
-        }
-
+        function startDrag(e) { isDragging = true; moveWatermark(e); }
         function moveWatermark(e) {
-            if (!isDragging) return;
+            if (!isDragging || isExporting) return;
             const pos = getCanvasCoordinates(e);
             watermark.x = Math.max(0, Math.min(canvas.width, pos.x));
             watermark.y = Math.max(0, Math.min(canvas.height, pos.y));
-            if (video.paused) draw();
+            if (video.paused) renderFrame();
         }
-
-        function stopDrag() {
-            isDragging = false;
-        }
+        function stopDrag() { isDragging = false; }
 
         canvas.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', moveWatermark);
         window.addEventListener('mouseup', stopDrag);
-
-        // Touch support untuk HP/Tablet
         canvas.addEventListener('touchstart', startDrag);
         window.addEventListener('touchmove', moveWatermark);
         window.addEventListener('touchend', stopDrag);
 
-        // Play / Pause
         playPauseBtn.addEventListener('click', () => {
             if (video.paused) {
                 video.play();
-                playPauseBtn.innerText = '⏸ Jeda Preview';
-                draw();
+                playPauseBtn.innerText = '⏸ Jeda';
+                previewLoop();
             } else {
                 video.pause();
                 playPauseBtn.innerText = '▶ Putar Preview';
             }
         });
 
-        // Export/Download Video (Menggunakan MediaRecorder API)
+        // FAST EXPORT dengan High-Bitrate (8 Mbps)
         exportBtn.addEventListener('click', async () => {
-            if (!isVideoLoaded) return;
+            if (!isVideoLoaded || isExporting) return;
 
-            exportBtn.disabled = true;
+            isExporting = true;
+            video.pause();
             playPauseBtn.disabled = true;
-            exportStatus.innerText = "Merekam & memproses video...";
+            exportBtn.disabled = true;
+            progressContainer.style.display = 'block';
+            exportStatus.innerText = "Memproses video berkecepatan tinggi...";
 
+            // Menjalankan video dengan kecepatan playback maksimal yang didukung browser (2x-4x)
+            video.playbackRate = 4.0;
             video.currentTime = 0;
-            video.muted = false; // Memastikan audio ikut jika didukung
-            await video.play();
 
-            const stream = canvas.captureStream(30); // 30 FPS
-            recordedChunks = [];
+            const stream = canvas.captureStream(30);
+            const recordedChunks = [];
             
-            // Konfigurasi Recorder
-            const options = { mimeType: 'video/webm; codecs=vp9' };
-            try {
-                mediaRecorder = new MediaRecorder(stream, options);
-            } catch (e) {
-                mediaRecorder = new MediaRecorder(stream);
-            }
-
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
+            // Set bitrate tinggi (8 Mbps) agar hasil Full HD tajam tanpa pecah
+            const recorderOptions = {
+                mimeType: 'video/webm;codecs=vp9',
+                videoBitsPerSecond: 8000000 
             };
 
-            mediaRecorder.onstop = () => {
+            let recorder;
+            try {
+                recorder = new MediaRecorder(stream, recorderOptions);
+            } catch (err) {
+                recorder = new MediaRecorder(stream, { videoBitsPerSecond: 8000000 });
+            }
+
+            recorder.ondataavailable = (e) => {
+                if (e.data.size > 0) recordedChunks.push(e.data);
+            };
+
+            recorder.onstop = () => {
                 const blob = new Blob(recordedChunks, { type: 'video/mp4' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `watermarked_video_${Date.now()}.mp4`;
+                a.download = `watermark_hd_${Date.now()}.mp4`;
                 a.click();
-                
-                exportStatus.innerText = "Selesai! File sedang diunduh.";
+
+                // Reset state
+                video.playbackRate = 1.0;
+                isExporting = false;
                 exportBtn.disabled = false;
                 playPauseBtn.disabled = false;
-                playPauseBtn.innerText = '▶ Putar Preview';
-                video.pause();
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+                exportStatus.innerText = "Selesai! Video berhasil diunduh.";
             };
 
-            mediaRecorder.start();
-            draw();
+            recorder.start();
+            await video.play();
 
-            video.onended = () => {
-                mediaRecorder.stop();
-            };
+            // Render loop khusus ekspor
+            function fastRender() {
+                if (!video.ended && isExporting) {
+                    renderFrame();
+                    const progress = (video.currentTime / video.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    exportStatus.innerText = `Memproses: ${Math.round(progress)}%`;
+                    requestAnimationFrame(fastRender);
+                } else if (video.ended) {
+                    renderFrame();
+                    progressBar.style.width = '100%';
+                    recorder.stop();
+                }
+            }
+
+            fastRender();
         });
 
-        // Gambar state inisial
-        draw();
+        renderFrame();
     </script>
 </body>
 </html>
