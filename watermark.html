@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Video Editor Watermark & Auto Subtitle 9:16 Responsif</title>
-    <meta name="description" content="Aplikasi web editor video vertikal 9:16 online untuk menambahkan watermark kustom dan transkripsi subtitle suara manusia otomatis tanpa menghilangkan audio.">
-    <meta name="keywords" content="watermark video, subtitle otomatis video, editor video 9:16, convert video mobile">
-    <meta name="robots" content="index, follow">
-
+    <title>Studio Watermark & Subtitle 9:16 (Auto-Save State)</title>
+    <meta name="description" content="Aplikasi editor video vertikal 9:16 dengan penyimpanan otomatis teks, transparansi, lokasi watermark, dan tombol reset ke default.">
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Montserrat:wght@700;900&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 
     <style>
@@ -18,6 +16,9 @@
             --primary: #38bdf8;
             --primary-hover: #0ea5e9;
             --accent: #f59e0b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
             --text: #f8fafc;
             --text-sub: #94a3b8;
             --border: #334155;
@@ -219,6 +220,7 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
+            transition: all 0.2s;
         }
 
         .btn:disabled {
@@ -230,6 +232,32 @@
             background: transparent;
             border: 1px solid var(--border);
             color: var(--text);
+        }
+
+        .btn-save {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 0.65rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-save:hover {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.65rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: #fff;
         }
 
         .progress-box {
@@ -262,13 +290,15 @@
     </header>
 
     <main class="main-wrapper">
+        <!-- Area HP 9:16 -->
         <section class="stage-area">
             <div class="phone-frame">
                 <canvas id="videoCanvas" width="1080" height="1920"></canvas>
             </div>
-            <p class="phone-hint">👆 Sentuh dan geser teks watermark di layar</p>
+            <p class="phone-hint">👆 Sentuh dan geser teks watermark di layar (posisi tersimpan otomatis)</p>
         </section>
 
+        <!-- Panel Kontrol -->
         <section class="settings-card">
             
             <div class="group-title">1. Unggah Media</div>
@@ -327,12 +357,19 @@
                 </div>
             </div>
 
+            <!-- Tombol Simpan & Reset Preset -->
+            <div class="row-2" style="margin-top: 0.2rem;">
+                <button type="button" class="btn btn-save" id="saveManualBtn">💾 Simpan Posisi</button>
+                <button type="button" class="btn btn-danger" id="resetBtn">🔄 Reset Default</button>
+            </div>
+
             <div class="group-title">3. Subtitle Suara Manusia (AI)</div>
             <label class="checkbox-container">
                 <input type="checkbox" id="autoSubtitleCheck" checked>
                 <span>Aktifkan Subtitle Teks Suara Manusia</span>
             </label>
 
+            <!-- Aksi Video -->
             <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:0.4rem;">
                 <button type="button" class="btn btn-outline" id="playBtn" disabled>▶ Putar Preview Video</button>
                 <button type="button" class="btn" id="exportBtn" disabled>⚡ Download Video & Suara Asli</button>
@@ -350,19 +387,22 @@
         const ctx = canvas.getContext('2d');
         const video = document.getElementById('rawVideo');
 
-        // State Watermark & Subtitle
-        let watermark = {
+        // Nilai Default Awal
+        const DEFAULT_CONFIG = {
             type: 'text',
             text: '@nama_kamu',
             font: 'Plus Jakarta Sans',
             color: '#ffffff',
             x: 540,
-            y: 200, // Posisi atas
+            y: 200, // Atas
             size: 60,
             opacity: 0.9,
-            logoImg: null
+            logoBase64: null,
+            autoSubtitle: true
         };
 
+        // State Aktif
+        let watermark = { ...DEFAULT_CONFIG, logoImg: null };
         let currentSubtitle = "";
         let isDragging = false;
         let isExporting = false;
@@ -382,11 +422,101 @@
         const autoSubtitleCheck = document.getElementById('autoSubtitleCheck');
         const playBtn = document.getElementById('playBtn');
         const exportBtn = document.getElementById('exportBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const saveManualBtn = document.getElementById('saveManualBtn');
         const statusText = document.getElementById('statusText');
         const pBox = document.getElementById('pBox');
         const pBar = document.getElementById('pBar');
 
-        // Setup AI Speech Recognition (Deteksi Suara Manusia)
+        // --- SISTEM LOCAL STORAGE (SIMPAN & MUAT) ---
+        function saveSettingsToLocal() {
+            const dataToSave = {
+                type: watermark.type,
+                text: watermark.text,
+                font: watermark.font,
+                color: watermark.color,
+                x: watermark.x,
+                y: watermark.y,
+                size: watermark.size,
+                opacity: watermark.opacity,
+                logoBase64: watermark.logoBase64,
+                autoSubtitle: autoSubtitleCheck.checked
+            };
+            localStorage.setItem('watermark_studio_config', JSON.stringify(dataToSave));
+        }
+
+        function loadSettingsFromLocal() {
+            const saved = localStorage.getItem('watermark_studio_config');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    watermark = { ...watermark, ...parsed };
+                    
+                    // Muat Logo jika ada base64 tersimpan
+                    if (watermark.logoBase64) {
+                        const img = new Image();
+                        img.src = watermark.logoBase64;
+                        img.onload = () => {
+                            watermark.logoImg = img;
+                            render();
+                        };
+                        document.getElementById('logoStatusLabel').innerText = "Logo Tersimpan (Aktif)";
+                    }
+
+                    // Sinkronkan ke elemen UI
+                    wmType.value = watermark.type;
+                    wmText.value = watermark.text;
+                    wmFont.value = watermark.font;
+                    wmColor.value = watermark.color;
+                    wmSize.value = watermark.size;
+                    document.getElementById('valSize').innerText = watermark.size;
+                    wmOpacity.value = Math.round(watermark.opacity * 100);
+                    document.getElementById('valOpacity').innerText = Math.round(watermark.opacity * 100);
+                    autoSubtitleCheck.checked = watermark.autoSubtitle !== undefined ? watermark.autoSubtitle : true;
+
+                    textSetting.style.display = watermark.type === 'text' ? 'block' : 'none';
+                    logoSetting.style.display = watermark.type === 'logo' ? 'block' : 'none';
+                } catch (e) {
+                    console.error("Gagal memuat setting dari local storage", e);
+                }
+            }
+        }
+
+        // --- RESET KE DEFAULT ---
+        resetBtn.addEventListener('click', () => {
+            if (confirm("Kembalikan semua teks, posisi, dan transparansi ke pengaturan awal?")) {
+                localStorage.removeItem('watermark_studio_config');
+                watermark = { ...DEFAULT_CONFIG, logoImg: null };
+                
+                wmType.value = watermark.type;
+                wmText.value = watermark.text;
+                wmFont.value = watermark.font;
+                wmColor.value = watermark.color;
+                wmSize.value = watermark.size;
+                document.getElementById('valSize').innerText = watermark.size;
+                wmOpacity.value = Math.round(watermark.opacity * 100);
+                document.getElementById('valOpacity').innerText = Math.round(watermark.opacity * 100);
+                autoSubtitleCheck.checked = true;
+                
+                document.getElementById('logoStatusLabel').innerText = "🖼 Pilih Logo (PNG)";
+                textSetting.style.display = 'block';
+                logoSetting.style.display = 'none';
+
+                saveSettingsToLocal();
+                render();
+
+                statusText.innerText = "✓ Pengaturan berhasil di-reset ke default!";
+                setTimeout(() => { statusText.innerText = ""; }, 3000);
+            }
+        });
+
+        saveManualBtn.addEventListener('click', () => {
+            saveSettingsToLocal();
+            statusText.innerText = "✓ Posisi & konfigurasi berhasil disimpan!";
+            setTimeout(() => { statusText.innerText = ""; }, 3000);
+        });
+
+        // Setup AI Speech Recognition
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             speechRecognizer = new SpeechRecognition();
@@ -404,14 +534,12 @@
             };
         }
 
-        // Render Frame Canvas (Video Utuh Tanpa Terpotong)
+        // Render Frame Canvas
         function render() {
-            // Latar Belakang Hitam Pekat
             ctx.fillStyle = "#000000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (video.readyState >= 2) {
-                // LOGIKA "CONTAIN / FIT": Seluruh frame video asli masuk tanpa ter-crop
                 const scale = Math.min(canvas.width / video.videoWidth, canvas.height / video.videoHeight);
                 const drawWidth = video.videoWidth * scale;
                 const drawHeight = video.videoHeight * scale;
@@ -426,7 +554,7 @@
                 ctx.fillText("Upload video untuk memulai", 540, 960);
             }
 
-            // Render Watermark
+            // Render Watermark (Posisi dan Transparansi tetap terkunci dari state)
             ctx.save();
             ctx.globalAlpha = watermark.opacity;
             if (watermark.type === 'text') {
@@ -445,7 +573,7 @@
             }
             ctx.restore();
 
-            // Render Subtitle Suara Manusia (Jika Aktif dan Ada Ucapan)
+            // Subtitle
             if (autoSubtitleCheck.checked && currentSubtitle.trim() !== "") {
                 ctx.save();
                 ctx.font = "bold 44px 'Plus Jakarta Sans'";
@@ -453,16 +581,14 @@
                 ctx.textBaseline = "bottom";
 
                 const subX = 540;
-                const subY = 1750; // Posisi bawah layar handphone
+                const subY = 1750;
                 const textWidth = ctx.measureText(currentSubtitle).width;
 
-                // Box Background Teks Subtitle
                 ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
                 ctx.roundRect ? ctx.roundRect(subX - textWidth/2 - 24, subY - 56, textWidth + 48, 64, 12) : 
                                 ctx.fillRect(subX - textWidth/2 - 24, subY - 56, textWidth + 48, 64);
                 ctx.fill();
 
-                // Teks Subtitle Kuning Kontras
                 ctx.fillStyle = "#fde047";
                 ctx.fillText(currentSubtitle, subX, subY - 8);
                 ctx.restore();
@@ -490,36 +616,69 @@
             }
         });
 
-        // Toggle Type
+        // Event Input & Auto-Save
         wmType.addEventListener('change', (e) => {
             watermark.type = e.target.value;
             textSetting.style.display = watermark.type === 'text' ? 'block' : 'none';
             logoSetting.style.display = watermark.type === 'logo' ? 'block' : 'none';
+            saveSettingsToLocal();
             render();
         });
 
-        // Kontrol Input
-        wmText.addEventListener('input', (e) => { watermark.text = e.target.value; render(); });
-        wmFont.addEventListener('change', (e) => { watermark.font = e.target.value; render(); });
-        wmColor.addEventListener('input', (e) => { watermark.color = e.target.value; render(); });
-        wmSize.addEventListener('input', (e) => { 
-            watermark.size = parseInt(e.target.value); 
-            document.getElementById('valSize').innerText = watermark.size;
-            render(); 
-        });
-        wmOpacity.addEventListener('input', (e) => { 
-            watermark.opacity = parseInt(e.target.value) / 100; 
-            document.getElementById('valOpacity').innerText = e.target.value;
+        wmText.addEventListener('input', (e) => { 
+            watermark.text = e.target.value; 
+            saveSettingsToLocal();
             render(); 
         });
 
+        wmFont.addEventListener('change', (e) => { 
+            watermark.font = e.target.value; 
+            saveSettingsToLocal();
+            render(); 
+        });
+
+        wmColor.addEventListener('input', (e) => { 
+            watermark.color = e.target.value; 
+            saveSettingsToLocal();
+            render(); 
+        });
+
+        wmSize.addEventListener('input', (e) => { 
+            watermark.size = parseInt(e.target.value); 
+            document.getElementById('valSize').innerText = watermark.size;
+            saveSettingsToLocal();
+            render(); 
+        });
+
+        wmOpacity.addEventListener('input', (e) => { 
+            watermark.opacity = parseInt(e.target.value) / 100; 
+            document.getElementById('valOpacity').innerText = e.target.value;
+            saveSettingsToLocal();
+            render(); 
+        });
+
+        autoSubtitleCheck.addEventListener('change', () => {
+            saveSettingsToLocal();
+            render();
+        });
+
+        // Upload Logo & Simpan Base64 ke Local Storage
         logoFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
-                document.getElementById('logoStatusLabel').innerText = file.name.substring(0, 18);
-                const img = new Image();
-                img.src = URL.createObjectURL(file);
-                img.onload = () => { watermark.logoImg = img; render(); };
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    watermark.logoBase64 = event.target.result;
+                    const img = new Image();
+                    img.src = watermark.logoBase64;
+                    img.onload = () => {
+                        watermark.logoImg = img;
+                        saveSettingsToLocal();
+                        render();
+                    };
+                    document.getElementById('logoStatusLabel').innerText = file.name.substring(0, 18);
+                };
+                reader.readAsDataURL(file);
             }
         });
 
@@ -535,11 +694,21 @@
 
         canvas.addEventListener('mousedown', (e) => { isDragging = true; updatePos(e); });
         window.addEventListener('mousemove', (e) => { if (isDragging && !isExporting) updatePos(e); });
-        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                saveSettingsToLocal(); // Simpan koordinat lokasi terbaru
+            }
+        });
 
         canvas.addEventListener('touchstart', (e) => { isDragging = true; updatePos(e); }, { passive: true });
         window.addEventListener('touchmove', (e) => { if (isDragging && !isExporting) updatePos(e); }, { passive: true });
-        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                saveSettingsToLocal(); // Simpan koordinat lokasi terbaru
+            }
+        });
 
         function updatePos(e) {
             const pos = getCanvasCoords(e);
@@ -566,7 +735,7 @@
             }
         });
 
-        // Ekspor Video + Mempertahankan Audio Asli
+        // Ekspor Video + Audio Asli
         exportBtn.addEventListener('click', async () => {
             if (isExporting) return;
             isExporting = true;
@@ -575,18 +744,15 @@
             playBtn.disabled = true;
             exportBtn.disabled = true;
             pBox.style.display = 'block';
-            statusText.innerText = "Memproses video & menyatukan audio asli...";
+            statusText.innerText = "Memproses video & audio asli...";
 
-            // Setup Web Audio API untuk mempertahankan suara asli 100%
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const audioSource = audioCtx.createMediaElementSource(video);
             const audioDestination = audioCtx.createMediaStreamDestination();
             audioSource.connect(audioDestination);
-            audioSource.connect(audioCtx.destination); // Ke speaker saat render
+            audioSource.connect(audioCtx.destination);
 
             const canvasStream = canvas.captureStream(30);
-            
-            // Gabungkan video stream canvas + audio stream asli
             const combinedStream = new MediaStream([
                 ...canvasStream.getVideoTracks(),
                 ...audioDestination.stream.getAudioTracks()
@@ -595,7 +761,7 @@
             const chunks = [];
             const recorder = new MediaRecorder(combinedStream, {
                 mimeType: 'video/webm; codecs=vp8,opus',
-                videoBitsPerSecond: 8000000 // 8 Mbps HD
+                videoBitsPerSecond: 8000000
             });
 
             recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
@@ -604,7 +770,7 @@
                 const blob = new Blob(chunks, { type: 'video/mp4' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = `video_watermark_${Date.now()}.mp4`;
+                a.download = `video_watermarked_${Date.now()}.mp4`;
                 a.click();
 
                 isExporting = false;
@@ -635,7 +801,8 @@
             exportLoop();
         });
 
-        // Inisialisasi Layar Pertama
+        // Muat Konfigurasi Tersimpan saat Pertama Dibuka
+        loadSettingsFromLocal();
         render();
     </script>
 </body>
