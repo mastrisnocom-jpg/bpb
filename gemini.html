@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI Image Studio Pro</title>
+  <title>AI Image Studio Lite</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -17,13 +17,6 @@
     .custom-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
-    }
-    @keyframes pulse-indigo {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-    .anim-pulse-indigo {
-      animation: pulse-indigo 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
   </style>
 </head>
@@ -39,8 +32,8 @@
           </svg>
         </div>
         <div>
-          <h1 class="text-base font-bold tracking-tight text-white leading-tight">AI Studio <span class="text-xs font-medium text-indigo-400">Pro</span></h1>
-          <p class="text-[11px] text-slate-400 font-medium">Image Generation & Optimization</p>
+          <h1 class="text-base font-bold tracking-tight text-white leading-tight">AI Studio <span class="text-xs font-medium text-indigo-400">Lite</span></h1>
+          <p class="text-[11px] text-slate-400 font-medium">Simple Image Generation</p>
         </div>
       </div>
       <span id="engineBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -50,56 +43,24 @@
 
     <main class="flex-1 p-5 space-y-5 overflow-y-auto custom-scrollbar">
 
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
-          <a 
-            href="https://aistudio.google.com/app/apikey" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 transition-colors">
-            <span>Dapatkan API Key</span>
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        </div>
+      <div class="space-y-1.5 opacity-50">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key (Optional for Lite)</label>
         <div class="relative">
           <input 
             type="password" 
             id="apiKey" 
-            placeholder="AIzaSy..." 
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono">
-          <button 
-            type="button" 
-            onclick="toggleKeyVisibility()"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs">
-            Show
-          </button>
+            placeholder="Key not needed for basic generation" 
+            class="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-400 placeholder-slate-700 font-mono cursor-not-allowed"
+            disabled>
         </div>
       </div>
 
-      <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Deskripsi Gambar (Prompt)</label>
-          
-          <button 
-            id="optimizeBtn"
-            onclick="optimizePrompt()"
-            class="text-[11px] font-medium text-slate-400 hover:text-indigo-400 flex items-center space-x-1.5 transition-colors px-2 py-1 rounded-lg hover:bg-indigo-500/10"
-            title="Ubah ide singkat menjadi prompt detail">
-            <svg id="magicIcon" class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-1.008.504a4 4 0 01-2.185.455l-2.316-.232a2 2 0 00-1.35.452l-2.073 2.073a2 2 0 00-.586 1.414V21h12.5a2 2 0 001.916-1.391l1.196-3.791a2 2 0 00-.015-1.39z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.5 14h.5M14 11h.5M16 8h.5M19 11h.5M18 14h.5M11.5 8h.5M10.5 11h.5M12.5 14h.5M7.5 8h.5M8.5 11h.5M10.5 14h.5" />
-            </svg>
-            <span id="optimizeText">Optimasi Prompt</span>
-          </button>
-        </div>
-
+      <div class="space-y-1.5">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Deskripsi Gambar (Prompt)</label>
         <textarea 
           id="prompt" 
-          rows="4" 
-          placeholder="Tulis ide singkat Anda (misal: kucing astronot) lalu tekan 'Optimasi Prompt' untuk hasil detail..." 
+          rows="3" 
+          placeholder="Tulis ide Anda (misal: 'kucing astronot terbang di ruang angkasa')" 
           class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"></textarea>
       </div>
 
@@ -147,7 +108,7 @@
 
           <div id="loadingView" class="hidden flex-col items-center space-y-3">
             <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            <p id="loadingStatusText" class="text-xs text-slate-400 animate-pulse">Sedang memproses...</p>
+            <p class="text-xs text-slate-400 animate-pulse">Sedang merender gambar...</p>
           </div>
 
           <img id="generatedImage" class="hidden w-full h-full object-contain rounded-xl" alt="AI Generated Output" />
@@ -160,16 +121,6 @@
   <script>
     let selectedAspectRatio = '1:1';
     let currentImageUrl = null;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedKey = localStorage.getItem('gemini_api_key');
-      if (savedKey) document.getElementById('apiKey').value = savedKey;
-    });
-
-    function toggleKeyVisibility() {
-      const input = document.getElementById('apiKey');
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
 
     function setRatio(ratio) {
       selectedAspectRatio = ratio;
@@ -186,113 +137,25 @@
 
     function getDimensions(ratio) {
       switch (ratio) {
-        case '9:16': return { width: 720, height: 1280 };
-        case '16:9': return { width: 1280, height: 720 };
+        case '9:16': return { width: 576, height: 1024 };
+        case '16:9': return { width: 1024, height: 576 };
         case '4:3':  return { width: 1024, height: 768 };
         case '1:1':
         default:     return { width: 1024, height: 1024 };
       }
     }
 
-    // --- FUNGSI BARU: OPTIMASI PROMPT ---
-    async function optimizePrompt() {
-      const apiKey = document.getElementById('apiKey').value.trim();
-      const promptInput = document.getElementById('prompt');
-      const optimizeBtn = document.getElementById('optimizeBtn');
-      const optimizeText = document.getElementById('optimizeText');
-      const magicIcon = document.getElementById('magicIcon');
-
-      const userIdea = promptInput.value.trim();
-
-      if (!apiKey) {
-        alert('Harap masukkan Gemini API Key terlebih dahulu untuk menggunakan fitur optimasi.');
-        return;
-      }
-      if (!userIdea) {
-        alert('Tuliskan ide singkat Anda di kolom prompt terlebih dahulu (misal: "kucing terbang").');
-        promptInput.focus();
-        return;
-      }
-
-      // UI State -> Loading
-      optimizeBtn.disabled = true;
-      optimizeText.innerText = 'Mengoptimasi...';
-      magicIcon.classList.add('anim-pulse-indigo');
-      promptInput.classList.add('opacity-70');
-      promptInput.disabled = true;
-
-      try {
-        // Menggunakan gemini-1.5-flash untuk kecepatan dan efisiensi biaya
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
-        // System Prompt khusus untuk instruksi pembuatan prompt gambar
-        const systemInstruction = "Anda adalah ahli pembuat prompt untuk AI Image Generator (seperti DALL-E, Midjourney, Imagen). Tugas Anda adalah mengambil ide singkat dari pengguna (dalam Bahasa Indonesia atau Inggris) dan mengubahnya menjadi prompt deskriptif yang detail, kaya visual, artistik, dan dalam Bahasa Inggris (karena AI gambar bekerja paling baik dengan Bahasa Inggris). Sertakan detail tentang subjek, latar belakang, gaya pencahayaan (misal: sinematik, studio, soft light), gaya artistik (misal: fotorealistik, anime, lukisan minyak, 8k, ultra detail), dan suasana. Jangan berikan teks pembuka, hanya berikan prompt akhirnya saja.";
-
-        const payload = {
-          contents: [{ 
-            parts: [{ 
-              text: `${systemInstruction}\n\nIde Pengguna: "${userIdea}"\n\nPrompt Detail (dalam Bahasa Inggris):` 
-            }] 
-          }],
-          generationConfig: {
-            temperature: 0.7, // Sedikit kreatif
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 200, // Cukup untuk prompt yang bagus
-          }
-        };
-
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error?.message || 'Gagal menghubungi Gemini API.');
-        }
-
-        const optimizedResult = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (optimizedResult) {
-          // Update prompt dengan hasil optimasi (dibersihkan dari spasi berlebih)
-          promptInput.value = optimizedResult.trim();
-        } else {
-          throw new Error('Gemini tidak memberikan respon yang valid.');
-        }
-
-      } catch (err) {
-        alert(`Gagal mengoptimasi prompt: ${err.message}\n\nPastikan API Key Anda valid dan memiliki akses ke model Gemini 1.5 Flash.`);
-      } finally {
-        // Restore UI State
-        optimizeBtn.disabled = false;
-        optimizeText.innerText = 'Optimasi Prompt';
-        magicIcon.classList.remove('anim-pulse-indigo');
-        promptInput.classList.remove('opacity-70');
-        promptInput.disabled = false;
-      }
-    }
-
-    // --- FUNGSI GENERATE GAMBAR (Tetap sama, menggunakan Fallback) ---
     async function generateImage() {
-      const apiKey = document.getElementById('apiKey').value.trim();
       const prompt = document.getElementById('prompt').value.trim();
       const generateBtn = document.getElementById('generateBtn');
       const placeholderView = document.getElementById('placeholderView');
       const loadingView = document.getElementById('loadingView');
-      const loadingStatus = document.getElementById('loadingStatusText');
       const generatedImage = document.getElementById('generatedImage');
       const downloadBtn = document.getElementById('downloadBtn');
 
       if (!prompt) {
-        alert('Tuliskan prompt deskripsi gambar terlebih dahulu atau gunakan fitur Optimasi.');
+        alert('Tuliskan prompt deskripsi gambar.');
         return;
-      }
-
-      if (apiKey) {
-        localStorage.setItem('gemini_api_key', apiKey);
       }
 
       generateBtn.disabled = true;
@@ -302,79 +165,39 @@
       downloadBtn.classList.add('hidden');
       loadingView.classList.remove('hidden');
       loadingView.classList.add('flex');
-      loadingStatus.innerText = 'Memproses permintaan...';
 
-      let success = false;
+      try {
+        const dim = getDimensions(selectedAspectRatio);
+        // Menggunakan engine pembuat gambar yang cepat & gratis
+        const seed = Math.floor(Math.random() * 1000000); // Acak untuk variasi
+        const fallbackImageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true`;
 
-      // 1. Coba Gemini Native Image Generation jika ada API Key
-      if (apiKey) {
-        loadingStatus.innerText = 'Menghubungkan ke Gemini Image...';
-        try {
-          // Menggunakan endpoint model yang sesuai untuk image generation (jika sudah di-whitelist)
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`;
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: {
-                responseModalities: ["IMAGE"]
-              }
-            })
-          });
+        // Validasi preload gambar sebelum ditampilkan
+        const imageCheck = new Image();
+        imageCheck.src = fallbackImageUrl;
+        
+        await new Promise((resolve, reject) => {
+          imageCheck.onload = resolve;
+          imageCheck.onerror = () => reject(new Error('Gagal memuat gambar dari server.'));
+        });
 
-          if (response.ok) {
-            const data = await response.json();
-            const part = data.candidates?.[0]?.content?.parts?.[0];
-            if (part && part.inlineData) {
-              currentImageUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
-              success = true;
-            }
-          } else {
-             console.warn('Gemini Native API ditolak (kemungkinan masalah whitelist model).');
-          }
-        } catch (e) {
-          console.warn('Gemini endpoint gagal, beralih ke engine fallback:', e);
-        }
-      }
-
-      // 2. Fallback Engine Otomatis (jika API Key tidak ada atau belum di-whitelist)
-      if (!success) {
-        loadingStatus.innerText = 'Menggunakan Cloud Image Engine...';
-        try {
-          const dim = getDimensions(selectedAspectRatio);
-          const seed = Math.floor(Math.random() * 1000000);
-          const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true`;
-
-          // Validasi preload gambar
-          await new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              currentImageUrl = fallbackUrl;
-              resolve();
-            };
-            img.onerror = reject;
-            img.src = fallbackUrl;
-          });
-
-          success = true;
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-      loadingView.classList.add('hidden');
-      loadingView.classList.remove('flex');
-      generateBtn.disabled = false;
-      generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-
-      if (success && currentImageUrl) {
+        currentImageUrl = fallbackImageUrl;
         generatedImage.src = currentImageUrl;
+        
+        loadingView.classList.add('hidden');
+        loadingView.classList.remove('flex');
         generatedImage.classList.remove('hidden');
         downloadBtn.classList.remove('hidden');
-      } else {
+
+      } catch (err) {
+        console.error(err);
+        alert(`Terjadi kesalahan: ${err.message}. Coba lagi nanti.`);
+        loadingView.classList.add('hidden');
+        loadingView.classList.remove('flex');
         placeholderView.classList.remove('hidden');
-        alert('Gagal membuat gambar. Periksa koneksi internet Anda atau coba prompt lain.');
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       }
     }
 
@@ -385,12 +208,12 @@
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = `ai-image-${Date.now()}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `ai-image-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(blobUrl);
       } catch (err) {
         window.open(currentImageUrl, '_blank');
