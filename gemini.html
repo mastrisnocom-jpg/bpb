@@ -48,7 +48,20 @@
 
       <!-- API Key Field -->
       <div class="space-y-1.5">
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
+          <!-- Tautan Buat API Key -->
+          <a 
+            href="https://aistudio.google.com/app/apikey" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 transition-colors">
+            <span>Dapatkan API Key</span>
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
         <div class="relative">
           <input 
             type="password" 
@@ -62,6 +75,9 @@
             Show
           </button>
         </div>
+        <p class="text-[10px] text-slate-500">
+          Belum punya kunci? Buat gratis melalui <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-slate-400 underline hover:text-indigo-400">Google AI Studio</a>.
+        </p>
       </div>
 
       <!-- Prompt Input -->
@@ -138,7 +154,6 @@
     let selectedAspectRatio = '1:1';
     let currentImageBase64 = null;
 
-    // Load saved API Key from localStorage
     window.addEventListener('DOMContentLoaded', () => {
       const savedKey = localStorage.getItem('gemini_api_key');
       if (savedKey) document.getElementById('apiKey').value = savedKey;
@@ -181,10 +196,8 @@
         return;
       }
 
-      // Save key locally for convenience
       localStorage.setItem('gemini_api_key', apiKey);
 
-      // UI state -> loading
       generateBtn.disabled = true;
       generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
       placeholderView.classList.add('hidden');
@@ -245,12 +258,13 @@
 
     function downloadImage() {
       if (!currentImageBase64) return;
-      const link = document.createElement('a');
-      link.href = currentImageBase64;
-      link.download = `ai-image-${Date.now()}.jpg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const link = document.createElement('link');
+      const a = document.createElement('a');
+      a.href = currentImageBase64;
+      a.download = `ai-image-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
   </script>
 </body>
