@@ -29,8 +29,10 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex justify-center selection:bg-indigo-500 selection:text-white">
 
+  <!-- Mobile Frame Container -->
   <div class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col shadow-2xl relative border-x border-slate-800">
     
+    <!-- Header -->
     <header class="sticky top-0 z-20 backdrop-blur-md bg-slate-900/80 border-b border-slate-800 px-5 py-4 flex items-center justify-between">
       <div class="flex items-center space-x-2.5">
         <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
@@ -48,8 +50,10 @@
       </span>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-1 p-5 space-y-5 overflow-y-auto custom-scrollbar">
 
+      <!-- API Key Field -->
       <div class="space-y-1.5">
         <div class="flex items-center justify-between">
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key (Optional)</label>
@@ -82,6 +86,7 @@
         </p>
       </div>
 
+      <!-- Prompt Input & Optimization -->
       <div class="space-y-2">
         <div class="flex items-center justify-between">
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Deskripsi Gambar (Prompt)</label>
@@ -102,10 +107,11 @@
         <textarea 
           id="prompt" 
           rows="4" 
-          placeholder="Tulis ide Anda (misal: 'kucing flying') lalu tekan 'Optimasi' atau 'Generate'..." 
+          placeholder="Tulis ide Anda (misal: 'kucing flying') lalu tekan 'Optimasi Prompt' atau 'Generate Gambar'..." 
           class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"></textarea>
       </div>
 
+      <!-- Aspect Ratio Selection -->
       <div class="space-y-1.5">
         <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Aspek Rasio</label>
         <div class="grid grid-cols-4 gap-2">
@@ -116,6 +122,7 @@
         </div>
       </div>
 
+      <!-- Generate Button -->
       <button 
         id="generateBtn" 
         onclick="generateImage()"
@@ -126,6 +133,7 @@
         </svg>
       </button>
 
+      <!-- Result Card -->
       <div class="pt-2">
         <div class="flex items-center justify-between mb-2">
           <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Hasil Render</h2>
@@ -197,7 +205,7 @@
       }
     }
 
-    // --- FUNGSI OPTIMASI PROMPT (MEMERLUKAN GEMINI API KEY) ---
+    // --- FUNGSI OPTIMASI PROMPT DIPERBAIKI (DENGAN AUTO FALLBACK) ---
     async function optimizePrompt() {
       const apiKey = document.getElementById('apiKey').value.trim();
       const promptInput = document.getElementById('prompt');
@@ -217,7 +225,6 @@
         return;
       }
 
-      // Simpan Key
       localStorage.setItem('gemini_api_key', apiKey);
 
       // UI State -> Loading
@@ -228,30 +235,32 @@
       promptInput.disabled = true;
 
       try {
-        // Menggunakan model Gemini 1.5 Flash untuk optimasi teks yang cepat
-        // URL Endpoint diperbarui untuk menggunakan v1 (stabil) alih-alih v1beta
-        const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
-        // System Prompt khusus untuk instruksi pembuatan prompt gambar
-        const systemInstruction = "Anda adalah ahli pembuat prompt untuk AI Image Generator (seperti DALL-E, Midjourney, Imagen). Tugas Anda adalah mengambil ide singkat dari pengguna (dalam Bahasa Indonesia atau Inggris) dan mengubahnya menjadi prompt deskriptif yang detail, kaya visual, artistik, dan dalam Bahasa Inggris (karena AI gambar bekerja paling baik dengan Bahasa Inggris). Sertakan detail tentang subjek, latar belakang, gaya pencahayaan (misal: sinematik, studio, soft light), gaya artistik (misal: fotorealistik, anime, lukisan minyak, 8k, ultra detail), dan suasana. Jangan berikan teks pembuka, hanya berikan prompt akhirnya saja.";
-
+        const systemInstruction = "Anda adalah ahli pembuat prompt untuk AI Image Generator (seperti Midjourney). Ubah ide singkat pengguna menjadi prompt deskriptif dalam Bahasa Inggris. Sertakan detail subjek, latar belakang, pencahayaan, dan gaya artistik. Jangan berikan teks pembuka, hanya berikan prompt akhirnya saja.";
         const payload = {
           contents: [{ 
-            parts: [{ 
-              text: `${systemInstruction}\n\nIde Pengguna: "${userIdea}"\n\nPrompt Detail (dalam Bahasa Inggris):` 
-            }] 
+            parts: [{ text: `${systemInstruction}\n\nIde Pengguna: "${userIdea}"\n\nPrompt Detail (Inggris):` }] 
           }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 200,
-          }
+          generationConfig: { temperature: 0.7, maxOutputTokens: 250 }
         };
 
-        const response = await fetch(endpoint, {
+        // Percobaan 1: Menggunakan model standar gemini-1.5-flash
+        const endpoint1 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        let response = await fetch(endpoint1, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        // Jika model 1.5-flash gagal (misal karena limitasi key/region), otomatis gunakan gemini-pro (1.0)
+        if (!response.ok) {
+            console.warn("Model 1.5-flash gagal, mencoba fallback ke gemini-pro...");
+            const endpoint2 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+            response = await fetch(endpoint2, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
 
         const data = await response.json();
 
@@ -262,15 +271,13 @@
         const optimizedResult = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (optimizedResult) {
-          // Update prompt dengan hasil optimasi
           promptInput.value = optimizedResult.trim();
         } else {
-          throw new Error('Gemini tidak memberikan respon yang valid.');
+          throw new Error('API tidak memberikan respon teks yang valid.');
         }
 
       } catch (err) {
-        // Menangani error akses model gemini-1.5-flash (termasuk regional restriction)
-        alert(`Gagal mengoptimasi prompt: ${err.message}\n\nPastikan API Key Anda valid dan memiliki akses ke model gemini-1.5-flash di region Anda. Anda tetap bisa menggunakan teks prompt langsung.`);
+        alert(`Gagal mengoptimasi prompt: ${err.message}\n\nPastikan API Key Anda valid dan terhubung dengan internet.`);
       } finally {
         // Restore UI State
         optimizeBtn.disabled = false;
@@ -281,9 +288,8 @@
       }
     }
 
-    // --- FUNGSI GENERATE GAMBAR (TIDAK MEMERLUKAN API KEY SEKARANG) ---
+    // --- FUNGSI GENERATE GAMBAR (TIDAK MEMERLUKAN API KEY) ---
     async function generateImage() {
-      const apiKey = document.getElementById('apiKey').value.trim(); // Tetap ambil, mungkin berguna nanti
       const prompt = document.getElementById('prompt').value.trim();
       const generateBtn = document.getElementById('generateBtn');
       const placeholderView = document.getElementById('placeholderView');
@@ -307,12 +313,11 @@
 
       try {
         const dim = getDimensions(selectedAspectRatio);
-        // Menggunakan engine pembuat gambar yang cepat, gratis, dan tidak memerlukan Key.
-        // seed diacak untuk variasi hasil setiap generate.
+        // Memakai parameter tambahan agar gambar lebih berkualitas
         const seed = Math.floor(Math.random() * 1000000);
-        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true`;
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true&enhance=true`;
 
-        // Validasi preload gambar sebelum ditampilkan
+        // Validasi preload gambar sebelum ditampilkan ke layar
         const imageCheck = new Image();
         imageCheck.src = imageUrl;
         
