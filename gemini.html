@@ -35,10 +35,10 @@
         </div>
         <div>
           <h1 class="text-base font-bold tracking-tight text-white leading-tight">AI Studio</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Powered by Imagen 3</p>
+          <p class="text-[11px] text-slate-400 font-medium">Gemini Image Generation</p>
         </div>
       </div>
-      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+      <span id="engineBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
         Ready
       </span>
     </header>
@@ -50,7 +50,6 @@
       <div class="space-y-1.5">
         <div class="flex items-center justify-between">
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
-          <!-- Tautan Buat API Key -->
           <a 
             href="https://aistudio.google.com/app/apikey" 
             target="_blank" 
@@ -75,8 +74,8 @@
             Show
           </button>
         </div>
-        <p class="text-[10px] text-slate-500">
-          Belum punya kunci? Buat gratis melalui <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-slate-400 underline hover:text-indigo-400">Google AI Studio</a>.
+        <p class="text-[10px] text-slate-500 leading-normal">
+          Kunci tersimpan aman di browser Anda (Local Storage).
         </p>
       </div>
 
@@ -86,7 +85,7 @@
         <textarea 
           id="prompt" 
           rows="3" 
-          placeholder="Contoh: Seekor kucing astronot melayang di ruang angkasa, gaya sinematik, detail tajam 8k..." 
+          placeholder="Contoh: Kucing oranye memakai kacamata hitam di pantai tropis, sinematik, detail 8k..." 
           class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"></textarea>
       </div>
 
@@ -139,7 +138,7 @@
           <!-- Loading State -->
           <div id="loadingView" class="hidden flex-col items-center space-y-3">
             <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-xs text-slate-400 animate-pulse">Sedang merender gambar...</p>
+            <p id="loadingStatusText" class="text-xs text-slate-400 animate-pulse">Sedang memproses gambar...</p>
           </div>
 
           <!-- Image Display -->
@@ -152,7 +151,7 @@
 
   <script>
     let selectedAspectRatio = '1:1';
-    let currentImageBase64 = null;
+    let currentImageUrl = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       const savedKey = localStorage.getItem('gemini_api_key');
@@ -177,26 +176,34 @@
       });
     }
 
+    function getDimensions(ratio) {
+      switch (ratio) {
+        case '9:16': return { width: 576, height: 1024 };
+        case '16:9': return { width: 1024, height: 576 };
+        case '4:3':  return { width: 1024, height: 768 };
+        case '1:1':
+        default:     return { width: 1024, height: 1024 };
+      }
+    }
+
     async function generateImage() {
       const apiKey = document.getElementById('apiKey').value.trim();
       const prompt = document.getElementById('prompt').value.trim();
       const generateBtn = document.getElementById('generateBtn');
       const placeholderView = document.getElementById('placeholderView');
       const loadingView = document.getElementById('loadingView');
+      const loadingStatus = document.getElementById('loadingStatusText');
       const generatedImage = document.getElementById('generatedImage');
       const downloadBtn = document.getElementById('downloadBtn');
 
-      if (!apiKey) {
-        alert('Harap masukkan Gemini API Key terlebih dahulu.');
-        return;
-      }
-
       if (!prompt) {
-        alert('Tuliskan prompt deskripsi gambar.');
+        alert('Tuliskan prompt deskripsi gambar terlebih dahulu.');
         return;
       }
 
-      localStorage.setItem('gemini_api_key', apiKey);
+      if (apiKey) {
+        localStorage.setItem('gemini_api_key', apiKey);
+      }
 
       generateBtn.disabled = true;
       generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -205,66 +212,95 @@
       downloadBtn.classList.add('hidden');
       loadingView.classList.remove('hidden');
       loadingView.classList.add('flex');
+      loadingStatus.innerText = 'Menghubungkan ke Gemini...';
 
-      try {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+      let success = false;
 
-        const payload = {
-          instances: [
-            { prompt: prompt }
-          ],
-          parameters: {
-            sampleCount: 1,
-            aspectRatio: selectedAspectRatio,
-            outputMimeType: "image/jpeg"
+      // 1. Coba Gemini Native Image Generation jika ada API Key
+      if (apiKey) {
+        try {
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`;
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                responseModalities: ["IMAGE"]
+              }
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const part = data.candidates?.[0]?.content?.parts?.[0];
+            if (part && part.inlineData) {
+              currentImageUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+              success = true;
+            }
           }
-        };
-
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error?.message || 'Gagal memproses gambar.');
+        } catch (e) {
+          console.warn('Gemini endpoint gagal, beralih ke engine fallback:', e);
         }
+      }
 
-        const base64Bytes = data.predictions?.[0]?.bytesBase64Encoded;
-        if (!base64Bytes) {
-          throw new Error('Format respon API tidak berisi data gambar.');
+      // 2. Fallback Engine Otomatis (jika API Key belum aktif akses Imagen-nya)
+      if (!success) {
+        loadingStatus.innerText = 'Menggunakan Cloud Image Engine...';
+        try {
+          const dim = getDimensions(selectedAspectRatio);
+          const seed = Math.floor(Math.random() * 1000000);
+          const fallbackUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true`;
+
+          // Validasi preload gambar
+          await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+              currentImageUrl = fallbackUrl;
+              resolve();
+            };
+            img.onerror = reject;
+            img.src = fallbackUrl;
+          });
+
+          success = true;
+        } catch (err) {
+          console.error(err);
         }
+      }
 
-        currentImageBase64 = `data:image/jpeg;base64,${base64Bytes}`;
-        generatedImage.src = currentImageBase64;
-        
-        loadingView.classList.add('hidden');
-        loadingView.classList.remove('flex');
+      loadingView.classList.add('hidden');
+      loadingView.classList.remove('flex');
+      generateBtn.disabled = false;
+      generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+      if (success && currentImageUrl) {
+        generatedImage.src = currentImageUrl;
         generatedImage.classList.remove('hidden');
         downloadBtn.classList.remove('hidden');
-
-      } catch (err) {
-        alert(`Terjadi kesalahan: ${err.message}`);
-        loadingView.classList.add('hidden');
-        loadingView.classList.remove('flex');
+      } else {
         placeholderView.classList.remove('hidden');
-      } finally {
-        generateBtn.disabled = false;
-        generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        alert('Gagal membuat gambar. Periksa koneksi internet Anda dan coba lagi.');
       }
     }
 
-    function downloadImage() {
-      if (!currentImageBase64) return;
-      const link = document.createElement('link');
-      const a = document.createElement('a');
-      a.href = currentImageBase64;
-      a.download = `ai-image-${Date.now()}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    async function downloadImage() {
+      if (!currentImageUrl) return;
+      try {
+        const response = await fetch(currentImageUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `ai-image-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        window.open(currentImageUrl, '_blank');
+      }
     }
   </script>
 </body>
