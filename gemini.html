@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI Studio Lite - Fixed</title>
+  <title>AI Studio Pro - Hybrid Design</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
+      /* Background untuk desktop agar bingkai ponsel menonjol */
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
     }
     .custom-scrollbar::-webkit-scrollbar {
       display: none;
@@ -18,124 +20,163 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+    @keyframes pulse-indigo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .anim-pulse-indigo {
+      animation: pulse-indigo 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex justify-center selection:bg-indigo-500 selection:text-white">
+<body class="text-slate-100 min-h-screen flex justify-center selection:bg-indigo-500 selection:text-white antialiased">
 
-  <div class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col shadow-2xl relative border-x border-slate-800">
-    
-    <header class="sticky top-0 z-20 backdrop-blur-md bg-slate-900/80 border-b border-slate-800 px-5 py-4 flex items-center justify-between">
-      <div class="flex items-center space-x-2.5">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+  <div class="desktop-backdrop w-full flex justify-center items-start pt-10 pb-10">
+
+    <div id="mobileFrame" class="w-full max-w-[420px] md:max-w-md bg-slate-900 min-h-[100dvh] md:min-h-0 md:h-[90vh] flex flex-col shadow-2xl md:rounded-[40px] md:border-[12px] md:border-slate-800 md:overflow-hidden md:relative">
+      
+      <div class="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-50"></div>
+
+      <header class="sticky top-0 z-20 backdrop-blur-md bg-slate-900/80 border-b border-slate-800 px-6 py-5 flex items-center justify-between md:pt-10">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-base font-bold tracking-tight text-white leading-tight">AI Studio <span class="text-xs font-medium text-indigo-400">Pro</span></h1>
+            <p class="text-[11px] text-slate-400 font-medium">Image Generation & Optimization</p>
+          </div>
+        </div>
+        <span id="engineBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Ready
+        </span>
+      </header>
+
+      <main class="flex-1 p-6 space-y-6 overflow-y-auto custom-scrollbar pb-12">
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
+            <a 
+              href="https://aistudio.google.com/app/apikey" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 transition-colors">
+              <span>Dapatkan Key</span>
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="apiKey" 
+              placeholder="AIzaSy..." 
+              class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition-all font-mono">
+            <button 
+              type="button" 
+              onclick="toggleKeyVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs">
+              Show
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-500 leading-normal">
+            Key tersimpan aman di browser Anda. Fitur "Optimasi Prompt" akan error jika Key Anda gagal menghubungi Gemini.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Deskripsi Gambar (Prompt)</label>
+            
+            <button 
+              id="optimizeBtn"
+              onclick="optimizePrompt()"
+              class="text-[11px] font-medium text-slate-400 hover:text-indigo-400 flex items-center space-x-1.5 transition-colors px-2.5 py-1 rounded-lg hover:bg-indigo-500/10"
+              title="Ubah ide singkat menjadi prompt detail (Memerlukan API Key)">
+              <svg id="magicIcon" class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-1.008.504a4 4 0 01-2.185.455l-2.316-.232a2 2 0 00-1.35.452l-2.073 2.073a2 2 0 00-.586 1.414V21h12.5a2 2 0 001.916-1.391l1.196-3.791a2 2 0 00-.015-1.39z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.5 14h.5M14 11h.5M16 8h.5M19 11h.5M18 14h.5M11.5 8h.5M10.5 11h.5M12.5 14h.5M7.5 8h.5M8.5 11h.5M10.5 14h.5" />
+              </svg>
+              <span id="optimizeText">Optimasi</span>
+            </button>
+          </div>
+
+          <textarea 
+            id="prompt" 
+            rows="5" 
+            placeholder="Tulis ide singkat Anda (misal: 'kucing terbang') lalu tekan 'Optimasi' untuk hasil detail..." 
+            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition-all resize-none leading-relaxed"></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Aspek Rasio</label>
+          <div class="grid grid-cols-4 gap-2.5">
+            <button type="button" onclick="setRatio('1:1')" class="ratio-btn active bg-indigo-600 text-white border-transparent text-xs py-3 rounded-xl font-semibold border flex items-center justify-center transition-all">1:1</button>
+            <button type="button" onclick="setRatio('9:16')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-3 rounded-xl font-semibold border flex items-center justify-center transition-all">9:16</button>
+            <button type="button" onclick="setRatio('16:9')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-3 rounded-xl font-semibold border flex items-center justify-center transition-all">16:9</button>
+            <button type="button" onclick="setRatio('4:3')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-3 rounded-xl font-semibold border flex items-center justify-center transition-all">4:3</button>
+          </div>
+        </div>
+
+        <button 
+          id="generateBtn" 
+          onclick="generateImage()"
+          class="w-full py-4 px-6 rounded-2xl font-bold text-xs tracking-wide bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+          <span>Generate Gambar</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
-        </div>
-        <div>
-          <h1 class="text-base font-bold tracking-tight text-white leading-tight">AI Studio <span class="text-xs font-medium text-emerald-400">Fixed</span></h1>
-          <p class="text-[11px] text-slate-400 font-medium">Simple Image Generation</p>
-        </div>
-      </div>
-      <span id="engineBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-        Ready
-      </span>
-    </header>
+        </button>
 
-    <main class="flex-1 p-5 space-y-5 overflow-y-auto custom-scrollbar">
-
-      <div class="space-y-1.5 opacity-50">
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Gemini API Key</label>
-        <div class="relative">
-          <input 
-            type="text" 
-            placeholder="Tidak dibutuhkan untuk versi ini" 
-            class="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-500 font-mono cursor-not-allowed"
-            disabled>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Deskripsi Gambar (Prompt)</label>
-          
-          <button 
-            id="clearBtn"
-            onclick="clearPrompt()"
-            class="text-[11px] font-medium text-slate-400 hover:text-red-400 flex items-center space-x-1.5 transition-colors px-2 py-1 rounded-lg hover:bg-red-500/10"
-            title="Hapus teks prompt saat ini">
-            <svg class="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            <span>Hapus Teks</span>
-          </button>
-        </div>
-
-        <textarea 
-          id="prompt" 
-          rows="4" 
-          placeholder="Tulis ide Anda (misal: 'kucing flying') lalu tekan 'Generate Gambar'..." 
-          class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"></textarea>
-      </div>
-
-      <div class="space-y-1.5">
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Aspek Rasio</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button type="button" onclick="setRatio('1:1')" class="ratio-btn active bg-indigo-600 text-white border-transparent text-xs py-2 rounded-xl font-medium border flex items-center justify-center transition-all">1:1</button>
-          <button type="button" onclick="setRatio('9:16')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-2 rounded-xl font-medium border flex items-center justify-center transition-all">9:16</button>
-          <button type="button" onclick="setRatio('16:9')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-2 rounded-xl font-medium border flex items-center justify-center transition-all">16:9</button>
-          <button type="button" onclick="setRatio('4:3')" class="ratio-btn bg-slate-950 text-slate-400 border-slate-800 text-xs py-2 rounded-xl font-medium border flex items-center justify-center transition-all">4:3</button>
-        </div>
-      </div>
-
-      <button 
-        id="generateBtn" 
-        onclick="generateImage()"
-        class="w-full py-3.5 px-4 rounded-xl font-semibold text-xs tracking-wide bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-600/30 active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
-        <span>Generate Gambar</span>
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </button>
-
-      <div class="pt-2">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Hasil Render</h2>
-          <button 
-            id="downloadBtn" 
-            onclick="downloadImage()"
-            class="hidden text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center space-x-1">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            <span>Simpan</span>
-          </button>
-        </div>
-
-        <div id="outputArea" class="w-full aspect-square bg-slate-950 border border-slate-800/80 rounded-2xl flex flex-col items-center justify-center text-center p-4 relative overflow-hidden group">
-          <div id="placeholderView" class="space-y-2 text-slate-600">
-            <svg class="w-10 h-10 mx-auto stroke-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <p class="text-xs">Gambar yang dibuat akan tampil di sini</p>
+        <div class="pt-2">
+          <div class="flex items-center justify-between mb-2.5">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Hasil Render</h2>
+            <button 
+              id="downloadBtn" 
+              onclick="downloadImage()"
+              class="hidden text-[11px] font-medium text-indigo-400 hover:text-indigo-300 flex items-center space-x-1">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>Simpan PNG</span>
+            </button>
           </div>
 
-          <div id="loadingView" class="hidden flex-col items-center space-y-3">
-            <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            <p id="loadingStatusText" class="text-xs text-slate-400 animate-pulse">Sedang memproses...</p>
+          <div id="outputArea" class="w-full aspect-square bg-slate-950 border-2 border-dashed border-slate-800 rounded-3xl flex flex-col items-center justify-center text-center p-6 relative overflow-hidden group">
+            <div id="placeholderView" class="space-y-3 text-slate-600">
+              <svg class="w-12 h-12 mx-auto stroke-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p class="text-xs max-w-[200px]">Gambar yang Anda buat akan tampil di sini.</p>
+            </div>
+
+            <div id="loadingView" class="hidden flex-col items-center space-y-4">
+              <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <p id="loadingStatusText" class="text-xs text-slate-400 animate-pulse">Sedang merender gambar...</p>
+            </div>
+
+            <img id="generatedImage" class="hidden w-full h-full object-contain rounded-2xl" alt="AI Generated Output" />
           </div>
-
-          <img id="generatedImage" class="hidden w-full h-full object-contain rounded-xl" alt="AI Generated Output" />
         </div>
-      </div>
 
-    </main>
+      </main>
+
+      <div class="hidden md:block absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-700 rounded-full"></div>
+    </div>
   </div>
 
   <script>
     let selectedAspectRatio = '1:1';
     let currentImageUrl = null;
 
-    // PERBAIKAN: Bagian LocalStorage dihapus karena API Key tidak dipakai.
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedKey = localStorage.getItem('gemini_api_key');
+      if (savedKey) document.getElementById('apiKey').value = savedKey;
+    });
 
     function toggleKeyVisibility() {
       const input = document.getElementById('apiKey');
@@ -157,24 +198,90 @@
 
     function getDimensions(ratio) {
       switch (ratio) {
-        case '9:16': return { width: 576, height: 1024 };
-        case '16:9': return { width: 1024, height: 576 };
+        case '9:16': return { width: 720, height: 1280 };
+        case '16:9': return { width: 1280, height: 720 };
         case '4:3':  return { width: 1024, height: 768 };
         case '1:1':
         default:     return { width: 1024, height: 1024 };
       }
     }
 
-    // --- PERBAIKAN: FUNGSI OPTIMASI DIHAPUS ---
-    // Fungsi baru hanya untuk menghapus teks
-    function clearPrompt() {
-        document.getElementById('prompt').value = '';
-        document.getElementById('prompt').focus();
+    // --- FUNGSI OPTIMASI PROMPT DIPERBAIKI (v1 STABIL + AUTO FALLBACK) ---
+    async function optimizePrompt() {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const promptInput = document.getElementById('prompt');
+      const optimizeBtn = document.getElementById('optimizeBtn');
+      const optimizeText = document.getElementById('optimizeText');
+      const magicIcon = document.getElementById('magicIcon');
+
+      const userIdea = promptInput.value.trim();
+
+      if (!apiKey) {
+        alert('Harap masukkan Gemini API Key terlebih dahulu.');
+        return;
+      }
+      if (!userIdea) {
+        alert('Tuliskan ide singkat Anda di kolom prompt.');
+        promptInput.focus();
+        return;
+      }
+
+      localStorage.setItem('gemini_api_key', apiKey);
+
+      // UI State -> Loading
+      optimizeBtn.disabled = true;
+      optimizeText.innerText = 'Tunggu...';
+      magicIcon.classList.add('anim-pulse-indigo');
+      promptInput.classList.add('opacity-70');
+      promptInput.disabled = true;
+
+      try {
+        const systemInstruction = "Anda adalah ahli pembuat prompt untuk AI Image Generator (seperti Midjourney). Ubah ide singkat pengguna menjadi prompt deskriptif dalam Bahasa Inggris. Sertakan detail subjek, latar belakang, pencahayaan, dan gaya artistik. Jangan berikan teks pembuka, hanya berikan prompt akhirnya saja.";
+        const payload = {
+          contents: [{ 
+            parts: [{ text: `${systemInstruction}\n\nIde Pengguna: "${userIdea}"\n\nPrompt Detail (Inggris):` }] 
+          }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 250 }
+        };
+
+        // Menggunakan endpoint v1 yang stabil dan model gemini-1.5-flash
+        const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error?.message || 'Gagal menghubungi Gemini API.');
+        }
+
+        const optimizedResult = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (optimizedResult) {
+          promptInput.value = optimizedResult.trim();
+        } else {
+          throw new Error('API tidak memberikan respon teks yang valid.');
+        }
+
+      } catch (err) {
+        // PERBAIKAN: Popup error khusus untuk regional/whitelist restriction
+        alert(`Gagal mengoptimasi prompt: ${err.message}\n\nRegion Anda atau API Key Anda mungkin dibatasi untuk model Gemini 1.5. Anda bisa menggunakan teks prompt langsung.`);
+      } finally {
+        // Restore UI State
+        optimizeBtn.disabled = false;
+        optimizeText.innerText = 'Optimasi';
+        magicIcon.classList.remove('anim-pulse-indigo');
+        promptInput.classList.remove('opacity-70');
+        promptInput.disabled = false;
+      }
     }
 
-    // --- FUNGSI GENERATE GAMBAR (TIDAK MEMERLUKAN API KEY SEKARANG) ---
+    // --- FUNGSI GENERATE GAMBAR (TIDAK MEMERLUKAN API KEY) ---
     async function generateImage() {
-      // API Key dihapus dari sini.
       const prompt = document.getElementById('prompt').value.trim();
       const generateBtn = document.getElementById('generateBtn');
       const placeholderView = document.getElementById('placeholderView');
@@ -183,7 +290,7 @@
       const downloadBtn = document.getElementById('downloadBtn');
 
       if (!prompt) {
-        alert('Tuliskan prompt deskripsi gambar terlebih dahulu.');
+        alert('Tuliskan prompt deskripsi gambar.');
         return;
       }
 
@@ -198,7 +305,7 @@
 
       try {
         const dim = getDimensions(selectedAspectRatio);
-        // Menggunakan engine pembuat gambar gratis dan terbuka.
+        // Menggunakan engine pembuat gambar yang cepat, gratis, dan terbuka.
         const seed = Math.floor(Math.random() * 1000000);
         const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${dim.width}&height=${dim.height}&seed=${seed}&nologo=true`;
 
