@@ -1,4 +1,4 @@
-          <!DOCTYPE html>
+                   <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
@@ -721,7 +721,7 @@
                     </div>
                 </div>
 
-                <!-- VIEW 4: DOMPET INSENTIF (DENGAN TAB HARIAN, BULANAN, TAHUNAN & STATS LENGKAP) -->
+                <!-- VIEW 4: DOMPET INSENTIF (TAB HARIAN, BULANAN, TAHUNAN & TOTAL STATS) -->
                 <div id="view-feed-wallet" class="app-feed-view hidden animate-fade-in px-0 md:px-0 mb-6 space-y-3">
                     <div class="bg-white dark:bg-slate-900 md:rounded-2xl shadow-sm p-4 md:p-5 space-y-4">
                         <div class="flex items-center justify-between pb-1">
@@ -1495,7 +1495,7 @@
                                     </div>
                                     <div>
                                         <span class="text-[9.5px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Max Tugas/Hari Dihitung</span>
-                                        <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-white dark:bg-slate-900 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500 shadow-xs">
+                                        <input type="number" id="inputMaxDailyTasks" min="1" max="20" class="w-full bg-white dark:bg-slate-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500 shadow-xs">
                                     </div>
                                 </div>
                             </div>
@@ -2147,7 +2147,7 @@
     <!-- TOAST NOTIFIKASI STANDARD -->
     <div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-xl transition-opacity duration-300 opacity-0 pointer-events-none z-[110]">Pesan</div>
 
-    <script>
+  <script>
         const SUPABASE_URL = 'https://fmlotqntqxbmsvivvgnw.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_xcjfrcsPC9WV3mlwKeZ2_Q_e5vjsroM'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -2210,7 +2210,7 @@
         let userProfilesMap = {};
         let userRolesPermissionsMap = {};
 
-        // STATE ACCORDION PER TUGAS (EXPAND/COLLAPSE PER JADWAL)
+        // STATE ACCORDION PER TUGAS (BUKA / TUTUP PER JADWAL)
         let expandedTaskItemsMap = {};
 
         // STATE PERIODE DOMPET INSENTIF: 'daily' | 'monthly' | 'yearly'
@@ -2274,7 +2274,7 @@
             rose: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 900: '#881337', 950: '#4c0519' }
         };
 
-        // ================= FACEBOOK SMART HEADER SCROLL =================
+        // ================= SMART HEADER SCROLL =================
         let lastScrollTop = 0;
         const scrollThreshold = 10;
 
@@ -2543,7 +2543,7 @@
                 `;
             } else if (isOwner) {
                 actionButtonsCont.innerHTML = `
-                    <button onclick="closeTaskPreviewModal(); openRequestDeleteModal('${task.id}')" class="w-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold py-2.5 rounded-xl text-xs transition active:scale-95 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center gap-1.5 shadow-xs">
+                    <button onclick="closeTaskPreviewModal(); openRequestDeleteModal('${task.id}')" class="w-full bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold py-2.5 rounded-xl text-xs transition active:scale-95 flex items-center justify-center gap-1.5 shadow-xs">
                         <i class="fa-solid fa-trash-can-arrow-up text-xs"></i> Ajukan Penghapusan Jadwal ke Super Admin
                     </button>
                 `;
@@ -2557,7 +2557,7 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        // ================= VIEW PROFIL USER DARI SISI SUPER ADMIN =================
+        // ================= VIEW PROFIL USER =================
         async function openUserProfileModal(userId) {
             if (!userId) return;
             const modal = document.getElementById('superAdminUserProfileModal');
@@ -2604,7 +2604,7 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        // ================= PENGAJUAN HAPUS JADWAL KE SUPER ADMIN =================
+        // ================= PENGAJUAN HAPUS JADWAL =================
         function openRequestDeleteModal(taskId) {
             const task = globalTasks.find(t => String(t.id) === String(taskId));
             if (!task) return;
@@ -3282,12 +3282,11 @@
                 if (labelText) labelText.innerText = "Estimasi Insentif Saya (Bulan Ini)";
             }
 
-            // Update statistik keseluruhan (Total Insentif, Total Ditarik, Total Hangus)
             const elTotalEarned = document.getElementById('walletTotalEarnedAll');
             const elTotalWithdrawn = document.getElementById('walletTotalWithdrawnAll');
             const elTotalLost = document.getElementById('walletTotalLostAll');
             
-  if (elTotalEarned) elTotalEarned.innerText = `Rp ${formatRupiahK(allTotalEarned)}`;
+            if (elTotalEarned) elTotalEarned.innerText = `Rp ${formatRupiahK(allTotalEarned)}`;
             if (elTotalWithdrawn) elTotalWithdrawn.innerText = `Rp ${formatRupiahK(allTotalWithdrawn)}`;
             if (elTotalLost) elTotalLost.innerText = `Rp ${formatRupiahK(allTotalLost)}`;
 
@@ -3481,7 +3480,8 @@
 
         function dismissQuakeBanner() {
             const banner = document.getElementById('liveQuakeBanner');
-            if (banner) banner.classList.add('hidden');
+            if (!banner) return;
+            banner.classList.add('hidden');
         }
 
         function updateQuakeUI(quake) {
@@ -4277,6 +4277,45 @@
 
             setTimeout(() => { bubble.remove(); }, 4500);
         }
+        
+        async function sendStoryReaction(emoji) {
+            const currentGroup = userStoriesGroups[activeUserStoryGroupIndex];
+            if (!currentGroup) return;
+            const currentStory = currentGroup.items[currentItemStoryIndex];
+            if (!currentStory) return;
+            
+            displayLiveStoryCommentBubble(getUserDisplayName(currentUser.id, currentUser.email), emoji);
+            
+            sendAppNotification({
+                recipient_id: currentGroup.userId,
+                sender_id: currentUser.id,
+                sender_name: getUserDisplayName(currentUser.id, currentUser.email),
+                type: 'like_story',
+                title: `Reaksi ${emoji} pada Story`,
+                message: `Memberikan reaksi ${emoji} pada foto dokumentasi tugas: "${currentStory.taskTitle}"`,
+                task_id: currentStory.taskId
+            });
+
+            showToast(`Mengirim ${emoji} ke ${currentGroup.userName}`);
+        }
+
+        function shareActiveStory() {
+            const currentGroup = userStoriesGroups[activeUserStoryGroupIndex];
+            if (!currentGroup) return;
+            const currentStory = currentGroup.items[currentItemStoryIndex];
+            if (!currentStory) return;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Dokumentasi Kerja - ${currentGroup.userName}`,
+                    text: `Lihat hasil dokumentasi kerja: ${currentStory.taskTitle}`,
+                    url: currentStory.photoUrl
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(currentStory.photoUrl);
+                showToast("Tautan dokumentasi disalin!");
+            }
+        }
 
         async function sendAppNotification({ recipient_id, sender_id, sender_name, type, title, message, task_id = null }) {
             if (!recipient_id || recipient_id === sender_id) return;
@@ -4674,7 +4713,7 @@
             }
         });
 
-        // ================= KALKULASI PENDAPATAN BULANAN =================
+        // ================= KALKULASI PENDAPATAN =================
         function calculateAndRenderEarnings() {
             const userEarningsMap = {};
 
@@ -4708,7 +4747,6 @@
                         }
                     }
 
-                    // Akumulasi total penarikan sukses seluruh waktu
                     if (w.status === 'Sukses') {
                         allTotalWithdrawn += Number(w.nominal || 0);
                     }
@@ -4922,7 +4960,6 @@
 
                 totalTeamBudgetUsed += u.grossEarning;
 
-                // Akumulasi total pendapatan kotor & total hangus/penalti
                 allTotalEarned += u.grossEarning;
                 allTotalLost += Math.round((u.debtPoints / 100) * budgetSettings.ratePerTask);
                 if (u.prevMonthExpired) {
@@ -6192,7 +6229,7 @@
                 });
             }
 
-            // TAMPILAN FEED RATA KIRI-KANAN FULL-WIDTH (FACEBOOK FEED STYLE, BORDERLESS & PER-TASK ACCORDION)
+            // TAMPILAN FEED RATA KIRI-KANAN (BORDERLESS FB STYLE DENGAN ICON PANAH BUKA/TUTUP SETIAP JADWAL)
             const groupedByUser = {};
             filteredTasks.forEach(task => {
                 const userKey = task.user_id || 'unknown';
@@ -6234,7 +6271,7 @@
                     const theme = getTaskStatusTheme(item);
                     const { text: countdownText } = getTaskTimeStatusAndCountdown(item);
 
-                    // Setiap item tugas bisa dibuka/tutup
+                    // Accordion buka/tutup per tugas
                     const isTaskExpanded = (expandedTaskItemsMap[item.id] !== false);
 
                     let photoEvidenceHtml = '';
@@ -6654,7 +6691,7 @@
             document.getElementById('btn-save-task').innerText = "Simpan Perubahan";
         }
 
-        // ================= SUPER ADMIN LANGSUNG HAPUS JADWAL =================
+        // ================= SUPER ADMIN HAPUS JADWAL =================
         function askDeleteTask(id) {
             deleteTargetId = id;
             const task = globalTasks.find(t => String(t.id) === String(id));
@@ -6947,8 +6984,8 @@ WAJIB merespon HANYA dalam format array JSON murni tanpa awalan/akhiran teks lai
                     });
 
                     const data = await response.json();
-
-                    if (data.error) {
+                    
+   if (data.error) {
                         lastError = data.error.message || `Error pada model ${modelName}`;
                         continue;
                     }
