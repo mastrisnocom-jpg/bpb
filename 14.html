@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Ops Super App - Budaya Jawa Workspace</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-jawa: #15221b;
+            --sidebar-jawa: #0f1913;
+            --card-jawa: #1e3026;
+            --card-inner: #243a2e;
+            --cream-jawa: #f5eedc;
+            --gold-jawa: #d4a359;
+            --gold-bright: #eec676;
+            --gold-border: rgba(212, 163, 89, 0.28);
+            --gold-gradient: linear-gradient(135deg, #eec676 0%, #b88636 100%);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-jawa);
+            color: var(--cream-jawa);
+            min-height: 100vh;
+        }
+
+        .font-gunungan {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Ukiran & Ornamen Jawa Halus */
+        .jawa-card {
+            background-color: var(--card-jawa);
+            border: 1px solid var(--gold-border);
+            position: relative;
+        }
+
+        .jawa-card-corner::before, .jawa-card-corner::after {
+            content: "❖";
+            position: absolute;
+            font-size: 9px;
+            color: var(--gold-jawa);
+            opacity: 0.7;
+        }
+        .jawa-card-corner::before { top: 6px; left: 8px; }
+        .jawa-card-corner::after { bottom: 6px; right: 8px; }
+
+        .gold-pill {
+            background: linear-gradient(180deg, rgba(212, 163, 89, 0.18) 0%, rgba(184, 134, 54, 0.08) 100%);
+            border: 1px solid var(--gold-border);
+        }
+
+        .sidebar-active {
+            background: linear-gradient(90deg, #7c4a27 0%, #523117 100%);
+            border-left: 4px solid var(--gold-bright);
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--sidebar-jawa); }
+        ::-webkit-scrollbar-thumb { background: #523117; border-radius: 6px; }
+    </style>
+</head>
+<body class="flex overflow-x-hidden antialiased">
+
+    <aside class="w-64 bg-[#0d1712] border-r border-[#d4a359]/20 flex flex-col justify-between p-4 min-h-screen sticky top-0 shrink-0 z-30">
+        <div>
+            <div class="flex items-center gap-3 p-2 mb-6 border-b border-[#d4a359]/15 pb-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#3b2313] to-[#8d562b] border border-[#d4a359]/40 flex items-center justify-center text-amber-300 shadow-md">
+                    <svg viewBox="0 0 24 24" class="w-7 h-7 fill-[#d4a359]">
+                        <path d="M12 2L6 9l2 3-3 4 3 2-2 4h12l-2-4 3-2-3-4 2-3z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="font-gunungan text-sm font-black tracking-wider text-[#eec676]">M-OPS JAWA</h2>
+                    <p class="text-[10px] tracking-widest text-[#d4a359]/70 font-semibold uppercase">@budayajawa</p>
+                </div>
+            </div>
+
+            <nav class="space-y-1.5 text-xs font-bold">
+                <button onclick="switchTab('feed-schedule')" id="btnNavSchedule" class="w-full sidebar-active px-3.5 py-3 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-calendar-week text-[#eec676]"></i>
+                        <span>Feed Jadwal</span>
+                    </div>
+                    <span class="text-[9px] bg-[#d4a359]/20 text-[#eec676] px-2 py-0.5 rounded-full border border-[#d4a359]/30">Ringkasan</span>
+                </button>
+
+                <button onclick="switchTab('feed-chat')" id="btnNavChat" class="w-full text-[#f5eedc]/80 hover:bg-[#18271f] px-3.5 py-2.5 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-comments text-[#d4a359]"></i>
+                        <span>Chat Global Tim</span>
+                    </div>
+                    <span class="bg-amber-600 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black">4</span>
+                </button>
+
+                <button onclick="switchTab('feed-wallet')" id="btnNavWallet" class="w-full text-[#f5eedc]/80 hover:bg-[#18271f] px-3.5 py-2.5 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-wallet text-[#d4a359]"></i>
+                        <span>Dompet Insentif</span>
+                    </div>
+                    <span class="text-[10px] text-[#eec676] font-mono">10k+</span>
+                </button>
+
+                <button onclick="switchTab('feed-notif')" id="btnNavNotif" class="w-full text-[#f5eedc]/80 hover:bg-[#18271f] px-3.5 py-2.5 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bell text-[#d4a359]"></i>
+                        <span>Notifikasi & Relasi</span>
+                    </div>
+                </button>
+
+                <button onclick="switchTab('feed-quake')" id="btnNavQuake" class="w-full text-rose-300/90 hover:bg-rose-950/20 px-3.5 py-2.5 rounded-xl flex items-center justify-between transition border border-rose-900/20">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-tower-broadcast text-rose-400 animate-pulse"></i>
+                        <span>Radar Gempa BMKG</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                </button>
+
+                <div class="pt-4 pb-2 border-t border-[#d4a359]/15 my-2">
+                    <p class="text-[9px] font-gunungan uppercase tracking-widest text-[#d4a359]/60 px-3 mb-2">Penugasan & AI</p>
+                    
+                    <button class="w-full text-left bg-gradient-to-r from-[#593922] to-[#3a2313] hover:opacity-95 text-[#f5eedc] border border-[#d4a359]/30 px-3 py-2.5 rounded-xl flex items-center gap-2.5 mb-2 shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles text-[#eec676] text-xs"></i>
+                        <span class="text-[11px]">AI Smart Schedule</span>
+                    </button>
+
+                    <button class="w-full text-left bg-[#1a2c22] hover:bg-[#20362a] text-[#f5eedc] border border-[#d4a359]/20 px-3 py-2 rounded-xl flex items-center gap-2.5 text-[11px]">
+                        <i class="fa-solid fa-paste text-[#d4a359] text-xs"></i>
+                        <span>Import Teks WA</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <div class="border-t border-[#d4a359]/15 pt-3">
+            <div class="flex items-center gap-3 p-2 rounded-xl bg-[#17281f] border border-[#d4a359]/20">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-700 to-amber-500 border border-[#d4a359] flex items-center justify-center font-bold text-slate-950 text-xs">
+                    BP
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-1">
+                        <p class="text-[11px] font-black truncate text-[#eec676]">Tim Operasional</p>
+                    </div>
+                    <span class="text-[8px] bg-amber-500/20 text-[#eec676] border border-[#d4a359]/30 px-1.5 py-0.2 rounded font-mono uppercase">Super Admin</span>
+                </div>
+                <i class="fa-solid fa-sliders text-[#d4a359]/70 text-xs hover:text-[#d4a359] cursor-pointer"></i>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 min-h-screen bg-[#15221b] overflow-y-auto">
+        
+        <header class="h-20 border-b border-[#d4a359]/20 px-8 flex items-center justify-between bg-[#111c16]/80 backdrop-blur-md sticky top-0 z-20">
+            <div>
+                <h1 class="font-gunungan text-xl font-bold tracking-wide text-[#eec676]">Sugeng Enjang, Sedulur Kreatif!</h1>
+                <p class="text-[11px] text-[#d4a359]/80 font-medium mt-0.5">
+                    Tanggal, 4 September 2026 • Unit BSN KC Surabaya • PT. Binayasa Putrabatara
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="gold-pill px-4 py-2 rounded-full flex items-center gap-2 text-xs">
+                    <i class="fa-solid fa-layer-group text-[#d4a359]"></i>
+                    <span class="text-[#eec676] font-bold">Kategori: Multi-Profesi</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-[#d4a359] ml-1"></i>
+                </div>
+
+                <div class="relative">
+                    <button class="w-10 h-10 rounded-xl bg-[#1c2e24] border border-[#d4a359]/30 flex items-center justify-center text-[#eec676] hover:bg-[#253d30] transition">
+                        <i class="fa-regular fa-bell"></i>
+                    </button>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-rose-600 rounded-full border-2 border-[#15221b] text-[9px] font-black flex items-center justify-center text-white">1</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8 space-y-6 max-w-7xl w-full mx-auto">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div class="jawa-card jawa-card-corner rounded-2xl p-4 flex flex-col justify-between h-36">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-[#eec676] tracking-wide">1. Total Jangkauan Tugas</span>
+                        <div class="w-7 h-7 rounded-lg bg-[#d4a359]/10 border border-[#d4a359]/30 flex items-center justify-center text-[#d4a359]">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black font-gunungan text-white tracking-wider">124.500</div>
+                        <div class="flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-400 mt-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            <span>+12.4% peningkatan</span>
+                        </div>
+                    </div>
+                    <div class="text-[9px] text-[#d4a359]/60 font-medium">Berdasarkan seluruh unit kantor</div>
+                </div>
+
+                <div class="jawa-card jawa-card-corner rounded-2xl p-4 flex flex-col justify-between h-36">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-[#eec676] tracking-wide">2. Interaksi Pasinaon</span>
+                        <div class="w-7 h-7 rounded-lg bg-[#d4a359]/10 border border-[#d4a359]/30 flex items-center justify-center text-[#d4a359]">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black font-gunungan text-white tracking-wider">18.200</div>
+                        <div class="flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-400 mt-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            <span>+8.1% keterlibatan</span>
+                        </div>
+                    </div>
+                    <div class="text-[9px] text-[#d4a359]/60 font-medium">Diskusi chat & komentar live</div>
+                </div>
+
+                <div class="jawa-card jawa-card-corner rounded-2xl p-4 flex flex-col justify-between h-36">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-[#eec676] tracking-wide">3. Dompet Simpanan (Poin)</span>
+                        <div class="w-7 h-7 rounded-lg bg-[#d4a359]/10 border border-[#d4a359]/30 flex items-center justify-center text-[#d4a359]">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black font-gunungan text-white tracking-wider">4.310k</div>
+                        <div class="flex items-center gap-1.5 text-[10.5px] font-bold text-amber-400 mt-1">
+                            <i class="fa-solid fa-wallet"></i>
+                            <span>Rp 431.000 terakumulasi</span>
+                        </div>
+                    </div>
+                    <div class="text-[9px] text-[#d4a359]/60 font-medium">Target min penarikan: Rp 10.000</div>
+                </div>
+
+                <div class="jawa-card jawa-card-corner rounded-2xl p-4 flex flex-col justify-between h-36">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-[#eec676] tracking-wide">4. Pengikut Anyar</span>
+                        <div class="w-7 h-7 rounded-lg bg-[#d4a359]/10 border border-[#d4a359]/30 flex items-center justify-center text-[#d4a359]">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black font-gunungan text-white tracking-wider">+1.250</div>
+                        <div class="flex items-center gap-1.5 text-[10.5px] font-bold text-emerald-400 mt-1">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Relasi follow aktif</span>
+                        </div>
+                    </div>
+                    <div class="text-[9px] text-[#d4a359]/60 font-medium">Akun terverifikasi M-Ops BPB</div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="lg:col-span-2 jawa-card jawa-card-corner rounded-2xl p-5 flex flex-col justify-between">
+                    <div class="flex items-center justify-between border-b border-[#d4a359]/20 pb-3 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base text-[#eec676]">❖</span>
+                            <h3 class="font-gunungan text-sm font-bold text-[#eec676]">Tren Interaksi Harian Operasional</h3>
+                        </div>
+                        <span class="gold-pill text-[10px] text-[#eec676] font-bold px-3 py-1 rounded-full">Performa</span>
+                    </div>
+
+                    <div class="w-full h-56 relative">
+                        <canvas id="dailyTrendChart"></canvas>
+                    </div>
+
+                    <div class="flex items-center justify-between text-[11px] text-[#d4a359]/80 pt-3 border-t border-[#d4a359]/15">
+                        <span>Puncak aktivitas: <b>Waktu Ngaso / Santai Sore (17:00 WIB)</b></span>
+                        <span class="font-mono text-emerald-400">+34% vs Hari Kemarin</span>
+                    </div>
+                </div>
+
+                <div class="jawa-card jawa-card-corner rounded-2xl p-5 flex flex-col justify-between">
+                    <div class="flex items-center justify-between border-b border-[#d4a359]/20 pb-3 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base text-[#eec676]">❖</span>
+                            <h3 class="font-gunungan text-sm font-bold text-[#eec676]">Profil Pamirsa & Wilayah</h3>
+                        </div>
+                        <span class="gold-pill text-[10px] text-[#eec676] font-bold px-2.5 py-0.5 rounded-full">Sebaran</span>
+                    </div>
+
+                    <div class="flex items-center justify-center my-2 h-40">
+                        <canvas id="audienceChart"></canvas>
+                    </div>
+
+                    <div class="bg-[#17281f] border border-rose-800/30 rounded-xl p-3 flex items-center justify-between text-xs mt-2">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-rose-600/20 text-rose-400 flex items-center justify-center">
+                                <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-rose-300 text-[11px]">Radar Gempa BMKG Terkini</p>
+                                <p class="text-[9.5px] text-[#f5eedc]/60">M 5.1 • Wilayah Jawa Timur</p>
+                            </div>
+                        </div>
+                        <span class="text-[9px] bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded font-black uppercase">Aman</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="lg:col-span-2 jawa-card jawa-card-corner rounded-2xl p-5">
+                    <div class="flex items-center justify-between border-b border-[#d4a359]/20 pb-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base text-[#eec676]">❖</span>
+                            <h3 class="font-gunungan text-sm font-bold text-[#eec676]">Konten Terlaris & Pilar Kinerja (Top Tasks)</h3>
+                        </div>
+                        <div class="gold-pill text-[10px] text-[#eec676] px-3 py-1 rounded-full font-bold">
+                            Kategori Konten
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="text-[#d4a359]/70 border-b border-[#d4a359]/15 text-[10px] uppercase font-gunungan">
+                                    <th class="py-2.5 px-3">#</th>
+                                    <th class="py-2.5 px-3">Konten & Aktivitas</th>
+                                    <th class="py-2.5 px-3">Metrik Jangkauan</th>
+                                    <th class="py-2.5 px-3">Performa</th>
+                                    <th class="py-2.5 px-3">Tanggal Pelaksanaan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#d4a359]/10 font-medium">
+                                <tr class="hover:bg-[#22382c]/40 transition">
+                                    <td class="py-3 px-3 text-[#eec676] font-bold font-mono">1.</td>
+                                    <td class="py-3 px-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-lg bg-[#3e2918] border border-[#d4a359]/30 flex items-center justify-center font-bold text-[#eec676]">
+                                                <i class="fa-solid fa-users"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-[#f5eedc]">CIRI KHAS ORANG JAWA</p>
+                                                <p class="text-[10px] text-[#d4a359]/70">Sopan, Ramah, & Ngayomi (Andhap Asor)</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 font-mono text-white font-bold">124.500</td>
+                                    <td class="py-3 px-3 text-emerald-400 font-bold font-mono">+1.250</td>
+                                    <td class="py-3 px-3 text-[#d4a359]/70 text-[11px]">15.09.2026</td>
+                                </tr>
+
+                                <tr class="hover:bg-[#22382c]/40 transition">
+                                    <td class="py-3 px-3 text-[#eec676] font-bold font-mono">2.</td>
+                                    <td class="py-3 px-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-lg bg-[#3e2918] border border-[#d4a359]/30 flex items-center justify-center font-bold text-[#eec676]">
+                                                <i class="fa-solid fa-heart"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-[#f5eedc]">TATA KRAMA & UNGGAH-UNGGUH</p>
+                                                <p class="text-[10px] text-[#d4a359]/70">Family Tradition & Kearifan Lokal Nusantara</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 font-mono text-white font-bold">18.200</td>
+                                    <td class="py-3 px-3 text-emerald-400 font-bold font-mono">+8.1%</td>
+                                    <td class="py-3 px-3 text-[#d4a359]/70 text-[11px]">19.09.2026</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="jawa-card jawa-card-corner rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-[#d4a359]/20 pb-3 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base text-[#eec676]">❖</span>
+                                <h3 class="font-gunungan text-sm font-bold text-[#eec676]">Jadwal Kirim (Queue)</h3>
+                            </div>
+                            <span class="gold-pill text-[9px] text-[#eec676] px-2 py-0.5 rounded-full font-bold">Terjadwal</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-3 rounded-xl bg-[#17281f] border border-[#d4a359]/20 flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-[#eec676] flex items-center justify-center text-xs">
+                                        <i class="fa-regular fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-[#f5eedc] text-xs">Ciri Khas Orang Jawa</p>
+                                        <p class="text-[10px] text-[#d4a359]/70">Feed Instagram & Story</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-amber-300 font-bold">13 Sep 2026</span>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-[#17281f] border border-[#d4a359]/20 flex items-center justify-between">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-[#f5eedc] text-xs">Interaksi Pasinaon</p>
+                                        <p class="text-[10px] text-[#d4a359]/70">AI Schedule Multi-Profesi</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-emerald-300 font-bold">17 Sep 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-[#7c4a27] to-[#4e2d16] text-[#eec676] font-gunungan text-xs font-bold border border-[#d4a359]/30 hover:opacity-90 transition">
+                        + Tambah Antrean Kirim
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // 1. Chart Garis Emas (Tren Interaksi Harian)
+        const ctxTrend = document.getElementById('dailyTrendChart').getContext('2d');
+        const goldGradient = ctxTrend.createLinearGradient(0, 0, 0, 200);
+        goldGradient.addColorStop(0, 'rgba(238, 198, 118, 0.45)');
+        goldGradient.addColorStop(1, 'rgba(238, 198, 118, 0.0)');
+
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: ['06:00', '09:00', '10:00', '13:00', '15:00', '17:00', '19:00', '22:00'],
+                datasets: [{
+                    label: 'Tingkat Keterlibatan',
+                    data: [40, 75, 55, 70, 110, 185, 120, 140],
+                    borderColor: '#eec676',
+                    borderWidth: 2.5,
+                    backgroundColor: goldGradient,
+                    fill: true,
+                    tension: 0.45,
+                    pointBackgroundColor: '#eec676',
+                    pointBorderColor: '#0f1913',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(212, 163, 89, 0.08)' },
+                        ticks: { color: 'rgba(245, 238, 220, 0.6)', font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(212, 163, 89, 0.08)' },
+                        ticks: { color: 'rgba(245, 238, 220, 0.6)', font: { size: 10 } }
+                    }
+                }
+            }
+        });
+
+        // 2. Chart Donut Cokelat-Emas (Profil Pamirsa)
+        const ctxAudience = document.getElementById('audienceChart').getContext('2d');
+        new Chart(ctxAudience, {
+            type: 'doughnut',
+            data: {
+                labels: ['Indonesia (60%)', 'Global (40%)'],
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: ['#b8743b', '#f5eedc'],
+                    borderWidth: 2,
+                    borderColor: '#15221b'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#f5eedc',
+                            font: { size: 11, family: "'Plus Jakarta Sans'" },
+                            boxWidth: 12
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // Tab Switch Helper
+        function switchTab(tabId) {
+            console.log("Navigasi ke:", tabId);
+        }
+    </script>
+</body>
+</html>
