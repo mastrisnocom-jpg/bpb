@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Touring Go</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 flex justify-center min-h-screen">
+
+  <div class="w-full max-w-md bg-gradient-to-b from-blue-600 via-blue-100 to-slate-50 min-h-screen flex flex-col relative pb-20 shadow-2xl">
+    
+    <header class="flex items-center justify-between px-5 pt-4 pb-2 text-white">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-motorcycle text-2xl"></i>
+        <span class="font-extrabold tracking-wider text-sm">TOURING GO</span>
+      </div>
+      <div class="flex items-center space-x-4 text-lg">
+        <button class="hover:opacity-80 transition"><i class="fa-solid fa-user-group"></i></button>
+        <button class="hover:opacity-80 transition"><i class="fa-solid fa-music"></i></button>
+      </div>
+    </header>
+
+    <main class="flex-1 px-4 space-y-4 pt-2">
+      
+      <section>
+        <div class="flex justify-between items-center text-xs font-semibold text-white mb-2 px-1">
+          <span class="tracking-wide">STATUS TEMAN</span>
+          <a href="#" class="hover:underline">Lihat semua</a>
+        </div>
+        <div class="flex space-x-3 overflow-x-auto hide-scrollbar pb-1">
+          <div class="bg-blue-700/80 backdrop-blur-md rounded-2xl p-3 w-28 flex flex-col items-center justify-center border border-white/20 shadow-md">
+            <div class="relative mb-2">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&h=120&q=80" alt="Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-white/60">
+              <span class="absolute bottom-0 right-0 bg-green-500 border-2 border-white w-4 h-4 rounded-full flex items-center justify-center text-[9px] text-white font-bold">+</span>
+            </div>
+            <span class="text-white text-xs font-semibold truncate w-full text-center">Mastrisno</span>
+            <span class="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-emerald-950/40 text-emerald-300 font-medium border border-emerald-500/40">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-4 text-white shadow-lg flex items-center justify-between cursor-pointer active:scale-[0.99] transition">
+        <div class="flex items-center space-x-3">
+          <span class="text-3xl text-amber-300 drop-shadow"><i class="fa-solid fa-sun"></i></span>
+          <div>
+            <div class="flex items-baseline space-x-2">
+              <span class="text-2xl font-bold">26°C</span>
+              <span class="text-sm font-medium opacity-90">Cerah</span>
+            </div>
+            <div class="text-[11px] opacity-80 flex items-center gap-1 mt-0.5">
+              <span>Lokasi Saat Ini</span>
+              <span>📍</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="text-right text-[11px] space-y-1 opacity-90 font-medium">
+            <div class="flex items-center justify-end gap-1.5">
+              <i class="fa-solid fa-wind"></i>
+              <span>6 km/j</span>
+            </div>
+            <div class="flex items-center justify-end gap-1.5">
+              <i class="fa-solid fa-droplet"></i>
+              <span>0% hujan</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs opacity-70"></i>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex flex-col space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="pr-2">
+            <h2 class="text-slate-800 font-bold text-base leading-snug">Belum ada touring aktif</h2>
+            <p class="text-slate-500 text-xs mt-1 leading-relaxed">
+              Buat touring baru atau masukkan kode invite untuk bergabung dengan teman
+            </p>
+          </div>
+          <div class="w-28 flex-shrink-0">
+            <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=200&q=80" alt="Motorcycle rider" class="rounded-xl object-cover h-20 w-full">
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Buat touring</span>
+          </button>
+          <button class="bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-blue-200 transition active:scale-95">
+            <i class="fa-solid fa-user-plus text-xs"></i>
+            <span>Gabung touring</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 flex items-center justify-between cursor-pointer active:scale-[0.99] transition">
+        <div class="flex items-center space-x-3">
+          <div class="w-11 h-11 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-lg flex-shrink-0">
+            <i class="fa-solid fa-person-biking"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-slate-800 font-bold text-sm">Sepedaan</span>
+              <span class="bg-red-100 text-red-500 text-[10px] font-bold px-1.5 py-0.2 rounded tracking-wide uppercase">BETA</span>
+            </div>
+            <p class="text-slate-400 text-xs mt-0.5">Mulai atau gabung sesi sepeda</p>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      </section>
+
+      <section class="pt-1">
+        <span class="text-slate-500 font-bold text-xs px-1 uppercase tracking-wider block mb-2.5">Menu</span>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition">
+            <i class="fa-solid fa-location-arrow text-blue-500 text-lg"></i>
+            <span class="font-bold text-xs text-slate-700">Tracking</span>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition">
+            <i class="fa-solid fa-star text-blue-600 text-lg"></i>
+            <span class="font-bold text-xs text-slate-800">Leaderboard</span>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition">
+            <i class="fa-solid fa-play text-blue-500 text-lg"></i>
+            <span class="font-bold text-xs text-slate-800">Playback</span>
+          </div>
+          <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex items-center space-x-3 cursor-pointer hover:bg-slate-50 transition">
+            <i class="fa-solid fa-dollar-sign text-blue-600 text-lg bg-blue-100/70 w-6 h-6 rounded-full flex items-center justify-center"></i>
+            <span class="font-bold text-xs text-slate-800">Dapatkan Poin</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 py-2.5 px-6 flex justify-between items-center text-slate-400 text-[11px] font-medium z-50">
+      <button class="flex flex-col items-center space-y-1 text-blue-600">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span>Home</span>
+      </button>
+      <button class="flex flex-col items-center space-y-1 hover:text-slate-600">
+        <i class="fa-solid fa-users text-lg"></i>
+        <span>Komunitas</span>
+      </button>
+      <button class="flex flex-col items-center space-y-1 hover:text-slate-600">
+        <i class="fa-solid fa-comment-dots text-lg"></i>
+        <span>Chat</span>
+      </button>
+      <button class="flex flex-col items-center space-y-1 hover:text-slate-600">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span>Profil</span>
+      </button>
+    </nav>
+
+  </div>
+
+</body>
+</html>
