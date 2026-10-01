@@ -26,10 +26,8 @@
     }
   </script>
 
-  <!-- Lucide Icons & Font Awesome -->
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- SheetJS (XLSX) untuk Export Excel & CSV -->
@@ -41,10 +39,6 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .sig-canvas {
-      touch-action: none;
-      cursor: crosshair;
-    }
     .pulse-dot {
       animation: pulseAnimation 1.5s infinite;
     }
@@ -57,7 +51,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen pb-24 select-none transition-colors duration-200">
 
-  <!-- ================= TOP HEADER (INSTAGRAM STYLE) ================= -->
+  <!-- ================= TOP HEADER ================= -->
   <header class="sticky top-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-gray-200 dark:border-neutral-800 px-4 py-2.5 flex items-center justify-between">
     <div class="flex items-center space-x-2.5">
       <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
@@ -92,7 +86,7 @@
     </div>
   </header>
 
-  <!-- FLOATING TOAST NOTIFICATION -->
+  <!-- FLOATING TOAST -->
   <div id="toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 transform -translate-y-20 opacity-0 transition-all duration-300 bg-neutral-900/90 text-white text-xs px-4 py-2 rounded-full shadow-2xl border border-gray-700 flex items-center space-x-2 backdrop-blur pointer-events-none">
     <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
     <span id="toastMsg">Sinkronisasi berhasil!</span>
@@ -101,7 +95,7 @@
   <!-- ================= WORKSPACE UTAMA ================= -->
   <main class="max-w-md mx-auto min-h-screen">
 
-    <!-- 1. VIEW EXPLORE / KATALOG ALAT (INSTAGRAM GRID) -->
+    <!-- 1. VIEW EXPLORE / KATALOG ALAT -->
     <section id="view-explore" class="block pb-10">
       
       <!-- Search & Filters -->
@@ -111,7 +105,6 @@
           <input type="text" id="searchInput" oninput="renderToolsGrid()" placeholder="Cari nama alat, merk, kode ID..." class="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-amber-500 shadow-sm" />
         </div>
 
-        <!-- Filter Chips: Kategori & Brand -->
         <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-2 text-[11px]">
           <button onclick="setFilterCategory('ALL')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-amber-500 text-black font-semibold shadow-sm transition" data-cat="ALL">Semua</button>
           <button onclick="setFilterCategory('HVAC')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-gray-300 transition" data-cat="HVAC">Alat AC / HVAC</button>
@@ -129,13 +122,13 @@
         <button onclick="switchView('activeRentals')" class="text-[11px] bg-amber-500 text-black px-2.5 py-0.5 rounded-lg font-bold">Pantau Detik</button>
       </div>
 
-      <!-- Tool Grid (Instagram 3-Column Layout) -->
+      <!-- Tool Grid (3-Column Layout) -->
       <div id="toolsGrid" class="grid grid-cols-3 gap-1 px-1">
         <!-- Rendered by JS -->
       </div>
     </section>
 
-    <!-- 2. VIEW DETIK SEWA / SIRKULASI AKTIF (LIVE TIMER) -->
+    <!-- 2. VIEW DETIK SEWA / SIRKULASI AKTIF -->
     <section id="view-activeRentals" class="hidden px-3 pt-3 pb-10">
       <div class="flex items-center justify-between mb-3">
         <div>
@@ -153,7 +146,7 @@
       </div>
     </section>
 
-    <!-- 3. VIEW LOG LAPANGAN & AUDIT (PDF & EXCEL RESMI) -->
+    <!-- 3. VIEW LOG LAPANGAN & AUDIT -->
     <section id="view-logs" class="hidden px-3 pt-3 pb-10">
       <div class="flex items-center justify-between mb-3">
         <div>
@@ -177,21 +170,21 @@
       </div>
     </section>
 
-    <!-- 4. VIEW SETTINGS (INSTAGRAM STYLE & MANAJEMEN PETUGAS) -->
+    <!-- 4. VIEW SETTINGS -->
     <section id="view-settings" class="hidden px-3 pt-3 pb-10">
       <div class="border-b border-gray-200 dark:border-neutral-800 pb-3 mb-4">
         <h2 class="text-sm font-bold">Pengaturan Sistem</h2>
-        <p class="text-[11px] text-gray-500">Profil pengguna, manajemen staf & database Supabase</p>
+        <p class="text-[11px] text-gray-500">Profil, manajemen staf & master workshop</p>
       </div>
 
       <!-- Current Profile Card -->
       <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm">
         <div class="flex items-center space-x-3">
-          <img id="settingsAvatarPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500" />
+          <img id="settingsAvatarPreview" src="" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500" />
           <div class="flex-1">
-            <h3 id="settingsProfileName" class="text-sm font-bold">Admin Binayasa</h3>
-            <p id="settingsProfileNIK" class="text-xs text-gray-500">NIK: ADMIN01</p>
-            <span id="settingsProfileRole" class="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-500">SUPER ADMIN</span>
+            <h3 id="settingsProfileName" class="text-sm font-bold">-</h3>
+            <p id="settingsProfileNIK" class="text-xs text-gray-500">NIK: -</p>
+            <span id="settingsProfileRole" class="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-500">ROLE</span>
           </div>
         </div>
 
@@ -203,14 +196,28 @@
           <div>
             <label class="block text-[11px] text-gray-400 mb-1">Gudang / Workshop Operasional</label>
             <select id="editUserOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-2 focus:outline-none">
-              <option value="Workshop Surabaya">Workshop Surabaya</option>
-              <option value="Central Hub Jakarta">Central Hub Jakarta</option>
-              <option value="Site Yard Cilegon">Site Yard Cilegon</option>
-              <option value="Gudang Balikpapan">Gudang Balikpapan</option>
+              <!-- Rendered dynamically -->
             </select>
           </div>
           <button type="submit" class="w-full bg-neutral-800 hover:bg-neutral-700 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-white font-medium py-1.5 rounded-lg text-xs mt-1 transition">Simpan Profil</button>
         </form>
+      </div>
+
+      <!-- SUPER ADMIN ONLY: KELOLA WORKSHOP & GUDANG -->
+      <div id="superAdminOfficeSection" class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500">Master Lokasi Workshop</h3>
+            <p class="text-[10px] text-gray-500">Tambah & hapus workshop/gudang operasional</p>
+          </div>
+          <button onclick="promptAddOffice()" class="text-xs bg-amber-500 hover:bg-amber-600 text-black px-2.5 py-1 rounded-lg font-bold flex items-center space-x-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Tambah</span>
+          </button>
+        </div>
+        <div id="officeListContainer" class="divide-y divide-gray-100 dark:divide-neutral-800 text-xs">
+          <!-- Rendered by JS -->
+        </div>
       </div>
 
       <!-- SUPER ADMIN ONLY: MANAJEMEN PETUGAS -->
@@ -228,18 +235,6 @@
 
         <div id="staffListTable" class="divide-y divide-gray-100 dark:divide-neutral-800 text-xs">
           <!-- Rendered by JS -->
-        </div>
-      </div>
-
-      <!-- Supabase Connection Details -->
-      <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm text-xs">
-        <h3 class="font-bold mb-1 flex items-center text-emerald-500">
-          <i data-lucide="database" class="w-4 h-4 mr-1.5"></i> Supabase Realtime Database
-        </h3>
-        <p class="text-[11px] text-gray-500 mb-2">Terkoneksi langsung ke database cloud:</p>
-        <div class="bg-gray-100 dark:bg-neutral-950 p-2.5 rounded-lg font-mono text-[10px] space-y-1 break-all text-gray-600 dark:text-gray-400">
-          <div><span class="text-blue-500 font-bold">HOST:</span> https://tztxcqaskdfsgcllfixd.supabase.co</div>
-          <div><span class="text-emerald-500 font-bold">STATUS:</span> Realtime Multi-Unit Active</div>
         </div>
       </div>
 
@@ -339,10 +334,11 @@
             </div>
           </div>
 
+          <!-- Petugas Penyerah Otomatis Sesuai Login -->
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penyerah *</label>
-              <input type="text" id="officerBorrow" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none font-bold" required />
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penyerah (Login)</label>
+              <input type="text" id="officerBorrow" class="w-full bg-gray-100 dark:bg-neutral-800/50 border border-gray-300 dark:border-neutral-700 rounded-xl p-2.5 text-gray-500 dark:text-gray-400 font-bold cursor-not-allowed text-[11px]" readonly />
             </div>
             <div>
               <label class="block text-[11px] font-medium text-gray-400 mb-1">Waktu Pinjam *</label>
@@ -382,17 +378,6 @@
             <input type="hidden" id="borrowPhotoData" required />
           </div>
 
-          <!-- TANDA TANGAN DIGITAL PEMINJAM -->
-          <div class="p-3 bg-gray-50 dark:bg-neutral-950 rounded-xl border border-gray-200 dark:border-neutral-800 space-y-1">
-            <div class="flex items-center justify-between">
-              <label class="text-[10px] font-bold text-gray-400 uppercase">Tanda Tangan Peminjam *</label>
-              <button type="button" onclick="clearSignature('borrow')" class="text-[10px] text-rose-500 font-bold">Bersihkan</button>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-300 overflow-hidden">
-              <canvas id="borrowSigCanvas" width="380" height="110" class="sig-canvas w-full h-20 block bg-white"></canvas>
-            </div>
-          </div>
-
           <button type="submit" id="btnSubmitRent" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5 text-xs">
             <i data-lucide="play" class="w-4 h-4 fill-current"></i>
             <span>Mulai Pinjam & Jalankan Detik</span>
@@ -423,10 +408,11 @@
         <form id="formReturnAction" onsubmit="handleConfirmReturn(event)" class="space-y-3">
           <input type="hidden" id="returnLoanId" />
 
+          <!-- Petugas Penerima Otomatis Sesuai Login -->
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penerima *</label>
-              <input type="text" id="officerReturn" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none font-bold" required />
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penerima (Login)</label>
+              <input type="text" id="officerReturn" class="w-full bg-gray-100 dark:bg-neutral-800/50 border border-gray-300 dark:border-neutral-700 rounded-xl p-2.5 text-gray-500 dark:text-gray-400 font-bold cursor-not-allowed text-[11px]" readonly />
             </div>
             <div>
               <label class="block text-[11px] font-medium text-gray-400 mb-1">Waktu Kembali *</label>
@@ -476,17 +462,6 @@
             <input type="hidden" id="returnPhotoData" required />
           </div>
 
-          <!-- TANDA TANGAN PENERIMA -->
-          <div class="p-3 bg-gray-50 dark:bg-neutral-950 rounded-xl border border-gray-200 dark:border-neutral-800 space-y-1">
-            <div class="flex items-center justify-between">
-              <label class="text-[10px] font-bold text-gray-400 uppercase">Tanda Tangan Petugas Penerima *</label>
-              <button type="button" onclick="clearSignature('return')" class="text-[10px] text-rose-500 font-bold">Bersihkan</button>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-300 overflow-hidden">
-              <canvas id="returnSigCanvas" width="380" height="110" class="sig-canvas w-full h-20 block bg-white"></canvas>
-            </div>
-          </div>
-
           <button type="submit" id="btnSubmitReturn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5 text-xs">
             <i data-lucide="check-check" class="w-4 h-4"></i>
             <span>Simpan Log & Pulihkan Stok</span>
@@ -496,7 +471,7 @@
     </div>
   </div>
 
-  <!-- 3. MODAL BERITA ACARA DIGITAL & CETAK PDF TAJAM (A4 HD) -->
+  <!-- 3. MODAL BERITA ACARA DIGITAL & CETAK PDF TAJAM (A4 HD - TANPA TTD) -->
   <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
       <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
@@ -507,7 +482,7 @@
         <button onclick="closeModal('detailModal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <!-- Area yang dicetak persis ke file PDF A4 -->
+      <!-- Area cetak PDF A4 (Tanda tangan dihapus) -->
       <div id="pdfContentArea" class="bg-white p-5 space-y-3 text-xs text-slate-900 overflow-y-auto no-scrollbar">
         <div class="text-center pb-2 border-b-2 border-slate-900">
           <h2 class="font-black text-sm uppercase tracking-wide text-slate-900">BERITA ACARA PINJAM PAKAI ALAT KERJA</h2>
@@ -544,8 +519,8 @@
             <span id="docBorrowDate" class="font-semibold text-slate-800">-</span>
           </div>
           <div class="p-2 rounded bg-slate-50 border border-slate-200">
-            <span class="text-[9px] text-slate-400 uppercase font-bold block">Device Peminjaman</span>
-            <span id="docDeviceBorrow" class="font-semibold text-slate-800 font-mono text-[10px]">-</span>
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Petugas Penerima</span>
+            <span id="docOfficerReturn" class="font-bold text-slate-900 text-xs">-</span>
           </div>
           <div class="p-2 rounded bg-slate-50 border border-slate-200">
             <span class="text-[9px] text-slate-400 uppercase font-bold block">Waktu Kembali</span>
@@ -562,13 +537,13 @@
           <div class="grid grid-cols-2 gap-2">
             <div class="border border-slate-200 rounded-lg p-1.5 text-center bg-slate-50">
               <span class="text-[9px] font-bold text-slate-600 block mb-1 uppercase">Sebelum Dipinjam</span>
-              <div class="h-28 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
+              <div class="h-32 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
                 <img id="docPhotoBefore" src="" class="h-full w-full object-cover" />
               </div>
             </div>
             <div class="border border-slate-200 rounded-lg p-1.5 text-center bg-slate-50">
               <span class="text-[9px] font-bold text-slate-600 block mb-1 uppercase">Saat Dikembalikan</span>
-              <div class="h-28 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
+              <div class="h-32 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
                 <img id="docPhotoAfter" src="" class="h-full w-full object-cover hidden" />
                 <span id="docPhotoAfterEmpty" class="text-[10px] text-slate-400 italic">Belum Dikembalikan</span>
               </div>
@@ -576,25 +551,9 @@
           </div>
         </div>
 
-        <div class="pt-1">
-          <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1">Pengesahan Tanda Tangan Digital</span>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="border border-slate-200 rounded-lg p-2 text-center bg-white">
-              <span class="text-[9px] text-slate-400 block mb-0.5 uppercase font-semibold">Pihak Peminjam</span>
-              <div class="h-14 flex items-center justify-center">
-                <img id="docSigBorrow" src="" class="max-h-full max-w-full" />
-              </div>
-              <span id="docBorrowerSignName" class="text-[10px] font-bold text-slate-900 block border-t border-slate-200 pt-1 mt-1">-</span>
-            </div>
-            <div class="border border-slate-200 rounded-lg p-2 text-center bg-white">
-              <span class="text-[9px] text-slate-400 block mb-0.5 uppercase font-semibold">Petugas Unit</span>
-              <div class="h-14 flex items-center justify-center">
-                <img id="docSigReturn" src="" class="max-h-full max-w-full hidden" />
-                <span id="docSigReturnEmpty" class="text-[10px] text-slate-400 italic">-</span>
-              </div>
-              <span id="docOfficerSignName" class="text-[10px] font-bold text-slate-900 block border-t border-slate-200 pt-1 mt-1">-</span>
-            </div>
-          </div>
+        <!-- Validasi Sistem (Pengganti TTD) -->
+        <div class="p-2 rounded-lg bg-slate-100 border border-slate-300 text-[10px] text-slate-600 text-center font-mono">
+          Dokumen ini divalidasi secara digital melalui sistem ToolTrack Pro berbasis login resmi karyawan.
         </div>
       </div>
 
@@ -603,15 +562,15 @@
           <i data-lucide="download" class="w-3.5 h-3.5"></i>
           <span>Unduh PDF HD</span>
         </button>
-        <button onclick="shareWhatsAppOfficial(currentDetailLoan)" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow">
+        <button onclick="shareWhatsAppWithPhotos(currentDetailLoan)" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow">
           <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
-          <span>Share WA</span>
+          <span>Share WA + Foto</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 4. MODAL DETAIL ALAT & HAPUS (SUPER ADMIN) -->
+  <!-- 4. MODAL DETAIL ALAT -->
   <div id="modalDetailTool" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
       <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
@@ -635,22 +594,20 @@
           <div class="flex items-center space-x-2 text-[11px] text-gray-500 mt-0.5">
             <span id="modalDetailBrand">Merk</span>
             <span>•</span>
-            <span id="modalDetailOffice">Lokasi Kantor</span>
+            <span id="modalDetailOffice">Lokasi Workshop</span>
             <span>•</span>
             <span id="modalDetailStock" class="font-bold text-amber-500">Stok: 1 Unit</span>
           </div>
         </div>
 
         <div class="pt-2">
-          <button id="modalBtnAction" onclick="" class="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 shadow">
-            <!-- Dynamic button via JS -->
-          </button>
+          <button id="modalBtnAction" onclick="" class="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 shadow"></button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 5. MODAL TAMBAH ALAT (SUPER ADMIN ONLY) -->
+  <!-- 5. MODAL TAMBAH ALAT (SUPER ADMIN) -->
   <div id="modalAddTool" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
       <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
@@ -687,10 +644,7 @@
           <div>
             <label class="block text-[11px] text-gray-400 mb-1">Gudang / Workshop</label>
             <select id="newToolOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
-              <option value="Workshop Surabaya">Workshop Surabaya</option>
-              <option value="Central Hub Jakarta">Central Hub Jakarta</option>
-              <option value="Site Yard Cilegon">Site Yard Cilegon</option>
-              <option value="Gudang Balikpapan">Gudang Balikpapan</option>
+              <!-- Rendered dynamically -->
             </select>
           </div>
         </div>
@@ -716,7 +670,7 @@
     </div>
   </div>
 
-  <!-- 6. MODAL TAMBAH PETUGAS (SUPER ADMIN ONLY) -->
+  <!-- 6. MODAL TAMBAH PETUGAS -->
   <div id="modalAddStaff" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col">
       <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
@@ -738,12 +692,9 @@
           <input type="password" id="newStaffPass" placeholder="******" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none" required />
         </div>
         <div>
-          <label class="block text-[11px] text-gray-400 mb-1">Penempatan Gudang</label>
+          <label class="block text-[11px] text-gray-400 mb-1">Penempatan Workshop</label>
           <select id="newStaffOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none">
-            <option value="Workshop Surabaya">Workshop Surabaya</option>
-            <option value="Central Hub Jakarta">Central Hub Jakarta</option>
-            <option value="Site Yard Cilegon">Site Yard Cilegon</option>
-            <option value="Gudang Balikpapan">Gudang Balikpapan</option>
+            <!-- Rendered dynamically -->
           </select>
         </div>
         <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 rounded-xl transition">Daftarkan Petugas</button>
@@ -751,7 +702,7 @@
     </div>
   </div>
 
-  <!-- 7. MODAL LOGIN (NIK & SANDI) -->
+  <!-- 7. MODAL LOGIN -->
   <div id="modalLogin" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-xs overflow-hidden shadow-2xl p-6 text-center">
       <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-indigo-600 flex items-center justify-center text-white mb-3 shadow-lg">
@@ -782,7 +733,7 @@
 
   <!-- ================= LOGIC JAVASCRIPT ================= -->
   <script>
-    // 1. SUPABASE REALTIME CONFIGURATION
+    // 1. SUPABASE CONFIGURATION
     const SUPABASE_URL = "https://tztxcqaskdfsgcllfixd.supabase.co";
     const SUPABASE_KEY = "sb_publishable_pKV-0VdO0wSKzPM4JWeNhg_DC1xn2EA";
 
@@ -797,7 +748,7 @@
       console.warn("Supabase init error:", e);
     }
 
-    // Default In-Memory Mock Data
+    // Default Mock Data
     const INITIAL_TOOLS = [
       { id: "ALT-001", name: "Bor Tangan Cordless 18V", brand: "Bosch", category: "Mekanikal", condition: "Baik", total_qty: 3, available_qty: 3, office: "Workshop Surabaya", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80" },
       { id: "ALT-002", name: "Multimeter Digital CD800a", brand: "Sanwa", category: "Elektrikal", condition: "Baik", total_qty: 2, available_qty: 2, office: "Workshop Surabaya", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80" },
@@ -807,124 +758,41 @@
 
     const INITIAL_USERS = [
       { nik: "ADMIN01", name: "Hendro Wibowo (Lead Eng)", role: "superadmin", password: "admin123", office: "Workshop Surabaya", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" },
-      { nik: "TECH01", name: "Rian Saputra (Petugas Gudang)", role: "petugas", password: "tech123", office: "Workshop Surabaya", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" }
+      { nik: "TECH01", name: "Rian Saputra (Petugas Lapangan)", role: "petugas", password: "tech123", office: "Workshop Surabaya", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" }
     ];
 
-    // State Variables
+    const INITIAL_OFFICES = [
+      "Workshop Surabaya",
+      "Central Hub Jakarta",
+      "Site Yard Cilegon",
+      "Gudang Balikpapan"
+    ];
+
+    // State
     let currentUser = null;
     let tools = [];
     let loans = [];
     let users = [];
+    let offices = [];
     let currentCategoryFilter = "ALL";
     let selectedToolForDetail = null;
     let currentDetailLoan = null;
 
-    // Temporary Cache Compressed Images
     const compressedCache = {
       before: { dataUrl: null, sizeKb: null },
       after: { dataUrl: null, sizeKb: null },
       newTool: { dataUrl: null, sizeKb: null }
     };
 
-    // 2. SIGNATURE PAD CLASS
-    class SimpleSignaturePad {
-      constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        this.isDrawing = false;
-        this.hasContent = false;
-        this.setupCanvas();
-        this.bindEvents();
-      }
-
-      setupCanvas() {
-        this.ctx.lineWidth = 2.2;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.ctx.strokeStyle = '#000000';
-      }
-
-      getCoordinates(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const scaleX = this.canvas.width / rect.width;
-        const scaleY = this.canvas.height / rect.height;
-
-        let clientX = e.clientX;
-        let clientY = e.clientY;
-
-        if (e.touches && e.touches.length > 0) {
-          clientX = e.touches[0].clientX;
-          clientY = e.touches[0].clientY;
-        }
-
-        return {
-          x: (clientX - rect.left) * scaleX,
-          y: (clientY - rect.top) * scaleY
-        };
-      }
-
-      start(e) {
-        this.isDrawing = true;
-        this.hasContent = true;
-        const coords = this.getCoordinates(e);
-        this.ctx.beginPath();
-        this.ctx.moveTo(coords.x, coords.y);
-      }
-
-      draw(e) {
-        if (!this.isDrawing) return;
-        const coords = this.getCoordinates(e);
-        this.ctx.lineTo(coords.x, coords.y);
-        this.ctx.stroke();
-      }
-
-      stop() {
-        if (this.isDrawing) {
-          this.ctx.closePath();
-          this.isDrawing = false;
-        }
-      }
-
-      clear() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.hasContent = false;
-      }
-
-      toDataURL() {
-        return this.hasContent ? this.canvas.toDataURL('image/png') : null;
-      }
-
-      bindEvents() {
-        this.canvas.addEventListener('mousedown', (e) => this.start(e));
-        window.addEventListener('mousemove', (e) => this.draw(e));
-        window.addEventListener('mouseup', () => this.stop());
-
-        this.canvas.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          this.start(e);
-        }, { passive: false });
-        this.canvas.addEventListener('touchmove', (e) => {
-          e.preventDefault();
-          this.draw(e);
-        }, { passive: false });
-        this.canvas.addEventListener('touchend', (e) => {
-          e.preventDefault();
-          this.stop();
-        });
-      }
-    }
-
-    let borrowSigPad, returnSigPad;
-
-    // 3. INITIALIZATION ON LOAD
+    // 2. INITIALIZATION
     window.addEventListener("DOMContentLoaded", async () => {
       lucide.createIcons();
       initTheme();
 
-      // Load cache
       tools = JSON.parse(localStorage.getItem("app_tools_cache")) || INITIAL_TOOLS;
       loans = JSON.parse(localStorage.getItem("app_loans_cache")) || [];
       users = JSON.parse(localStorage.getItem("app_users_cache")) || INITIAL_USERS;
+      offices = JSON.parse(localStorage.getItem("app_offices_cache")) || INITIAL_OFFICES;
 
       const savedUser = localStorage.getItem("app_current_user");
       if (savedUser) {
@@ -935,29 +803,103 @@
         document.getElementById("modalLogin").classList.remove("hidden");
       }
 
+      populateOfficeDropdowns();
       await refreshData();
       setupSupabaseRealtime();
       autoConnectDevicePhone();
 
-      // Start global 1-second interval timer
       setInterval(updateLiveTimers, 1000);
       renderAll();
     });
 
-    // 4. SUPABASE REALTIME & SINKRONISASI
+    // 3. MASTER WORKSHOP MANAGEMENT
+    function populateOfficeDropdowns() {
+      const dropdownIds = ["editUserOffice", "newToolOffice", "newStaffOffice"];
+      dropdownIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const currentVal = el.value;
+        el.innerHTML = offices.map(o => `<option value="${o}">${o}</option>`).join("");
+        if (currentVal && offices.includes(currentVal)) el.value = currentVal;
+      });
+
+      renderOfficeList();
+    }
+
+    function renderOfficeList() {
+      const container = document.getElementById("officeListContainer");
+      if (!container) return;
+
+      container.innerHTML = offices.map((off, idx) => `
+        <div class="py-2 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="building-2" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span class="font-medium text-gray-800 dark:text-gray-200">${off}</span>
+          </div>
+          ${offices.length > 1 ? `
+            <button onclick="handleDeleteOffice('${off}')" class="text-rose-500 hover:text-rose-400 p-1" title="Hapus Lokasi">
+              <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
+        </div>
+      `).join("");
+
+      lucide.createIcons();
+    }
+
+    function promptAddOffice() {
+      const newOff = prompt("Masukkan nama lokasi workshop/gudang baru:");
+      if (!newOff || !newOff.trim()) return;
+      const clean = newOff.trim();
+      if (offices.includes(clean)) return alert("Lokasi tersebut sudah terdaftar!");
+
+      offices.push(clean);
+      localStorage.setItem("app_offices_cache", JSON.stringify(offices));
+      populateOfficeDropdowns();
+      showToast(`Lokasi "${clean}" berhasil ditambahkan!`);
+    }
+
+    function handleDeleteOffice(officeName) {
+      if (!confirm(`Hapus lokasi workshop "${officeName}"?`)) return;
+      offices = offices.filter(o => o !== officeName);
+      localStorage.setItem("app_offices_cache", JSON.stringify(offices));
+      populateOfficeDropdowns();
+      showToast("Lokasi workshop berhasil dihapus!");
+    }
+
+    // 4. SUPABASE REALTIME & SYNC
     function setupSupabaseRealtime() {
       if (!supabaseClient) return;
-
       if (realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
 
       realtimeChannel = supabaseClient.channel('realtime_tooltrack')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'loans' }, (payload) => {
-          handleRealtimeLoanEvent(payload);
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'loans' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            if (!loans.some(l => l.id === payload.new.id)) loans.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = loans.findIndex(l => l.id === payload.new.id);
+            if (idx !== -1) loans[idx] = { ...loans[idx], ...payload.new };
+            else loans.unshift(payload.new);
+          } else if (payload.eventType === 'DELETE') {
+            loans = loans.filter(l => l.id !== payload.old.id);
+          }
+          saveCache();
+          renderAll();
         })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'tools' }, (payload) => {
-          handleRealtimeToolEvent(payload);
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tools' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            if (!tools.some(t => t.id === payload.new.id)) tools.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = tools.findIndex(t => t.id === payload.new.id);
+            if (idx !== -1) tools[idx] = { ...tools[idx], ...payload.new };
+            else tools.unshift(payload.new);
+          } else if (payload.eventType === 'DELETE') {
+            tools = tools.filter(t => t.id !== payload.old.id);
+          }
+          saveCache();
+          renderAll();
         })
-        .subscribe((status) => {
+        .subscribe(status => {
           const badge = document.getElementById('realtimeBadge');
           if (badge) {
             badge.innerHTML = status === 'SUBSCRIBED' 
@@ -965,35 +907,6 @@
               : `<span class="w-1.5 h-1.5 rounded-full bg-slate-500 inline-block mr-1"></span> SYNC`;
           }
         });
-    }
-
-    function handleRealtimeLoanEvent(payload) {
-      if (payload.eventType === 'INSERT') {
-        if (!loans.some(l => l.id === payload.new.id)) loans.unshift(payload.new);
-      } else if (payload.eventType === 'UPDATE') {
-        const idx = loans.findIndex(l => l.id === payload.new.id);
-        if (idx !== -1) loans[idx] = { ...loans[idx], ...payload.new };
-        else loans.unshift(payload.new);
-      } else if (payload.eventType === 'DELETE') {
-        loans = loans.filter(l => l.id !== payload.old.id);
-      }
-      saveCache();
-      renderAll();
-      showToast("Data sirkulasi diperbarui secara realtime!");
-    }
-
-    function handleRealtimeToolEvent(payload) {
-      if (payload.eventType === 'INSERT') {
-        if (!tools.some(t => t.id === payload.new.id)) tools.unshift(payload.new);
-      } else if (payload.eventType === 'UPDATE') {
-        const idx = tools.findIndex(t => t.id === payload.new.id);
-        if (idx !== -1) tools[idx] = { ...tools[idx], ...payload.new };
-        else tools.unshift(payload.new);
-      } else if (payload.eventType === 'DELETE') {
-        tools = tools.filter(t => t.id !== payload.old.id);
-      }
-      saveCache();
-      renderAll();
     }
 
     async function refreshData(showNotice = false) {
@@ -1017,9 +930,9 @@
 
         saveCache();
         renderAll();
-        if (showNotice) showToast("Sinkronisasi Cloud Supabase Sukses!");
+        if (showNotice) showToast("Sinkronisasi Supabase Sukses!");
       } catch (e) {
-        console.warn("Supabase fetch notice:", e);
+        console.warn("Supabase notice:", e);
       } finally {
         if (syncIcon) syncIcon.classList.remove("animate-spin");
       }
@@ -1030,19 +943,18 @@
         localStorage.setItem("app_tools_cache", JSON.stringify(tools));
         localStorage.setItem("app_loans_cache", JSON.stringify(loans));
         localStorage.setItem("app_users_cache", JSON.stringify(users));
+        localStorage.setItem("app_offices_cache", JSON.stringify(offices));
       } catch (e) {
-        console.warn("Quota storage:", e);
+        console.warn("Storage quota:", e);
       }
     }
 
-    // 5. IMAGE COMPRESSION ENGINE (TARGET <= 100 KB)
+    // 5. IMAGE COMPRESSION (≤ 100 KB TARGET)
     async function processImage(fileInput, type) {
       const file = fileInput.files[0];
       if (!file) return;
 
-      const origSizeKb = (file.size / 1024).toFixed(1);
       const reader = new FileReader();
-
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
@@ -1101,7 +1013,7 @@
       ctx.fillRect(0, height - 30, width, 30);
       ctx.fillStyle = "#f59e0b";
       ctx.font = "bold 12px sans-serif";
-      ctx.fillText(`TOOLTRACK AUDIT | NIK: ${currentUser ? currentUser.nik : 'OFFLINE'} | ${timeStr}`, 12, height - 10);
+      ctx.fillText(`TOOLTRACK AUDIT | PETUGAS: ${currentUser ? currentUser.nik : 'OFFLINE'} | ${timeStr}`, 12, height - 10);
 
       let quality = 0.8;
       let dataUrl = canvas.toDataURL("image/jpeg", quality);
@@ -1116,12 +1028,7 @@
       callback(dataUrl, sizeKb);
     }
 
-    function clearSignature(type) {
-      if (type === 'borrow' && borrowSigPad) borrowSigPad.clear();
-      if (type === 'return' && returnSigPad) returnSigPad.clear();
-    }
-
-    // 6. AUTO DETECT DEVICE & PHONE
+    // 6. AUTO CONNECT PHONE
     function autoConnectDevicePhone() {
       const savedPhone = localStorage.getItem('app_device_whatsapp_number');
       const phoneInput = document.getElementById('borrowerPhone');
@@ -1154,7 +1061,7 @@
         phoneInput.value = savedPhone;
         if (icon) icon.classList.remove('hidden');
       } else {
-        const val = prompt("Masukkan nomor WhatsApp aktif di HP ini (contoh: 08123456789):");
+        const val = prompt("Masukkan nomor WhatsApp peminjam (contoh: 08123456789):");
         if (val && val.trim().length >= 9) {
           const cleaned = val.trim().replace(/\D/g, '');
           localStorage.setItem('app_device_whatsapp_number', cleaned);
@@ -1162,25 +1069,6 @@
           if (icon) icon.classList.remove('hidden');
         }
       }
-    }
-
-    function parseDeviceInfo() {
-      const ua = navigator.userAgent || '';
-      let os = "Windows PC";
-      let browser = "Browser";
-
-      if (/Android/i.test(ua)) os = "Android";
-      else if (/iPhone/i.test(ua)) os = "iPhone iOS";
-      else if (/iPad/i.test(ua)) os = "iPadOS";
-      else if (/Macintosh/i.test(ua)) os = "macOS";
-      else if (/Linux/i.test(ua)) os = "Linux";
-
-      if (/Chrome/i.test(ua) && !/Edge|Edg|OPR/i.test(ua)) browser = "Chrome";
-      else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = "Safari";
-      else if (/Edg/i.test(ua)) browser = "Edge";
-      else if (/Firefox/i.test(ua)) browser = "Firefox";
-
-      return `${os} (${browser})`;
     }
 
     // 7. DIRECT WORKFLOW SEWA (CHECK-IN & CHECK-OUT)
@@ -1191,7 +1079,7 @@
 
       const avail = tool.available_qty !== undefined ? tool.available_qty : 1;
       if (avail <= 0) {
-        alert("Unit alat ini sedang habis (seluruh unit sedang dipinjam)!");
+        alert("Unit alat ini sedang habis!");
         return;
       }
 
@@ -1207,7 +1095,9 @@
 
       document.getElementById("renterName").value = "";
       document.getElementById("renterProject").value = "";
-      document.getElementById("officerBorrow").value = currentUser ? currentUser.name : "Petugas";
+      
+      // Petugas Penyerah Otomatis Sesuai Akun Login
+      document.getElementById("officerBorrow").value = currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas";
       
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -1219,12 +1109,6 @@
 
       openModal("modalRent");
       autoConnectDevicePhone();
-
-      if (!borrowSigPad) {
-        borrowSigPad = new SimpleSignaturePad("borrowSigCanvas");
-      } else {
-        borrowSigPad.clear();
-      }
     }
 
     async function handleConfirmRent(e) {
@@ -1246,12 +1130,6 @@
         return;
       }
 
-      const sigData = borrowSigPad ? borrowSigPad.toDataURL() : null;
-      if (!sigData) {
-        alert("Wajib bubuhkan tanda tangan peminjam di layar!");
-        return;
-      }
-
       const loanId = "TRX-" + Date.now().toString().slice(-6);
       const remainingQty = currentAvail - borrowQty;
       const newStatus = remainingQty <= 0 ? 'DIPINJAM' : 'TERSEDIA';
@@ -1263,20 +1141,16 @@
         qty_borrowed: borrowQty,
         borrower_name: document.getElementById("renterName").value.trim(),
         borrower_phone: document.getElementById("borrowerPhone").value.trim(),
-        officer_borrow: document.getElementById("officerBorrow").value.trim(),
+        officer_borrow: currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas",
         borrow_date: document.getElementById("borrowDate").value,
         notes_borrow: document.getElementById("renterProject").value.trim(),
         photo_before: compressedCache.before.dataUrl,
         before_size_kb: compressedCache.before.sizeKb,
-        signature_borrow: sigData,
-        device_borrow: parseDeviceInfo(),
         return_date: null,
         condition_return: null,
         notes_return: null,
         photo_after: null,
-        signature_return: null,
         officer_return: null,
-        device_return: null,
         rent_started_at: Date.now(),
         status: "DIPINJAM"
       };
@@ -1295,13 +1169,13 @@
             status: newStatus
           }).eq("id", tool.id);
         } catch (err) {
-          console.warn("Supabase insert loan notice:", err);
+          console.warn("Supabase insert error:", err);
         }
       }
 
       closeModal("modalRent");
       renderAll();
-      showToast(`Peminjaman ${borrowQty} unit berhasil dicatat! Detik berjalan.`);
+      showToast(`Peminjaman ${borrowQty} unit dicatat! Detik berjalan.`);
       switchView("activeRentals");
     }
 
@@ -1312,7 +1186,9 @@
 
       document.getElementById("returnLoanId").value = loan.id;
       document.getElementById("returnRenterInfo").innerText = `Penyewa: ${loan.borrower_name} (${loan.borrower_phone}) • ${loan.qty_borrowed || 1} Unit`;
-      document.getElementById("officerReturn").value = currentUser ? currentUser.name : (loan.officer_borrow || 'Petugas');
+      
+      // Petugas Penerima Otomatis Sesuai Login Aktif
+      document.getElementById("officerReturn").value = currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas";
       
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -1326,12 +1202,6 @@
       compressedCache.after = { dataUrl: null, sizeKb: null };
 
       openModal("modalReturn");
-
-      if (!returnSigPad) {
-        returnSigPad = new SimpleSignaturePad("returnSigCanvas");
-      } else {
-        returnSigPad.clear();
-      }
     }
 
     async function handleConfirmReturn(e) {
@@ -1345,22 +1215,14 @@
         return;
       }
 
-      const sigData = returnSigPad ? returnSigPad.toDataURL() : null;
-      if (!sigData) {
-        alert("Wajib bubuhkan tanda tangan petugas penerima di layar!");
-        return;
-      }
-
       const condition = document.getElementById("returnCondition").value;
       const updateData = {
         return_date: document.getElementById("returnDate").value,
-        officer_return: document.getElementById("officerReturn").value.trim(),
+        officer_return: currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas",
         condition_return: condition,
         notes_return: document.getElementById("returnNotes").value.trim(),
         photo_after: compressedCache.after.dataUrl,
         after_size_kb: compressedCache.after.sizeKb,
-        signature_return: sigData,
-        device_return: parseDeviceInfo(),
         status: "KEMBALI"
       };
 
@@ -1447,12 +1309,13 @@
       return [h, m, s].map(v => v < 10 ? "0" + v : v).join(":");
     }
 
-    // 9. RENDERING VIEWS & EXPLORE FEED
+    // 9. RENDERING VIEWS
     function renderAll() {
       renderToolsGrid();
       renderActiveRentalsList();
       renderLogsHistory();
       renderStaffList();
+      renderOfficeList();
     }
 
     function renderToolsGrid() {
@@ -1538,10 +1401,10 @@
                 </div>
                 <h4 class="text-xs font-bold text-gray-900 dark:text-white truncate mt-0.5">${loan.tool_name}</h4>
                 <p class="text-[10px] text-gray-500">Peminjam: <strong class="text-gray-700 dark:text-gray-300">${loan.borrower_name}</strong> (${loan.borrower_phone})</p>
+                <p class="text-[9px] text-amber-500 font-semibold mt-0.5">Penyerah: ${loan.officer_borrow || '-'}</p>
               </div>
             </div>
 
-            <!-- Running timer box -->
             <div class="bg-gray-50 dark:bg-neutral-950 p-2 rounded-xl flex items-center justify-between border border-gray-100 dark:border-neutral-800">
               <div class="flex items-center space-x-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500 pulse-dot"></span>
@@ -1595,18 +1458,18 @@
           <div class="grid grid-cols-2 gap-2 text-[10px] text-gray-500">
             <div>Peminjam: <strong class="text-gray-800 dark:text-gray-200">${loan.borrower_name}</strong></div>
             <div>Jumlah: <strong class="text-emerald-500 font-bold">${loan.qty_borrowed || 1} Unit</strong></div>
-            <div>Petugas Pinjam: ${loan.officer_borrow || '-'}</div>
-            <div>Petugas Kembali: ${loan.officer_return || '-'}</div>
+            <div>Penyerah: ${loan.officer_borrow || '-'}</div>
+            <div>Penerima: ${loan.officer_return || '-'}</div>
           </div>
 
           <!-- Side-by-side Inspection Images -->
           <div class="grid grid-cols-2 gap-2 pt-1">
             <div class="bg-gray-50 dark:bg-neutral-950 p-1.5 rounded-xl text-center border border-gray-200 dark:border-neutral-800">
-              <span class="text-[9px] font-bold text-amber-500 block mb-1">Sebelum (${loan.before_size_kb || 95} KB)</span>
+              <span class="text-[9px] font-bold text-amber-500 block mb-1">Foto Sebelum (${loan.before_size_kb || 95} KB)</span>
               <img src="${loan.photo_before || 'https://via.placeholder.com/150'}" class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90" onclick="window.open(this.src)" />
             </div>
             <div class="bg-gray-50 dark:bg-neutral-950 p-1.5 rounded-xl text-center border border-gray-200 dark:border-neutral-800">
-              <span class="text-[9px] font-bold text-emerald-500 block mb-1">Saat Kembali</span>
+              <span class="text-[9px] font-bold text-emerald-500 block mb-1">Foto Sesudah</span>
               ${loan.photo_after 
                 ? `<img src="${loan.photo_after}" class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90" onclick="window.open(this.src)" />`
                 : `<div class="w-full h-24 flex items-center justify-center bg-gray-200 dark:bg-neutral-800 rounded-lg text-gray-400 italic text-[10px]">Belum kembali</div>`
@@ -1621,9 +1484,9 @@
                 <i data-lucide="file-text" class="w-3 h-3"></i>
                 <span>Berita Acara</span>
               </button>
-              <button onclick="shareWhatsAppOfficial(loans.find(l=>l.id==='${loan.id}'))" class="px-2 py-1 bg-emerald-600/10 text-emerald-500 hover:bg-emerald-600 hover:text-white rounded-lg text-[10px] font-semibold flex items-center space-x-1">
+              <button onclick="shareWhatsAppWithPhotos(loans.find(l=>l.id==='${loan.id}'))" class="px-2 py-1 bg-emerald-600/10 text-emerald-500 hover:bg-emerald-600 hover:text-white rounded-lg text-[10px] font-semibold flex items-center space-x-1">
                 <i data-lucide="share-2" class="w-3 h-3"></i>
-                <span>WA</span>
+                <span>Share WA</span>
               </button>
             </div>
           </div>
@@ -1633,7 +1496,7 @@
       lucide.createIcons();
     }
 
-    // 10. BERITA ACARA DIGITAL & EXPORT PDF TAJAM (A4 HD)
+    // 10. DETAIL & EXPORT PDF (A4 HD - TANPA TTD)
     function openDetailModal(loanId) {
       const loan = loans.find(l => l.id === loanId);
       if (!loan) return;
@@ -1644,10 +1507,8 @@
       document.getElementById('docQtyBorrowed').textContent = `${loan.qty_borrowed || 1} Unit`;
       document.getElementById('docBorrowerName').textContent = loan.borrower_name;
       document.getElementById('docOfficerBorrow').textContent = loan.officer_borrow || '-';
-      document.getElementById('docDeviceBorrow').textContent = loan.device_borrow || '-';
       document.getElementById('docBorrowerPhone').textContent = loan.borrower_phone;
       document.getElementById('docBorrowDate').textContent = formatDateTime(loan.borrow_date);
-      document.getElementById('docBorrowerSignName').textContent = loan.borrower_name;
 
       const statusBadge = document.getElementById('docStatusBadge');
       if (loan.status === 'DIPINJAM') {
@@ -1659,30 +1520,22 @@
       }
 
       document.getElementById('docPhotoBefore').src = loan.photo_before || '';
-      document.getElementById('docSigBorrow').src = loan.signature_borrow || '';
 
       if (loan.return_date && loan.photo_after) {
         document.getElementById('docReturnDate').textContent = formatDateTime(loan.return_date);
+        document.getElementById('docOfficerReturn').textContent = loan.officer_return || '-';
         document.getElementById('docConditionReturn').textContent = `${loan.condition_return || '-'} (${loan.notes_return || 'Normal'})`;
-        document.getElementById('docOfficerSignName').textContent = loan.officer_return || 'Petugas Unit';
         
         document.getElementById('docPhotoAfter').src = loan.photo_after;
         document.getElementById('docPhotoAfter').classList.remove('hidden');
         document.getElementById('docPhotoAfterEmpty').classList.add('hidden');
-
-        document.getElementById('docSigReturn').src = loan.signature_return || '';
-        document.getElementById('docSigReturn').classList.remove('hidden');
-        document.getElementById('docSigReturnEmpty').classList.add('hidden');
       } else {
         document.getElementById('docReturnDate').textContent = "Belum Dikembalikan";
+        document.getElementById('docOfficerReturn').textContent = "-";
         document.getElementById('docConditionReturn').textContent = "-";
-        document.getElementById('docOfficerSignName').textContent = loan.officer_borrow || 'Petugas Unit';
         
         document.getElementById('docPhotoAfter').classList.add('hidden');
         document.getElementById('docPhotoAfterEmpty').classList.remove('hidden');
-
-        document.getElementById('docSigReturn').classList.add('hidden');
-        document.getElementById('docSigReturnEmpty').classList.remove('hidden');
       }
 
       openModal('detailModal');
@@ -1723,34 +1576,78 @@
       }
     }
 
-    function shareWhatsAppOfficial(loan) {
+    // 11. SHARE WHATSAPP: MENAMPILKAN FOTO SEBELUM & SESUDAH
+    async function shareWhatsAppWithPhotos(loan) {
       if (!loan) return;
       const qty = loan.qty_borrowed || 1;
-      let text = `*BERITA ACARA PINJAM PAKAI ALAT KERJA*\n`;
-      text += `====================================\n`;
-      text += `*No Registrasi:* ${loan.id}\n`;
-      text += `*Nama Alat:* ${loan.tool_name}\n`;
-      text += `*Jumlah Unit:* ${qty} Unit\n`;
-      text += `*Nama Peminjam:* ${loan.borrower_name}\n`;
-      text += `*Petugas Penyerah:* ${loan.officer_borrow || '-'}\n`;
-      text += `*Waktu Pinjam:* ${formatDateTime(loan.borrow_date)}\n`;
-      text += `*Status:* ${loan.status}\n`;
-      if (loan.return_date) {
-        text += `*Waktu Kembali:* ${formatDateTime(loan.return_date)}\n`;
-        text += `*Petugas Penerima:* ${loan.officer_return || '-'}\n`;
-        text += `*Kondisi Akhir:* ${loan.condition_return || '-'}\n`;
-      }
-      text += `====================================\n`;
-      text += `_Dokumentasi resmi pencatatan dan sirkulasi inventaris._`;
 
+      let message = `*BERITA ACARA PINJAM PAKAI ALAT KERJA*\n`;
+      message += `====================================\n`;
+      message += `*No Registrasi:* ${loan.id}\n`;
+      message += `*Nama Alat:* ${loan.tool_name}\n`;
+      message += `*Jumlah Unit:* ${qty} Unit\n`;
+      message += `*Nama Peminjam:* ${loan.borrower_name}\n`;
+      message += `*Petugas Penyerah:* ${loan.officer_borrow || '-'}\n`;
+      message += `*Waktu Pinjam:* ${formatDateTime(loan.borrow_date)}\n`;
+      message += `*Status:* ${loan.status}\n`;
+      if (loan.return_date) {
+        message += `*Waktu Kembali:* ${formatDateTime(loan.return_date)}\n`;
+        message += `*Petugas Penerima:* ${loan.officer_return || '-'}\n`;
+        message += `*Kondisi Akhir:* ${loan.condition_return || '-'}\n`;
+      }
+      if (loan.notes_borrow) {
+        message += `*Catatan Proyek:* ${loan.notes_borrow}\n`;
+      }
+      message += `====================================\n`;
+      message += `_Dokumentasi foto kondisi sebelum pinjam & sesudah kembali terlampir._`;
+
+      // Menyiapkan lampiran foto sebelum & sesudah pinjam
+      const filesToShare = [];
+      try {
+        if (loan.photo_before) {
+          const blobBefore = dataURLtoBlob(loan.photo_before);
+          filesToShare.push(new File([blobBefore], `Foto_Sebelum_${loan.id}.jpg`, { type: 'image/jpeg' }));
+        }
+        if (loan.photo_after) {
+          const blobAfter = dataURLtoBlob(loan.photo_after);
+          filesToShare.push(new File([blobAfter], `Foto_Sesudah_${loan.id}.jpg`, { type: 'image/jpeg' }));
+        }
+
+        // Jika browser mendukung Web Share API dengan multi file foto
+        if (navigator.canShare && filesToShare.length > 0 && navigator.canShare({ files: filesToShare })) {
+          await navigator.share({
+            title: `Bukti Peminjaman - ${loan.tool_name}`,
+            text: message,
+            files: filesToShare
+          });
+          return;
+        }
+      } catch (err) {
+        console.warn("Native WebShare dialihkan ke link WA biasa:", err);
+      }
+
+      // Fallback ke tautan WhatsApp biasa jika browser tidak mendukung kirim multi-file langsung
       let phone = (loan.borrower_phone || '').replace(/\D/g, '');
       if (phone.startsWith('0')) phone = '62' + phone.substring(1);
 
-      const waUrl = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
+      const waUrl = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
     }
 
-    // 11. EXPORT EXCEL & CSV CORPORATE
+    function dataURLtoBlob(dataurl) {
+      if (!dataurl || !dataurl.includes(',')) return null;
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    }
+
+    // 12. EXPORT EXCEL & CSV
     function exportCorporateExcel() {
       if (loans.length === 0) return alert("Belum ada data transaksi untuk diekspor!");
 
@@ -1758,7 +1655,7 @@
         [`LAPORAN AUDIT & MUTASI SIRKULASI INVENTARIS ALAT KERJA`],
         [`Tanggal Unduh: ${new Date().toLocaleString("id-ID")}`],
         [],
-        ["NO", "ID TRANSAKSI", "KODE ALAT", "NAMA ALAT", "JUMLAH UNIT", "PEMINJAM", "NO WA", "PETUGAS PINJAM", "DEVICE PINJAM", "WAKTU PINJAM", "STATUS", "PETUGAS KEMBALI", "WAKTU KEMBALI", "KONDISI KEMBALI", "CATATAN"]
+        ["NO", "ID TRANSAKSI", "KODE ALAT", "NAMA ALAT", "JUMLAH UNIT", "PEMINJAM", "NO WA", "PETUGAS PENYERAH", "WAKTU PINJAM", "STATUS", "PETUGAS PENERIMA", "WAKTU KEMBALI", "KONDISI KEMBALI", "CATATAN"]
       ];
 
       loans.forEach((l, idx) => {
@@ -1771,7 +1668,6 @@
           l.borrower_name,
           l.borrower_phone ? `'${l.borrower_phone}` : "-",
           l.officer_borrow || "-",
-          l.device_borrow || "-",
           formatDateTime(l.borrow_date),
           l.status,
           l.officer_return || "-",
@@ -1785,15 +1681,15 @@
       const ws = XLSX.utils.aoa_to_sheet(wsData);
       XLSX.utils.book_append_sheet(wb, ws, "Mutasi Alat");
       XLSX.writeFile(wb, `Laporan_Mutasi_Alat_${Date.now()}.xlsx`);
-      showToast("File Excel resmi berhasil diunduh!");
+      showToast("File Excel berhasil diunduh!");
     }
 
     function exportCorporateCSV() {
       if (loans.length === 0) return alert("Belum ada data untuk diunduh!");
 
-      let csv = "\uFEFFNO,ID TRANSAKSI,NAMA ALAT,JUMLAH,PEMINJAM,NO WA,PETUGAS PINJAM,WAKTU PINJAM,STATUS,WAKTU KEMBALI\n";
+      let csv = "\uFEFFNO,ID TRANSAKSI,NAMA ALAT,JUMLAH,PEMINJAM,NO WA,PETUGAS PENYERAH,WAKTU PINJAM,STATUS,PETUGAS PENERIMA,WAKTU KEMBALI\n";
       loans.forEach((l, idx) => {
-        csv += `${idx + 1},"${l.id}","${l.tool_name}",${l.qty_borrowed || 1},"${l.borrower_name}","${l.borrower_phone || '-'}","${l.officer_borrow || '-'}","${formatDateTime(l.borrow_date)}","${l.status}","${l.return_date ? formatDateTime(l.return_date) : '-'}"\n`;
+        csv += `${idx + 1},"${l.id}","${l.tool_name}",${l.qty_borrowed || 1},"${l.borrower_name}","${l.borrower_phone || '-'}","${l.officer_borrow || '-'}","${formatDateTime(l.borrow_date)}","${l.status}","${l.officer_return || '-'}","${l.return_date ? formatDateTime(l.return_date) : '-'}"\n`;
       });
 
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -1806,7 +1702,7 @@
       document.body.removeChild(a);
     }
 
-    // 12. ROLE-BASED ACCESS & PENGATURAN
+    // 13. ROLE-BASED ACCESS
     function applyUserRoleUI() {
       if (!currentUser) return;
       const isSuperAdmin = currentUser.role === "superadmin";
@@ -1824,6 +1720,9 @@
 
       const staffSection = document.getElementById("superAdminStaffSection");
       if (staffSection) staffSection.classList.toggle("hidden", !isSuperAdmin);
+
+      const officeSection = document.getElementById("superAdminOfficeSection");
+      if (officeSection) officeSection.classList.toggle("hidden", !isSuperAdmin);
 
       const btnDetailDelete = document.getElementById("btnDetailDeleteTool");
       if (btnDetailDelete) btnDetailDelete.classList.toggle("hidden", !isSuperAdmin);
@@ -1994,7 +1893,7 @@
       showToast("Alat berhasil dihapus!");
     }
 
-    // 13. AUTH & VIEW NAVIGATION
+    // 14. AUTH & VIEWS
     function handleLoginSubmit(e) {
       e.preventDefault();
       const nik = document.getElementById("loginNik").value.trim().toUpperCase();
@@ -2138,7 +2037,7 @@
           day: '2-digit', month: 'short', year: 'numeric',
           hour: '2-digit', minute: '2-digit'
         });
-      } catch(e) {
+      } catch (e) {
         return str;
       }
     }
