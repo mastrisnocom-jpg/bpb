@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <title>ToolTrack Pro - Sistem Sirkulasi & Sewa Alat Kerja</title>
+  <meta name="description" content="Aplikasi peminjaman dan sewa alat kerja berbasis Supabase realtime, multi-unit stok, kompresi foto ≤100KB, Berita Acara PDF, dan export Excel." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            igdark: '#000000',
+            igcard: '#121212',
+            igborder: '#262626',
+            iggray: '#8e8e8e',
+            accent: '#0095f6',
+            enggold: '#f59e0b'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- SheetJS (XLSX) untuk Export Excel & CSV -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- jsPDF & html2canvas untuk Berita Acara Digital HD -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .pulse-dot {
+      animation: pulseAnimation 1.5s infinite;
+    }
+    @keyframes pulseAnimation {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-black dark:text-white min-h-screen pb-24 select-none transition-colors duration-200">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-gray-200 dark:border-neutral-800 px-4 py-2.5 flex items-center justify-between">
+    <div class="flex items-center space-x-2.5">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+        <i data-lucide="wrench" class="w-4 h-4"></i>
+      </div>
+      <div>
+        <h1 class="text-sm font-black tracking-tight leading-none bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">ToolTrack<span class="text-blue-500">Pro</span></h1>
+        <div class="flex items-center space-x-1.5 mt-0.5">
+          <span id="roleBadgeHeader" class="text-[9px] uppercase px-1.5 py-0.2 rounded font-bold bg-amber-500/10 text-amber-500 border border-amber-500/30">SUPER ADMIN</span>
+          <span id="realtimeBadge" class="text-[9px] text-gray-500 flex items-center font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-1 pulse-dot"></span>
+            LIVE
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls: Tema, Sync & Profil -->
+    <div class="flex items-center space-x-2">
+      <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-gray-300 transition" title="Ganti Mode Terang / Gelap">
+        <i data-lucide="sun" id="themeIconSun" class="w-4 h-4 hidden"></i>
+        <i data-lucide="moon" id="themeIconMoon" class="w-4 h-4"></i>
+      </button>
+
+      <button onclick="refreshData(true)" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-800 text-blue-500 transition" title="Sinkronkan Supabase">
+        <i data-lucide="refresh-cw" id="syncIcon" class="w-4 h-4"></i>
+      </button>
+
+      <div onclick="switchView('settings')" class="cursor-pointer pl-1">
+        <img id="headerAvatar" src="" class="w-7 h-7 rounded-full object-cover border border-amber-500" alt="Avatar" />
+      </div>
+    </div>
+  </header>
+
+  <!-- FLOATING TOAST -->
+  <div id="toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 transform -translate-y-20 opacity-0 transition-all duration-300 bg-neutral-900/90 text-white text-xs px-4 py-2 rounded-full shadow-2xl border border-gray-700 flex items-center space-x-2 backdrop-blur pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMsg">Sinkronisasi berhasil!</span>
+  </div>
+
+  <!-- ================= WORKSPACE UTAMA ================= -->
+  <main class="max-w-md mx-auto min-h-screen">
+
+    <!-- 1. VIEW EXPLORE / KATALOG ALAT -->
+    <section id="view-explore" class="block pb-10">
+      
+      <!-- Search & Filters -->
+      <div class="px-3 pt-3 pb-2 sticky top-[51px] bg-gray-100/95 dark:bg-black/95 z-30 backdrop-blur">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5"></i>
+          <input type="text" id="searchInput" oninput="renderToolsGrid()" placeholder="Cari nama alat, merk, kode ID..." class="w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-amber-500 shadow-sm" />
+        </div>
+
+        <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-2 text-[11px]">
+          <button onclick="setFilterCategory('ALL')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-amber-500 text-black font-semibold shadow-sm transition" data-cat="ALL">Semua</button>
+          <button onclick="setFilterCategory('HVAC')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-gray-300 transition" data-cat="HVAC">Alat AC / HVAC</button>
+          <button onclick="setFilterCategory('Elektrikal')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-gray-300 transition" data-cat="Elektrikal">Listrik & Daya</button>
+          <button onclick="setFilterCategory('Mekanikal')" class="category-chip px-3 py-1 rounded-full whitespace-nowrap bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-gray-300 transition" data-cat="Mekanikal">Mekanikal & Bor</button>
+        </div>
+      </div>
+
+      <!-- Live Rented Ticker Alert -->
+      <div id="liveRentedAlert" class="mx-3 mb-2 hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500 pulse-dot"></span>
+          <span class="text-xs font-semibold text-amber-600 dark:text-amber-400" id="liveRentedCountText">0 Unit Berjalan</span>
+        </div>
+        <button onclick="switchView('activeRentals')" class="text-[11px] bg-amber-500 text-black px-2.5 py-0.5 rounded-lg font-bold">Pantau Detik</button>
+      </div>
+
+      <!-- Tool Grid (3-Column Layout) -->
+      <div id="toolsGrid" class="grid grid-cols-3 gap-1 px-1">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 2. VIEW DETIK SEWA / SIRKULASI AKTIF -->
+    <section id="view-activeRentals" class="hidden px-3 pt-3 pb-10">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-sm font-bold flex items-center">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-dot mr-2"></span>
+            Sedang Berdetik Dipinjam
+          </h2>
+          <p class="text-[11px] text-gray-500">Hitungan detik real-time sejak check-in alat</p>
+        </div>
+        <span id="activeCountBadge" class="text-xs bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-bold">0 Unit</span>
+      </div>
+
+      <div id="activeRentalsList" class="space-y-3">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 3. VIEW LOG LAPANGAN & AUDIT -->
+    <section id="view-logs" class="hidden px-3 pt-3 pb-10">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-sm font-bold">Log Lapangan & Audit</h2>
+          <p class="text-[11px] text-gray-500">Riwayat sirkulasi & bukti foto ≤100KB</p>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <button onclick="exportCorporateExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2.5 py-1.5 rounded-lg flex items-center space-x-1 shadow font-medium">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+            <span>Excel</span>
+          </button>
+          <button onclick="exportCorporateCSV()" class="bg-neutral-800 hover:bg-neutral-700 text-white text-[11px] px-2.5 py-1.5 rounded-lg flex items-center space-x-1 shadow font-medium">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="logsHistoryList" class="space-y-3">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- 4. VIEW SETTINGS -->
+    <section id="view-settings" class="hidden px-3 pt-3 pb-10">
+      <div class="border-b border-gray-200 dark:border-neutral-800 pb-3 mb-4">
+        <h2 class="text-sm font-bold">Pengaturan Sistem</h2>
+        <p class="text-[11px] text-gray-500">Profil, manajemen staf, ganti password & master workshop</p>
+      </div>
+
+      <!-- Current Profile Card -->
+      <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <img id="settingsAvatarPreview" src="" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500" />
+          <div class="flex-1">
+            <h3 id="settingsProfileName" class="text-sm font-bold">-</h3>
+            <p id="settingsProfileNIK" class="text-xs text-gray-500">NIK: -</p>
+            <span id="settingsProfileRole" class="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-500">ROLE</span>
+          </div>
+        </div>
+
+        <form onsubmit="handleSaveProfile(event)" class="mt-4 space-y-2.5 pt-3 border-t border-gray-100 dark:border-neutral-800 text-xs">
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Nama Lengkap</label>
+            <input type="text" id="editUserName" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-2 focus:outline-none" required />
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Gudang / Workshop Operasional</label>
+            <select id="editUserOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg p-2 focus:outline-none">
+              <!-- Rendered dynamically -->
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-neutral-800 hover:bg-neutral-700 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-white font-medium py-1.5 rounded-lg text-xs mt-1 transition">Simpan Profil</button>
+        </form>
+
+        <!-- FITUR GANTI PASSWORD SENDIRI -->
+        <div class="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-800 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold text-gray-800 dark:text-gray-200">Keamanan Akun Saya</p>
+            <p class="text-[10px] text-gray-400">Ganti kata sandi login Anda</p>
+          </div>
+          <button onclick="openChangePasswordModal(currentUser.nik, currentUser.name)" class="text-xs bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500 hover:text-black text-amber-500 font-bold px-3 py-1.5 rounded-xl transition flex items-center space-x-1">
+            <i data-lucide="key" class="w-3.5 h-3.5"></i>
+            <span>Ganti Password</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SUPER ADMIN ONLY: KELOLA WORKSHOP & GUDANG -->
+      <div id="superAdminOfficeSection" class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500">Master Lokasi Workshop</h3>
+            <p class="text-[10px] text-gray-500">Tambah & hapus workshop/gudang operasional</p>
+          </div>
+          <button onclick="promptAddOffice()" class="text-xs bg-amber-500 hover:bg-amber-600 text-black px-2.5 py-1 rounded-lg font-bold flex items-center space-x-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Tambah</span>
+          </button>
+        </div>
+        <div id="officeListContainer" class="divide-y divide-gray-100 dark:divide-neutral-800 text-xs">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- SUPER ADMIN ONLY: MANAJEMEN PETUGAS & RESET PASSWORD USER LAIN -->
+      <div id="superAdminStaffSection" class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500">Manajemen Petugas & Akun</h3>
+            <p class="text-[10px] text-gray-500">Tambah, hapus, dan ganti password user</p>
+          </div>
+          <button onclick="openModalAddStaff()" class="text-xs bg-amber-500 hover:bg-amber-600 text-black px-2.5 py-1 rounded-lg font-bold flex items-center space-x-1">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+            <span>Tambah</span>
+          </button>
+        </div>
+
+        <div id="staffListTable" class="divide-y divide-gray-100 dark:divide-neutral-800 text-xs">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <button onclick="handleLogout()" class="w-full bg-rose-600/10 border border-rose-600/30 text-rose-500 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition hover:bg-rose-600 hover:text-white">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        <span>Keluar dari Akun (Logout)</span>
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION BAR ================= -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md border-t border-gray-200 dark:border-neutral-800 py-1.5 max-w-md mx-auto flex items-center justify-around text-xs">
+    <button onclick="switchView('explore')" id="navBtn-explore" class="nav-btn flex flex-col items-center py-1 text-amber-500">
+      <i data-lucide="compass" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Katalog</span>
+    </button>
+    
+    <button onclick="switchView('activeRentals')" id="navBtn-activeRentals" class="nav-btn relative flex flex-col items-center py-1 text-gray-400">
+      <i data-lucide="timer" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Detik Sewa</span>
+      <span id="navLiveBadge" class="absolute -top-1 right-2 w-2 h-2 rounded-full bg-red-500 hidden pulse-dot"></span>
+    </button>
+
+    <!-- Super Admin Only Button: Tambah Alat Baru -->
+    <button id="navBtnAddTool" onclick="openModalAddTool()" class="flex flex-col items-center justify-center p-2 rounded-xl bg-amber-500 text-black font-bold shadow-lg transform -translate-y-2 hover:scale-105 transition" title="Tambah Alat Baru">
+      <i data-lucide="plus" class="w-5 h-5 stroke-[2.5]"></i>
+    </button>
+
+    <button onclick="switchView('logs')" id="navBtn-logs" class="nav-btn flex flex-col items-center py-1 text-gray-400">
+      <i data-lucide="file-check-2" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Log PDF</span>
+    </button>
+
+    <button onclick="switchView('settings')" id="navBtn-settings" class="nav-btn flex flex-col items-center py-1 text-gray-400">
+      <i data-lucide="user-cog" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Pengaturan</span>
+    </button>
+  </nav>
+
+  <!-- ================= MODALS & POPUPS ================= -->
+
+  <!-- 1. MODAL DIRECT SEWA / CHECK-IN ALAT -->
+  <div id="modalRent" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          <h3 class="text-xs font-bold uppercase tracking-wider">Formulir Peminjaman & Sewa</h3>
+        </div>
+        <button onclick="closeModal('modalRent')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="p-4 overflow-y-auto no-scrollbar space-y-3 text-xs">
+        <div class="flex items-center space-x-3 bg-gray-100 dark:bg-neutral-800/60 p-2.5 rounded-xl">
+          <img id="rentToolImg" src="" class="w-12 h-12 rounded-lg object-cover" />
+          <div class="truncate">
+            <h4 id="rentToolName" class="font-bold text-xs leading-tight truncate">Nama Alat</h4>
+            <p id="rentToolCat" class="text-[11px] text-gray-500">Kategori</p>
+          </div>
+        </div>
+
+        <form id="formRentAction" onsubmit="handleConfirmRent(event)" class="space-y-3">
+          <input type="hidden" id="rentToolId" />
+          
+          <div class="grid grid-cols-2 gap-2 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/30">
+            <div>
+              <label class="block text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase mb-0.5">Unit Dipinjam *</label>
+              <div class="flex items-center space-x-1">
+                <input type="number" id="borrowQty" required min="1" value="1" class="w-full px-2 py-1 bg-white dark:bg-neutral-800 border border-amber-400 rounded-lg font-bold text-xs text-center focus:outline-none" />
+                <span class="text-[10px] font-bold">Unit</span>
+              </div>
+            </div>
+            <div class="flex flex-col justify-center">
+              <span class="text-[9px] text-gray-500 uppercase font-semibold">Stok Tersedia:</span>
+              <span id="borrowMaxStockInfo" class="text-xs font-bold text-amber-500">-</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-gray-400 mb-1">Nama Peminjam *</label>
+            <input type="text" id="renterName" placeholder="Contoh: Budi Santoso" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none focus:border-amber-500" required />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] font-medium text-gray-400">Nomor WhatsApp *</label>
+              <button type="button" onclick="loadSavedDevicePhone()" class="text-[9px] font-bold text-amber-500 flex items-center space-x-0.5">
+                <i data-lucide="smartphone" class="w-3 h-3"></i>
+                <span>No. Perangkat</span>
+              </button>
+            </div>
+            <div class="relative">
+              <input type="tel" id="borrowerPhone" placeholder="08xxxxxxxxxx" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none focus:border-amber-500 font-mono" required />
+              <span id="devicePhoneConnectedIcon" class="absolute right-3 top-3 text-emerald-500 hidden"><i data-lucide="check-circle" class="w-4 h-4"></i></span>
+            </div>
+          </div>
+
+          <!-- Petugas Penyerah Otomatis Sesuai Login -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penyerah (Login)</label>
+              <input type="text" id="officerBorrow" class="w-full bg-gray-100 dark:bg-neutral-800/50 border border-gray-300 dark:border-neutral-700 rounded-xl p-2.5 text-gray-500 dark:text-gray-400 font-bold cursor-not-allowed text-[11px]" readonly />
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Waktu Pinjam *</label>
+              <input type="datetime-local" id="borrowDate" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none text-[11px]" required />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-gray-400 mb-1">Lokasi Proyek / Catatan</label>
+            <input type="text" id="renterProject" placeholder="Contoh: Chiller AHU Lantai 3" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" />
+          </div>
+
+          <!-- UPLOAD FOTO SEBELUM (AUTO KOMPRESI ≤ 100KB) -->
+          <div class="border border-dashed border-gray-300 dark:border-neutral-700 rounded-2xl p-3 text-center bg-gray-50/50 dark:bg-neutral-900/50">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] font-bold text-amber-500">FOTO SEBELUM PINJAM *</label>
+              <span id="badgeBeforeOriginal" class="text-[9px] text-gray-400">Target ≤ 100KB</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <label class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-xl bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 cursor-pointer font-bold text-[11px]">
+                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                <span>Kamera</span>
+                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processImage(this, 'before')" />
+              </label>
+              <label class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-xl bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 cursor-pointer font-bold text-[11px]">
+                <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                <span>Galeri</span>
+                <input type="file" accept="image/*" class="hidden" onchange="processImage(this, 'before')" />
+              </label>
+            </div>
+
+            <div id="previewBeforeBox" class="mt-2 hidden">
+              <img id="previewBeforeImg" src="" class="w-24 h-24 object-cover mx-auto rounded-lg border border-amber-500" />
+              <span id="badgeBeforeCompressed" class="text-[10px] text-amber-500 font-bold block mt-1">Tersimpan: ~95 KB</span>
+            </div>
+            <input type="hidden" id="borrowPhotoData" required />
+          </div>
+
+          <button type="submit" id="btnSubmitRent" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5 text-xs">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>Mulai Pinjam & Jalankan Detik</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MODAL SELESAI SEWA / CHECK-OUT ALAT -->
+  <div id="modalReturn" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <h3 class="text-xs font-bold uppercase tracking-wider">Selesaikan Sewa & Audit Alat</h3>
+        </div>
+        <button onclick="closeModal('modalReturn')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="p-4 overflow-y-auto no-scrollbar space-y-3 text-xs">
+        <div class="bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-center">
+          <p class="text-[11px] text-emerald-600 dark:text-emerald-400">Total Waktu Pemakaian</p>
+          <div id="returnElapsedTimerDisplay" class="font-mono text-xl font-black text-emerald-500">00:00:00</div>
+          <div id="returnRenterInfo" class="text-[10px] text-gray-500 mt-0.5">Penyewa: -</div>
+        </div>
+
+        <form id="formReturnAction" onsubmit="handleConfirmReturn(event)" class="space-y-3">
+          <input type="hidden" id="returnLoanId" />
+
+          <!-- Petugas Penerima Otomatis Sesuai Login -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Petugas Penerima (Login)</label>
+              <input type="text" id="officerReturn" class="w-full bg-gray-100 dark:bg-neutral-800/50 border border-gray-300 dark:border-neutral-700 rounded-xl p-2.5 text-gray-500 dark:text-gray-400 font-bold cursor-not-allowed text-[11px]" readonly />
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-gray-400 mb-1">Waktu Kembali *</label>
+              <input type="datetime-local" id="returnDate" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none text-[11px]" required />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-gray-400 mb-1">Kondisi Pengembalian *</label>
+            <select id="returnCondition" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
+              <option value="Baik & Lengkap">Baik & Lengkap</option>
+              <option value="Kotor / Perlu Dicuci">Kotor / Perlu Dicuci</option>
+              <option value="Rusak Ringan">Rusak Ringan</option>
+              <option value="Rusak Berat">Rusak Berat</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-medium text-gray-400 mb-1">Catatan Pengembalian</label>
+            <textarea id="returnNotes" rows="2" placeholder="Kabel utuh, probe normal, freon aman..." class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none"></textarea>
+          </div>
+
+          <!-- UPLOAD FOTO SESUDAH SEWA (AUTO ≤ 100KB) -->
+          <div class="border border-dashed border-emerald-500/50 rounded-2xl p-3 text-center bg-gray-50/50 dark:bg-neutral-900/50">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-[11px] font-bold text-emerald-500">FOTO SESUDAH PINJAM *</label>
+              <span id="badgeAfterOriginal" class="text-[9px] text-gray-400">Target ≤ 100KB</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <label class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-xl bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 cursor-pointer font-bold text-[11px]">
+                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                <span>Kamera</span>
+                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="processImage(this, 'after')" />
+              </label>
+              <label class="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-xl bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 cursor-pointer font-bold text-[11px]">
+                <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                <span>Galeri</span>
+                <input type="file" accept="image/*" class="hidden" onchange="processImage(this, 'after')" />
+              </label>
+            </div>
+
+            <div id="previewAfterBox" class="mt-2 hidden">
+              <img id="previewAfterImg" src="" class="w-24 h-24 object-cover mx-auto rounded-lg border border-emerald-500" />
+              <span id="badgeAfterCompressed" class="text-[10px] text-emerald-500 font-bold block mt-1">Tersimpan: ~96 KB</span>
+            </div>
+            <input type="hidden" id="returnPhotoData" required />
+          </div>
+
+          <button type="submit" id="btnSubmitReturn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5 text-xs">
+            <i data-lucide="check-check" class="w-4 h-4"></i>
+            <span>Simpan Log & Pulihkan Stok</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODAL BERITA ACARA DIGITAL & CETAK PDF TAJAM (A4 HD) -->
+  <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+          <i data-lucide="file-text" class="w-4 h-4 text-emerald-500"></i>
+          Berita Acara Digital (Siap Cetak PDF)
+        </h3>
+        <button onclick="closeModal('detailModal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div id="pdfContentArea" class="bg-white p-5 space-y-3 text-xs text-slate-900 overflow-y-auto no-scrollbar">
+        <div class="text-center pb-2 border-b-2 border-slate-900">
+          <h2 class="font-black text-sm uppercase tracking-wide text-slate-900">BERITA ACARA PINJAM PAKAI ALAT KERJA</h2>
+          <p class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-0.5">Sistem Manajemen Aset & Inventaris Operasional</p>
+          <div class="flex justify-between items-center text-[10px] text-slate-600 mt-2 font-mono">
+            <span id="docLoanId" class="font-bold text-slate-900">NO. REG: -</span>
+            <span id="docStatusBadge" class="px-2 py-0.5 rounded font-bold uppercase text-[9px] bg-amber-100 text-amber-800">DIPINJAM</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-[11px]">
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Nama Alat Kerja</span>
+            <span id="docToolName" class="font-bold text-slate-900 text-xs">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Jumlah Unit Dipinjam</span>
+            <span id="docQtyBorrowed" class="font-bold text-emerald-800 text-xs">1 Unit</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Nama Peminjam</span>
+            <span id="docBorrowerName" class="font-bold text-slate-900 text-xs">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Petugas Penyerah</span>
+            <span id="docOfficerBorrow" class="font-bold text-slate-900 text-xs">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Kontak WhatsApp</span>
+            <span id="docBorrowerPhone" class="font-semibold text-slate-800 font-mono">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Waktu Pinjam</span>
+            <span id="docBorrowDate" class="font-semibold text-slate-800">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Petugas Penerima</span>
+            <span id="docOfficerReturn" class="font-bold text-slate-900 text-xs">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Waktu Kembali</span>
+            <span id="docReturnDate" class="font-semibold text-slate-800">-</span>
+          </div>
+          <div class="p-2 rounded bg-slate-50 border border-slate-200 col-span-2">
+            <span class="text-[9px] text-slate-400 uppercase font-bold block">Kondisi Pengembalian & Catatan</span>
+            <span id="docConditionReturn" class="font-semibold text-slate-800">-</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1">Dokumentasi Kondisi Fisik Alat (≤ 100KB)</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="border border-slate-200 rounded-lg p-1.5 text-center bg-slate-50">
+              <span class="text-[9px] font-bold text-slate-600 block mb-1 uppercase">Sebelum Dipinjam</span>
+              <div class="h-32 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
+                <img id="docPhotoBefore" src="" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded-lg p-1.5 text-center bg-slate-50">
+              <span class="text-[9px] font-bold text-slate-600 block mb-1 uppercase">Saat Dikembalikan</span>
+              <div class="h-32 flex items-center justify-center bg-slate-200 rounded overflow-hidden">
+                <img id="docPhotoAfter" src="" class="h-full w-full object-cover hidden" />
+                <span id="docPhotoAfterEmpty" class="text-[10px] text-slate-400 italic">Belum Dikembalikan</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2 rounded-lg bg-slate-100 border border-slate-300 text-[10px] text-slate-600 text-center font-mono">
+          Dokumen ini divalidasi secara digital melalui sistem ToolTrack Pro berbasis login resmi karyawan.
+        </div>
+      </div>
+
+      <div class="p-3 bg-gray-50 dark:bg-neutral-950 border-t border-gray-200 dark:border-neutral-800 flex items-center space-x-2">
+        <button id="btnDownloadPDF" onclick="generatePDF()" class="flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Unduh PDF HD</span>
+        </button>
+        <button onclick="shareWhatsAppWithPhotos(currentDetailLoan)" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow">
+          <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+          <span>Share WA + Foto</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MODAL DETAIL ALAT -->
+  <div id="modalDetailTool" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 id="modalDetailTitle" class="text-xs font-bold truncate">Detail Peralatan</h3>
+        <div class="flex items-center space-x-1">
+          <!-- Super Admin: Tombol Edit & Hapus Alat -->
+          <button id="btnDetailEditTool" onclick="handleOpenEditToolFromDetail()" class="text-amber-500 hover:text-amber-400 p-1.5 hidden" title="Edit Alat (Super Admin)">
+            <i data-lucide="edit" class="w-4 h-4"></i>
+          </button>
+          <button id="btnDetailDeleteTool" onclick="handleDeleteTool()" class="text-rose-500 hover:text-rose-400 p-1.5 hidden" title="Hapus Alat (Super Admin)">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+          <button onclick="closeModal('modalDetailTool')" class="text-gray-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+      </div>
+
+      <div class="p-4 overflow-y-auto no-scrollbar space-y-3 text-xs">
+        <div class="relative rounded-2xl overflow-hidden aspect-video bg-neutral-950">
+          <img id="modalDetailImg" src="" class="w-full h-full object-cover" />
+          <span id="modalDetailStatusBadge" class="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/70 text-emerald-400">Tersedia</span>
+        </div>
+
+        <div>
+          <h4 id="modalDetailName" class="text-base font-black">Nama Alat</h4>
+          <div class="flex items-center space-x-2 text-[11px] text-gray-500 mt-0.5">
+            <span id="modalDetailBrand">Merk</span>
+            <span>•</span>
+            <span id="modalDetailOffice">Lokasi Workshop</span>
+            <span>•</span>
+            <span id="modalDetailStock" class="font-bold text-amber-500">Stok: 1 Unit</span>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button id="modalBtnAction" onclick="" class="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 shadow"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. MODAL TAMBAH ALAT (SUPER ADMIN) -->
+  <div id="modalAddTool" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500">Tambah Unit Alat Baru</h3>
+        <button onclick="closeModal('modalAddTool')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveNewTool(event)" class="p-4 overflow-y-auto no-scrollbar space-y-3 text-xs">
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Nama Peralatan *</label>
+          <input type="text" id="newToolName" placeholder="Contoh: Digital Manifold Fieldpiece SM480V" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Kategori *</label>
+            <select id="newToolCat" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
+              <option value="HVAC">Alat AC (HVAC)</option>
+              <option value="Elektrikal">Listrik & Daya</option>
+              <option value="Mekanikal">Mekanikal & Bor</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Merk / Brand *</label>
+            <input type="text" id="newToolBrand" placeholder="Contoh: Fluke / Bosch" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Total Unit Stok *</label>
+            <input type="number" id="newToolTotalQty" min="1" value="1" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none font-bold" required />
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Gudang / Workshop</label>
+            <select id="newToolOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
+              <!-- Rendered dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Foto Alat (Auto Kompresi ≤ 100KB) -->
+        <div class="border border-dashed border-gray-300 dark:border-neutral-700 rounded-2xl p-3 text-center">
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">Foto Alat (Auto Kompresi ≤100KB)</label>
+          <input type="file" id="fileNewTool" accept="image/*" onchange="processImage(this, 'newTool')" class="hidden" required />
+          <label for="fileNewTool" class="cursor-pointer inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-xs font-semibold">
+            <i data-lucide="image-plus" class="w-4 h-4"></i>
+            <span>Upload Foto Alat</span>
+          </label>
+
+          <div id="previewNewToolBox" class="mt-2 hidden">
+            <img id="previewNewToolImg" src="" class="w-24 h-24 object-cover mx-auto rounded-lg border border-amber-500" />
+            <span id="badgeNewToolSize" class="text-[10px] text-amber-500 font-bold block mt-1">≤100KB</span>
+          </div>
+          <input type="hidden" id="newToolPhotoData" required />
+        </div>
+
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 rounded-xl shadow-lg transition">Simpan ke Supabase</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. MODAL EDIT ALAT (SUPER ADMIN ONLY) -->
+  <div id="modalEditTool" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500 flex items-center space-x-1.5">
+          <i data-lucide="edit" class="w-4 h-4"></i>
+          <span>Edit Peralatan Katalog</span>
+        </h3>
+        <button onclick="closeModal('modalEditTool')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveEditedTool(event)" class="p-4 overflow-y-auto no-scrollbar space-y-3 text-xs">
+        <input type="hidden" id="editToolId" />
+
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Nama Peralatan *</label>
+          <input type="text" id="editToolName" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Kategori *</label>
+            <select id="editToolCat" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
+              <option value="HVAC">Alat AC (HVAC)</option>
+              <option value="Elektrikal">Listrik & Daya</option>
+              <option value="Mekanikal">Mekanikal & Bor</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Merk / Brand *</label>
+            <input type="text" id="editToolBrand" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Total Stok Unit *</label>
+            <input type="number" id="editToolTotalQty" min="1" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none font-bold" required />
+          </div>
+          <div>
+            <label class="block text-[11px] text-gray-400 mb-1">Lokasi Workshop</label>
+            <select id="editToolOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none">
+              <!-- Rendered dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Ubah Foto Alat (Opsional, Auto Kompresi ≤ 100KB) -->
+        <div class="border border-dashed border-gray-300 dark:border-neutral-700 rounded-2xl p-3 text-center">
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">Ganti Foto Alat (Opsional - ≤100KB)</label>
+          <input type="file" id="fileEditTool" accept="image/*" onchange="processImage(this, 'editTool')" class="hidden" />
+          <label for="fileEditTool" class="cursor-pointer inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-gray-200 dark:bg-neutral-800 hover:bg-gray-300 dark:hover:bg-neutral-700 text-xs font-semibold">
+            <i data-lucide="image-plus" class="w-4 h-4"></i>
+            <span>Pilih Foto Baru</span>
+          </label>
+
+          <div id="previewEditToolBox" class="mt-2">
+            <img id="previewEditToolImg" src="" class="w-24 h-24 object-cover mx-auto rounded-lg border border-amber-500" />
+            <span id="badgeEditToolSize" class="text-[10px] text-amber-500 font-bold block mt-1">Foto Saat Ini</span>
+          </div>
+          <input type="hidden" id="editToolPhotoData" />
+        </div>
+
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 rounded-xl shadow-lg transition">Simpan Perubahan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. MODAL GANTI / RESET PASSWORD USER (SUPER ADMIN & USER SENDIRI) -->
+  <div id="modalChangePassword" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500 flex items-center space-x-1.5">
+          <i data-lucide="key-round" class="w-4 h-4"></i>
+          <span>Ganti / Reset Password</span>
+        </h3>
+        <button onclick="closeModal('modalChangePassword')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveNewPassword(event)" class="p-4 space-y-3 text-xs">
+        <input type="hidden" id="changePassTargetNik" />
+
+        <div class="bg-gray-100 dark:bg-neutral-800/60 p-2.5 rounded-xl">
+          <p class="text-[10px] text-gray-400">Akun Pengguna:</p>
+          <p id="changePassTargetName" class="font-bold text-gray-800 dark:text-gray-200 text-xs">-</p>
+          <p id="changePassTargetNikDisplay" class="font-mono text-[10px] text-amber-500">NIK: -</p>
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Kata Sandi Baru *</label>
+          <input type="password" id="inputNewPassword" placeholder="Masukkan password baru" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required minlength="4" />
+        </div>
+
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Konfirmasi Kata Sandi Baru *</label>
+          <input type="password" id="inputConfirmPassword" placeholder="Ulangi password baru" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required minlength="4" />
+        </div>
+
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 rounded-xl transition shadow">Perbarui Kata Sandi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. MODAL TAMBAH PETUGAS -->
+  <div id="modalAddStaff" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl flex flex-col">
+      <div class="p-3.5 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between bg-gray-50 dark:bg-neutral-950">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-500">Tambah Akun Petugas</h3>
+        <button onclick="closeModal('modalAddStaff')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveNewStaff(event)" class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">NIK Petugas *</label>
+          <input type="text" id="newStaffNik" placeholder="Contoh: TECH02" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none" required />
+        </div>
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Nama Petugas *</label>
+          <input type="text" id="newStaffName" placeholder="Contoh: Joko Widodo" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none" required />
+        </div>
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Kata Sandi (Password) *</label>
+          <input type="password" id="newStaffPass" placeholder="******" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none" required />
+        </div>
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Penempatan Workshop</label>
+          <select id="newStaffOffice" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2 focus:outline-none">
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 rounded-xl transition">Daftarkan Petugas</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. MODAL LOGIN -->
+  <div id="modalLogin" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-3xl w-full max-w-xs overflow-hidden shadow-2xl p-6 text-center">
+      <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-amber-500 via-rose-500 to-indigo-600 flex items-center justify-center text-white mb-3 shadow-lg">
+        <i data-lucide="shield-check" class="w-8 h-8"></i>
+      </div>
+      <h2 class="text-base font-black bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">ToolTrack Pro</h2>
+      <p class="text-xs text-gray-500 mb-4">Masuk dengan NIK & Password Petugas</p>
+
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-3 text-xs text-left">
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">NIK Petugas</label>
+          <input type="text" id="loginNik" value="ADMIN01" placeholder="Masukkan NIK" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+        </div>
+        <div>
+          <label class="block text-[11px] text-gray-400 mb-1">Kata Sandi</label>
+          <input type="password" id="loginPassword" value="admin123" placeholder="******" class="w-full bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-2.5 focus:outline-none" required />
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 rounded-xl transition shadow">Masuk ke Portal</button>
+      </form>
+
+      <div class="mt-4 pt-3 border-t border-gray-100 dark:border-neutral-800 text-[10px] text-gray-400 text-left space-y-1">
+        <p class="font-bold text-amber-500">Akun Pengujian Demo:</p>
+        <p>• Super Admin: <span class="font-mono text-gray-300">ADMIN01</span> / <span class="font-mono text-gray-300">admin123</span></p>
+        <p>• Petugas Lapangan: <span class="font-mono text-gray-300">TECH01</span> / <span class="font-mono text-gray-300">tech123</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= LOGIC JAVASCRIPT ================= -->
+  <script>
+    // 1. SUPABASE CONFIGURATION
+    const SUPABASE_URL = "https://tztxcqaskdfsgcllfixd.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_pKV-0VdO0wSKzPM4JWeNhg_DC1xn2EA";
+
+    let supabaseClient = null;
+    let realtimeChannel = null;
+
+    try {
+      if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (e) {
+      console.warn("Supabase init error:", e);
+    }
+
+    // Default Mock Data
+    const INITIAL_TOOLS = [
+      { id: "ALT-001", name: "Bor Tangan Cordless 18V", brand: "Bosch", category: "Mekanikal", condition: "Baik", total_qty: 3, available_qty: 3, office: "Workshop Surabaya", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80" },
+      { id: "ALT-002", name: "Multimeter Digital CD800a", brand: "Sanwa", category: "Elektrikal", condition: "Baik", total_qty: 2, available_qty: 2, office: "Workshop Surabaya", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80" },
+      { id: "ALT-003", name: "Fieldpiece SM480V Digital Manifold AC", brand: "Fieldpiece", category: "HVAC", condition: "Baik", total_qty: 4, available_qty: 4, office: "Central Hub Jakarta", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80" },
+      { id: "ALT-004", name: "Gerinda Tangan 4 Inch Heavy Duty", brand: "Maktec", category: "Mekanikal", condition: "Baik", total_qty: 2, available_qty: 2, office: "Site Yard Cilegon", status: "TERSEDIA", photo: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    const INITIAL_USERS = [
+      { nik: "ADMIN01", name: "Hendro Wibowo (Lead Eng)", role: "superadmin", password: "admin123", office: "Workshop Surabaya", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" },
+      { nik: "TECH01", name: "Rian Saputra (Petugas Lapangan)", role: "petugas", password: "tech123", office: "Workshop Surabaya", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" }
+    ];
+
+    const INITIAL_OFFICES = [
+      "Workshop Surabaya",
+      "Central Hub Jakarta",
+      "Site Yard Cilegon",
+      "Gudang Balikpapan"
+    ];
+
+    // State
+    let currentUser = null;
+    let tools = [];
+    let loans = [];
+    let users = [];
+    let offices = [];
+    let currentCategoryFilter = "ALL";
+    let selectedToolForDetail = null;
+    let currentDetailLoan = null;
+
+    const compressedCache = {
+      before: { dataUrl: null, sizeKb: null },
+      after: { dataUrl: null, sizeKb: null },
+      newTool: { dataUrl: null, sizeKb: null },
+      editTool: { dataUrl: null, sizeKb: null }
+    };
+
+    // 2. INITIALIZATION
+    window.addEventListener("DOMContentLoaded", async () => {
+      lucide.createIcons();
+      initTheme();
+
+      tools = JSON.parse(localStorage.getItem("app_tools_cache")) || INITIAL_TOOLS;
+      loans = JSON.parse(localStorage.getItem("app_loans_cache")) || [];
+      users = JSON.parse(localStorage.getItem("app_users_cache")) || INITIAL_USERS;
+      offices = JSON.parse(localStorage.getItem("app_offices_cache")) || INITIAL_OFFICES;
+
+      const savedUser = localStorage.getItem("app_current_user");
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        document.getElementById("modalLogin").classList.add("hidden");
+        applyUserRoleUI();
+      } else {
+        document.getElementById("modalLogin").classList.remove("hidden");
+      }
+
+      populateOfficeDropdowns();
+      await refreshData();
+      setupSupabaseRealtime();
+      autoConnectDevicePhone();
+
+      setInterval(updateLiveTimers, 1000);
+      renderAll();
+    });
+
+    // 3. MASTER WORKSHOP MANAGEMENT
+    function populateOfficeDropdowns() {
+      const dropdownIds = ["editUserOffice", "newToolOffice", "newStaffOffice", "editToolOffice"];
+      dropdownIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const currentVal = el.value;
+        el.innerHTML = offices.map(o => `<option value="${o}">${o}</option>`).join("");
+        if (currentVal && offices.includes(currentVal)) el.value = currentVal;
+      });
+
+      renderOfficeList();
+    }
+
+    function renderOfficeList() {
+      const container = document.getElementById("officeListContainer");
+      if (!container) return;
+
+      container.innerHTML = offices.map((off, idx) => `
+        <div class="py-2 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="building-2" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span class="font-medium text-gray-800 dark:text-gray-200">${off}</span>
+          </div>
+          ${offices.length > 1 ? `
+            <button onclick="handleDeleteOffice('${off}')" class="text-rose-500 hover:text-rose-400 p-1" title="Hapus Lokasi">
+              <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+            </button>
+          ` : ''}
+        </div>
+      `).join("");
+
+      lucide.createIcons();
+    }
+
+    function promptAddOffice() {
+      const newOff = prompt("Masukkan nama lokasi workshop/gudang baru:");
+      if (!newOff || !newOff.trim()) return;
+      const clean = newOff.trim();
+      if (offices.includes(clean)) return alert("Lokasi tersebut sudah terdaftar!");
+
+      offices.push(clean);
+      localStorage.setItem("app_offices_cache", JSON.stringify(offices));
+      populateOfficeDropdowns();
+      showToast(`Lokasi "${clean}" berhasil ditambahkan!`);
+    }
+
+    function handleDeleteOffice(officeName) {
+      if (!confirm(`Hapus lokasi workshop "${officeName}"?`)) return;
+      offices = offices.filter(o => o !== officeName);
+      localStorage.setItem("app_offices_cache", JSON.stringify(offices));
+      populateOfficeDropdowns();
+      showToast("Lokasi workshop berhasil dihapus!");
+    }
+
+    // 4. SUPABASE REALTIME & SYNC
+    function setupSupabaseRealtime() {
+      if (!supabaseClient) return;
+      if (realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
+
+      realtimeChannel = supabaseClient.channel('realtime_tooltrack')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'loans' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            if (!loans.some(l => l.id === payload.new.id)) loans.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = loans.findIndex(l => l.id === payload.new.id);
+            if (idx !== -1) loans[idx] = { ...loans[idx], ...payload.new };
+            else loans.unshift(payload.new);
+          } else if (payload.eventType === 'DELETE') {
+            loans = loans.filter(l => l.id !== payload.old.id);
+          }
+          saveCache();
+          renderAll();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tools' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            if (!tools.some(t => t.id === payload.new.id)) tools.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = tools.findIndex(t => t.id === payload.new.id);
+            if (idx !== -1) tools[idx] = { ...tools[idx], ...payload.new };
+            else tools.unshift(payload.new);
+          } else if (payload.eventType === 'DELETE') {
+            tools = tools.filter(t => t.id !== payload.old.id);
+          }
+          saveCache();
+          renderAll();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, payload => {
+          if (payload.eventType === 'UPDATE' || payload.eventType === 'INSERT') {
+            const idx = users.findIndex(u => u.nik === payload.new.nik);
+            if (idx !== -1) users[idx] = payload.new;
+            else users.push(payload.new);
+            if (currentUser && currentUser.nik === payload.new.nik) {
+              currentUser = payload.new;
+              localStorage.setItem("app_current_user", JSON.stringify(currentUser));
+            }
+            saveCache();
+            renderStaffList();
+          }
+        })
+        .subscribe(status => {
+          const badge = document.getElementById('realtimeBadge');
+          if (badge) {
+            badge.innerHTML = status === 'SUBSCRIBED' 
+              ? `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-1 pulse-dot"></span> LIVE`
+              : `<span class="w-1.5 h-1.5 rounded-full bg-slate-500 inline-block mr-1"></span> SYNC`;
+          }
+        });
+    }
+
+    async function refreshData(showNotice = false) {
+      const syncIcon = document.getElementById("syncIcon");
+      if (syncIcon) syncIcon.classList.add("animate-spin");
+
+      if (!supabaseClient) {
+        if (syncIcon) syncIcon.classList.remove("animate-spin");
+        return;
+      }
+
+      try {
+        const { data: dbTools } = await supabaseClient.from("tools").select("*").order("created_at", { ascending: false });
+        if (dbTools && dbTools.length > 0) tools = dbTools;
+
+        const { data: dbLoans } = await supabaseClient.from("loans").select("*").order("borrow_date", { ascending: false });
+        if (dbLoans && dbLoans.length > 0) loans = dbLoans;
+
+        const { data: dbUsers } = await supabaseClient.from("users").select("*");
+        if (dbUsers && dbUsers.length > 0) users = dbUsers;
+
+        saveCache();
+        renderAll();
+        if (showNotice) showToast("Sinkronisasi Supabase Sukses!");
+      } catch (e) {
+        console.warn("Supabase notice:", e);
+      } finally {
+        if (syncIcon) syncIcon.classList.remove("animate-spin");
+      }
+    }
+
+    function saveCache() {
+      try {
+        localStorage.setItem("app_tools_cache", JSON.stringify(tools));
+        localStorage.setItem("app_loans_cache", JSON.stringify(loans));
+        localStorage.setItem("app_users_cache", JSON.stringify(users));
+        localStorage.setItem("app_offices_cache", JSON.stringify(offices));
+      } catch (e) {
+        console.warn("Storage quota:", e);
+      }
+    }
+
+    // 5. IMAGE COMPRESSION (≤ 100 KB TARGET)
+    async function processImage(fileInput, type) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          compressImageTo100Kb(img, (compressedDataUrl, finalSizeKb) => {
+            compressedCache[type] = { dataUrl: compressedDataUrl, sizeKb: finalSizeKb };
+
+            if (type === 'before') {
+              document.getElementById("previewBeforeBox").classList.remove("hidden");
+              document.getElementById("previewBeforeImg").src = compressedDataUrl;
+              document.getElementById("badgeBeforeCompressed").innerText = `Tersimpan: ${finalSizeKb} KB (≤100KB)`;
+              document.getElementById("borrowPhotoData").value = compressedDataUrl;
+            } else if (type === 'after') {
+              document.getElementById("previewAfterBox").classList.remove("hidden");
+              document.getElementById("previewAfterImg").src = compressedDataUrl;
+              document.getElementById("badgeAfterCompressed").innerText = `Tersimpan: ${finalSizeKb} KB (≤100KB)`;
+              document.getElementById("returnPhotoData").value = compressedDataUrl;
+            } else if (type === 'newTool') {
+              document.getElementById("previewNewToolBox").classList.remove("hidden");
+              document.getElementById("previewNewToolImg").src = compressedDataUrl;
+              document.getElementById("badgeNewToolSize").innerText = `Tersimpan: ${finalSizeKb} KB (≤100KB)`;
+              document.getElementById("newToolPhotoData").value = compressedDataUrl;
+            } else if (type === 'editTool') {
+              document.getElementById("previewEditToolBox").classList.remove("hidden");
+              document.getElementById("previewEditToolImg").src = compressedDataUrl;
+              document.getElementById("badgeEditToolSize").innerText = `Baru: ${finalSizeKb} KB (≤100KB)`;
+              document.getElementById("editToolPhotoData").value = compressedDataUrl;
+            }
+          });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressImageTo100Kb(img, callback) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let width = img.width;
+      let height = img.height;
+      const MAX_DIM = 1000;
+
+      if (width > MAX_DIM || height > MAX_DIM) {
+        if (width > height) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const now = new Date();
+      const timeStr = `${now.toLocaleDateString("id-ID")} ${now.toLocaleTimeString("id-ID")}`;
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+      ctx.fillRect(0, height - 30, width, 30);
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText(`TOOLTRACK AUDIT | PETUGAS: ${currentUser ? currentUser.nik : 'OFFLINE'} | ${timeStr}`, 12, height - 10);
+
+      let quality = 0.8;
+      let dataUrl = canvas.toDataURL("image/jpeg", quality);
+      let sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
+
+      while (sizeKb > 98 && quality > 0.15) {
+        quality -= 0.08;
+        dataUrl = canvas.toDataURL("image/jpeg", quality);
+        sizeKb = Math.round((dataUrl.length * 3) / 4 / 1024);
+      }
+
+      callback(dataUrl, sizeKb);
+    }
+
+    // 6. AUTO CONNECT PHONE
+    function autoConnectDevicePhone() {
+      const savedPhone = localStorage.getItem('app_device_whatsapp_number');
+      const phoneInput = document.getElementById('borrowerPhone');
+      const icon = document.getElementById('devicePhoneConnectedIcon');
+
+      if (savedPhone && phoneInput) {
+        phoneInput.value = savedPhone;
+        if (icon) icon.classList.remove('hidden');
+      }
+
+      if (phoneInput) {
+        phoneInput.addEventListener('input', () => {
+          const val = phoneInput.value.trim();
+          if (val.length >= 9) {
+            localStorage.setItem('app_device_whatsapp_number', val);
+            if (icon) icon.classList.remove('hidden');
+          } else {
+            if (icon) icon.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    function loadSavedDevicePhone() {
+      const savedPhone = localStorage.getItem('app_device_whatsapp_number');
+      const phoneInput = document.getElementById('borrowerPhone');
+      const icon = document.getElementById('devicePhoneConnectedIcon');
+
+      if (savedPhone) {
+        phoneInput.value = savedPhone;
+        if (icon) icon.classList.remove('hidden');
+      } else {
+        const val = prompt("Masukkan nomor WhatsApp peminjam (contoh: 08123456789):");
+        if (val && val.trim().length >= 9) {
+          const cleaned = val.trim().replace(/\D/g, '');
+          localStorage.setItem('app_device_whatsapp_number', cleaned);
+          phoneInput.value = cleaned;
+          if (icon) icon.classList.remove('hidden');
+        }
+      }
+    }
+
+    // 7. DIRECT WORKFLOW SEWA (CHECK-IN & CHECK-OUT)
+    function triggerDirectRent(toolId, event) {
+      if (event) event.stopPropagation();
+      const tool = tools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      const avail = tool.available_qty !== undefined ? tool.available_qty : 1;
+      if (avail <= 0) {
+        alert("Unit alat ini sedang habis!");
+        return;
+      }
+
+      document.getElementById("rentToolId").value = tool.id;
+      document.getElementById("rentToolName").innerText = tool.name;
+      document.getElementById("rentToolCat").innerText = `${tool.brand || tool.category} • ${tool.office || 'Workshop'}`;
+      document.getElementById("rentToolImg").src = tool.photo || tool.image;
+
+      const qtyInput = document.getElementById("borrowQty");
+      qtyInput.max = avail;
+      qtyInput.value = 1;
+      document.getElementById("borrowMaxStockInfo").innerText = `${avail} Unit Siap Pakai`;
+
+      document.getElementById("renterName").value = "";
+      document.getElementById("renterProject").value = "";
+      document.getElementById("officerBorrow").value = currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas";
+      
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById("borrowDate").value = now.toISOString().slice(0, 16);
+
+      document.getElementById("borrowPhotoData").value = "";
+      document.getElementById("previewBeforeBox").classList.add("hidden");
+      compressedCache.before = { dataUrl: null, sizeKb: null };
+
+      openModal("modalRent");
+      autoConnectDevicePhone();
+    }
+
+    async function handleConfirmRent(e) {
+      e.preventDefault();
+      const toolId = document.getElementById("rentToolId").value;
+      const tool = tools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      const borrowQty = parseInt(document.getElementById("borrowQty").value) || 1;
+      const currentAvail = tool.available_qty !== undefined ? tool.available_qty : 1;
+
+      if (borrowQty > currentAvail) {
+        alert(`Jumlah pinjam melebihi stok! Tersedia: ${currentAvail} unit.`);
+        return;
+      }
+
+      if (!compressedCache.before.dataUrl) {
+        alert("Wajib lampirkan foto kondisi sebelum pinjam (auto ≤100KB)!");
+        return;
+      }
+
+      const loanId = "TRX-" + Date.now().toString().slice(-6);
+      const remainingQty = currentAvail - borrowQty;
+      const newStatus = remainingQty <= 0 ? 'DIPINJAM' : 'TERSEDIA';
+
+      const newLoan = {
+        id: loanId,
+        tool_id: tool.id,
+        tool_name: tool.name,
+        qty_borrowed: borrowQty,
+        borrower_name: document.getElementById("renterName").value.trim(),
+        borrower_phone: document.getElementById("borrowerPhone").value.trim(),
+        officer_borrow: currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas",
+        borrow_date: document.getElementById("borrowDate").value,
+        notes_borrow: document.getElementById("renterProject").value.trim(),
+        photo_before: compressedCache.before.dataUrl,
+        before_size_kb: compressedCache.before.sizeKb,
+        return_date: null,
+        condition_return: null,
+        notes_return: null,
+        photo_after: null,
+        officer_return: null,
+        rent_started_at: Date.now(),
+        status: "DIPINJAM"
+      };
+
+      tool.available_qty = remainingQty;
+      tool.status = newStatus;
+
+      loans.unshift(newLoan);
+      saveCache();
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from("loans").insert([newLoan]);
+          await supabaseClient.from("tools").update({
+            available_qty: remainingQty,
+            status: newStatus
+          }).eq("id", tool.id);
+        } catch (err) {
+          console.warn("Supabase insert error:", err);
+        }
+      }
+
+      closeModal("modalRent");
+      renderAll();
+      showToast(`Peminjaman ${borrowQty} unit dicatat! Detik berjalan.`);
+      switchView("activeRentals");
+    }
+
+    function triggerReturnTool(loanId, event) {
+      if (event) event.stopPropagation();
+      const loan = loans.find(l => l.id === loanId);
+      if (!loan) return;
+
+      document.getElementById("returnLoanId").value = loan.id;
+      document.getElementById("returnRenterInfo").innerText = `Penyewa: ${loan.borrower_name} (${loan.borrower_phone}) • ${loan.qty_borrowed || 1} Unit`;
+      document.getElementById("officerReturn").value = currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas";
+      
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById("returnDate").value = now.toISOString().slice(0, 16);
+
+      const elapsedSec = Math.floor((Date.now() - (loan.rent_started_at || new Date(loan.borrow_date).getTime())) / 1000);
+      document.getElementById("returnElapsedTimerDisplay").innerText = formatSecondsToHms(elapsedSec);
+
+      document.getElementById("returnPhotoData").value = "";
+      document.getElementById("previewAfterBox").classList.add("hidden");
+      compressedCache.after = { dataUrl: null, sizeKb: null };
+
+      openModal("modalReturn");
+    }
+
+    async function handleConfirmReturn(e) {
+      e.preventDefault();
+      const loanId = document.getElementById("returnLoanId").value;
+      const loan = loans.find(l => l.id === loanId);
+      if (!loan) return;
+
+      if (!compressedCache.after.dataUrl) {
+        alert("Wajib lampirkan foto fisik saat pengembalian (auto ≤100KB)!");
+        return;
+      }
+
+      const condition = document.getElementById("returnCondition").value;
+      const updateData = {
+        return_date: document.getElementById("returnDate").value,
+        officer_return: currentUser ? `${currentUser.name} (${currentUser.nik})` : "Petugas",
+        condition_return: condition,
+        notes_return: document.getElementById("returnNotes").value.trim(),
+        photo_after: compressedCache.after.dataUrl,
+        after_size_kb: compressedCache.after.sizeKb,
+        status: "KEMBALI"
+      };
+
+      Object.assign(loan, updateData);
+
+      const tool = tools.find(t => t.id === loan.tool_id);
+      if (tool) {
+        const total = tool.total_qty || 1;
+        const currentAvail = tool.available_qty !== undefined ? tool.available_qty : 0;
+        const restoredQty = Math.min(total, currentAvail + (loan.qty_borrowed || 1));
+        const finalStatus = condition.includes("Rusak Berat") ? (restoredQty > 0 ? 'TERSEDIA' : 'RUSAK') : 'TERSEDIA';
+
+        tool.available_qty = restoredQty;
+        tool.status = finalStatus;
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from("tools").update({
+              available_qty: restoredQty,
+              status: finalStatus
+            }).eq("id", tool.id);
+          } catch (e) {
+            console.warn("Supabase update tool stock:", e);
+          }
+        }
+      }
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from("loans").update(updateData).eq("id", loanId);
+        } catch (e) {
+          console.warn("Supabase update loan notice:", e);
+        }
+      }
+
+      saveCache();
+      closeModal("modalReturn");
+      renderAll();
+      showToast("Alat berhasil dikembalikan! Stok telah dipulihkan.");
+      openDetailModal(loanId);
+    }
+
+    // 8. LIVE SECONDS TICKER
+    function updateLiveTimers() {
+      const now = Date.now();
+      let activeCount = 0;
+
+      loans.forEach(loan => {
+        if (loan.status === "DIPINJAM") {
+          activeCount++;
+          const startTime = loan.rent_started_at || new Date(loan.borrow_date).getTime();
+          const elapsedSec = Math.max(0, Math.floor((now - startTime) / 1000));
+          const hmsStr = formatSecondsToHms(elapsedSec);
+
+          const cardTimer = document.getElementById(`activeCardTimer-${loan.id}`);
+          if (cardTimer) cardTimer.innerText = hmsStr;
+
+          const gridTimer = document.getElementById(`gridTimer-${loan.tool_id}`);
+          if (gridTimer) gridTimer.innerText = hmsStr;
+        }
+      });
+
+      const navLiveBadge = document.getElementById("navLiveBadge");
+      const liveAlert = document.getElementById("liveRentedAlert");
+      const liveCountText = document.getElementById("liveRentedCountText");
+      const activeCountBadge = document.getElementById("activeCountBadge");
+
+      if (activeCount > 0) {
+        if (navLiveBadge) navLiveBadge.classList.remove("hidden");
+        if (liveAlert) liveAlert.classList.remove("hidden");
+        if (liveCountText) liveCountText.innerText = `${activeCount} Transaksi Berjalan`;
+        if (activeCountBadge) activeCountBadge.innerText = `${activeCount} Unit`;
+      } else {
+        if (navLiveBadge) navLiveBadge.classList.add("hidden");
+        if (liveAlert) liveAlert.classList.add("hidden");
+        if (activeCountBadge) activeCountBadge.innerText = `0 Unit`;
+      }
+    }
+
+    function formatSecondsToHms(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return [h, m, s].map(v => v < 10 ? "0" + v : v).join(":");
+    }
+
+    // 9. RENDERING VIEWS & KATALOG
+    function renderAll() {
+      renderToolsGrid();
+      renderActiveRentalsList();
+      renderLogsHistory();
+      renderStaffList();
+      renderOfficeList();
+    }
+
+    function renderToolsGrid() {
+      const grid = document.getElementById("toolsGrid");
+      const query = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+      const isSuperAdmin = currentUser && currentUser.role === "superadmin";
+
+      const filtered = tools.filter(t => {
+        const matchCat = currentCategoryFilter === "ALL" || t.category === currentCategoryFilter;
+        const matchQuery = (t.name || '').toLowerCase().includes(query) || (t.brand || '').toLowerCase().includes(query) || (t.id || '').toLowerCase().includes(query);
+        return matchCat && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-3 py-16 text-center text-gray-400 text-xs">Tidak ada alat ditemukan</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(t => {
+        const avail = t.available_qty !== undefined ? t.available_qty : 1;
+        const total = t.total_qty !== undefined ? t.total_qty : 1;
+        const isOutOfStock = avail <= 0;
+
+        return `
+          <div onclick="openToolDetailModal('${t.id}')" class="relative group cursor-pointer bg-neutral-900 aspect-square overflow-hidden rounded-md border border-gray-200 dark:border-neutral-900 shadow-sm">
+            <img src="${t.photo || t.image}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+            
+            <div class="absolute top-1 left-1">
+              ${isOutOfStock 
+                ? `<span class="bg-red-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded shadow">Dipinjam Semua</span>`
+                : `<span class="bg-black/70 backdrop-blur text-emerald-400 font-bold text-[9px] px-1.5 py-0.2 rounded">Sisa ${avail}/${total} Unit</span>`
+              }
+            </div>
+
+            <div class="absolute top-1 right-1 flex items-center space-x-1">
+              ${isSuperAdmin ? `
+                <button onclick="openModalEditTool('${t.id}', event)" class="bg-amber-500/90 hover:bg-amber-500 text-black p-1 rounded-md shadow" title="Edit Alat">
+                  <i data-lucide="edit" class="w-3 h-3"></i>
+                </button>
+              ` : ''}
+              <span class="text-[8px] font-semibold px-1 rounded bg-black/70 text-gray-200">${t.brand || t.category}</span>
+            </div>
+
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-1.5 flex items-end justify-between">
+              <div class="truncate mr-1">
+                <p class="text-[10px] font-bold text-white truncate leading-tight">${t.name}</p>
+                <p class="text-[8px] text-gray-300 truncate">${t.office || 'Workshop'}</p>
+              </div>
+
+              ${!isOutOfStock 
+                ? `<button onclick="triggerDirectRent('${t.id}', event)" class="bg-amber-500 hover:bg-amber-600 text-black text-[10px] font-black px-2 py-0.5 rounded shadow whitespace-nowrap">Pinjam</button>`
+                : `<button class="bg-gray-700 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded cursor-not-allowed">Habis</button>`
+              }
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function renderActiveRentalsList() {
+      const container = document.getElementById("activeRentalsList");
+      const activeList = loans.filter(l => l.status === "DIPINJAM");
+
+      if (activeList.length === 0) {
+        container.innerHTML = `
+          <div class="py-16 text-center text-gray-400 bg-white dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800">
+            <i data-lucide="timer-off" class="w-10 h-10 mx-auto mb-2 text-gray-500"></i>
+            <p class="text-xs">Tidak ada alat yang sedang dipinjam saat ini.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = activeList.map(loan => {
+        const startTime = loan.rent_started_at || new Date(loan.borrow_date).getTime();
+        const elapsedSec = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+        
+        return `
+          <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-3 shadow-sm flex flex-col space-y-2.5">
+            <div class="flex items-center space-x-3">
+              <img src="${loan.photo_before || 'https://via.placeholder.com/150'}" class="w-14 h-14 rounded-xl object-cover border border-amber-500/40" />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-[9px] uppercase px-1.5 py-0.2 rounded font-bold bg-amber-500/10 text-amber-500">${loan.qty_borrowed || 1} UNIT</span>
+                  <span class="text-[9px] text-gray-400 font-mono">${loan.id}</span>
+                </div>
+                <h4 class="text-xs font-bold text-gray-900 dark:text-white truncate mt-0.5">${loan.tool_name}</h4>
+                <p class="text-[10px] text-gray-500">Peminjam: <strong class="text-gray-700 dark:text-gray-300">${loan.borrower_name}</strong> (${loan.borrower_phone})</p>
+                <p class="text-[9px] text-amber-500 font-semibold mt-0.5">Penyerah: ${loan.officer_borrow || '-'}</p>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-neutral-950 p-2 rounded-xl flex items-center justify-between border border-gray-100 dark:border-neutral-800">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 pulse-dot"></span>
+                <span class="text-[11px] text-gray-400">Detik Berjalan:</span>
+              </div>
+              <span id="activeCardTimer-${loan.id}" class="font-mono text-sm font-black text-amber-500">${formatSecondsToHms(elapsedSec)}</span>
+            </div>
+
+            <div class="flex items-center space-x-2 pt-1">
+              <button onclick="triggerReturnTool('${loan.id}', event)" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center space-x-1 shadow transition">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Kembalikan & Audit (≤100KB)</span>
+              </button>
+              <button onclick="openDetailModal('${loan.id}')" class="px-3 py-2 bg-gray-200 dark:bg-neutral-800 rounded-xl text-xs text-gray-700 dark:text-gray-300 font-semibold">
+                Berita Acara
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    function renderLogsHistory() {
+      const container = document.getElementById("logsHistoryList");
+
+      if (loans.length === 0) {
+        container.innerHTML = `
+          <div class="py-16 text-center text-gray-400 bg-white dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800">
+            <i data-lucide="clipboard-x" class="w-10 h-10 mx-auto mb-2 text-gray-500"></i>
+            <p class="text-xs">Belum ada riwayat mutasi sirkulasi.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = loans.map(loan => `
+        <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-3 shadow-sm space-y-2 text-xs">
+          <div class="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2">
+            <div>
+              <span class="font-mono font-bold text-amber-500 text-[11px]">${loan.id}</span>
+              <h4 class="font-bold text-gray-900 dark:text-white leading-tight">${loan.tool_name}</h4>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${loan.status === 'DIPINJAM' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'}">
+              ${loan.status}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[10px] text-gray-500">
+            <div>Peminjam: <strong class="text-gray-800 dark:text-gray-200">${loan.borrower_name}</strong></div>
+            <div>Jumlah: <strong class="text-emerald-500 font-bold">${loan.qty_borrowed || 1} Unit</strong></div>
+            <div>Penyerah: ${loan.officer_borrow || '-'}</div>
+            <div>Penerima: ${loan.officer_return || '-'}</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div class="bg-gray-50 dark:bg-neutral-950 p-1.5 rounded-xl text-center border border-gray-200 dark:border-neutral-800">
+              <span class="text-[9px] font-bold text-amber-500 block mb-1">Foto Sebelum (${loan.before_size_kb || 95} KB)</span>
+              <img src="${loan.photo_before || 'https://via.placeholder.com/150'}" class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90" onclick="window.open(this.src)" />
+            </div>
+            <div class="bg-gray-50 dark:bg-neutral-950 p-1.5 rounded-xl text-center border border-gray-200 dark:border-neutral-800">
+              <span class="text-[9px] font-bold text-emerald-500 block mb-1">Foto Sesudah</span>
+              ${loan.photo_after 
+                ? `<img src="${loan.photo_after}" class="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90" onclick="window.open(this.src)" />`
+                : `<div class="w-full h-24 flex items-center justify-center bg-gray-200 dark:bg-neutral-800 rounded-lg text-gray-400 italic text-[10px]">Belum kembali</div>`
+              }
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-neutral-800">
+            <span class="text-[10px] text-gray-400">${new Date(loan.borrow_date).toLocaleDateString("id-ID")}</span>
+            <div class="flex items-center space-x-1">
+              <button onclick="openDetailModal('${loan.id}')" class="px-2 py-1 bg-gray-100 dark:bg-neutral-800 hover:bg-gray-200 text-gray-700 dark:text-gray-300 rounded-lg text-[10px] font-semibold flex items-center space-x-1">
+                <i data-lucide="file-text" class="w-3 h-3"></i>
+                <span>Berita Acara</span>
+              </button>
+              <button onclick="shareWhatsAppWithPhotos(loans.find(l=>l.id==='${loan.id}'))" class="px-2 py-1 bg-emerald-600/10 text-emerald-500 hover:bg-emerald-600 hover:text-white rounded-lg text-[10px] font-semibold flex items-center space-x-1">
+                <i data-lucide="share-2" class="w-3 h-3"></i>
+                <span>Share WA</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      lucide.createIcons();
+    }
+
+    // 10. EDIT & HAPUS ALAT (SUPER ADMIN ONLY)
+    function openModalEditTool(toolId, event) {
+      if (event) event.stopPropagation();
+      const tool = tools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      document.getElementById("editToolId").value = tool.id;
+      document.getElementById("editToolName").value = tool.name;
+      document.getElementById("editToolCat").value = tool.category || "HVAC";
+      document.getElementById("editToolBrand").value = tool.brand || "";
+      document.getElementById("editToolTotalQty").value = tool.total_qty || 1;
+      document.getElementById("editToolOffice").value = tool.office || offices[0];
+
+      document.getElementById("previewEditToolImg").src = tool.photo || tool.image;
+      document.getElementById("badgeEditToolSize").innerText = "Foto Saat Ini";
+      document.getElementById("editToolPhotoData").value = "";
+      compressedCache.editTool = { dataUrl: null, sizeKb: null };
+
+      openModal("modalEditTool");
+    }
+
+    function handleOpenEditToolFromDetail() {
+      if (!selectedToolForDetail) return;
+      closeModal("modalDetailTool");
+      openModalEditTool(selectedToolForDetail.id);
+    }
+
+    async function handleSaveEditedTool(e) {
+      e.preventDefault();
+      const toolId = document.getElementById("editToolId").value;
+      const tool = tools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      const newTotal = parseInt(document.getElementById("editToolTotalQty").value) || 1;
+      const prevTotal = tool.total_qty || 1;
+      const diff = newTotal - prevTotal;
+
+      tool.name = document.getElementById("editToolName").value.trim();
+      tool.category = document.getElementById("editToolCat").value;
+      tool.brand = document.getElementById("editToolBrand").value.trim();
+      tool.office = document.getElementById("editToolOffice").value;
+      tool.total_qty = newTotal;
+      tool.available_qty = Math.max(0, (tool.available_qty !== undefined ? tool.available_qty : prevTotal) + diff);
+      tool.status = tool.available_qty > 0 ? "TERSEDIA" : "DIPINJAM";
+
+      if (compressedCache.editTool.dataUrl) {
+        tool.photo = compressedCache.editTool.dataUrl;
+      }
+
+      saveCache();
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from("tools").upsert(tool);
+        } catch (err) {
+          console.warn("Supabase update error:", err);
+        }
+      }
+
+      closeModal("modalEditTool");
+      renderToolsGrid();
+      showToast(`Alat "${tool.name}" berhasil diperbarui!`);
+    }
+
+    async function handleDeleteTool() {
+      if (!selectedToolForDetail) return;
+      if (!confirm(`Hapus permanen alat "${selectedToolForDetail.name}" dari katalog?`)) return;
+
+      const toolId = selectedToolForDetail.id;
+      tools = tools.filter(t => t.id !== toolId);
+      saveCache();
+
+      if (supabaseClient) {
+        try { await supabaseClient.from("tools").delete().eq("id", toolId); } catch (e) {}
+      }
+
+      closeModal("modalDetailTool");
+      renderAll();
+      showToast("Alat berhasil dihapus dari katalog!");
+    }
+
+    // 11. GANTI & RESET PASSWORD (SUPER ADMIN & SEMUA USER)
+    function openChangePasswordModal(targetNik, targetName) {
+      document.getElementById("changePassTargetNik").value = targetNik;
+      document.getElementById("changePassTargetName").innerText = targetName;
+      document.getElementById("changePassTargetNikDisplay").innerText = `NIK: ${targetNik}`;
+      document.getElementById("inputNewPassword").value = "";
+      document.getElementById("inputConfirmPassword").value = "";
+
+      openModal("modalChangePassword");
+    }
+
+    async function handleSaveNewPassword(e) {
+      e.preventDefault();
+      const targetNik = document.getElementById("changePassTargetNik").value;
+      const newPass = document.getElementById("inputNewPassword").value.trim();
+      const confirmPass = document.getElementById("inputConfirmPassword").value.trim();
+
+      if (newPass !== confirmPass) {
+        alert("Konfirmasi kata sandi tidak cocok!");
+        return;
+      }
+
+      const targetUser = users.find(u => u.nik === targetNik);
+      if (!targetUser) {
+        alert("Pengguna tidak ditemukan!");
+        return;
+      }
+
+      targetUser.password = newPass;
+
+      // Jika mengubah password akun yang sedang login
+      if (currentUser && currentUser.nik === targetNik) {
+        currentUser.password = newPass;
+        localStorage.setItem("app_current_user", JSON.stringify(currentUser));
+      }
+
+      saveCache();
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from("users").update({ password: newPass }).eq("nik", targetNik);
+        } catch (err) {
+          console.warn("Supabase update password notice:", err);
+        }
+      }
+
+      closeModal("modalChangePassword");
+      showToast(`Kata sandi untuk NIK ${targetNik} berhasil diperbarui!`);
+    }
+
+    // 12. BERITA ACARA & SHARE WA
+    function openDetailModal(loanId) {
+      const loan = loans.find(l => l.id === loanId);
+      if (!loan) return;
+      currentDetailLoan = loan;
+
+      document.getElementById('docLoanId').textContent = `NO. REG: ${loan.id}`;
+      document.getElementById('docToolName').textContent = loan.tool_name;
+      document.getElementById('docQtyBorrowed').textContent = `${loan.qty_borrowed || 1} Unit`;
+      document.getElementById('docBorrowerName').textContent = loan.borrower_name;
+      document.getElementById('docOfficerBorrow').textContent = loan.officer_borrow || '-';
+      document.getElementById('docBorrowerPhone').textContent = loan.borrower_phone;
+      document.getElementById('docBorrowDate').textContent = formatDateTime(loan.borrow_date);
+
+      const statusBadge = document.getElementById('docStatusBadge');
+      if (loan.status === 'DIPINJAM') {
+        statusBadge.textContent = 'DIPINJAM';
+        statusBadge.className = 'text-[9px] px-2 py-0.5 rounded font-bold uppercase bg-amber-100 text-amber-800 border border-amber-300';
+      } else {
+        statusBadge.textContent = 'SELESAI / KEMBALI';
+        statusBadge.className = 'text-[9px] px-2 py-0.5 rounded font-bold uppercase bg-emerald-100 text-emerald-800 border border-emerald-300';
+      }
+
+      document.getElementById('docPhotoBefore').src = loan.photo_before || '';
+
+      if (loan.return_date && loan.photo_after) {
+        document.getElementById('docReturnDate').textContent = formatDateTime(loan.return_date);
+        document.getElementById('docOfficerReturn').textContent = loan.officer_return || '-';
+        document.getElementById('docConditionReturn').textContent = `${loan.condition_return || '-'} (${loan.notes_return || 'Normal'})`;
+        
+        document.getElementById('docPhotoAfter').src = loan.photo_after;
+        document.getElementById('docPhotoAfter').classList.remove('hidden');
+        document.getElementById('docPhotoAfterEmpty').classList.add('hidden');
+      } else {
+        document.getElementById('docReturnDate').textContent = "Belum Dikembalikan";
+        document.getElementById('docOfficerReturn').textContent = "-";
+        document.getElementById('docConditionReturn').textContent = "-";
+        
+        document.getElementById('docPhotoAfter').classList.add('hidden');
+        document.getElementById('docPhotoAfterEmpty').classList.remove('hidden');
+      }
+
+      openModal('detailModal');
+    }
+
+    async function generatePDF() {
+      if (!currentDetailLoan) return;
+      const element = document.getElementById('pdfContentArea');
+      const btn = document.getElementById('btnDownloadPDF');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i><span>Merender HD...</span>`;
+      lucide.createIcons();
+
+      try {
+        const canvas = await html2canvas(element, {
+          scale: 3,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'JPEG', 0, 10, pdfWidth, pdfHeight, undefined, 'FAST');
+        pdf.save(`BeritaAcara_${currentDetailLoan.id}_${currentDetailLoan.tool_name.replace(/\s+/g, '_')}.pdf`);
+        showToast("PDF Berita Acara berhasil diunduh!");
+      } catch (e) {
+        alert("Gagal merender PDF: " + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="download" class="w-3.5 h-3.5"></i><span>Unduh PDF HD</span>`;
+        lucide.createIcons();
+      }
+    }
+
+    async function shareWhatsAppWithPhotos(loan) {
+      if (!loan) return;
+      const qty = loan.qty_borrowed || 1;
+
+      let message = `*BERITA ACARA PINJAM PAKAI ALAT KERJA*\n`;
+      message += `====================================\n`;
+      message += `*No Registrasi:* ${loan.id}\n`;
+      message += `*Nama Alat:* ${loan.tool_name}\n`;
+      message += `*Jumlah Unit:* ${qty} Unit\n`;
+      message += `*Nama Peminjam:* ${loan.borrower_name}\n`;
+      message += `*Petugas Penyerah:* ${loan.officer_borrow || '-'}\n`;
+      message += `*Waktu Pinjam:* ${formatDateTime(loan.borrow_date)}\n`;
+      message += `*Status:* ${loan.status}\n`;
+      if (loan.return_date) {
+        message += `*Waktu Kembali:* ${formatDateTime(loan.return_date)}\n`;
+        message += `*Petugas Penerima:* ${loan.officer_return || '-'}\n`;
+        message += `*Kondisi Akhir:* ${loan.condition_return || '-'}\n`;
+      }
+      if (loan.notes_borrow) {
+        message += `*Catatan Proyek:* ${loan.notes_borrow}\n`;
+      }
+      message += `====================================\n`;
+      message += `_Dokumentasi foto kondisi sebelum pinjam & sesudah kembali terlampir._`;
+
+      const filesToShare = [];
+      try {
+        if (loan.photo_before) {
+          const blobBefore = dataURLtoBlob(loan.photo_before);
+          filesToShare.push(new File([blobBefore], `Foto_Sebelum_${loan.id}.jpg`, { type: 'image/jpeg' }));
+        }
+        if (loan.photo_after) {
+          const blobAfter = dataURLtoBlob(loan.photo_after);
+          filesToShare.push(new File([blobAfter], `Foto_Sesudah_${loan.id}.jpg`, { type: 'image/jpeg' }));
+        }
+
+        if (navigator.canShare && filesToShare.length > 0 && navigator.canShare({ files: filesToShare })) {
+          await navigator.share({
+            title: `Bukti Peminjaman - ${loan.tool_name}`,
+            text: message,
+            files: filesToShare
+          });
+          return;
+        }
+      } catch (err) {
+        console.warn("WebShare fallback link:", err);
+      }
+
+      let phone = (loan.borrower_phone || '').replace(/\D/g, '');
+      if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+
+      const waUrl = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    function dataURLtoBlob(dataurl) {
+      if (!dataurl || !dataurl.includes(',')) return null;
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    }
+
+    // 13. EXPORT EXCEL & CSV
+    function exportCorporateExcel() {
+      if (loans.length === 0) return alert("Belum ada data transaksi untuk diekspor!");
+
+      const wsData = [
+        [`LAPORAN AUDIT & MUTASI SIRKULASI INVENTARIS ALAT KERJA`],
+        [`Tanggal Unduh: ${new Date().toLocaleString("id-ID")}`],
+        [],
+        ["NO", "ID TRANSAKSI", "KODE ALAT", "NAMA ALAT", "JUMLAH UNIT", "PEMINJAM", "NO WA", "PETUGAS PENYERAH", "WAKTU PINJAM", "STATUS", "PETUGAS PENERIMA", "WAKTU KEMBALI", "KONDISI KEMBALI", "CATATAN"]
+      ];
+
+      loans.forEach((l, idx) => {
+        wsData.push([
+          idx + 1,
+          l.id,
+          l.tool_id || "-",
+          l.tool_name,
+          l.qty_borrowed || 1,
+          l.borrower_name,
+          l.borrower_phone ? `'${l.borrower_phone}` : "-",
+          l.officer_borrow || "-",
+          formatDateTime(l.borrow_date),
+          l.status,
+          l.officer_return || "-",
+          l.return_date ? formatDateTime(l.return_date) : "-",
+          l.condition_return || "-",
+          l.notes_borrow || "-"
+        ]);
+      });
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      XLSX.utils.book_append_sheet(wb, ws, "Mutasi Alat");
+      XLSX.writeFile(wb, `Laporan_Mutasi_Alat_${Date.now()}.xlsx`);
+      showToast("File Excel berhasil diunduh!");
+    }
+
+    function exportCorporateCSV() {
+      if (loans.length === 0) return alert("Belum ada data untuk diunduh!");
+
+      let csv = "\uFEFFNO,ID TRANSAKSI,NAMA ALAT,JUMLAH,PEMINJAM,NO WA,PETUGAS PENYERAH,WAKTU PINJAM,STATUS,PETUGAS PENERIMA,WAKTU KEMBALI\n";
+      loans.forEach((l, idx) => {
+        csv += `${idx + 1},"${l.id}","${l.tool_name}",${l.qty_borrowed || 1},"${l.borrower_name}","${l.borrower_phone || '-'}","${l.officer_borrow || '-'}","${formatDateTime(l.borrow_date)}","${l.status}","${l.officer_return || '-'}","${l.return_date ? formatDateTime(l.return_date) : '-'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Log_Mutasi_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // 14. ROLE-BASED ACCESS & USER MANAGEMENT
+    function applyUserRoleUI() {
+      if (!currentUser) return;
+      const isSuperAdmin = currentUser.role === "superadmin";
+
+      const badgeHeader = document.getElementById("roleBadgeHeader");
+      if (badgeHeader) {
+        badgeHeader.innerText = isSuperAdmin ? "SUPER ADMIN" : "PETUGAS";
+        badgeHeader.className = isSuperAdmin 
+          ? "text-[9px] uppercase px-1.5 py-0.2 rounded font-bold bg-amber-500/20 text-amber-500 border border-amber-500/40"
+          : "text-[9px] uppercase px-1.5 py-0.2 rounded font-bold bg-blue-500/20 text-blue-500 border border-blue-500/40";
+      }
+
+      const btnAddTool = document.getElementById("navBtnAddTool");
+      if (btnAddTool) btnAddTool.classList.toggle("hidden", !isSuperAdmin);
+
+      const staffSection = document.getElementById("superAdminStaffSection");
+      if (staffSection) staffSection.classList.toggle("hidden", !isSuperAdmin);
+
+      const officeSection = document.getElementById("superAdminOfficeSection");
+      if (officeSection) officeSection.classList.toggle("hidden", !isSuperAdmin);
+
+      const btnDetailDelete = document.getElementById("btnDetailDeleteTool");
+      if (btnDetailDelete) btnDetailDelete.classList.toggle("hidden", !isSuperAdmin);
+
+      const btnDetailEdit = document.getElementById("btnDetailEditTool");
+      if (btnDetailEdit) btnDetailEdit.classList.toggle("hidden", !isSuperAdmin);
+
+      document.getElementById("headerAvatar").src = currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
+      document.getElementById("settingsAvatarPreview").src = currentUser.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
+      document.getElementById("settingsProfileName").innerText = currentUser.name;
+      document.getElementById("settingsProfileNIK").innerText = "NIK: " + currentUser.nik;
+      document.getElementById("settingsProfileRole").innerText = isSuperAdmin ? "SUPER ADMIN" : "PETUGAS LAPANGAN";
+      document.getElementById("editUserName").value = currentUser.name;
+      document.getElementById("editUserOffice").value = currentUser.office;
+    }
+
+    function renderStaffList() {
+      const container = document.getElementById("staffListTable");
+      if (!container) return;
+      const isSuperAdmin = currentUser && currentUser.role === "superadmin";
+
+      container.innerHTML = users.map(user => `
+        <div class="py-2.5 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center font-bold text-amber-500">
+              ${user.name.charAt(0)}
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 dark:text-white leading-tight">${user.name}</p>
+              <p class="text-[10px] text-gray-400">NIK: ${user.nik} • ${user.office}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-1.5">
+            <span class="text-[9px] uppercase px-1.5 py-0.2 rounded font-bold ${user.role === 'superadmin' ? 'bg-amber-500/20 text-amber-500' : 'bg-blue-500/20 text-blue-500'}">
+              ${user.role}
+            </span>
+
+            ${isSuperAdmin ? `
+              <button onclick="openChangePasswordModal('${user.nik}', '${user.name}')" class="text-amber-500 hover:text-amber-400 p-1" title="Ganti Kata Sandi">
+                <i data-lucide="key" class="w-3.5 h-3.5"></i>
+              </button>
+            ` : ''}
+
+            ${isSuperAdmin && user.nik !== currentUser.nik && user.role !== 'superadmin' ? `
+              <button onclick="handleDeleteStaff('${user.nik}')" class="text-rose-500 hover:text-rose-400 p-1" title="Hapus Petugas">
+                <i data-lucide="user-x" class="w-3.5 h-3.5"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `).join("");
+
+      lucide.createIcons();
+    }
+
+    async function handleSaveNewStaff(e) {
+      e.preventDefault();
+      const nik = document.getElementById("newStaffNik").value.trim().toUpperCase();
+      const name = document.getElementById("newStaffName").value.trim();
+      const password = document.getElementById("newStaffPass").value.trim();
+      const office = document.getElementById("newStaffOffice").value;
+
+      if (users.some(u => u.nik === nik)) return alert("Petugas dengan NIK tersebut sudah ada!");
+
+      const newStaff = {
+        nik, name, password, role: "petugas", office,
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+      };
+
+      users.push(newStaff);
+      saveCache();
+
+      if (supabaseClient) {
+        try { await supabaseClient.from("users").upsert(newStaff); } catch (e) {}
+      }
+
+      closeModal("modalAddStaff");
+      renderStaffList();
+      showToast(`Petugas ${name} (${nik}) berhasil ditambahkan!`);
+    }
+
+    async function handleDeleteStaff(nik) {
+      if (!confirm(`Hapus akun petugas NIK: ${nik}?`)) return;
+      users = users.filter(u => u.nik !== nik);
+      saveCache();
+
+      if (supabaseClient) {
+        try { await supabaseClient.from("users").delete().eq("nik", nik); } catch (e) {}
+      }
+
+      renderStaffList();
+      showToast("Akun petugas dihapus!");
+    }
+
+    async function handleSaveNewTool(e) {
+      e.preventDefault();
+      const totalQty = parseInt(document.getElementById("newToolTotalQty").value) || 1;
+      const newTool = {
+        id: "ALT-" + Date.now().toString().slice(-4),
+        name: document.getElementById("newToolName").value.trim(),
+        category: document.getElementById("newToolCat").value,
+        brand: document.getElementById("newToolBrand").value.trim(),
+        office: document.getElementById("newToolOffice").value,
+        total_qty: totalQty,
+        available_qty: totalQty,
+        status: "TERSEDIA",
+        photo: compressedCache.newTool.dataUrl || "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80"
+      };
+
+      tools.unshift(newTool);
+      saveCache();
+
+      if (supabaseClient) {
+        try { await supabaseClient.from("tools").upsert(newTool); } catch (e) {}
+      }
+
+      closeModal("modalAddTool");
+      renderToolsGrid();
+      showToast(`Alat "${newTool.name}" berhasil ditambahkan!`);
+    }
+
+    function openToolDetailModal(toolId) {
+      const tool = tools.find(t => t.id === toolId);
+      if (!tool) return;
+
+      selectedToolForDetail = tool;
+      document.getElementById("modalDetailTitle").innerText = tool.name;
+      document.getElementById("modalDetailName").innerText = tool.name;
+      document.getElementById("modalDetailBrand").innerText = tool.brand || tool.category;
+      document.getElementById("modalDetailOffice").innerText = tool.office || 'Workshop';
+      
+      const avail = tool.available_qty !== undefined ? tool.available_qty : 1;
+      const total = tool.total_qty !== undefined ? tool.total_qty : 1;
+      document.getElementById("modalDetailStock").innerText = `Tersedia: ${avail} / ${total} Unit`;
+      document.getElementById("modalDetailImg").src = tool.photo || tool.image;
+
+      const badge = document.getElementById("modalDetailStatusBadge");
+      const btnAction = document.getElementById("modalBtnAction");
+
+      if (avail > 0) {
+        badge.className = "absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-black/70 text-emerald-400";
+        badge.innerText = `TERSEDIA (${avail} UNIT)`;
+
+        btnAction.className = "w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 shadow bg-amber-500 text-black hover:bg-amber-600 transition";
+        btnAction.innerHTML = `<i data-lucide="play" class="w-4 h-4 fill-current"></i><span>Pinjam Sekarang (Isi Form)</span>`;
+        btnAction.onclick = () => {
+          closeModal("modalDetailTool");
+          triggerDirectRent(tool.id);
+        };
+      } else {
+        badge.className = "absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-600 text-white";
+        badge.innerText = `HABIS / SEDANG DIPINJAM`;
+
+        btnAction.className = "w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-1.5 shadow bg-neutral-800 text-gray-400 cursor-not-allowed";
+        btnAction.innerHTML = `<span>Seluruh Unit Sedang Dipinjam</span>`;
+        btnAction.onclick = null;
+      }
+
+      openModal("modalDetailTool");
+      lucide.createIcons();
+    }
+
+    // 15. AUTH & VIEWS
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const nik = document.getElementById("loginNik").value.trim().toUpperCase();
+      const pass = document.getElementById("loginPassword").value.trim();
+
+      const found = users.find(u => u.nik === nik && u.password === pass);
+      if (found) {
+        currentUser = found;
+        localStorage.setItem("app_current_user", JSON.stringify(currentUser));
+        document.getElementById("modalLogin").classList.add("hidden");
+        applyUserRoleUI();
+        renderAll();
+        showToast(`Selamat datang, ${currentUser.name}!`);
+      } else {
+        alert("NIK atau Password salah! Gunakan ADMIN01 / admin123 atau TECH01 / tech123");
+      }
+    }
+
+    function handleLogout() {
+      if (!confirm("Keluar dari akun Anda?")) return;
+      currentUser = null;
+      localStorage.removeItem("app_current_user");
+      document.getElementById("modalLogin").classList.remove("hidden");
+      applyUserRoleUI();
+    }
+
+    function handleSaveProfile(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      currentUser.name = document.getElementById("editUserName").value.trim();
+      currentUser.office = document.getElementById("editUserOffice").value;
+
+      const idx = users.findIndex(u => u.nik === currentUser.nik);
+      if (idx !== -1) {
+        users[idx] = currentUser;
+        saveCache();
+        if (supabaseClient) supabaseClient.from("users").upsert(currentUser).then();
+      }
+
+      localStorage.setItem("app_current_user", JSON.stringify(currentUser));
+      applyUserRoleUI();
+      showToast("Profil diperbarui!");
+    }
+
+    function switchView(viewName) {
+      const views = ["explore", "activeRentals", "logs", "settings"];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.toggle("hidden", v !== viewName);
+      });
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.remove("text-amber-500");
+        btn.classList.add("text-gray-400");
+      });
+      const activeBtn = document.getElementById(`navBtn-${viewName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove("text-gray-400");
+        activeBtn.classList.add("text-amber-500");
+      }
+
+      if (viewName === "explore") renderToolsGrid();
+      if (viewName === "activeRentals") renderActiveRentalsList();
+      if (viewName === "logs") renderLogsHistory();
+      if (viewName === "settings") applyUserRoleUI();
+    }
+
+    function setFilterCategory(cat) {
+      currentCategoryFilter = cat;
+      document.querySelectorAll(".category-chip").forEach(btn => {
+        const isMatch = btn.getAttribute("data-cat") === cat;
+        btn.className = isMatch
+          ? "category-chip px-3 py-1 rounded-full whitespace-nowrap bg-amber-500 text-black font-semibold shadow-sm transition"
+          : "category-chip px-3 py-1 rounded-full whitespace-nowrap bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-gray-300 transition";
+      });
+      renderToolsGrid();
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+      document.getElementById(id).classList.add("flex");
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+      document.getElementById(id).classList.remove("flex");
+    }
+
+    function openModalAddTool() {
+      document.getElementById("newToolName").value = "";
+      document.getElementById("newToolBrand").value = "";
+      document.getElementById("previewNewToolBox").classList.add("hidden");
+      compressedCache.newTool = { dataUrl: null, sizeKb: null };
+      openModal("modalAddTool");
+    }
+
+    function openModalAddStaff() {
+      document.getElementById("newStaffNik").value = "";
+      document.getElementById("newStaffName").value = "";
+      document.getElementById("newStaffPass").value = "";
+      openModal("modalAddStaff");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").innerText = msg;
+      toast.classList.remove("-translate-y-20", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+      setTimeout(() => {
+        toast.classList.add("-translate-y-20", "opacity-0");
+        toast.classList.remove("translate-y-0", "opacity-100");
+      }, 3000);
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle("dark");
+      localStorage.setItem("app_theme", isDark ? "dark" : "light");
+      document.getElementById("themeIconSun").classList.toggle("hidden", !isDark);
+      document.getElementById("themeIconMoon").classList.toggle("hidden", isDark);
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("app_theme") || "dark";
+      if (saved === "dark") {
+        document.documentElement.classList.add("dark");
+        document.getElementById("themeIconSun").classList.remove("hidden");
+        document.getElementById("themeIconMoon").classList.add("hidden");
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.getElementById("themeIconSun").classList.add("hidden");
+        document.getElementById("themeIconMoon").classList.remove("hidden");
+      }
+    }
+
+    function formatDateTime(str) {
+      if (!str) return '-';
+      try {
+        const d = new Date(str);
+        return d.toLocaleDateString('id-ID', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch(e) {
+        return str;
+      }
+    }
+  </script>
+</body>
+</html>
